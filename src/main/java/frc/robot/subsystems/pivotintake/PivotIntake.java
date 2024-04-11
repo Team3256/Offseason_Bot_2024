@@ -208,7 +208,8 @@ public class PivotIntake extends SubsystemBase implements Loggable {
   @AutoLogOutput
   public boolean isMotorStalled() {
     return this.isCurrentSpiking()
-        && this.pivotMotor.getRotorVelocity().getValue() < PivotIntakeConstants.kStallVelocityThreshold;
+        && this.pivotMotor.getRotorVelocity().getValue()
+            < PivotIntakeConstants.kStallVelocityThreshold;
   }
 
   @Override

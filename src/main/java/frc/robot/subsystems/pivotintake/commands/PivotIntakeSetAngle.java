@@ -7,14 +7,13 @@
 
 package frc.robot.subsystems.pivotintake.commands;
 
+import static frc.robot.subsystems.pivotintake.PivotIntakeConstants.kPivotMotorGearing;
+import static frc.robot.subsystems.pivotintake.PivotIntakeConstants.kPivotPositionToleranceDeg;
+
 import frc.robot.Constants;
 import frc.robot.helpers.DebugCommandBase;
 import frc.robot.helpers.TimedBoolean;
 import frc.robot.subsystems.pivotintake.PivotIntake;
-
-import static frc.robot.subsystems.pivotintake.PivotIntakeConstants.kPivotMotorGearing;
-import static frc.robot.subsystems.pivotintake.PivotIntakeConstants.kPivotPositionToleranceDeg;
-
 import org.littletonrobotics.junction.Logger;
 
 public class PivotIntakeSetAngle extends DebugCommandBase {

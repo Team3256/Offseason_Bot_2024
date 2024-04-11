@@ -10,8 +10,8 @@ package frc.robot.subsystems.pivotintake.commands;
 import frc.robot.Constants.FeatureFlags;
 import frc.robot.helpers.DebugCommandBase;
 import frc.robot.helpers.TimedBoolean;
-import frc.robot.subsystems.pivotintake.PivotIntakeConstants;
 import frc.robot.subsystems.pivotintake.PivotIntake;
+import frc.robot.subsystems.pivotintake.PivotIntakeConstants;
 
 public class PivotIntakeCalibrate extends DebugCommandBase {
   private PivotIntake pivot;

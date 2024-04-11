@@ -8,8 +8,8 @@
 package frc.robot.subsystems.pivotintake.commands;
 
 import frc.robot.helpers.DebugCommandBase;
-import frc.robot.subsystems.pivotintake.PivotIntakeConstants;
 import frc.robot.subsystems.pivotintake.PivotIntake;
+import frc.robot.subsystems.pivotintake.PivotIntakeConstants;
 
 public class PivotIntakeSlam extends DebugCommandBase {
   private final PivotIntake pivot;

@@ -47,8 +47,8 @@ import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.commands.*;
 import frc.robot.subsystems.led.LED;
 import frc.robot.subsystems.led.commands.*;
-import frc.robot.subsystems.pivotintake.PivotIntakeConstants;
 import frc.robot.subsystems.pivotintake.PivotIntake;
+import frc.robot.subsystems.pivotintake.PivotIntakeConstants;
 import frc.robot.subsystems.pivotintake.commands.PivotIntakeSetAngle;
 import frc.robot.subsystems.pivotintake.commands.PivotIntakeSlamAndVoltage;
 import frc.robot.subsystems.pivotintake.commands.PivotIntakeZero;
@@ -216,8 +216,10 @@ public class RobotContainer {
       NamedCommands.registerCommand( // rev shooter to amp presets
           "rev amp", new ShootAmp(shooter));
       NamedCommands.registerCommand( // modular pivot down, use for sabotage
-          "pivot down", new PivotIntakeSetAngle(pivotIntake, kPivotGroundAngleDeg).withTimeout(0.75));
-      NamedCommands.registerCommand("stow", new PivotIntakeSlamAndVoltage(pivotIntake).withTimeout(0.75));
+          "pivot down",
+          new PivotIntakeSetAngle(pivotIntake, kPivotGroundAngleDeg).withTimeout(0.75));
+      NamedCommands.registerCommand(
+          "stow", new PivotIntakeSlamAndVoltage(pivotIntake).withTimeout(0.75));
       NamedCommands.registerCommand( // intake with no stow, use for sabotage
           "intake", new IntakeIn(intake));
       NamedCommands.registerCommand( // shoot preloaded note to amp, use at match start
