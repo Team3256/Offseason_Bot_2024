@@ -72,8 +72,8 @@ public class Shooter extends SubsystemBase implements Loggable {
   }
 
   private void configureRealHardware() {
-    shooterMotor = MonitoredTalonFX.build(ShooterConstants.kShooterMotorID);
-    shooterMotorFollower = MonitoredTalonFX.build(ShooterConstants.kShooterMotorFollowerID);
+    shooterMotor = new MonitoredTalonFX(ShooterConstants.kShooterMotorID);
+    shooterMotorFollower = new MonitoredTalonFX(ShooterConstants.kShooterMotorFollowerID);
 
     setShootConfigs(
         ShooterConstants.kShooterKS,
