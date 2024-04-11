@@ -1,0 +1,2 @@
+#./gradlew spotlessApply
+./gradlew deploy

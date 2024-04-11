@@ -1,0 +1,22 @@
+{
+  "robotWidth": 0.84455,
+  "robotLength": 0.84455,
+  "holonomicMode": true,
+  "pathFolders": [
+    "6 note auto Awwww",
+    "renamed 2",
+    "renamed 1",
+    "side auto feed",
+    "side auto score",
+    "sketch",
+    "strategic"
+  ],
+  "autoFolders": [
+    "archive"
+  ],
+  "defaultMaxVel": 4.28,
+  "defaultMaxAccel": 5.0,
+  "defaultMaxAngVel": 540.0,
+  "defaultMaxAngAccel": 720.0,
+  "maxModuleSpeed": 4.28
+}

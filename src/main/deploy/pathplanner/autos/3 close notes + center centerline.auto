@@ -1,0 +1,43 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 15.24,
+      "y": 5.55
+    },
+    "rotation": 180.0
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "S to wing mid"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "S to wing top"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "S to center bottom"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "S to center 3"
+          }
+        }
+      ]
+    }
+  },
+  "folder": null,
+  "choreoAuto": false
+}
