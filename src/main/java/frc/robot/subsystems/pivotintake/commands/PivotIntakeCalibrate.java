@@ -5,21 +5,21 @@
 // license that can be found in the LICENSE file at
 // the root directory of this project.
 
-package frc.robot.subsystems.pivot.commands;
+package frc.robot.subsystems.pivotintake.commands;
 
 import frc.robot.Constants.FeatureFlags;
 import frc.robot.helpers.DebugCommandBase;
 import frc.robot.helpers.TimedBoolean;
-import frc.robot.subsystems.pivot.PivotConstants;
-import frc.robot.subsystems.pivot.PivotIntake;
+import frc.robot.subsystems.pivotintake.PivotIntakeConstants;
+import frc.robot.subsystems.pivotintake.PivotIntake;
 
-public class PivotCalibrate extends DebugCommandBase {
+public class PivotIntakeCalibrate extends DebugCommandBase {
   private PivotIntake pivot;
   private final int position;
   private TimedBoolean isCurrentSpiking;
 
   // position: 0 is ground, 1 is shooter
-  public PivotCalibrate(PivotIntake pivot, int position) {
+  public PivotIntakeCalibrate(PivotIntake pivot, int position) {
     if (position != 0 && position != 1) {
       throw new IllegalArgumentException("Invalid position: " + position);
     }
@@ -37,11 +37,11 @@ public class PivotCalibrate extends DebugCommandBase {
   public void initialize() {
     if (position == 0) {
       // slam to ground position
-      pivot.setOutputVoltage(PivotConstants.kPivotSlamIntakeVoltage);
+      pivot.setOutputVoltage(PivotIntakeConstants.kPivotSlamIntakeVoltage);
       System.out.println("pivot slam to ground");
     } else {
       // slam to shooter position
-      pivot.setOutputVoltage(PivotConstants.kPivotSlamShooterVoltage);
+      pivot.setOutputVoltage(PivotIntakeConstants.kPivotSlamShooterVoltage);
       System.out.println("pivot slam to shooter");
     }
   }

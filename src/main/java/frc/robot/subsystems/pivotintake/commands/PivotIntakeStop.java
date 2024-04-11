@@ -5,21 +5,21 @@
 // license that can be found in the LICENSE file at
 // the root directory of this project.
 
-package frc.robot.subsystems.pivot.commands;
+package frc.robot.subsystems.pivotintake.commands;
 
 import frc.robot.helpers.DebugCommandBase;
-import frc.robot.subsystems.pivot.PivotIntake;
+import frc.robot.subsystems.pivotintake.PivotIntake;
 
-public class PivotStaticBrake extends DebugCommandBase {
+public class PivotIntakeStop extends DebugCommandBase {
   private PivotIntake pivotIntake;
 
-  public PivotStaticBrake(PivotIntake pivotIntake) {
+  public PivotIntakeStop(PivotIntake pivotIntake) {
     this.pivotIntake = pivotIntake;
     addRequirements(pivotIntake);
   }
 
   public void initialize() {
-    pivotIntake.setControlStaticBrake();
+    pivotIntake.setOutputVoltage(0);
   }
 
   @Override

@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj.Timer;
 import frc.robot.Robot;
 import frc.robot.helpers.DebugCommandBase;
 import frc.robot.subsystems.intake.Intake;
-import frc.robot.subsystems.pivot.PivotIntake;
+import frc.robot.subsystems.pivotintake.PivotIntake;
 
 public class IntakeOutArmOff extends DebugCommandBase {
   private Intake intakeSubsystem;

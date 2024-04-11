@@ -7,8 +7,6 @@
 
 package frc.robot.commands;
 
-import static frc.robot.subsystems.pivot.PivotConstants.kPivotGroundAngleDeg;
-
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -19,9 +17,9 @@ import frc.robot.subsystems.climb.Climb;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.commands.IntakeIn;
 import frc.robot.subsystems.intake.commands.IntakeOut;
-import frc.robot.subsystems.pivot.PivotIntake;
-import frc.robot.subsystems.pivot.commands.PivotSetAngle;
-import frc.robot.subsystems.pivot.commands.PivotSlamAndVoltage;
+import frc.robot.subsystems.pivotintake.PivotIntake;
+import frc.robot.subsystems.pivotintake.commands.PivotIntakeSetAngle;
+import frc.robot.subsystems.pivotintake.commands.PivotIntakeSlamAndVoltage;
 import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.subsystems.shooter.commands.ShootAmp;
 import frc.robot.subsystems.shooter.commands.ShootSpeaker;
@@ -29,6 +27,9 @@ import frc.robot.subsystems.shooter.commands.ShooterOff;
 import frc.robot.subsystems.swerve.SwerveDrive;
 import frc.robot.subsystems.swerve.commands.TeleopSwerve;
 import frc.robot.subsystems.swerve.commands.ZeroGyro;
+
+import static frc.robot.subsystems.pivotintake.PivotIntakeConstants.kPivotGroundAngleDeg;
+
 import java.util.LinkedList;
 
 public class PitRoutine extends DebugCommandBase {
@@ -100,8 +101,8 @@ public class PitRoutine extends DebugCommandBase {
     // pivot
 
     if (Constants.FeatureFlags.kPivotEnabled) {
-      Command pivotDown = new PivotSetAngle(pivot, kPivotGroundAngleDeg).withTimeout(0.75);
-      Command pivotSlam = new PivotSlamAndVoltage(pivot);
+      Command pivotDown = new PivotIntakeSetAngle(pivot, kPivotGroundAngleDeg).withTimeout(0.75);
+      Command pivotSlam = new PivotIntakeSlamAndVoltage(pivot);
 
       CommandList.add(pivotDown);
       CommandList.add(pivotSlam);

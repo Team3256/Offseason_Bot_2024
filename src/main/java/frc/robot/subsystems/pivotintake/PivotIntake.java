@@ -5,7 +5,7 @@
 // license that can be found in the LICENSE file at
 // the root directory of this project.
 
-package frc.robot.subsystems.pivot;
+package frc.robot.subsystems.pivotintake;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
@@ -37,9 +37,9 @@ public class PivotIntake extends SubsystemBase implements Loggable {
   private SingleJointedArmSim pivotModel;
 
   final PositionVoltage positionRequest =
-      new PositionVoltage(0).withEnableFOC(PivotConstants.kUseFOC).withSlot(0);
+      new PositionVoltage(0).withEnableFOC(PivotIntakeConstants.kUseFOC).withSlot(0);
   final MotionMagicVoltage motionMagicRequest =
-      new MotionMagicVoltage(0).withEnableFOC(PivotConstants.kUseFOC).withSlot(0);
+      new MotionMagicVoltage(0).withEnableFOC(PivotIntakeConstants.kUseFOC).withSlot(0);
 
   public void DEFAULT() {}
 
@@ -52,20 +52,20 @@ public class PivotIntake extends SubsystemBase implements Loggable {
   }
 
   private void configureRealHardware() {
-    pivotMotor = new MonitoredTalonFX(PivotConstants.kPivotMotorID);
+    pivotMotor = new MonitoredTalonFX(PivotIntakeConstants.kPivotMotorID);
     pivotMotor.setNeutralMode(NeutralModeValue.Brake);
 
     setMotorConfigs(
-        PivotConstants.kS,
-        PivotConstants.kV,
-        PivotConstants.kP,
-        PivotConstants.kI,
-        PivotConstants.kD,
-        PivotConstants.motionMagicVelocity,
-        PivotConstants.motionMagicAcceleration,
-        PivotConstants.motionMagicJerk,
-        PivotConstants.enableStatorLimit,
-        PivotConstants.statorLimit);
+        PivotIntakeConstants.kS,
+        PivotIntakeConstants.kV,
+        PivotIntakeConstants.kP,
+        PivotIntakeConstants.kI,
+        PivotIntakeConstants.kD,
+        PivotIntakeConstants.motionMagicVelocity,
+        PivotIntakeConstants.motionMagicAcceleration,
+        PivotIntakeConstants.motionMagicJerk,
+        PivotIntakeConstants.enableStatorLimit,
+        PivotIntakeConstants.statorLimit);
   }
 
   // @Config(name = "Pivot Motor Slot 0 Configs")
@@ -102,14 +102,14 @@ public class PivotIntake extends SubsystemBase implements Loggable {
     pivotMotorSim.setSupplyVoltage(12);
     pivotModel =
         new SingleJointedArmSim(
-            DCMotor.getFalcon500(PivotConstants.kNumPivotMotors),
-            PivotConstants.kPivotMotorGearing,
-            PivotConstants.jKgMetersSquared,
-            PivotConstants.kPivotLength,
-            Units.degreesToRadians(PivotConstants.kPivotMinAngleDeg),
-            Units.degreesToRadians(PivotConstants.kPivotMaxAngleDeg),
+            DCMotor.getFalcon500(PivotIntakeConstants.kNumPivotMotors),
+            PivotIntakeConstants.kPivotMotorGearing,
+            PivotIntakeConstants.jKgMetersSquared,
+            PivotIntakeConstants.kPivotLength,
+            Units.degreesToRadians(PivotIntakeConstants.kPivotMinAngleDeg),
+            Units.degreesToRadians(PivotIntakeConstants.kPivotMaxAngleDeg),
             false,
-            PivotConstants.kPivotMinAngleDeg);
+            PivotIntakeConstants.kPivotMinAngleDeg);
   }
 
   public void off() {
@@ -135,7 +135,7 @@ public class PivotIntake extends SubsystemBase implements Loggable {
     if (Constants.FeatureFlags.kDebugEnabled) {
       System.out.println("Pivot set to: " + degrees + " deg");
     }
-    if (PivotConstants.kUseMotionMagic) {
+    if (PivotIntakeConstants.kUseMotionMagic) {
       pivotMotor.setControl(motionMagicRequest.withPosition(degrees));
     } else {
       pivotMotor.setControl(positionRequest.withPosition(degrees));
@@ -201,14 +201,14 @@ public class PivotIntake extends SubsystemBase implements Loggable {
   @Log
   @AutoLogOutput
   public boolean isCurrentSpiking() {
-    return this.getCurrent() > PivotConstants.kCurrentThreshold;
+    return this.getCurrent() > PivotIntakeConstants.kCurrentThreshold;
   }
 
   @Log
   @AutoLogOutput
   public boolean isMotorStalled() {
     return this.isCurrentSpiking()
-        && this.pivotMotor.getRotorVelocity().getValue() < PivotConstants.kStallVelocityThreshold;
+        && this.pivotMotor.getRotorVelocity().getValue() < PivotIntakeConstants.kStallVelocityThreshold;
   }
 
   @Override

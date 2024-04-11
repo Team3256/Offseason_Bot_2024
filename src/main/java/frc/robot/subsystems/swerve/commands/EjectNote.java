@@ -12,8 +12,8 @@ import frc.robot.helpers.DebugCommandBase;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.commands.IntakeIn;
 import frc.robot.subsystems.intake.commands.IntakeOut;
-import frc.robot.subsystems.pivot.PivotIntake;
-import frc.robot.subsystems.pivot.commands.PivotSlamAndVoltage;
+import frc.robot.subsystems.pivotintake.PivotIntake;
+import frc.robot.subsystems.pivotintake.commands.PivotIntakeSlamAndVoltage;
 import frc.robot.subsystems.swerve.SwerveDrive;
 
 public class EjectNote extends DebugCommandBase {
@@ -29,7 +29,7 @@ public class EjectNote extends DebugCommandBase {
 
   @Override
   public void execute() {
-    new ParallelCommandGroup(new IntakeIn(intake), new PivotSlamAndVoltage(pivot));
+    new ParallelCommandGroup(new IntakeIn(intake), new PivotIntakeSlamAndVoltage(pivot));
     new IntakeOut(intake).withTimeout(2);
     swerveSubsystem.setAngularVelocity(10); // 10 rads/sec rotation
   }

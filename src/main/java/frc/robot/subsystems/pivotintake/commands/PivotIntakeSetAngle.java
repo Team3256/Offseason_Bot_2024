@@ -5,23 +5,24 @@
 // license that can be found in the LICENSE file at
 // the root directory of this project.
 
-package frc.robot.subsystems.pivot.commands;
-
-import static frc.robot.subsystems.pivot.PivotConstants.kPivotMotorGearing;
-import static frc.robot.subsystems.pivot.PivotConstants.kPivotPositionToleranceDeg;
+package frc.robot.subsystems.pivotintake.commands;
 
 import frc.robot.Constants;
 import frc.robot.helpers.DebugCommandBase;
 import frc.robot.helpers.TimedBoolean;
-import frc.robot.subsystems.pivot.PivotIntake;
+import frc.robot.subsystems.pivotintake.PivotIntake;
+
+import static frc.robot.subsystems.pivotintake.PivotIntakeConstants.kPivotMotorGearing;
+import static frc.robot.subsystems.pivotintake.PivotIntakeConstants.kPivotPositionToleranceDeg;
+
 import org.littletonrobotics.junction.Logger;
 
-public class PivotSetAngle extends DebugCommandBase {
+public class PivotIntakeSetAngle extends DebugCommandBase {
   private PivotIntake pivotIntake;
   private final double angleDeg;
   private TimedBoolean isMotorStalled;
 
-  public PivotSetAngle(PivotIntake pivotIntake, double angleDeg) {
+  public PivotIntakeSetAngle(PivotIntake pivotIntake, double angleDeg) {
     this.pivotIntake = pivotIntake;
     this.angleDeg = angleDeg;
     this.isMotorStalled =

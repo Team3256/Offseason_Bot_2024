@@ -5,15 +5,15 @@
 // license that can be found in the LICENSE file at
 // the root directory of this project.
 
-package frc.robot.subsystems.pivot.commands;
+package frc.robot.subsystems.pivotintake.commands;
 
 import frc.robot.helpers.DebugCommandBase;
-import frc.robot.subsystems.pivot.PivotIntake;
+import frc.robot.subsystems.pivotintake.PivotIntake;
 
-public class PivotZero extends DebugCommandBase {
+public class PivotIntakeZero extends DebugCommandBase {
   private PivotIntake pivotIntake;
 
-  public PivotZero(PivotIntake pivotIntake) {
+  public PivotIntakeZero(PivotIntake pivotIntake) {
     this.pivotIntake = pivotIntake;
     // addRequirements(pivotIntake);
   }

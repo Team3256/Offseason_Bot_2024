@@ -5,11 +5,11 @@
 // license that can be found in the LICENSE file at
 // the root directory of this project.
 
-package frc.robot.subsystems.pivot;
+package frc.robot.subsystems.pivotintake;
 
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 
-public final class PivotConstants {
+public final class PivotIntakeConstants {
   /* CAN */
   public static final int kPivotMotorID = 34;
 
