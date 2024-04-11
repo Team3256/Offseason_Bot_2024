@@ -59,7 +59,6 @@ import frc.robot.subsystems.shooter.commands.ShootAmp;
 import frc.robot.subsystems.shooter.commands.ShootSpeaker;
 import frc.robot.subsystems.shooter.commands.ShootSubwoofer;
 import frc.robot.subsystems.shooter.commands.ShooterOff;
-import frc.robot.subsystems.shooter.helpers.ShooterIOTalonFX;
 import frc.robot.subsystems.swerve.SwerveDrive;
 import frc.robot.subsystems.swerve.commands.*;
 import io.github.oblarg.oblog.annotations.Config;
@@ -526,10 +525,10 @@ public class RobotContainer {
 
   private void configureShooter() {
     if (isReal()) {
-      shooter = new Shooter(new ShooterIOTalonFX());
+      shooter = new Shooter();
     } else {
-      shooter = new Shooter(new ShooterIOTalonFX());
-      shooter = new Shooter(new ShooterIOTalonFX());
+      shooter = new Shooter();
+      shooter = new Shooter();
     }
     // new Trigger(() -> Math.abs(shooter.getShooterRps() - 100) <= 5)
     // .onTrue(

@@ -22,7 +22,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
 import frc.robot.drivers.MonitoredTalonFX;
-import frc.robot.subsystems.shooter.helpers.ShooterIO;
 import frc.robot.utils.PhoenixUtil;
 import frc.robot.utils.TalonUtil;
 import io.github.oblarg.oblog.Loggable;
@@ -59,19 +58,11 @@ public class Shooter extends SubsystemBase implements Loggable {
       new MotionMagicVelocityVoltage(0).withEnableFOC(ShooterConstants.kUseFOC).withSlot(0);
   final MotionMagicVelocityVoltage motionMagicShooterFollowerRequest =
       new MotionMagicVelocityVoltage(0).withEnableFOC(ShooterConstants.kUseFOC).withSlot(0);
-  private final ShooterIO io;
   @Log.ToString private Command currentCommand = getCurrentCommand();
 
   public void DEFAULT() {}
 
-  public Shooter(ShooterIO io) {
-    this.io = io;
-    io.configurePID(
-        ShooterConstants.kShooterKP,
-        ShooterConstants.kShooterKI,
-        ShooterConstants.kShooterKD,
-        ShooterConstants.kShooterKS,
-        ShooterConstants.kShooterKV);
+  public Shooter() {
     if (RobotBase.isReal()) {
       configureRealHardware();
     } else {
@@ -81,8 +72,8 @@ public class Shooter extends SubsystemBase implements Loggable {
   }
 
   private void configureRealHardware() {
-    shooterMotor = new MonitoredTalonFX(ShooterConstants.kShooterMotorID);
-    shooterMotorFollower = new MonitoredTalonFX(ShooterConstants.kShooterMotorFollowerID);
+    shooterMotor = MonitoredTalonFX.build(ShooterConstants.kShooterMotorID);
+    shooterMotorFollower = MonitoredTalonFX.build(ShooterConstants.kShooterMotorFollowerID);
 
     setShootConfigs(
         ShooterConstants.kShooterKS,
