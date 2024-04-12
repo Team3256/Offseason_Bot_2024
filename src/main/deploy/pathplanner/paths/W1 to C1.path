@@ -3,41 +3,41 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 13.55,
-        "y": 6.9
+        "x": 14.14,
+        "y": 6.72
       },
       "prevControl": null,
       "nextControl": {
-        "x": 11.222775020726232,
-        "y": 6.9
-      },
-      "isLocked": false,
-      "linkedName": null
-    },
-    {
-      "anchor": {
-        "x": 8.328810723241988,
-        "y": 7.436381206571257
-      },
-      "prevControl": {
-        "x": 8.354488431005166,
-        "y": 7.97561306959801
-      },
-      "nextControl": {
-        "x": 8.305389050150426,
-        "y": 6.9445260716484345
-      },
-      "isLocked": false,
-      "linkedName": null
-    },
-    {
-      "anchor": {
-        "x": 14.16,
+        "x": 11.812775020726232,
         "y": 6.72
       },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 8.65671414652387,
+        "y": 7.366116187296568
+      },
       "prevControl": {
-        "x": 13.984337451813278,
-        "y": 6.742285196553275
+        "x": 8.735400115622799,
+        "y": 7.864460658256463
+      },
+      "nextControl": {
+        "x": 8.586449127249182,
+        "y": 6.921104398556871
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 10.706110542035635,
+        "y": 6.4292492636340475
+      },
+      "prevControl": {
+        "x": 10.530447993848913,
+        "y": 6.451534460187323
       },
       "nextControl": null,
       "isLocked": false,
@@ -59,23 +59,6 @@
   "constraintZones": [],
   "eventMarkers": [
     {
-      "name": "shoot",
-      "waypointRelativePos": 0,
-      "command": {
-        "type": "sequential",
-        "data": {
-          "commands": [
-            {
-              "type": "named",
-              "data": {
-                "name": "rev speaker"
-              }
-            }
-          ]
-        }
-      }
-    },
-    {
       "name": "intake sequence",
       "waypointRelativePos": 0.6,
       "command": {
@@ -93,8 +76,8 @@
       }
     },
     {
-      "name": "aim wing side",
-      "waypointRelativePos": 1.55,
+      "name": "aim wing line",
+      "waypointRelativePos": 0.1,
       "command": {
         "type": "sequential",
         "data": {
@@ -113,9 +96,16 @@
       "name": "shoot",
       "waypointRelativePos": 1.65,
       "command": {
-        "type": "parallel",
+        "type": "sequential",
         "data": {
-          "commands": []
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "outtake speaker"
+              }
+            }
+          ]
         }
       }
     }
@@ -128,11 +118,11 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 150.0,
+    "rotation": 170.0,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "6 note auto Awwww",
+  "folder": "7 note auto Awwww",
   "previewStartingState": {
     "rotation": 150.0,
     "velocity": 0

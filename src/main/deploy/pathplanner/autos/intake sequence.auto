@@ -1,0 +1,25 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 12.123121764075195,
+      "y": 5.726599070887158
+    },
+    "rotation": 0
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "intake test"
+          }
+        }
+      ]
+    }
+  },
+  "folder": "archive",
+  "choreoAuto": false
+}

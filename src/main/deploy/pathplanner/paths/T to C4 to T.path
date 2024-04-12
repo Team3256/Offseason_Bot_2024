@@ -3,41 +3,41 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 15.24,
-        "y": 5.55
+        "x": 13.0,
+        "y": 3.17
       },
       "prevControl": null,
       "nextControl": {
-        "x": 15.161095919795263,
-        "y": 5.632912378520905
+        "x": 10.905194763313919,
+        "y": 0.3864576060107912
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 13.93830142867133,
-        "y": 6.710309340732804
+        "x": 8.621581636886527,
+        "y": 2.1547939244237972
       },
       "prevControl": {
-        "x": 14.055409794129146,
-        "y": 6.593200975274989
+        "x": 8.884625195690015,
+        "y": 2.5009038702178588
       },
       "nextControl": {
-        "x": 13.896897368996893,
-        "y": 6.751713400407243
+        "x": 8.399075742516676,
+        "y": 1.862023010779259
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 15.24,
-        "y": 5.55
+        "x": 13.0,
+        "y": 3.17
       },
       "prevControl": {
-        "x": 15.239999999996257,
-        "y": 5.468024144178458
+        "x": 11.888905033159563,
+        "y": 1.159372818032369
       },
       "nextControl": null,
       "isLocked": false,
@@ -47,53 +47,20 @@
   "rotationTargets": [
     {
       "waypointRelativePos": 1.0,
-      "rotationDegrees": 135.0,
-      "rotateFast": false
-    },
-    {
-      "waypointRelativePos": 1.4,
-      "rotationDegrees": 180.0,
+      "rotationDegrees": 140.0,
       "rotateFast": true
     },
     {
-      "waypointRelativePos": 0.6,
-      "rotationDegrees": 135.0,
-      "rotateFast": true
-    },
-    {
-      "waypointRelativePos": 0.15,
-      "rotationDegrees": 180.0,
+      "waypointRelativePos": 1.7,
+      "rotationDegrees": -143.0,
       "rotateFast": true
     }
   ],
-  "constraintZones": [
-    {
-      "name": "New Constraints Zone",
-      "minWaypointRelativePos": 0.8,
-      "maxWaypointRelativePos": 1.0,
-      "constraints": {
-        "maxVelocity": 0.5,
-        "maxAcceleration": 3.0,
-        "maxAngularVelocity": 540.0,
-        "maxAngularAcceleration": 720.0
-      }
-    },
-    {
-      "name": "New Constraints Zone",
-      "minWaypointRelativePos": 1.85,
-      "maxWaypointRelativePos": 2.0,
-      "constraints": {
-        "maxVelocity": 0.25,
-        "maxAcceleration": 0.4,
-        "maxAngularVelocity": 540.0,
-        "maxAngularAcceleration": 720.0
-      }
-    }
-  ],
+  "constraintZones": [],
   "eventMarkers": [
     {
-      "name": "intake",
-      "waypointRelativePos": 0.3,
+      "name": "intake sequence",
+      "waypointRelativePos": 0.4,
       "command": {
         "type": "sequential",
         "data": {
@@ -109,24 +76,7 @@
       }
     },
     {
-      "name": "outtake",
-      "waypointRelativePos": 1.85,
-      "command": {
-        "type": "sequential",
-        "data": {
-          "commands": [
-            {
-              "type": "named",
-              "data": {
-                "name": "outtake speaker"
-              }
-            }
-          ]
-        }
-      }
-    },
-    {
-      "name": "aim subwoofer",
+      "name": "aim truss",
       "waypointRelativePos": 0,
       "command": {
         "type": "sequential",
@@ -135,7 +85,24 @@
             {
               "type": "named",
               "data": {
-                "name": "aim subwoofer"
+                "name": "aim truss "
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "shoot",
+      "waypointRelativePos": 1.8,
+      "command": {
+        "type": "sequential",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "outtake speaker"
               }
             }
           ]
@@ -151,13 +118,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 180.0,
-    "rotateFast": false
+    "rotation": -143.0,
+    "rotateFast": true
   },
   "reversed": false,
-  "folder": "5 note",
+  "folder": "Main Source Auto",
   "previewStartingState": {
-    "rotation": 180.0,
+    "rotation": -143.0,
     "velocity": 0
   },
   "useDefaultConstraints": false

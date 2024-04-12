@@ -48,25 +48,8 @@
   "constraintZones": [],
   "eventMarkers": [
     {
-      "name": "shoot",
-      "waypointRelativePos": 0,
-      "command": {
-        "type": "sequential",
-        "data": {
-          "commands": [
-            {
-              "type": "named",
-              "data": {
-                "name": "outtake speaker"
-              }
-            }
-          ]
-        }
-      }
-    },
-    {
       "name": "intake sequence",
-      "waypointRelativePos": 0.25,
+      "waypointRelativePos": 0.15,
       "command": {
         "type": "sequential",
         "data": {
@@ -83,7 +66,7 @@
     },
     {
       "name": "aim wing center",
-      "waypointRelativePos": 0.45,
+      "waypointRelativePos": 0.0,
       "command": {
         "type": "sequential",
         "data": {
@@ -111,7 +94,7 @@
     "rotateFast": true
   },
   "reversed": false,
-  "folder": "6 note auto Awwww",
+  "folder": "7 note auto Awwww",
   "previewStartingState": {
     "rotation": 150.0,
     "velocity": 0

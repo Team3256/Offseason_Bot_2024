@@ -34,11 +34,11 @@ public final class ShooterConstants {
   // Shooter follower
   // Feeder
 
-  public static double kShooterSpeakerRPS = 80; // TODO: Tune
-  public static double kShooterFollowerSpeakerRPS = 90; // really 80
+  public static double kShooterSpeakerRPS = 50; // TODO: Tune
+  public static double kShooterFollowerSpeakerRPS = 60; // really 80
 
-  public static double kShooterSubwooferRPS = 80;
-  public static double kShooterFollowerSubwooferRPS = 90;
+  public static double kShooterSubwooferRPS = 60;
+  public static double kShooterFollowerSubwooferRPS = 70;
 
   public static double kShooterAmpRPS = 22.5; // BEFORE: 1200/60 TODO: Tune
   public static double kShooterFollowerAmpRPS = 22.5;

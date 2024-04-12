@@ -3,9 +3,10 @@
   "robotLength": 0.84455,
   "holonomicMode": true,
   "pathFolders": [
-    "6 note auto Awwww",
-    "renamed 2",
-    "renamed 1",
+    "5 note",
+    "7 note auto Awwww",
+    "Main Source Auto",
+    "opponent side",
     "side auto feed",
     "side auto score",
     "sketch",

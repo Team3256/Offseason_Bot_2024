@@ -20,24 +20,24 @@
         "y": 6.72
       },
       "prevControl": {
-        "x": 14.697461886729716,
-        "y": 6.50272817344969
+        "x": 14.64753173290031,
+        "y": 6.406335950872925
       },
       "nextControl": {
-        "x": 13.789155973718339,
-        "y": 6.869915670198969
+        "x": 14.102253140312271,
+        "y": 6.75715268691593
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 13.55184382266054,
-        "y": 6.897682725465309
+        "x": 14.14,
+        "y": 6.74
       },
       "prevControl": {
-        "x": 13.667775189748992,
-        "y": 6.897682725465309
+        "x": 14.182132020608023,
+        "y": 6.713076165958667
       },
       "nextControl": null,
       "isLocked": false,
@@ -60,10 +60,10 @@
     {
       "name": "preload",
       "minWaypointRelativePos": 0,
-      "maxWaypointRelativePos": 0.15,
+      "maxWaypointRelativePos": 0.05,
       "constraints": {
-        "maxVelocity": 0.28,
-        "maxAcceleration": 3.0,
+        "maxVelocity": 0.1,
+        "maxAcceleration": 0.5,
         "maxAngularVelocity": 540.0,
         "maxAngularAcceleration": 720.0
       }
@@ -71,9 +71,9 @@
     {
       "name": "New Constraints Zone",
       "minWaypointRelativePos": 1.0,
-      "maxWaypointRelativePos": 1.05,
+      "maxWaypointRelativePos": 2.0,
       "constraints": {
-        "maxVelocity": 0.1,
+        "maxVelocity": 0.2,
         "maxAcceleration": 2.0,
         "maxAngularVelocity": 540.0,
         "maxAngularAcceleration": 720.0
@@ -117,7 +117,7 @@
     },
     {
       "name": "aim wing side",
-      "waypointRelativePos": 0.3,
+      "waypointRelativePos": 0.2,
       "command": {
         "type": "sequential",
         "data": {
@@ -134,7 +134,7 @@
     },
     {
       "name": "shoot",
-      "waypointRelativePos": 0.9,
+      "waypointRelativePos": 1.0,
       "command": {
         "type": "sequential",
         "data": {
@@ -162,7 +162,7 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "6 note auto Awwww",
+  "folder": "7 note auto Awwww",
   "previewStartingState": {
     "rotation": 120.0,
     "velocity": 0

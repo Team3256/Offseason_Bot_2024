@@ -42,16 +42,17 @@ public class PivotShooter extends SubsystemBase implements Loggable {
 
   public InterpolatingDoubleTreeMap pivotMotorData = new InterpolatingDoubleTreeMap();
   public InterpolatingDoubleTreeMap pivotMotorDataNotGlobalPose = new InterpolatingDoubleTreeMap();
-  public InterpolatingDoubleTreeMap pivotMotorDataNotGlobalPose2 =
-      new InterpolatingDoubleTreeMap(); // for second april
+  public InterpolatingDoubleTreeMap pivotMotorDataNotGlobalPose2 = new InterpolatingDoubleTreeMap(); // for second april
+  public InterpolatingDoubleTreeMap pivotMotorDataForFeeding = new InterpolatingDoubleTreeMap();
   // tag
 
-  final PositionVoltage positionRequest =
-      new PositionVoltage(0).withEnableFOC(PivotingShooterConstants.kUseFOC).withSlot(0);
-  final MotionMagicVoltage motionMagicRequest =
-      new MotionMagicVoltage(0).withEnableFOC(PivotingShooterConstants.kUseFOC).withSlot(0);
+  final PositionVoltage positionRequest = new PositionVoltage(0).withEnableFOC(PivotingShooterConstants.kUseFOC)
+      .withSlot(0);
+  final MotionMagicVoltage motionMagicRequest = new MotionMagicVoltage(0)
+      .withEnableFOC(PivotingShooterConstants.kUseFOC).withSlot(0);
 
-  public void DEFAULT() {}
+  public void DEFAULT() {
+  }
 
   public PivotShooter() {
     if (RobotBase.isReal()) {
@@ -78,17 +79,23 @@ public class PivotShooter extends SubsystemBase implements Loggable {
         PivotingShooterConstants.enableStatorLimit,
         PivotingShooterConstants.statorLimit);
     setupPivotShooterData();
+    setUpPivotShooterFeederData();
   }
 
   private void setupPivotShooterData() {
 
-    pivotMotorData.put(0.051, kSubWooferPreset);
-    pivotMotorData.put(1.4, 6.25 / 138.333);
-    pivotMotorData.put(0.945, 5.8 / 138.333);
-    pivotMotorData.put(1.69, 6.5 / 138.333);
-    pivotMotorData.put(0.485, 5.25 / 138.333);
-    //    pivotMotorData.put(3.19, 5.6/138.333); // DO NOT use to interpolate for now
+    // pivotMotorData.put(0.051, kSubWooferPreset);
+    // pivotMotorData.put(1.4, 6.25 / 138.333);
+    // pivotMotorData.put(0.945, 5.8 / 138.333);
+    // pivotMotorData.put(1.69, 6.5 / 138.333);
+    // pivotMotorData.put(0.485, 5.25 / 138.333);
+    pivotMotorData.put(19.771, kSubWooferPreset);
+    // pivotMotorData.put(3.19, 5.6/138.333); // DO NOT use to interpolate for now
     // distance to speaker and then angle
+  }
+
+  private void setUpPivotShooterFeederData() {
+    pivotMotorDataForFeeding.put(1.0, 0.1);
   }
 
   private void setupPivotShooterDataNotGlobalPose() {
@@ -135,16 +142,15 @@ public class PivotShooter extends SubsystemBase implements Loggable {
     configureRealHardware();
     pivotMotorSim = pivotMotor.getSimState();
     pivotMotorSim.setSupplyVoltage(12);
-    pivotModel =
-        new SingleJointedArmSim(
-            DCMotor.getFalcon500(PivotingShooterConstants.kNumPivotMotors),
-            PivotingShooterConstants.kPivotMotorGearing,
-            PivotingShooterConstants.jKgMetersSquared,
-            PivotingShooterConstants.kPivotLength,
-            Units.degreesToRadians(PivotingShooterConstants.kPivotMinAngleDeg),
-            Units.degreesToRadians(PivotingShooterConstants.kPivotMaxAngleDeg),
-            false,
-            PivotingShooterConstants.kPivotMinAngleDeg);
+    pivotModel = new SingleJointedArmSim(
+        DCMotor.getFalcon500(PivotingShooterConstants.kNumPivotMotors),
+        PivotingShooterConstants.kPivotMotorGearing,
+        PivotingShooterConstants.jKgMetersSquared,
+        PivotingShooterConstants.kPivotLength,
+        Units.degreesToRadians(PivotingShooterConstants.kPivotMinAngleDeg),
+        Units.degreesToRadians(PivotingShooterConstants.kPivotMaxAngleDeg),
+        false,
+        PivotingShooterConstants.kPivotMinAngleDeg);
   }
 
   public void off() {
@@ -249,12 +255,12 @@ public class PivotShooter extends SubsystemBase implements Loggable {
   @AutoLogOutput
   public boolean isMotorStalled() {
     return this.isCurrentSpiking()
-        && this.pivotMotor.getRotorVelocity().getValue()
-            < PivotingShooterConstants.kStallVelocityThreshold;
+        && this.pivotMotor.getRotorVelocity().getValue() < PivotingShooterConstants.kStallVelocityThreshold;
   }
 
   @Override
-  public void periodic() {}
+  public void periodic() {
+  }
 
   @Override
   public void simulationPeriodic() {
