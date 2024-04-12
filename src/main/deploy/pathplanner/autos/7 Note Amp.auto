@@ -32,12 +32,6 @@
         {
           "type": "path",
           "data": {
-            "pathName": "C2 to C3"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
             "pathName": "W1 to W2"
           }
         },

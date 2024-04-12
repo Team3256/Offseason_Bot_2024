@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 11.812775020726232,
-        "y": 6.72
+        "x": 11.924037542796913,
+        "y": 7.026501927468904
       },
       "isLocked": false,
       "linkedName": null
@@ -32,12 +32,12 @@
     },
     {
       "anchor": {
-        "x": 10.706110542035635,
-        "y": 6.4292492636340475
+        "x": 12.298784312261917,
+        "y": 7.026501927468906
       },
       "prevControl": {
-        "x": 10.530447993848913,
-        "y": 6.451534460187323
+        "x": 11.783507504247533,
+        "y": 6.99136941783156
       },
       "nextControl": null,
       "isLocked": false,
@@ -76,7 +76,7 @@
       }
     },
     {
-      "name": "aim wing line",
+      "name": "aim wing half",
       "waypointRelativePos": 0.1,
       "command": {
         "type": "sequential",
@@ -118,7 +118,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 170.0,
+    "rotation": 157.0,
     "rotateFast": false
   },
   "reversed": false,

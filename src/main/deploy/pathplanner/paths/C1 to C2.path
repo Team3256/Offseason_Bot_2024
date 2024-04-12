@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 10.71,
-        "y": 6.43
+        "x": 12.3,
+        "y": 7.03
       },
       "prevControl": null,
       "nextControl": {
-        "x": 9.703675380103972,
-        "y": 6.724791090923124
+        "x": 11.162833167321114,
+        "y": 6.4292492636340475
       },
       "isLocked": false,
       "linkedName": null
@@ -32,12 +32,12 @@
     },
     {
       "anchor": {
-        "x": 10.71,
-        "y": 6.43
+        "x": 12.3,
+        "y": 7.03
       },
       "prevControl": {
-        "x": 9.944906166559838,
-        "y": 5.843707436344972
+        "x": 11.29165236932471,
+        "y": 6.651755158003897
       },
       "nextControl": null,
       "isLocked": false,
@@ -52,7 +52,7 @@
     },
     {
       "waypointRelativePos": 1.9,
-      "rotationDegrees": 170.0,
+      "rotationDegrees": 157.0,
       "rotateFast": true
     },
     {
@@ -61,13 +61,13 @@
       "rotateFast": true
     },
     {
-      "waypointRelativePos": 1.35,
+      "waypointRelativePos": 1.1,
       "rotationDegrees": -171.0,
       "rotateFast": false
     },
     {
       "waypointRelativePos": 1.6,
-      "rotationDegrees": 170.0,
+      "rotationDegrees": 157.0,
       "rotateFast": true
     }
   ],
@@ -108,7 +108,7 @@
       }
     },
     {
-      "name": "aim wing side",
+      "name": "aim wing half",
       "waypointRelativePos": 0.1,
       "command": {
         "type": "sequential",
@@ -117,7 +117,7 @@
             {
               "type": "named",
               "data": {
-                "name": "aim wing side"
+                "name": "aim half truss wing"
               }
             }
           ]
@@ -133,13 +133,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 170.0,
+    "rotation": 157.0,
     "rotateFast": false
   },
   "reversed": false,
   "folder": "7 note auto Awwww",
   "previewStartingState": {
-    "rotation": 170.0,
+    "rotation": 157.0,
     "velocity": 0
   },
   "useDefaultConstraints": false

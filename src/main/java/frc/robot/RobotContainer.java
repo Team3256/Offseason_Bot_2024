@@ -231,6 +231,7 @@ public class RobotContainer {
       NamedCommands.registerCommand(
           "aim wing far side", new PivotShooterSetAngle(pivotShooter, kWingNoteFarSidePreset));
       NamedCommands.registerCommand("aim truss", new PivotShooterSetAngle(pivotShooter, kTrussSourceSidePreset));
+      NamedCommands.registerCommand("aim half truss wing", new PivotShooterSetAngle(pivotShooter, kHalfWingPodiumPreset));
       NamedCommands.registerCommand(
           "zero pivot shooter", new PivotShooterSlamAndVoltage(pivotShooter));
 
