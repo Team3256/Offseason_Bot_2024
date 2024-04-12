@@ -9,7 +9,7 @@ package frc.robot.subsystems.pivotshooter;
 
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 
-public final class PivotingShooterConstants {
+public final class PivotShooterConstants {
   // public static final double kSubWooferPreset = (3.5 + 0.3) / 138.33; // idk if
   // this works
   public static final double kSubWooferPreset = 6.5 / 138.33; // idk if this works

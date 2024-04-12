@@ -10,7 +10,7 @@ package frc.robot;
 import static edu.wpi.first.wpilibj.RobotBase.isReal;
 import static frc.robot.Constants.azimuthStickDeadband;
 import static frc.robot.subsystems.pivotintake.PivotIntakeConstants.kPivotGroundAngleDeg;
-import static frc.robot.subsystems.pivotshooter.PivotingShooterConstants.*;
+import static frc.robot.subsystems.pivotshooter.PivotShooterConstants.*;
 import static frc.robot.subsystems.swerve.SwerveConstants.AzimuthConstants.*;
 
 import com.pathplanner.lib.auto.AutoBuilder;

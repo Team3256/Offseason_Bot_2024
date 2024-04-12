@@ -23,14 +23,14 @@ public class PivotIntake extends SinglePositionSubsystem {
    public void off() {
        super.off();
        if (Constants.FeatureFlags.kDebugEnabled) {
-           System.out.println("Pivot off");
+           System.out.println("Pivot Intake off");
          }
    }
    @Override
    public void setOutputVoltage(double voltage) {
        super.setOutputVoltage(voltage);
        if (Constants.FeatureFlags.kDebugEnabled) {
-           System.out.println("Pivot voltage set to: " + voltage);
+           System.out.println("Pivot Intake voltage set to: " + voltage);
        }
    }
 
@@ -39,7 +39,7 @@ public class PivotIntake extends SinglePositionSubsystem {
    public void setDegrees(double degrees) {
        super.setDegrees(degrees);
        if (Constants.FeatureFlags.kDebugEnabled) {
-           System.out.println("Pivot set to: " + degrees);
+           System.out.println("Pivot Intake set to: " + degrees);
        }
    }
    @Override
