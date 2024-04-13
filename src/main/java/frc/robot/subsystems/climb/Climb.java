@@ -1,18 +1,32 @@
+// Copyright (c) 2024 FRC 3256
+// https://github.com/Team3256
+//
+// Use of this source code is governed by a 
+// license that can be found in the LICENSE file at
+// the root directory of this project.
+
 package frc.robot.subsystems.climb;
 
 import com.ctre.phoenix6.signals.NeutralModeValue;
-
-import edu.wpi.first.wpilibj.RobotBase;
 import frc.robot.Constants;
 import frc.robot.utils.SinglePositionSubsystem;
 
 public class Climb extends SinglePositionSubsystem {
   public Climb() {
     super(ClimbConstants.kUseClimbMotionMagic, ClimbConstants.kCurrentThreshold, 0);
-    super.configureRealHardware(ClimbConstants.kLeftClimbMotorID, NeutralModeValue.Brake, ClimbConstants.kS,
-        ClimbConstants.kV, ClimbConstants.kP, ClimbConstants.kI, ClimbConstants.kD,
-        ClimbConstants.motionMagicVelocity, ClimbConstants.motionMagicAcceleration,
-        ClimbConstants.motionMagicJerk, ClimbConstants.enableStatorLimit, ClimbConstants.statorLimit);
+    super.configureRealHardware(
+        ClimbConstants.kLeftClimbMotorID,
+        NeutralModeValue.Brake,
+        ClimbConstants.kS,
+        ClimbConstants.kV,
+        ClimbConstants.kP,
+        ClimbConstants.kI,
+        ClimbConstants.kD,
+        ClimbConstants.motionMagicVelocity,
+        ClimbConstants.motionMagicAcceleration,
+        ClimbConstants.motionMagicJerk,
+        ClimbConstants.enableStatorLimit,
+        ClimbConstants.statorLimit);
   }
 
   public void setLeftMotor(double position) {
@@ -80,5 +94,4 @@ public class Climb extends SinglePositionSubsystem {
     // }
 
   }
-
 }
