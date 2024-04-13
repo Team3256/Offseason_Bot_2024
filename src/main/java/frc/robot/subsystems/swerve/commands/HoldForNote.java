@@ -26,6 +26,9 @@ public class HoldForNote extends DebugCommandBase {
 
   private DoubleSupplier translationAxis;
 
+  private double translationPIDOutput = 0;
+  private double strafePIDOutput = 0;
+
   private PIDController translationPidController;
   private PIDController strafePidController;
 
@@ -70,12 +73,12 @@ public class HoldForNote extends DebugCommandBase {
     double compensatedMaxVelocity =
         maxTranslationalVelocity * Math.abs(translationAxis.getAsDouble());
 
-    double translationPIDOutput =
-        translationPidController.calculate(LimelightHelpers.getTY("limelight-note"), 0.0);
+    translationPIDOutput =
+        translationPidController.calculate(LimelightHelpers.getTY("limelight-note"), -9);
     translationPIDOutput =
         MathUtil.clamp(translationPIDOutput, -compensatedMaxVelocity, compensatedMaxVelocity);
-    double strafePIDOutput =
-        translationPidController.calculate(LimelightHelpers.getTX("limelight-note"), 0.0);
+     strafePIDOutput =
+        translationPidController.calculate(LimelightHelpers.getTX("limelight-note")*-1, 0.0);
     strafePIDOutput =
         MathUtil.clamp(strafePIDOutput, -compensatedMaxVelocity, compensatedMaxVelocity);
     translation = new Translation2d(translationPIDOutput, strafePIDOutput);
