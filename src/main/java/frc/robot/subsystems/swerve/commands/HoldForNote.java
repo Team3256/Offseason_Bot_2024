@@ -77,8 +77,8 @@ public class HoldForNote extends DebugCommandBase {
         translationPidController.calculate(LimelightHelpers.getTY("limelight-note"), -9);
     translationPIDOutput =
         MathUtil.clamp(translationPIDOutput, -compensatedMaxVelocity, compensatedMaxVelocity);
-     strafePIDOutput =
-        translationPidController.calculate(LimelightHelpers.getTX("limelight-note")*-1, 0.0);
+    strafePIDOutput =
+        translationPidController.calculate(LimelightHelpers.getTX("limelight-note") * -1, 0.0);
     strafePIDOutput =
         MathUtil.clamp(strafePIDOutput, -compensatedMaxVelocity, compensatedMaxVelocity);
     translation = new Translation2d(translationPIDOutput, strafePIDOutput);
