@@ -85,7 +85,7 @@ public class Intake extends SubsystemBase implements Loggable {
     passthroughMotor.setInverted(false);
     passthroughMotor.setNeutralMode(NeutralModeValue.Brake);
 
-    beamBreakInput = new DigitalInput(IntakeConstants.kIntakeBeamBreakDIO);
+    beamBreakInput = new DigitalInput(IntakeConstants.kIntakeBeamBreakDIONew);
     setMotorConfigsIntake(
         kIntakeKS,
         kIntakeKV,
