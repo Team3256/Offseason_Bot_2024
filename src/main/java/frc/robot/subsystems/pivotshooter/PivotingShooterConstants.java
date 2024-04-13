@@ -19,6 +19,8 @@ public final class PivotingShooterConstants {
   public static final double kWingNoteFarSidePreset = 0 / 138.33; // TODO: tune
   public static final double kTrussSourceSidePreset = 6.5 / 138.33;
   public static final double kHalfWingPodiumPreset = 6.7 / 138.33;
+  public static final double kPodiumLeftPreset = 6.5 / 138.33;
+  public static final double kPodiumRPreset = 6 / 138.33;
 
   public static final int kPivotMotorID = 12;
 
