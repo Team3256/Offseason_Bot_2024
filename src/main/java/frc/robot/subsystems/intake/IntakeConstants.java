@@ -45,7 +45,8 @@ public final class IntakeConstants {
   public static final double kBeamBreakDelayTime = 0;
   public static final double kMotorCurrentSpikingTime = 0.8;
 
-  public static final int kIntakeBeamBreakDIO = 0;
+  public static final int kIntakeBeamBreakDIONew = 1;
+  public static final int kIntakeBeamBreakDIOOld = 0;
   public static int kPassthroughMotorID = 35;
 
   public static final double kPassthroughkS = 0.0;

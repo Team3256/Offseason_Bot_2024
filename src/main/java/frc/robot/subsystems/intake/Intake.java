@@ -26,7 +26,7 @@ public class Intake extends DualVelocitySubsystem {
         IntakeConstants.kIntakeCurrentThreshold,
         IntakeConstants.kIntakeVelocitySpiking,
         IntakeConstants.kPassthroughVelocitySpiking);
-    beamBreakInput = new DigitalInput(IntakeConstants.kIntakeBeamBreakDIO);
+    beamBreakInput = new DigitalInput(IntakeConstants.kIntakeBeamBreakDIONew);
     super.configureRealHardware(
         IntakeConstants.kIntakeMotorID,
         IntakeConstants.kPassthroughMotorID,

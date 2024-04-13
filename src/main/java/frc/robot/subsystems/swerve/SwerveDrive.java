@@ -145,8 +145,8 @@ public class SwerveDrive extends SubsystemBase implements Loggable {
               false); // Closed loop
         },
         new HolonomicPathFollowerConfig(
-            new PIDConstants(37, 0, 0, 0), // Translation PID constants OLD: 37 0.075 0.15
-            new PIDConstants(20, 0, 0), // Rotation PID constants
+            new PIDConstants(37, 0, 0, 1), // Translation PID constants OLD: 37 0.075 0.15
+            new PIDConstants(25, 0, 2), // Rotation PID constants
             AutoConstants.kMaxSpeedMetersPerSecond, // Max module speed, in m/s
             AutoConstants
                 .kDriveBaseRadiusMeters, // Drive base radius in meters. Distance from robot center
