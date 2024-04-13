@@ -36,7 +36,7 @@ public final class ClimbConstants {
   // // What about the tension from the spring?
   // public static double gyroRollStableThreshold = 1; // 1 degree of error is
   // tolerated
-public static double motionMagicVelocity = 100;
-public static double motionMagicAcceleration = 100;
-public static double motionMagicJerk = 300;
+  public static double motionMagicVelocity = 100;
+  public static double motionMagicAcceleration = 100;
+  public static double motionMagicJerk = 300;
 }

@@ -1,23 +1,45 @@
-package frc.robot.subsystems.shooter;
+// Copyright (c) 2024 FRC 3256
+// https://github.com/Team3256
+//
+// Use of this source code is governed by a 
+// license that can be found in the LICENSE file at
+// the root directory of this project.
 
-import org.littletonrobotics.junction.AutoLogOutput;
+package frc.robot.subsystems.shooter;
 
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
-
 import edu.wpi.first.wpilibj.RobotBase;
 import frc.robot.Constants;
 import frc.robot.utils.DualVelocitySubsystem;
+import org.littletonrobotics.junction.AutoLogOutput;
 
 public class Shooter extends DualVelocitySubsystem {
   public Shooter() {
-    super(ShooterConstants.kUseShooterMotionMagic, ShooterConstants.kUseShooterMotionMagic, 69.0, 69.0, 69.0, 69.0);
-    super.configureRealHardware(ShooterConstants.kShooterMotorID, ShooterConstants.kShooterMotorFollowerID,
-        NeutralModeValue.Coast, NeutralModeValue.Brake, ShooterConstants.kShooterKS,
-        ShooterConstants.kShooterKV, ShooterConstants.kShooterKP, ShooterConstants.kShooterKI,
-        ShooterConstants.kShooterKD, ShooterConstants.kShooterKS, ShooterConstants.kShooterKV,
-        ShooterConstants.kShooterKP, ShooterConstants.kShooterKI, ShooterConstants.kShooterKD,
-        InvertedValue.CounterClockwise_Positive, InvertedValue.Clockwise_Positive);
+    super(
+        ShooterConstants.kUseShooterMotionMagic,
+        ShooterConstants.kUseShooterMotionMagic,
+        69.0,
+        69.0,
+        69.0,
+        69.0);
+    super.configureRealHardware(
+        ShooterConstants.kShooterMotorID,
+        ShooterConstants.kShooterMotorFollowerID,
+        NeutralModeValue.Coast,
+        NeutralModeValue.Brake,
+        ShooterConstants.kShooterKS,
+        ShooterConstants.kShooterKV,
+        ShooterConstants.kShooterKP,
+        ShooterConstants.kShooterKI,
+        ShooterConstants.kShooterKD,
+        ShooterConstants.kShooterKS,
+        ShooterConstants.kShooterKV,
+        ShooterConstants.kShooterKP,
+        ShooterConstants.kShooterKI,
+        ShooterConstants.kShooterKD,
+        InvertedValue.CounterClockwise_Positive,
+        InvertedValue.Clockwise_Positive);
     if (!RobotBase.isReal()) {
       super.configureSimHardware();
     }

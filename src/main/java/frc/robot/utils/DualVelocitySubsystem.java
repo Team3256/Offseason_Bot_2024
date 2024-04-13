@@ -7,7 +7,6 @@
 
 package frc.robot.utils;
 
-
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.MotionMagicVelocityVoltage;
@@ -18,15 +17,10 @@ import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.sim.TalonFXSimState;
 import edu.wpi.first.math.system.plant.DCMotor;
-import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.simulation.FlywheelSim;
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
 import frc.robot.drivers.MonitoredTalonFX;
-import frc.robot.utils.PhoenixUtil;
-import frc.robot.utils.TalonUtil;
 import io.github.oblarg.oblog.Loggable;
 import org.littletonrobotics.junction.AutoLogOutput;
 
@@ -64,13 +58,18 @@ public class DualVelocitySubsystem extends SubsystemBase implements Loggable {
   public double currentThresholdUno = 0;
   public double currentThresholdDos = 0;
 
-    public double velocityThresholdUno = 0;
-    public double velocityThresholdDos = 0;
+  public double velocityThresholdUno = 0;
+  public double velocityThresholdDos = 0;
 
- 
   // no output for error derivative
 
-  public DualVelocitySubsystem(boolean isMotionMagicUno, boolean isMotionMagicDos, double currentThresholdUno, double currentThresholdDos, double velocityThresholdUno, double velocityThresholdDos) {
+  public DualVelocitySubsystem(
+      boolean isMotionMagicUno,
+      boolean isMotionMagicDos,
+      double currentThresholdUno,
+      double currentThresholdDos,
+      double velocityThresholdUno,
+      double velocityThresholdDos) {
     this.isMotionMagicUno = isMotionMagicUno;
     this.isMotionMagicDos = isMotionMagicDos;
     this.currentThresholdUno = currentThresholdUno;
@@ -79,28 +78,29 @@ public class DualVelocitySubsystem extends SubsystemBase implements Loggable {
     this.velocityThresholdDos = velocityThresholdDos;
   }
 
-  protected void configureRealHardware(int motorIDUno, int motorIDDos, NeutralModeValue neutralModeUno, NeutralModeValue neutralModeDos, double kSUno, double kVUno, double kPUno, double kIUno, double kDUno, double kSDos, double kVDos, double kPDos, double kIDos, double kDDos, InvertedValue invertedUno, InvertedValue invertedDos) {
-    unoMotor =
-        new MonitoredTalonFX(motorIDUno, "rio"); // don't want piece to fall out
+  protected void configureRealHardware(
+      int motorIDUno,
+      int motorIDDos,
+      NeutralModeValue neutralModeUno,
+      NeutralModeValue neutralModeDos,
+      double kSUno,
+      double kVUno,
+      double kPUno,
+      double kIUno,
+      double kDUno,
+      double kSDos,
+      double kVDos,
+      double kPDos,
+      double kIDos,
+      double kDDos,
+      InvertedValue invertedUno,
+      InvertedValue invertedDos) {
+    unoMotor = new MonitoredTalonFX(motorIDUno, "rio"); // don't want piece to fall out
 
     dosMotor = new MonitoredTalonFX(motorIDDos, "rio");
 
-    setMotorConfigsUno(
-        kSUno,
-        kVUno,
-        kPUno,
-        kIUno,
-        kDUno,
-        invertedUno,
-        neutralModeUno);
-    setMotorConfigsDos(
-        kSDos,
-        kVDos,
-        kPDos,
-        kIDos,
-        kDDos,
-        invertedDos,
-        neutralModeDos);
+    setMotorConfigsUno(kSUno, kVUno, kPUno, kIUno, kDUno, invertedUno, neutralModeUno);
+    setMotorConfigsDos(kSDos, kVDos, kPDos, kIDos, kDDos, invertedDos, neutralModeDos);
   }
 
   // @Config(name = "PID values")
@@ -163,8 +163,7 @@ public class DualVelocitySubsystem extends SubsystemBase implements Loggable {
     unoMotor.getConfigurator().apply(motionMagicConfigs);
   }
 
-  public void setMotionMagicConfigsDos(
-      double cruiseVelocity, double acceleration, double jerk) {
+  public void setMotionMagicConfigsDos(double cruiseVelocity, double acceleration, double jerk) {
     var motionMagicConfigs = new MotionMagicConfigs();
     motionMagicConfigs.MotionMagicAcceleration = acceleration;
     motionMagicConfigs.MotionMagicCruiseVelocity = cruiseVelocity;
@@ -185,7 +184,6 @@ public class DualVelocitySubsystem extends SubsystemBase implements Loggable {
   public void setOutputVoltageDos(double voltage) {
     dosMotor.setVoltage(voltage);
   }
-
 
   public void setUnoVelocity(double velocity) {
     if (isMotionMagicUno) {
@@ -216,6 +214,7 @@ public class DualVelocitySubsystem extends SubsystemBase implements Loggable {
     return unoMotor.getControlMode().getValue() == ControlModeValue.NeutralOut
         && dosMotor.getControlMode().getValue() == ControlModeValue.NeutralOut;
   }
+
   public boolean isUnoMotorCurrentSpiking() {
     return unoMotor.getSupplyCurrent().getValue() > currentThresholdUno;
   }
@@ -227,7 +226,6 @@ public class DualVelocitySubsystem extends SubsystemBase implements Loggable {
   public double getUnoVelocity() {
     return unoMotor.getVelocity().getValue();
   }
-
 
   public double getDosVelocity() {
     return dosMotor.getVelocity().getValue();
@@ -282,7 +280,6 @@ public class DualVelocitySubsystem extends SubsystemBase implements Loggable {
   public void periodic() {
     // System.out.println("TOF DISTANCE: " + getTOFDistance());
   }
-
 
   @Override
   public void simulationPeriodic() {
