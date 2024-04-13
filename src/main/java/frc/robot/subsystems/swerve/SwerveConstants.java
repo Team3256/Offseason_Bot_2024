@@ -66,8 +66,8 @@ public final class SwerveConstants {
 
   /* Drive Motor Characterization Values From SysID */
   public static final double driveKS = 0; // TODO: Tune
-  public static final double driveKV = 2.08; //0.13
-  public static final double driveKA = 0.21; //0
+  public static final double driveKV = 2.08; // 0.13
+  public static final double driveKA = 0.21; // 0
 
   // Localization
 
