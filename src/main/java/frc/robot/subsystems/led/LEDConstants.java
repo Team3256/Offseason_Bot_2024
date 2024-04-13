@@ -15,4 +15,7 @@ public final class LEDConstants {
   /* LED Configurations */
   public static final int kLEDLength = 256;
   public static final double kLEDSpeed = 0.5;
+
+  public static final int kLEDWidth = 32;
+  public static final int kLEDHeight = 8;
 }
