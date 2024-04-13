@@ -266,8 +266,8 @@ public class RobotContainer {
 
   private void configurePivotShooter() {
     pivotShooter = new PivotShooter();
-    operator.b().onTrue(new bruh(pivotShooter));
-    operator.x().onTrue(new SequentialCommandGroup(new PivotShootSubwoofer(pivotShooter)));
+    // operator.b().onTrue(new bruh(pivotShooter));
+    // operator.x().onTrue(new SequentialCommandGroup(new PivotShootSubwoofer(pivotShooter)));
     operator.povUp().onTrue(new PivotShooterZero(pivotShooter));
   }
 
@@ -324,6 +324,8 @@ public class RobotContainer {
 
   private void configureSwerve() {
     swerveDrive = new SwerveDrive();
+    operator.b().whileTrue(new StrafeNoteTuner(swerveDrive, true ,false));
+    operator.x().whileTrue(new TranslationNoteTuner(swerveDrive, true, false));
 
     swerveDrive.setDefaultCommand(
         new TeleopSwerve(

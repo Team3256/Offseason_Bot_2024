@@ -24,20 +24,15 @@ public class StrafeNoteTuner extends DebugCommandBase {
 
   private SwerveDrive swerveSubsystem;
 
-  private DoubleSupplier translationAxis;
-
-  private PIDController translationPidController;
   private PIDController strafePidController;
 
   /** Driver control */
   public StrafeNoteTuner(
       SwerveDrive swerveSubsystem,
-      DoubleSupplier translationAxis,
       boolean fieldRelative,
       boolean openLoop) {
     this.swerveSubsystem = swerveSubsystem;
     addRequirements(swerveSubsystem);
-    this.translationAxis = translationAxis;
 
     this.fieldRelative = fieldRelative;
     this.openLoop = openLoop;
@@ -63,13 +58,10 @@ public class StrafeNoteTuner extends DebugCommandBase {
     // PID controller takes current robot position (getYaw) and compares to the
     // azimuth angle to
     // calculate error
-    double compensatedMaxVelocity =
-        maxTranslationalVelocity * Math.abs(translationAxis.getAsDouble());
+    double compensatedMaxVelocity = maxTranslationalVelocity * 1;
 
-    double strafePIDOutput =
-        translationPidController.calculate(LimelightHelpers.getTX("limelight-note"), 0.0);
-    strafePIDOutput =
-        MathUtil.clamp(strafePIDOutput, -compensatedMaxVelocity, compensatedMaxVelocity);
+    double strafePIDOutput = strafePidController.calculate(LimelightHelpers.getTX("limelight-note") * -1, 0.0);
+    strafePIDOutput = MathUtil.clamp(strafePIDOutput, -compensatedMaxVelocity, compensatedMaxVelocity);
     translation = new Translation2d(0, strafePIDOutput);
 
     swerveSubsystem.drive(translation, 0, fieldRelative, openLoop);
