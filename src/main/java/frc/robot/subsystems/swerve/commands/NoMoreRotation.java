@@ -67,7 +67,7 @@ public class NoMoreRotation extends DebugCommandBase {
     yAxis = (Math.abs(yAxis) < stickDeadband) ? 0 : yAxis;
     xAxis = (Math.abs(xAxis) < stickDeadband) ? 0 : xAxis;
 
-    translation = new Translation2d(yAxis, xAxis).times(maxTranslationalVelocity * 0.8);
+    translation = new Translation2d(yAxis, xAxis).times(maxTranslationalVelocity * 0.5);
 
     // Converts from coordinates to angle, sets joystick forward input as 0,
     // converts angle to

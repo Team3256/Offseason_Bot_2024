@@ -30,8 +30,6 @@ public class Azimuth extends DebugCommandBase {
   private SwerveDrive swerveSubsystem;
   private DoubleSupplier translationAxis;
   private DoubleSupplier strafeAxis;
-  private DoubleSupplier rotationXAxis;
-  private DoubleSupplier rotationYAxis;
   private DoubleSupplier setpointAngle;
   private BooleanSupplier manualRotating;
   private PIDController azimuthController;
@@ -41,8 +39,6 @@ public class Azimuth extends DebugCommandBase {
       SwerveDrive swerveSubsystem,
       DoubleSupplier translationAxis,
       DoubleSupplier strafeAxis,
-      DoubleSupplier rotationXAxis,
-      DoubleSupplier rotationYAxis,
       DoubleSupplier setpointAngle,
       BooleanSupplier manualRotating,
       boolean fieldRelative,
@@ -52,8 +48,6 @@ public class Azimuth extends DebugCommandBase {
 
     this.translationAxis = translationAxis;
     this.strafeAxis = strafeAxis;
-    this.rotationXAxis = rotationXAxis;
-    this.rotationYAxis = rotationYAxis;
     this.setpointAngle = setpointAngle;
     this.manualRotating = manualRotating;
     this.fieldRelative = fieldRelative;
@@ -68,24 +62,13 @@ public class Azimuth extends DebugCommandBase {
     double yAxis = -translationAxis.getAsDouble();
     double xAxis = -strafeAxis.getAsDouble();
 
-    // Gets position of joystick input on the x axis of the total stick area
-    double rAxisX = rotationXAxis.getAsDouble();
-    // Gets position of joystick input on the y axis of the total stick area
-    double rAxisY = -rotationYAxis.getAsDouble();
-
     // Safety area, insures that joystick movement will not be tracked within a
     // certain area,
     // prevents unintentional drifting
     yAxis = (Math.abs(yAxis) < stickDeadband) ? 0 : yAxis;
     xAxis = (Math.abs(xAxis) < stickDeadband) ? 0 : xAxis;
-    rAxisX = (Math.abs(rAxisX) < azimuthStickDeadband) ? 0 : rAxisX;
-    rAxisY = (Math.abs(rAxisY) < azimuthStickDeadband) ? 0 : rAxisY;
 
     translation = new Translation2d(yAxis, xAxis).times(maxTranslationalVelocity);
-    if (rAxisX == 0 && rAxisY == 0) {
-      swerveSubsystem.drive(translation, 0, fieldRelative, openLoop);
-      return;
-    }
 
     // Converts from coordinates to angle, sets joystick forward input as 0,
     // converts angle to

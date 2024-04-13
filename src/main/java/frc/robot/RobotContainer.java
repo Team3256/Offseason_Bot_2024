@@ -8,7 +8,6 @@
 package frc.robot;
 
 import static edu.wpi.first.wpilibj.RobotBase.isReal;
-import static frc.robot.Constants.azimuthStickDeadband;
 import static frc.robot.subsystems.pivotintake.PivotIntakeConstants.kPivotGroundAngleDeg;
 import static frc.robot.subsystems.pivotshooter.PivotingShooterConstants.*;
 import static frc.robot.subsystems.swerve.SwerveConstants.AzimuthConstants.*;
@@ -31,8 +30,6 @@ import frc.robot.autos.commands.MoveToNote;
 import frc.robot.autos.commands.RotateToNote;
 import frc.robot.commands.PitRoutine;
 import frc.robot.helpers.XboxStalker;
-import frc.robot.limelight.Limelight;
-import frc.robot.limelight.LimelightHelpers;
 import frc.robot.robotviz.RobotViz;
 import frc.robot.subsystems.ampbar.AmpBar;
 import frc.robot.subsystems.ampbar.commands.AmpPosition;
@@ -45,7 +42,6 @@ import frc.robot.subsystems.climb.commands.ZeroClimb;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.commands.*;
 import frc.robot.subsystems.led.LED;
-import frc.robot.subsystems.led.commands.*;
 import frc.robot.subsystems.pivotintake.PivotIntake;
 import frc.robot.subsystems.pivotintake.PivotIntakeConstants;
 import frc.robot.subsystems.pivotintake.commands.PivotIntakeSetAngle;
@@ -284,10 +280,8 @@ public class RobotContainer {
     operator.rightBumper().whileTrue(new IntakeAndPassthrough(intake));
     if (FeatureFlags.kPivotEnabled) {
       operator.leftBumper().whileTrue(new IntakeOutArmOff(intake, pivotIntake));
-      driver.rightTrigger().whileTrue(new IntakeOutArmOff(intake, pivotIntake));
     } else {
       operator.leftBumper().whileTrue(new IntakeOut(intake));
-      driver.rightTrigger().whileTrue(new IntakeOut(intake));
     }
 
     // operator.povDown().onTrue(new IntakeOff(intake));
@@ -326,7 +320,11 @@ public class RobotContainer {
     // operator.povDownLeft().onTrue(new TestClimbFlip(climb));
   }
 
-  private void configureSwerve() {
+  public void setAllianceCol(boolean col){
+    isRed = col;
+  }
+
+  public void configureSwerve() {
     swerveDrive = new SwerveDrive();
 
     swerveDrive.setDefaultCommand(
@@ -346,7 +344,7 @@ public class RobotContainer {
 
     // driver.povDown().whileTrue(new EjectNote(swerveDrive, pivotIntake, intake));
     driver
-        .leftBumper()
+        .rightTrigger()
         .whileTrue(
             new NoMoreRotation(
                 swerveDrive,
@@ -358,12 +356,6 @@ public class RobotContainer {
     driver.y().onTrue(new ZeroGyro(swerveDrive));
     driver.y().onTrue(new ForceResetModulePositions(swerveDrive));
 
-    Command aziRed = new InstantCommand(() -> isRed = true);
-    Command aziBlue = new InstantCommand(() -> isRed = false);
-
-    driver.povLeft().onTrue(aziRed);
-    driver.povRight().onTrue(aziBlue);
-
     if (isRed) /* RED ALLIANCE PRESETS */ {
       driver // AMP
           .a()
@@ -372,51 +364,7 @@ public class RobotContainer {
                       swerveDrive,
                       driver::getLeftY,
                       driver::getLeftX,
-                      () -> azimuthStickDeadband + 0.1,
-                      () -> azimuthStickDeadband + 0.1,
                       () -> aziAmpRed,
-                      () -> true,
-                      true,
-                      true)
-                  .withTimeout(aziCommandTimeOut));
-      driver // SUBWOOFER FRONT
-          .povDown()
-          .onTrue(
-              new Azimuth(
-                      swerveDrive,
-                      driver::getLeftY,
-                      driver::getLeftX,
-                      () -> azimuthStickDeadband + 0.1,
-                      () -> azimuthStickDeadband + 0.1,
-                      () -> aziSubwooferFront,
-                      () -> true,
-                      true,
-                      true)
-                  .withTimeout(aziCommandTimeOut));
-      driver // SUBWOOFER RIGHT
-          .b()
-          .onTrue(
-              new Azimuth(
-                      swerveDrive,
-                      driver::getLeftY,
-                      driver::getLeftX,
-                      () -> azimuthStickDeadband + 0.1,
-                      () -> azimuthStickDeadband + 0.1,
-                      () -> aziSubwooferRight,
-                      () -> true,
-                      true,
-                      true)
-                  .withTimeout(aziCommandTimeOut));
-      driver // SUBWOOFER LEFT
-          .x()
-          .onTrue(
-              new Azimuth(
-                      swerveDrive,
-                      driver::getLeftY,
-                      driver::getLeftX,
-                      () -> azimuthStickDeadband + 0.1,
-                      () -> azimuthStickDeadband + 0.1,
-                      () -> aziSubwooferLeft,
                       () -> true,
                       true,
                       true)
@@ -428,15 +376,14 @@ public class RobotContainer {
                       swerveDrive,
                       driver::getLeftY,
                       driver::getLeftX,
-                      () -> azimuthStickDeadband + 0.1,
-                      () -> azimuthStickDeadband + 0.1,
                       () -> aziSourceRed,
                       () -> true,
                       true,
                       true)
                   .withTimeout(aziCommandTimeOut));
 
-    } else /* BLUE ALLIANCE PRESETS */ {
+    }
+    else /* BLUE ALLIANCE PRESETS */ {
       driver // AMP
           .a()
           .onTrue(
@@ -444,51 +391,7 @@ public class RobotContainer {
                       swerveDrive,
                       driver::getLeftY,
                       driver::getLeftX,
-                      () -> azimuthStickDeadband + 0.1,
-                      () -> azimuthStickDeadband + 0.1,
                       () -> aziAmpBlue,
-                      () -> true,
-                      true,
-                      true)
-                  .withTimeout(aziCommandTimeOut));
-      driver // SUBWOOFER FRONT
-          .povDown()
-          .onTrue(
-              new Azimuth(
-                      swerveDrive,
-                      driver::getLeftY,
-                      driver::getLeftX,
-                      () -> azimuthStickDeadband + 0.1,
-                      () -> azimuthStickDeadband + 0.1,
-                      () -> aziSubwooferFront,
-                      () -> true,
-                      true,
-                      true)
-                  .withTimeout(aziCommandTimeOut));
-      driver // SUBWOOFER RIGHT
-          .b()
-          .onTrue(
-              new Azimuth(
-                      swerveDrive,
-                      driver::getLeftY,
-                      driver::getLeftX,
-                      () -> azimuthStickDeadband + 0.1,
-                      () -> azimuthStickDeadband + 0.1,
-                      () -> aziSubwooferRight,
-                      () -> true,
-                      true,
-                      true)
-                  .withTimeout(aziCommandTimeOut));
-      driver // SUBWOOFER LEFT
-          .x()
-          .onTrue(
-              new Azimuth(
-                      swerveDrive,
-                      driver::getLeftY,
-                      driver::getLeftX,
-                      () -> azimuthStickDeadband + 0.1,
-                      () -> azimuthStickDeadband + 0.1,
-                      () -> aziSubwooferLeft,
                       () -> true,
                       true,
                       true)
@@ -500,8 +403,6 @@ public class RobotContainer {
                       swerveDrive,
                       driver::getLeftY,
                       driver::getLeftX,
-                      () -> azimuthStickDeadband + 0.1,
-                      () -> azimuthStickDeadband + 0.1,
                       () -> aziSourceBlue,
                       () -> true,
                       true,
@@ -509,21 +410,70 @@ public class RobotContainer {
                   .withTimeout(aziCommandTimeOut));
     }
 
-    /* Tester bind */
+    driver // SUBWOOFER FRONT
+            .leftBumper()
+            .onTrue(
+                    new Azimuth(
+                            swerveDrive,
+                            driver::getLeftY,
+                            driver::getLeftX,
+                            () -> aziSubwooferFront,
+                            () -> true,
+                            true,
+                            true)
+                            .withTimeout(aziCommandTimeOut));
+    driver // SUBWOOFER RIGHT
+            .b()
+            .onTrue(
+                    new Azimuth(
+                            swerveDrive,
+                            driver::getLeftY,
+                            driver::getLeftX,
+                            () -> aziSubwooferRight,
+                            () -> true,
+                            true,
+                            true)
+                            .withTimeout(aziCommandTimeOut));
+    driver // SUBWOOFER LEFT
+            .x()
+            .onTrue(
+                    new Azimuth(
+                            swerveDrive,
+                            driver::getLeftY,
+                            driver::getLeftX,
+                            () -> aziSubwooferLeft,
+                            () -> true,
+                            true,
+                            true)
+                            .withTimeout(aziCommandTimeOut));
+
+    /* Feeder */
     driver
-        .povUp()
+            .povRight()
+            .onTrue(
+                    new Azimuth(
+                            swerveDrive,
+                            driver::getLeftY,
+                            driver::getLeftX,
+                            () -> feederRed,
+                            () -> true,
+                            true,
+                            true));
+
+    /* Clean up */
+    driver
+        .povDown()
         .onTrue(
             new Azimuth(
                     swerveDrive,
                     driver::getLeftY,
                     driver::getLeftX,
-                    () -> azimuthStickDeadband + 0.1,
-                    () -> azimuthStickDeadband + 0.1,
-                    () -> test,
+                    () -> cleanUp,
                     () -> true,
                     true,
                     true)
                 .withTimeout(aziCommandTimeOut));
+    SmartDashboard.putNumber("Angular Velocity", swerveDrive.getRotationalVelocity());
   }
 
   private void configureShooter() {
