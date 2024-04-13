@@ -62,6 +62,7 @@ import frc.robot.subsystems.swerve.SwerveDrive;
 import frc.robot.subsystems.swerve.commands.*;
 import io.github.oblarg.oblog.annotations.Config;
 import io.github.oblarg.oblog.annotations.Log;
+import java.util.ArrayList;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -271,7 +272,8 @@ public class RobotContainer {
   private void configurePivotShooter() {
     pivotShooter = new PivotShooter();
     // operator.b().onTrue(new bruh(pivotShooter));
-    // operator.x().onTrue(new SequentialCommandGroup(new PivotShootSubwoofer(pivotShooter)));
+    // operator.x().onTrue(new SequentialCommandGroup(new
+    // PivotShootSubwoofer(pivotShooter)));
     operator.povUp().onTrue(new PivotShooterZero(pivotShooter));
   }
 
@@ -588,7 +590,12 @@ public class RobotContainer {
   }
 
   public void configureLED() {
+    ArrayList<int[]> ledList = new ArrayList<int[]>();
+    ledList.add(new int[] {2, 4});
+    ledList.add(new int[] {6, 9});
+
     led = new LED();
+    led.setDefaultCommand(new CoordinatesButItsMultiple(led, ledList, 255, 0, 255, 255));
 
     /*
      * Intake LED, flashes RED while intake is down and running,
@@ -738,11 +745,12 @@ public class RobotContainer {
     double angleToGoalDegrees = limelightMountAngleDegrees + ty;
     double angleToGoalRadians = angleToGoalDegrees * (3.14159 / 180.0);
 
-    // calculate distance
-    double distanceFromLimelightToGoalInches =
-        (goalHeightInches - limelightLensHeightInches) / Math.tan(angleToGoalRadians);
+    // calculate distance le distanceFromLimelightToGoalInches =
+
+    // (goalHeightInches - limelightLensHeightInches) /
+    // Math.tan(angleToGoalRadians);
     LimelightHelpers.setPriorityTagID("limelight", 4);
-    System.out.println("Distance: " + distanceFromLimelightToGoalInches);
+    // System.out.println("Distance: " + distanceFromLimelightToGoalInches);
   }
 
   public void shootSpeaker() {

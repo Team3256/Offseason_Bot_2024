@@ -18,8 +18,7 @@ public class LED extends SubsystemBase implements Loggable {
   public IndicatorAnimation currentAnimation = IndicatorAnimation.Default;
   private CANdle candle;
 
-  public void DEFAULT() {
-  }
+  public void DEFAULT() {}
 
   public LED() {
     candle = new CANdle(LEDConstants.kLEDCANID, "rio");
