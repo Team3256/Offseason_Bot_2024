@@ -10,7 +10,7 @@ package frc.robot;
 import static edu.wpi.first.wpilibj.RobotBase.isReal;
 import static frc.robot.Constants.azimuthStickDeadband;
 import static frc.robot.subsystems.pivotintake.PivotIntakeConstants.kPivotGroundAngleDeg;
-import static frc.robot.subsystems.pivotshooter.PivotingShooterConstants.*;
+import static frc.robot.subsystems.pivotshooter.PivotShooterConstants.*;
 import static frc.robot.subsystems.swerve.SwerveConstants.AzimuthConstants.*;
 
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -270,8 +270,8 @@ public class RobotContainer {
 
   private void configurePivotShooter() {
     pivotShooter = new PivotShooter();
-    operator.b().onTrue(new bruh(pivotShooter));
-    operator.x().onTrue(new SequentialCommandGroup(new PivotShootSubwoofer(pivotShooter)));
+    // operator.b().onTrue(new bruh(pivotShooter));
+    // operator.x().onTrue(new SequentialCommandGroup(new PivotShootSubwoofer(pivotShooter)));
     operator.povUp().onTrue(new PivotShooterZero(pivotShooter));
   }
 
@@ -328,6 +328,8 @@ public class RobotContainer {
 
   private void configureSwerve() {
     swerveDrive = new SwerveDrive();
+    operator.b().whileTrue(new StrafeNoteTuner(swerveDrive, true ,false));
+    operator.x().whileTrue(new TranslationNoteTuner(swerveDrive, true, false));
 
     swerveDrive.setDefaultCommand(
         new TeleopSwerve(

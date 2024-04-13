@@ -14,8 +14,8 @@ import frc.robot.Constants;
 import frc.robot.utils.DualVelocitySubsystem;
 import org.littletonrobotics.junction.AutoLogOutput;
 
-public class Shooter extends DualVelocitySubsystem {
-  public Shooter() {
+public class ShooterTest extends DualVelocitySubsystem {
+  public ShooterTest() {
     super(
         ShooterConstants.kUseShooterMotionMagic,
         ShooterConstants.kUseShooterMotionMagic,

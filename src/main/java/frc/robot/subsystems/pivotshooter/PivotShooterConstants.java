@@ -9,7 +9,7 @@ package frc.robot.subsystems.pivotshooter;
 
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 
-public final class PivotingShooterConstants {
+public final class PivotShooterConstants {
   // public static final double kSubWooferPreset = (3.5 + 0.3) / 138.33; // idk if
   // this works
   public static final double kSubWooferPreset = 6.5 / 138.33; // idk if this works
@@ -19,6 +19,8 @@ public final class PivotingShooterConstants {
   public static final double kWingNoteFarSidePreset = 0 / 138.33; // TODO: tune
   public static final double kTrussSourceSidePreset = 6.5 / 138.33;
   public static final double kHalfWingPodiumPreset = 6.7 / 138.33;
+  public static final double kPodiumLeftPreset = 6.5 / 138.33;
+  public static final double kPodiumRPreset = 6 / 138.33;
 
   public static final int kPivotMotorID = 12;
 
@@ -28,8 +30,7 @@ public final class PivotingShooterConstants {
   public static final double kP = 25;
   public static final double kI = 0;
   public static final double kD = 0;
-  public static final TrapezoidProfile.Constraints kPivotProfileContraints =
-      new TrapezoidProfile.Constraints(16, 16);
+  public static final TrapezoidProfile.Constraints kPivotProfileContraints = new TrapezoidProfile.Constraints(16, 16);
 
   /* Tolerance/threshold */
   public static final double kCurrentThreshold = 10;

@@ -123,7 +123,7 @@ public class RobotViz {
       pivot.setAngle(pivot.getAngle());
     }
     if (FeatureFlags.kIntakeEnabled) {
-      intake.setAngle(intake.getAngle() + intakeSubsystem.getIntakeRps() * 360 * dt);
+      intake.setAngle(intake.getAngle() + intakeSubsystem.getIntakeVelocity() * 360 * dt);
     }
   }
 }
