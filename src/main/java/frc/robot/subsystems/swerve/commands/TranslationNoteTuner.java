@@ -15,7 +15,6 @@ import edu.wpi.first.math.geometry.Translation2d;
 import frc.robot.helpers.DebugCommandBase;
 import frc.robot.limelight.LimelightHelpers;
 import frc.robot.subsystems.swerve.SwerveDrive;
-import java.util.function.DoubleSupplier;
 
 public class TranslationNoteTuner extends DebugCommandBase {
   private Translation2d translation;
@@ -28,14 +27,13 @@ public class TranslationNoteTuner extends DebugCommandBase {
 
   /** Driver control */
   public TranslationNoteTuner(
-      SwerveDrive swerveSubsystem,
-      boolean fieldRelative,
-      boolean openLoop) {
+      SwerveDrive swerveSubsystem, boolean fieldRelative, boolean openLoop) {
     this.swerveSubsystem = swerveSubsystem;
     addRequirements(swerveSubsystem);
     this.fieldRelative = fieldRelative;
     this.openLoop = openLoop;
-    this.translationPidController = new PIDController(translationNoteKP, translationNoteKI, translationNoteKD);
+    this.translationPidController =
+        new PIDController(translationNoteKP, translationNoteKI, translationNoteKD);
     translationPidController.setTolerance(translationNoteTolerance, translationNoteToleranceVel);
     translationPidController.enableContinuousInput(-180, 180);
   }
@@ -58,8 +56,10 @@ public class TranslationNoteTuner extends DebugCommandBase {
     // calculate error
     double compensatedMaxVelocity = maxTranslationalVelocity * 1;
 
-    double translationPIDOutput = translationPidController.calculate(LimelightHelpers.getTY("limelight-note"), -9);
-    translationPIDOutput = MathUtil.clamp(translationPIDOutput, -compensatedMaxVelocity, compensatedMaxVelocity);
+    double translationPIDOutput =
+        translationPidController.calculate(LimelightHelpers.getTY("limelight-note"), -9);
+    translationPIDOutput =
+        MathUtil.clamp(translationPIDOutput, -compensatedMaxVelocity, compensatedMaxVelocity);
 
     System.out.println("Translation: " + translationPIDOutput);
     translation = new Translation2d(translationPIDOutput, 0);

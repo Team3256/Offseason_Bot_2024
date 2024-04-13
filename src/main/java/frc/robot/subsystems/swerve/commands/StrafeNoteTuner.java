@@ -15,7 +15,6 @@ import edu.wpi.first.math.geometry.Translation2d;
 import frc.robot.helpers.DebugCommandBase;
 import frc.robot.limelight.LimelightHelpers;
 import frc.robot.subsystems.swerve.SwerveDrive;
-import java.util.function.DoubleSupplier;
 
 public class StrafeNoteTuner extends DebugCommandBase {
   private Translation2d translation;
@@ -27,10 +26,7 @@ public class StrafeNoteTuner extends DebugCommandBase {
   private PIDController strafePidController;
 
   /** Driver control */
-  public StrafeNoteTuner(
-      SwerveDrive swerveSubsystem,
-      boolean fieldRelative,
-      boolean openLoop) {
+  public StrafeNoteTuner(SwerveDrive swerveSubsystem, boolean fieldRelative, boolean openLoop) {
     this.swerveSubsystem = swerveSubsystem;
     addRequirements(swerveSubsystem);
 
@@ -60,8 +56,10 @@ public class StrafeNoteTuner extends DebugCommandBase {
     // calculate error
     double compensatedMaxVelocity = maxTranslationalVelocity * 1;
 
-    double strafePIDOutput = strafePidController.calculate(LimelightHelpers.getTX("limelight-note") * -1, 0.0);
-    strafePIDOutput = MathUtil.clamp(strafePIDOutput, -compensatedMaxVelocity, compensatedMaxVelocity);
+    double strafePIDOutput =
+        strafePidController.calculate(LimelightHelpers.getTX("limelight-note") * -1, 0.0);
+    strafePIDOutput =
+        MathUtil.clamp(strafePIDOutput, -compensatedMaxVelocity, compensatedMaxVelocity);
     translation = new Translation2d(0, strafePIDOutput);
 
     swerveSubsystem.drive(translation, 0, fieldRelative, openLoop);
