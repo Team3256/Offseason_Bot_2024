@@ -33,9 +33,7 @@ public class HoldForNote extends DebugCommandBase {
 
   /** Driver control */
   public HoldForNote(
-      SwerveDrive swerveSubsystem,
-      DoubleSupplier translationAxis,
-      boolean openLoop) {
+      SwerveDrive swerveSubsystem, DoubleSupplier translationAxis, boolean openLoop) {
     this.swerveSubsystem = swerveSubsystem;
     addRequirements(swerveSubsystem);
     this.translationAxis = translationAxis;
