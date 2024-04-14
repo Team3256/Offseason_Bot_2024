@@ -54,6 +54,11 @@
       "waypointRelativePos": 0.1,
       "rotationDegrees": 170.0,
       "rotateFast": true
+    },
+    {
+      "waypointRelativePos": 1.05,
+      "rotationDegrees": 161.0,
+      "rotateFast": true
     }
   ],
   "constraintZones": [
@@ -65,6 +70,17 @@
         "maxVelocity": 4.28,
         "maxAcceleration": 3.0,
         "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 720.0
+      }
+    },
+    {
+      "name": "New Constraints Zone",
+      "minWaypointRelativePos": 1.0,
+      "maxWaypointRelativePos": 1.05,
+      "constraints": {
+        "maxVelocity": 0.5,
+        "maxAcceleration": 2.0,
+        "maxAngularVelocity": 343.77,
         "maxAngularAcceleration": 720.0
       }
     }
@@ -130,7 +146,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 157.0,
+    "rotation": 161.0,
     "rotateFast": false
   },
   "reversed": false,

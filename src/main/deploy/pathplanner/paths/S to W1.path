@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 15.285047631436203,
-        "y": 6.604911811820771
+        "x": 15.226493448707295,
+        "y": 6.511225119454518
       },
       "isLocked": false,
       "linkedName": null
@@ -20,12 +20,12 @@
         "y": 6.72
       },
       "prevControl": {
-        "x": 14.64753173290031,
-        "y": 6.406335950872925
+        "x": 14.687794967601347,
+        "y": 6.476092609817173
       },
       "nextControl": {
-        "x": 14.102253140312271,
-        "y": 6.75715268691593
+        "x": 14.09766796938636,
+        "y": 6.748805206273305
       },
       "isLocked": false,
       "linkedName": null
@@ -47,19 +47,19 @@
   "rotationTargets": [
     {
       "waypointRelativePos": 0.2,
-      "rotationDegrees": 125.0,
+      "rotationDegrees": 127.0,
       "rotateFast": true
     },
     {
       "waypointRelativePos": 1.0,
       "rotationDegrees": 150.0,
-      "rotateFast": false
+      "rotateFast": true
     }
   ],
   "constraintZones": [
     {
       "name": "preload",
-      "minWaypointRelativePos": 0,
+      "minWaypointRelativePos": 0.0,
       "maxWaypointRelativePos": 0.05,
       "constraints": {
         "maxVelocity": 0.2,
@@ -78,12 +78,23 @@
         "maxAngularVelocity": 540.0,
         "maxAngularAcceleration": 720.0
       }
+    },
+    {
+      "name": "New Constraints Zone",
+      "minWaypointRelativePos": 1.0,
+      "maxWaypointRelativePos": 2.0,
+      "constraints": {
+        "maxVelocity": 0.5,
+        "maxAcceleration": 0.5,
+        "maxAngularVelocity": 343.77,
+        "maxAngularAcceleration": 720.0
+      }
     }
   ],
   "eventMarkers": [
     {
       "name": "preload",
-      "waypointRelativePos": 0,
+      "waypointRelativePos": 0.0,
       "command": {
         "type": "sequential",
         "data": {
@@ -91,7 +102,7 @@
             {
               "type": "named",
               "data": {
-                "name": "preload speaker"
+                "name": "preload speaker amp side"
               }
             }
           ]
