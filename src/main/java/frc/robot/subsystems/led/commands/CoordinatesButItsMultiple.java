@@ -37,13 +37,18 @@ public class CoordinatesButItsMultiple extends DebugCommandBase {
   @Override
   public void initialize() {
     for (int[] coordinate : coordinates) {
-      led.setLedColor(r, g, b, w, getIndex(kLEDWidth - coordinate[0], coordinate[1]) + 8, 1);
+      led.setLedColor(r, g, b, w, getIndex(coordinate[0], coordinate[1]), 1);
     }
     super.initialize();
   }
 
   private int getIndex(int x, int y) {
-    return (kLEDWidth * (y % kLEDHeight)) + (x % kLEDWidth);
+    x -= 1;
+    if (x % 2 == 0) {
+      return (kLEDWidth - x) * kLEDHeight - y + 1;
+    } else {
+      return (kLEDWidth - x - 1) * kLEDHeight + y + 1;
+    }
   }
 
   @Override

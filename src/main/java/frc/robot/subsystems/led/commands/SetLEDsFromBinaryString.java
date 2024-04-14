@@ -36,7 +36,7 @@ public class SetLEDsFromBinaryString extends DebugCommandBase {
       String row = ledStates[y];
       for (int x = 0; x < width; x++) {
         int ledColor = (row.charAt(x) == '1') ? 255 : 0; // White if '1', off if '0'
-        led.setLedColor(ledColor, ledColor, ledColor, 0, getIndex(kLEDWidth - x, y) + 8, 1);
+        led.setLedColor(ledColor, ledColor, ledColor, 0, getIndex(x, y), 1);
       }
     }
   }
@@ -52,13 +52,18 @@ public class SetLEDsFromBinaryString extends DebugCommandBase {
       String row = ledStates[y];
       for (int x = 0; x < width; x++) {
         int ledColor = (row.charAt(x) == '1') ? 255 : 0; // White if '1', off if '0'
-        led.setLedColor(ledColor, ledColor, ledColor, 0, getIndex(y, kLEDWidth - x), 1);
+        led.setLedColor(ledColor, ledColor, ledColor, 0, getIndex(x, y), 1);
       }
     }
   }
 
   private int getIndex(int x, int y) {
-    return (kLEDWidth * (y % kLEDHeight)) + (x % kLEDWidth);
+    x-=1 ;
+    if (x%2 == 0) {
+      return (kLEDWidth- x) * kLEDHeight -y +1;
+    } else {
+      return (kLEDWidth - x -1) * kLEDHeight+ y+ 1;
+    }
   }
 
   @Override
