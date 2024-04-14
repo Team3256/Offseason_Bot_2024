@@ -31,8 +31,6 @@ import frc.robot.autos.commands.MoveToNote;
 import frc.robot.autos.commands.RotateToNote;
 import frc.robot.commands.PitRoutine;
 import frc.robot.helpers.XboxStalker;
-import frc.robot.limelight.Limelight;
-import frc.robot.limelight.LimelightHelpers;
 import frc.robot.robotviz.RobotViz;
 import frc.robot.subsystems.ampbar.AmpBar;
 import frc.robot.subsystems.ampbar.commands.AmpPosition;
@@ -170,13 +168,14 @@ public class RobotContainer {
       NamedCommands.registerCommand( // shoot preloaded note to speaker, use at match start
           "preload speaker",
           new SequentialCommandGroup(
-                  new PrintCommand("preload im outta blush"),
+              new PrintCommand("preload im outta blush"),
               new PivotShooterZero(pivotShooter),
-                  new PivotShooterSetAngle(pivotShooter, kSubWooferPreset).withTimeout(0.2),
+              new PivotShooterSetAngle(pivotShooter, kSubWooferPreset).withTimeout(0.2),
               new ParallelDeadlineGroup(
                   new SequentialCommandGroup(
                       new WaitCommand(0.25), // TODO: maybe need to tune this too
-                      new IntakeInOverride(intake).withTimeout(2)), // TODO: tune time in withTimeout
+                      new IntakeInOverride(intake)
+                          .withTimeout(2)), // TODO: tune time in withTimeout
                   new ShootSubwoofer(shooter))
               // new PivotShooterSlamAndVoltage(pivotShooter)));
               ));
@@ -276,7 +275,7 @@ public class RobotContainer {
     // operator.b().onTrue(new bruh(pivotShooter));
     // operator.x().onTrue(new SequentialCommandGroup(new
     // PivotShootSubwoofer(pivotShooter)));
-     operator.x().onTrue(new SequentialCommandGroup(new PivotShootSubwoofer(pivotShooter)));
+    operator.x().onTrue(new SequentialCommandGroup(new PivotShootSubwoofer(pivotShooter)));
     operator.povUp().onTrue(new PivotShooterZero(pivotShooter));
   }
 
@@ -335,8 +334,8 @@ public class RobotContainer {
 
   private void configureSwerve() {
     swerveDrive = new SwerveDrive();
-//    operator.b().whileTrue(new StrafeNoteTuner(swerveDrive, true, false));
-//    operator.x().whileTrue(new TranslationNoteTuner(swerveDrive, true, false));
+    //    operator.b().whileTrue(new StrafeNoteTuner(swerveDrive, true, false));
+    //    operator.x().whileTrue(new TranslationNoteTuner(swerveDrive, true, false));
 
     swerveDrive.setDefaultCommand(
         new TeleopSwerve(
@@ -363,7 +362,6 @@ public class RobotContainer {
                 () -> driver.getRawAxis(translationAxis),
                 () -> driver.getRawAxis(strafeAxis),
                 true,
-
                 true));
 
     driver.y().onTrue(new ZeroGyro(swerveDrive));
@@ -382,7 +380,6 @@ public class RobotContainer {
               new Azimuth(
                       swerveDrive,
                       driver::getLeftY,
-
                       driver::getLeftX,
                       () -> azimuthStickDeadband + 0.1,
                       () -> azimuthStickDeadband + 0.1,
@@ -401,7 +398,6 @@ public class RobotContainer {
                       () -> azimuthStickDeadband + 0.1,
                       () -> azimuthStickDeadband + 0.1,
                       () -> aziSubwooferFront,
-
                       () -> true,
                       true,
                       true)
@@ -457,7 +453,6 @@ public class RobotContainer {
               new Azimuth(
                       swerveDrive,
                       driver::getLeftY,
-
                       driver::getLeftX,
                       () -> azimuthStickDeadband + 0.1,
                       () -> azimuthStickDeadband + 0.1,
@@ -476,7 +471,6 @@ public class RobotContainer {
                       () -> azimuthStickDeadband + 0.1,
                       () -> azimuthStickDeadband + 0.1,
                       () -> aziSubwooferFront,
-
                       () -> true,
                       true,
                       true)
@@ -514,7 +508,6 @@ public class RobotContainer {
           .rightBumper()
           .onTrue(
               new Azimuth(
-
                       swerveDrive,
                       driver::getLeftY,
                       driver::getLeftX,
@@ -533,7 +526,6 @@ public class RobotContainer {
         .onTrue(
             new Azimuth(
                     swerveDrive,
-
                     driver::getLeftY,
                     driver::getLeftX,
                     () -> azimuthStickDeadband + 0.1,
@@ -551,7 +543,6 @@ public class RobotContainer {
     } else {
       shooter = new Shooter();
       shooter = new Shooter();
-
     }
     // new Trigger(() -> Math.abs(shooter.getShooterRps() - 100) <= 5)
     // .onTrue(
@@ -570,7 +561,6 @@ public class RobotContainer {
           .rightTrigger()
           .onTrue(Commands.parallel(new ShootSpeaker(shooter), new StowPosition(ampbar)));
       operator
-
           .leftTrigger()
           .onTrue(
               new ParallelCommandGroup(
@@ -589,7 +579,6 @@ public class RobotContainer {
       operator.leftTrigger().onTrue(new ShootAmp(shooter));
       operator
           .y()
-
           .onTrue(
               new ParallelCommandGroup(
                   new ShooterOff(shooter), new PivotShooterSlamAndVoltage(pivotShooter)));
@@ -606,7 +595,6 @@ public class RobotContainer {
     driver.getHID().setRumble(GenericHID.RumbleType.kBothRumble, 0);
     operator.getHID().setRumble(GenericHID.RumbleType.kBothRumble, 0);
   }
-
 
   public void configureLED() {
     ArrayList<int[]> ledList = new ArrayList<int[]>();
@@ -629,7 +617,6 @@ public class RobotContainer {
               new InstantCommand(
                   () -> {
                     operator.getHID().setRumble(GenericHID.RumbleType.kBothRumble, 50);
-
                   }))
           .onFalse(
               new InstantCommand(
@@ -647,7 +634,6 @@ public class RobotContainer {
                   () -> {
                     driver.getHID().setRumble(GenericHID.RumbleType.kBothRumble, 0);
                   }));
-
 
       // This boolean is true when velocity is LESS than 0.
       // Trigger intakeRunning = new Trigger(intake::isMotorSpinning);
@@ -723,7 +709,6 @@ public class RobotContainer {
     }
   }
 
-
   private void systemCheeks() {
     if (FeatureFlags.kSwerveEnabled && swerveDrive != null) {
       swerveDrive.CANTest();
@@ -744,7 +729,6 @@ public class RobotContainer {
     pitRoutine.schedule();
   }
 
-
   public void ccccccc() {
     Command shoot = new ShootSpeaker(shooter);
     shoot.schedule();
@@ -756,27 +740,27 @@ public class RobotContainer {
     }
     XboxStalker.stalk(driver, operator);
     // System.out.println(Limelight.getBotpose("limelight").length);
-//
-//    double ty = Limelight.getTY("limelight");
-//
-//    // how many degrees back is your limelight rotated from perfectly vertical?
-//
-//    double limelightMountAngleDegrees = 21.936;
-//
-//    // distance from the center of the Limelight lens to the floor
-//    double limelightLensHeightInches = 15.601;
-//
-//    // distance from the target to the floor
-//    double goalHeightInches = 56.375;
-//
-//    double angleToGoalDegrees = limelightMountAngleDegrees + ty;
-//    double angleToGoalRadians = angleToGoalDegrees * (3.14159 / 180.0);
-//
-//    // calculate distance
-//    double distanceFromLimelightToGoalInches =
-//        (goalHeightInches - limelightLensHeightInches) / Math.tan(angleToGoalRadians);
-//    LimelightHelpers.setPriorityTagID("limelight", 4);
-//    System.out.println("Distance: " + distanceFromLimelightToGoalInches);
+    //
+    //    double ty = Limelight.getTY("limelight");
+    //
+    //    // how many degrees back is your limelight rotated from perfectly vertical?
+    //
+    //    double limelightMountAngleDegrees = 21.936;
+    //
+    //    // distance from the center of the Limelight lens to the floor
+    //    double limelightLensHeightInches = 15.601;
+    //
+    //    // distance from the target to the floor
+    //    double goalHeightInches = 56.375;
+    //
+    //    double angleToGoalDegrees = limelightMountAngleDegrees + ty;
+    //    double angleToGoalRadians = angleToGoalDegrees * (3.14159 / 180.0);
+    //
+    //    // calculate distance
+    //    double distanceFromLimelightToGoalInches =
+    //        (goalHeightInches - limelightLensHeightInches) / Math.tan(angleToGoalRadians);
+    //    LimelightHelpers.setPriorityTagID("limelight", 4);
+    //    System.out.println("Distance: " + distanceFromLimelightToGoalInches);
   }
 
   public void shootSpeaker() {
@@ -784,25 +768,3 @@ public class RobotContainer {
     shoot.schedule();
   }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
