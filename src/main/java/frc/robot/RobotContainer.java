@@ -169,7 +169,7 @@ public class RobotContainer {
       NamedCommands.registerCommand( // shoot preloaded note to speaker, use at match start
           "preload speaker",
           new SequentialCommandGroup(
-              //new PrintCommand("preload im outta blush"),
+              // new PrintCommand("preload im outta blush"),
               new PivotShooterZero(pivotShooter),
               new ParallelDeadlineGroup(
                   new SequentialCommandGroup(
@@ -181,18 +181,18 @@ public class RobotContainer {
               // new PivotShooterSlamAndVoltage(pivotShooter)));
               ));
       NamedCommands.registerCommand( // shoot preloaded note to speaker, use at match start
-              "preload speaker amp side",
-              new SequentialCommandGroup(
-                      //new PrintCommand("preload im outta blush"),
-                      new PivotShooterZero(pivotShooter),
-                      new ParallelDeadlineGroup(
-                              new SequentialCommandGroup(
-                                      new WaitCommand(0.8), // TODO: maybe need to tune this too
-                                      new IntakeInOverride(intake)
-                                              .withTimeout(0.7)), // TODO: tune time in withTimeout
-                              new PivotShootSubwoofer(pivotShooter),
-                              new ShootSubwoofer(shooter))
-                      // new PivotShooterSlamAndVoltage(pivotShooter)));
+          "preload speaker amp side",
+          new SequentialCommandGroup(
+              // new PrintCommand("preload im outta blush"),
+              new PivotShooterZero(pivotShooter),
+              new ParallelDeadlineGroup(
+                  new SequentialCommandGroup(
+                      new WaitCommand(0.8), // TODO: maybe need to tune this too
+                      new IntakeInOverride(intake)
+                          .withTimeout(0.7)), // TODO: tune time in withTimeout
+                  new PivotShootSubwoofer(pivotShooter),
+                  new ShootSubwoofer(shooter))
+              // new PivotShooterSlamAndVoltage(pivotShooter)));
               ));
       NamedCommands.registerCommand( // intake ground note, stow to feeder chamber
           "intake sequence",

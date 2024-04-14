@@ -145,7 +145,7 @@ public class SwerveDrive extends SubsystemBase implements Loggable {
               false); // Closed loop
         },
         new HolonomicPathFollowerConfig(
-            new PIDConstants(5, 0, 0  ), // Translation PID constants OLD: 29 0 0
+            new PIDConstants(5, 0, 0), // Translation PID constants OLD: 29 0 0
             new PIDConstants(3.5, 0, 0), // Rotation PID constants OLD: 7.5 0 0.75
             AutoConstants.kMaxSpeedMetersPerSecond, // Max module speed, in m/s
             AutoConstants
