@@ -71,11 +71,34 @@
       "rotateFast": true
     }
   ],
-  "constraintZones": [],
+  "constraintZones": [
+    {
+      "name": "New Constraints Zone",
+      "minWaypointRelativePos": 1.9,
+      "maxWaypointRelativePos": 2.0,
+      "constraints": {
+        "maxVelocity": 4.28,
+        "maxAcceleration": 3.0,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 720.0
+      }
+    },
+    {
+      "name": "New Constraints Zone",
+      "minWaypointRelativePos": 0.9,
+      "maxWaypointRelativePos": 1.1,
+      "constraints": {
+        "maxVelocity": 4.28,
+        "maxAcceleration": 3.0,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 720.0
+      }
+    }
+  ],
   "eventMarkers": [
     {
       "name": "shoot",
-      "waypointRelativePos": 1.7,
+      "waypointRelativePos": 1.9,
       "command": {
         "type": "sequential",
         "data": {
@@ -109,7 +132,7 @@
     },
     {
       "name": "aim wing half",
-      "waypointRelativePos": 0.1,
+      "waypointRelativePos": 0.2,
       "command": {
         "type": "sequential",
         "data": {
@@ -117,7 +140,7 @@
             {
               "type": "named",
               "data": {
-                "name": "aim half truss wing"
+                "name": "aim wing side"
               }
             }
           ]
@@ -127,7 +150,7 @@
   ],
   "globalConstraints": {
     "maxVelocity": 4.28,
-    "maxAcceleration": 4.5,
+    "maxAcceleration": 4.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0
   },
@@ -137,7 +160,7 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "7 note auto Awwww",
+  "folder": "5 note amp",
   "previewStartingState": {
     "rotation": 157.0,
     "velocity": 0

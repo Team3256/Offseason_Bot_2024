@@ -9,6 +9,7 @@ package frc.robot.helpers;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
+import org.littletonrobotics.junction.Logger;
 
 public abstract class DebugCommandBase extends Command {
 
@@ -23,9 +24,8 @@ public abstract class DebugCommandBase extends Command {
       // This does mean that all commands in the same periodic() will have the same
       // timestamp, but I
       // don't believe that should be an issue for now.
-      if (this.getClass().getSimpleName().equals("IntakeSetVoltage")) {
-        return;
-      }
+//      Logger.recordOutput("dcb/initialized", );
+
       System.out.println(
           "[DCB] "
               + this.getClass().getSimpleName()
@@ -37,9 +37,6 @@ public abstract class DebugCommandBase extends Command {
   @Override
   public void end(boolean interrupted) {
     if (Constants.FeatureFlags.DebugCommandEnabled) {
-      if (this.getClass().getSimpleName().equals("IntakeSetVoltage")) {
-        return;
-      }
       System.out.println(
           "[DCB] "
               + this.getClass().getSimpleName()

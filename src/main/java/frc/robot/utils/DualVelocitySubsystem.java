@@ -85,11 +85,13 @@ public class DualVelocitySubsystem extends SubsystemBase implements Loggable {
       NeutralModeValue neutralModeDos,
       double kSUno,
       double kVUno,
+      double kAUno,
       double kPUno,
       double kIUno,
       double kDUno,
       double kSDos,
       double kVDos,
+      double kADos,
       double kPDos,
       double kIDos,
       double kDDos,
@@ -99,14 +101,15 @@ public class DualVelocitySubsystem extends SubsystemBase implements Loggable {
 
     dosMotor = new MonitoredTalonFX(motorIDDos, "rio");
 
-    setMotorConfigsUno(kSUno, kVUno, kPUno, kIUno, kDUno, invertedUno, neutralModeUno);
-    setMotorConfigsDos(kSDos, kVDos, kPDos, kIDos, kDDos, invertedDos, neutralModeDos);
+    setMotorConfigsUno(kSUno, kVUno, kAUno, kPUno, kIUno, kDUno, invertedUno, neutralModeUno);
+    setMotorConfigsDos(kSDos, kVDos, kADos, kPDos, kIDos, kDDos, invertedDos, neutralModeDos);
   }
 
   // @Config(name = "PID values")
   protected void setMotorConfigsUno(
       double kS,
       double kV,
+      double kA,
       double kP,
       double kI,
       double kD,
@@ -129,6 +132,7 @@ public class DualVelocitySubsystem extends SubsystemBase implements Loggable {
   protected void setMotorConfigsDos(
       double kS,
       double kV,
+      double kA,
       double kP,
       double kI,
       double kD,

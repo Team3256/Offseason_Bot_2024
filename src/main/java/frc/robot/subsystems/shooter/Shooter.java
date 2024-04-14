@@ -27,19 +27,21 @@ public class Shooter extends DualVelocitySubsystem {
         ShooterConstants.kShooterMotorID,
         ShooterConstants.kShooterMotorFollowerID,
         NeutralModeValue.Coast,
-        NeutralModeValue.Brake,
+        NeutralModeValue.Coast,
         ShooterConstants.kShooterKS,
         ShooterConstants.kShooterKV,
+        ShooterConstants.kShooterKA,
         ShooterConstants.kShooterKP,
         ShooterConstants.kShooterKI,
         ShooterConstants.kShooterKD,
         ShooterConstants.kShooterKS,
         ShooterConstants.kShooterKV,
+        ShooterConstants.kShooterKA,
         ShooterConstants.kShooterKP,
         ShooterConstants.kShooterKI,
         ShooterConstants.kShooterKD,
-        InvertedValue.CounterClockwise_Positive,
-        InvertedValue.Clockwise_Positive);
+        InvertedValue.Clockwise_Positive,
+        InvertedValue.CounterClockwise_Positive);
     if (!RobotBase.isReal()) {
       super.configureSimHardware();
     }

@@ -47,7 +47,7 @@ public final class Constants {
 
     // logging
     public static final boolean kDebugEnabled = false;
-    public static final boolean DebugCommandEnabled = false;
+    public static final boolean DebugCommandEnabled = true;
     public static final boolean kRobotVizEnabled = true && !Robot.isReal();
 
     // features

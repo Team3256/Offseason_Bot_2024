@@ -8,8 +8,24 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 10.905194763313919,
-        "y": 0.3864576060107912
+        "x": 12.427603514266906,
+        "y": 2.0962397417009275
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 10.659267195853895,
+        "y": 1.580962933686541
+      },
+      "prevControl": {
+        "x": 11.705676383726392,
+        "y": 1.5098477461612267
+      },
+      "nextControl": {
+        "x": 9.453051031638399,
+        "y": 1.6629387895070102
       },
       "isLocked": false,
       "linkedName": null
@@ -46,21 +62,33 @@
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 1.0,
+      "waypointRelativePos": 2.0,
       "rotationDegrees": 140.0,
       "rotateFast": true
     },
     {
-      "waypointRelativePos": 1.7,
+      "waypointRelativePos": 2.7,
       "rotationDegrees": -143.0,
       "rotateFast": true
     }
   ],
-  "constraintZones": [],
+  "constraintZones": [
+    {
+      "name": "New Constraints Zone",
+      "minWaypointRelativePos": 2.9,
+      "maxWaypointRelativePos": 3.0,
+      "constraints": {
+        "maxVelocity": 4.28,
+        "maxAcceleration": 3.0,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 720.0
+      }
+    }
+  ],
   "eventMarkers": [
     {
       "name": "intake sequence",
-      "waypointRelativePos": 0.4,
+      "waypointRelativePos": 0.8,
       "command": {
         "type": "sequential",
         "data": {
@@ -94,7 +122,7 @@
     },
     {
       "name": "shoot",
-      "waypointRelativePos": 1.8,
+      "waypointRelativePos": 2.8,
       "command": {
         "type": "sequential",
         "data": {
