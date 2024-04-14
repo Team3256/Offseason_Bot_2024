@@ -13,7 +13,6 @@ import static frc.robot.subsystems.led.LEDConstants.kLEDWidth;
 import frc.robot.helpers.DebugCommandBase;
 import frc.robot.subsystems.led.IndicatorAnimation;
 import frc.robot.subsystems.led.LED;
-import java.util.ArrayList;
 
 public class CoordinatesButItsMultiple extends DebugCommandBase {
   LED led;
@@ -25,8 +24,7 @@ public class CoordinatesButItsMultiple extends DebugCommandBase {
   private int b = 0;
   private int w = 0;
 
-  public CoordinatesButItsMultiple(
-      LED led, int[][] coordinates, int r, int g, int b, int w) {
+  public CoordinatesButItsMultiple(LED led, int[][] coordinates, int r, int g, int b, int w) {
     this.led = led;
     this.coordinates = coordinates;
     this.r = r;

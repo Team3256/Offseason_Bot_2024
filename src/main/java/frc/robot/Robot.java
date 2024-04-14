@@ -7,9 +7,6 @@
 
 package frc.robot;
 
-import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.commands.FollowPathCommand;
-import com.pathplanner.lib.commands.FollowPathHolonomic;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Timer;
@@ -127,9 +124,8 @@ public class Robot extends LoggedRobot {
       Logger.start();
     }
 
-
-//    FollowPathCommand warmupCommand = new FollowPathCommand();
-//    warmupCommand.schedule();
+    //    FollowPathCommand warmupCommand = new FollowPathCommand();
+    //    warmupCommand.schedule();
     // Start logging! No more data receivers, replay sources, or
     // metadata values
     // may
