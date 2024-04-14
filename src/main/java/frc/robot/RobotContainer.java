@@ -172,11 +172,11 @@ public class RobotContainer {
           new SequentialCommandGroup(
                   new PrintCommand("preload im outta blush"),
               new PivotShooterZero(pivotShooter),
-                  new PivotShooterSetAngle(pivotShooter, kSubWooferPreset).withTimeout(0.2),
               new ParallelDeadlineGroup(
                   new SequentialCommandGroup(
-                      new WaitCommand(0.25), // TODO: maybe need to tune this too
-                      new IntakeInOverride(intake).withTimeout(2)), // TODO: tune time in withTimeout
+                      new WaitCommand(0.5), // TODO: maybe need to tune this too
+                      new IntakeInOverride(intake).withTimeout(0.7)), // TODO: tune time in withTimeout
+                  new PivotShootSubwoofer(pivotShooter),
                   new ShootSubwoofer(shooter))
               // new PivotShooterSlamAndVoltage(pivotShooter)));
               ));
@@ -196,6 +196,7 @@ public class RobotContainer {
                   new IntakeInOverride(intake).withTimeout(2),
                   new ShootSubwoofer(shooter)))); // TODO: tune time in withTimeout
       NamedCommands.registerCommand("aim subwoofer", new PivotShootSubwoofer(pivotShooter));
+      NamedCommands.registerCommand("shooter off", new ShooterOff(shooter));
 
       NamedCommands.registerCommand( // outtake note to feeder
           "safety",
@@ -277,6 +278,7 @@ public class RobotContainer {
     // operator.x().onTrue(new SequentialCommandGroup(new
     // PivotShootSubwoofer(pivotShooter)));
      operator.x().onTrue(new SequentialCommandGroup(new PivotShootSubwoofer(pivotShooter)));
+     operator.b().onTrue(new SequentialCommandGroup(new PivotShooterSetAngle(pivotShooter, kTrussSourceSidePreset)));
     operator.povUp().onTrue(new PivotShooterZero(pivotShooter));
   }
 
@@ -609,11 +611,13 @@ public class RobotContainer {
 
 
   public void configureLED() {
-    ArrayList<int[]> ledList = new ArrayList<int[]>();
-    ledList.add(new int[] {2, 4});
-    ledList.add(new int[] {6, 9});
+    int[][] ledList = new int[][]{
+            new int[] {2,3}
+
+    };
 
     led = new LED();
+//    led.setDefaultCommand(new CoordinatesButItsMultiple(led, ledList, 100, 0,0,10));
     led.setDefaultCommand(new SetLEDsFromBinaryString(led, LEDConstants.based));
 
     /*
@@ -757,25 +761,26 @@ public class RobotContainer {
     XboxStalker.stalk(driver, operator);
     // System.out.println(Limelight.getBotpose("limelight").length);
 //
-//    double ty = Limelight.getTY("limelight");
+    double ty = Limelight.getTY("limelight");
 //
 //    // how many degrees back is your limelight rotated from perfectly vertical?
 //
-//    double limelightMountAngleDegrees = 21.936;
-//
-//    // distance from the center of the Limelight lens to the floor
-//    double limelightLensHeightInches = 15.601;
-//
-//    // distance from the target to the floor
-//    double goalHeightInches = 56.375;
-//
-//    double angleToGoalDegrees = limelightMountAngleDegrees + ty;
-//    double angleToGoalRadians = angleToGoalDegrees * (3.14159 / 180.0);
-//
-//    // calculate distance
-//    double distanceFromLimelightToGoalInches =
-//        (goalHeightInches - limelightLensHeightInches) / Math.tan(angleToGoalRadians);
-//    LimelightHelpers.setPriorityTagID("limelight", 4);
+    double limelightMountAngleDegrees = 21.936;
+
+    // distance from the center of the Limelight lens to the floor
+    double limelightLensHeightInches = 15.601;
+
+    // distance from the target to the floor
+    double goalHeightInches = 56.375;
+
+    double angleToGoalDegrees = limelightMountAngleDegrees + ty;
+    double angleToGoalRadians = angleToGoalDegrees * (3.14159 / 180.0);
+
+    // calculate distance
+    double distanceFromLimelightToGoalInches =
+        (goalHeightInches - limelightLensHeightInches) / Math.tan(angleToGoalRadians);
+    LimelightHelpers.setPriorityTagID("limelight", 7);
+    System.out.println("Distance: "+ty);
 //    System.out.println("Distance: " + distanceFromLimelightToGoalInches);
   }
 

@@ -25,6 +25,7 @@ public class LED extends SubsystemBase implements Loggable {
     CANdleConfiguration config = new CANdleConfiguration();
     config.stripType = CANdle.LEDStripType.RGB;
     config.brightnessScalar = 0.25;
+    config.v5Enabled = false;
     candle.configAllSettings(config);
     // candle.animate(new LarsonAnimation(255, 0, 255, 1, 0.54, 64,
     // LarsonAnimation.BounceMode.Center, 6));

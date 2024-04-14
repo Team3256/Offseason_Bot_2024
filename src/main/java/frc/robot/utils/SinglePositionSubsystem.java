@@ -170,7 +170,7 @@ public class SinglePositionSubsystem extends SubsystemBase implements Loggable {
   // @Log.Graph(name = "PivotIntake Stator Current")
   @AutoLogOutput
   public double getCurrent() {
-    return positionMotor.getSupplyCurrent().getValue();
+    return positionMotor.getStatorCurrent().getValue();
   }
 
   @Log

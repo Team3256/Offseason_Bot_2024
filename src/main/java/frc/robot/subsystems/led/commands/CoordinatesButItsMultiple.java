@@ -18,7 +18,7 @@ import java.util.ArrayList;
 public class CoordinatesButItsMultiple extends DebugCommandBase {
   LED led;
 
-  ArrayList<int[]> coordinates;
+  int[][] coordinates;
 
   private int r = 0;
   private int g = 0;
@@ -26,7 +26,7 @@ public class CoordinatesButItsMultiple extends DebugCommandBase {
   private int w = 0;
 
   public CoordinatesButItsMultiple(
-      LED led, ArrayList<int[]> coordinates, int r, int g, int b, int w) {
+      LED led, int[][] coordinates, int r, int g, int b, int w) {
     this.led = led;
     this.coordinates = coordinates;
     this.r = r;

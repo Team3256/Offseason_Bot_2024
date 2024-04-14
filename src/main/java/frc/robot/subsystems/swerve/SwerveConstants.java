@@ -173,7 +173,7 @@ public final class SwerveConstants {
   public static final double maxAngularVelocity = 6; // TODO: Tune
   public static final double slowMaxAngularVelocity = maxAngularVelocity * 0.5; // TODO: Tune
   /* Neutral Modes */
-  public static final NeutralModeValue angleNeutralMode = NeutralModeValue.Coast;
+  public static final NeutralModeValue angleNeutralMode = NeutralModeValue.Brake;
   public static final NeutralModeValue driveNeutralMode = NeutralModeValue.Brake;
   public static double crosshairAngleKP = 0.15;
   public static double crosshairAngleKI = 0;

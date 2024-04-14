@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 13.153675380103971,
-        "y": 6.780574360007493
+        "x": 13.698679793919784,
+        "y": 7.02923834041333
       },
       "isLocked": false,
       "linkedName": null
@@ -67,17 +67,6 @@
         "maxAngularVelocity": 540.0,
         "maxAngularAcceleration": 720.0
       }
-    },
-    {
-      "name": "New Constraints Zone",
-      "minWaypointRelativePos": 0.9,
-      "maxWaypointRelativePos": 1.1,
-      "constraints": {
-        "maxVelocity": 4.28,
-        "maxAcceleration": 3.0,
-        "maxAngularVelocity": 540.0,
-        "maxAngularAcceleration": 720.0
-      }
     }
   ],
   "eventMarkers": [
@@ -108,7 +97,7 @@
             {
               "type": "named",
               "data": {
-                "name": "aim wing side"
+                "name": "aim half truss wing"
               }
             }
           ]
@@ -136,7 +125,7 @@
   "globalConstraints": {
     "maxVelocity": 4.28,
     "maxAcceleration": 4.0,
-    "maxAngularVelocity": 540.0,
+    "maxAngularVelocity": 343.77,
     "maxAngularAcceleration": 720.0
   },
   "goalEndState": {

@@ -41,6 +41,22 @@ public class SetLEDsFromBinaryString extends DebugCommandBase {
     }
   }
 
+  @Override
+  public void execute() {
+    int height = ledStates.length;
+    int width = ledStates[0].length();
+
+    for (int y = 0; y < height; y++) {
+      // String row = ledStates[y].replace('B', '0'); // Assume binary character
+      // starts with B, replace with 0
+      String row = ledStates[y];
+      for (int x = 0; x < width; x++) {
+        int ledColor = (row.charAt(x) == '1') ? 255 : 0; // White if '1', off if '0'
+        led.setLedColor(ledColor, ledColor, ledColor, 0, getIndex(y, kLEDWidth - x), 1);
+      }
+    }
+  }
+
   private int getIndex(int x, int y) {
     return (kLEDWidth * (y % kLEDHeight)) + (x % kLEDWidth);
   }

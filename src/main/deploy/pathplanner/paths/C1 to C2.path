@@ -140,7 +140,7 @@
             {
               "type": "named",
               "data": {
-                "name": "aim wing side"
+                "name": "aim half truss wing"
               }
             }
           ]
@@ -151,7 +151,7 @@
   "globalConstraints": {
     "maxVelocity": 4.28,
     "maxAcceleration": 4.0,
-    "maxAngularVelocity": 540.0,
+    "maxAngularVelocity": 343.775,
     "maxAngularAcceleration": 720.0
   },
   "goalEndState": {

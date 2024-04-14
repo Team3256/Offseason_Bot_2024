@@ -65,6 +65,6 @@ public class PivotShooterSlam extends DebugCommandBase {
     // }
     // prevCurrent = pivot.getIntakeCurrent();
     // return false;
-    return pivot.getCurrent() > 15;
+    return pivot.getCurrent() > PivotShooterConstants.kCurrentThreshold;
   }
 }
