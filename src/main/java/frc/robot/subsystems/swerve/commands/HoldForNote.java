@@ -19,7 +19,6 @@ import java.util.function.DoubleSupplier;
 
 public class HoldForNote extends DebugCommandBase {
   private Translation2d translation;
-  private boolean fieldRelative;
   private boolean openLoop;
 
   private SwerveDrive swerveSubsystem;
@@ -36,13 +35,11 @@ public class HoldForNote extends DebugCommandBase {
   public HoldForNote(
       SwerveDrive swerveSubsystem,
       DoubleSupplier translationAxis,
-      boolean fieldRelative,
       boolean openLoop) {
     this.swerveSubsystem = swerveSubsystem;
     addRequirements(swerveSubsystem);
     this.translationAxis = translationAxis;
 
-    this.fieldRelative = fieldRelative;
     this.openLoop = openLoop;
     this.translationPidController =
         new PIDController(translationNoteKP, translationNoteKI, translationNoteKD);
@@ -83,7 +80,7 @@ public class HoldForNote extends DebugCommandBase {
         MathUtil.clamp(strafePIDOutput, -compensatedMaxVelocity, compensatedMaxVelocity);
     translation = new Translation2d(translationPIDOutput, strafePIDOutput);
 
-    swerveSubsystem.drive(translation, 0, fieldRelative, openLoop);
+    swerveSubsystem.drive(translation, 0, false, openLoop);
   }
 
   @Override

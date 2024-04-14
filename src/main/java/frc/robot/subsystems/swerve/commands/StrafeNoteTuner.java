@@ -62,7 +62,7 @@ public class StrafeNoteTuner extends DebugCommandBase {
         MathUtil.clamp(strafePIDOutput, -compensatedMaxVelocity, compensatedMaxVelocity);
     translation = new Translation2d(0, strafePIDOutput);
 
-    swerveSubsystem.drive(translation, 0, fieldRelative, openLoop);
+    swerveSubsystem.drive(translation, 0, false, openLoop);
   }
 
   @Override

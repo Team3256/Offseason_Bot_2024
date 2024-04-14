@@ -64,7 +64,7 @@ public class TranslationNoteTuner extends DebugCommandBase {
     System.out.println("Translation: " + translationPIDOutput);
     translation = new Translation2d(translationPIDOutput, 0);
 
-    swerveSubsystem.drive(translation, 0, fieldRelative, openLoop);
+    swerveSubsystem.drive(translation, 0, false, openLoop);
   }
 
   @Override
