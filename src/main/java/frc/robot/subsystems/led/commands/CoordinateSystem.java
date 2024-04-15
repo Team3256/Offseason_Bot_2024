@@ -42,12 +42,8 @@ public class CoordinateSystem extends DebugCommandBase {
   }
 
   private int getIndex(int x, int y) {
-    x-=1 ;
-    if (x%2 == 0) {
-      return (kLEDWidth- x) * kLEDHeight -y +1;
-    } else {
-      return (kLEDWidth - x -1) * kLEDHeight+ y+ 1;
-    }
+    y++;
+    return (kLEDWidth - x) * kLEDHeight - y + 1;
   }
 
   @Override

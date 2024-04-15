@@ -17,53 +17,47 @@ import frc.robot.subsystems.led.LED;
 public class SetLEDsFromBinaryString extends DebugCommandBase {
   private LED led;
   private String[] ledStates;
+  private int r;
+  private int g;
+  private int b;
+  private int w;
 
-  public SetLEDsFromBinaryString(LED led, String[] ledStates) {
+  public SetLEDsFromBinaryString(LED led, String[] ledStates, int r, int g, int b, int w) {
     this.led = led;
     this.ledStates = ledStates;
+    this.r = r;
+    this.g = g;
+    this.b = b;
+    this.w = w;
     addRequirements(led);
   }
 
   @Override
   public void initialize() {
     super.initialize();
-    int height = ledStates.length;
-    int width = ledStates[0].length();
-
-    for (int y = 0; y < height; y++) {
-      // String row = ledStates[y].replace('B', '0'); // Assume binary character
-      // starts with B, replace with 0
-      String row = ledStates[y];
-      for (int x = 0; x < width; x++) {
-        int ledColor = (row.charAt(x) == '1') ? 255 : 0; // White if '1', off if '0'
-        led.setLedColor(ledColor, ledColor, ledColor, 0, getIndex(x, y), 1);
-      }
-    }
+    new CoordinatesButItsMultiple(led, getCoordinates(ledStates), r, g , b, w).schedule();
+    
   }
 
   @Override
   public void execute() {
-    int height = ledStates.length;
-    int width = ledStates[0].length();
-
-    for (int y = 0; y < height; y++) {
-      // String row = ledStates[y].replace('B', '0'); // Assume binary character
-      // starts with B, replace with 0
-      String row = ledStates[y];
-      for (int x = 0; x < width; x++) {
-        int ledColor = (row.charAt(x) == '1') ? 255 : 0; // White if '1', off if '0'
-        led.setLedColor(ledColor, ledColor, ledColor, 0, getIndex(x, y), 1);
-      }
-    }
+    super.execute();
   }
 
-  private int getIndex(int x, int y) {
-    x-=1 ;
-    if (x%2 == 0) {
-      return (kLEDWidth- x) * kLEDHeight -y +1;
-    } else {
-      return (kLEDWidth - x -1) * kLEDHeight+ y+ 1;
+  private int[][] getCoordinates(String[] ledStates) {
+
+    int[][] coordinates = new int[ledStates.length][2];
+    int height = ledStates.length - 1;
+    for( int y = 0; y < ledStates.length; y++) {
+      String row = ledStates[y];
+      for (int x = 0; x < row.length(); x++) {
+        if (row.charAt(x) == '1') {
+          coordinates[y] = new int[] {x, height-y};
+        }
+      }
     }
+    return coordinates;
+
   }
 
   @Override
