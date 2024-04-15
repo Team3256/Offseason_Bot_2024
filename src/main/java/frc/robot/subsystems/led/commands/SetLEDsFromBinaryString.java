@@ -7,9 +7,6 @@
 
 package frc.robot.subsystems.led.commands;
 
-import static frc.robot.subsystems.led.LEDConstants.kLEDHeight;
-import static frc.robot.subsystems.led.LEDConstants.kLEDWidth;
-
 import frc.robot.helpers.DebugCommandBase;
 import frc.robot.subsystems.led.IndicatorAnimation;
 import frc.robot.subsystems.led.LED;
@@ -35,8 +32,7 @@ public class SetLEDsFromBinaryString extends DebugCommandBase {
   @Override
   public void initialize() {
     super.initialize();
-    new CoordinatesButItsMultiple(led, getCoordinates(ledStates), r, g , b, w).schedule();
-    
+    new CoordinatesButItsMultiple(led, getCoordinates(ledStates), r, g, b, w).schedule();
   }
 
   @Override
@@ -48,16 +44,15 @@ public class SetLEDsFromBinaryString extends DebugCommandBase {
 
     int[][] coordinates = new int[ledStates.length][2];
     int height = ledStates.length - 1;
-    for( int y = 0; y < ledStates.length; y++) {
+    for (int y = 0; y < ledStates.length; y++) {
       String row = ledStates[y];
       for (int x = 0; x < row.length(); x++) {
         if (row.charAt(x) == '1') {
-          coordinates[y] = new int[] {x, height-y};
+          coordinates[y] = new int[] {x, height - y};
         }
       }
     }
     return coordinates;
-
   }
 
   @Override
