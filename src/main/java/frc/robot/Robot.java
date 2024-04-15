@@ -123,8 +123,6 @@ public class Robot extends LoggedRobot {
               logCommandFunction.accept(command, false);
             });
 
-    FollowPathCommand.warmupCommand().schedule();
-
     if (Constants.kEnableAdvKit) {
       Logger.start();
     }
