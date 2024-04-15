@@ -622,7 +622,7 @@ public class RobotContainer {
 
     led = new LED();
     //    led.setDefaultCommand(new CoordinatesButItsMultiple(led, ledList, 100, 0,0,10));
-    led.setDefaultCommand(new SetLEDsFromBinaryString(led, LEDConstants.based));
+    led.setDefaultCommand(new SetLEDsFromBinaryString(led, LEDConstants.based, 100, 0, 0, 5));
 
     /*
      * Intake LED, flashes RED while intake is down and running,
