@@ -7,7 +7,6 @@
 
 package frc.robot.subsystems.swerve.commands;
 
-import static frc.robot.Constants.azimuthStickDeadband;
 import static frc.robot.Constants.stickDeadband;
 import static frc.robot.subsystems.swerve.SwerveConstants.*;
 import static frc.robot.subsystems.swerve.SwerveConstants.aziDrivekP;
