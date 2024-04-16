@@ -276,28 +276,35 @@ public final class SwerveConstants {
 
     // TODO: TUNE ALL OF THESE ON PRAC DAY
 
-    public static final double aziAmpRed = (Math.atan2(ampXRed, ampY) * 180 / Math.PI);
+    public static final double aziAmpRed =
+            (Math.atan2(ampXRed, ampY) * 180 / Math.PI);
 
-    public static final double aziAmpBlue = (Math.atan2(ampXBlue, ampY) * 180 / Math.PI);
+    public static final double aziAmpBlue =
+            (Math.atan2(ampXBlue, ampY) * 180 / Math.PI);
 
     public static final double aziSubwooferFront =
-        (Math.atan2(subwooferFrontX, subwooferFrontY) * 180 / Math.PI);
+            (Math.atan2(subwooferFrontX, subwooferFrontY) * 180 / Math.PI);
 
     public static final double aziSubwooferLeft =
-        (Math.atan2(subwooferLeftX, subwooferSideY) * 180 / pi);
+            (Math.atan2(subwooferLeftX, subwooferSideY) * 180 / pi);
 
     public static final double aziSubwooferRight =
-        (Math.atan2(subwooferRightX, subwooferSideY) * 180 / pi);
+            (Math.atan2(subwooferRightX, subwooferSideY) * 180 / pi);
 
-    public static final double aziSourceRed = (Math.atan2(sourceXRed, sourceY) * 180 / pi);
+    public static final double aziSourceRed =
+            (Math.atan2(sourceXRed, sourceY) * 180 / pi);
 
-    public static final double aziSourceBlue = (Math.atan2(sourceXBlue, sourceY) * 180 / pi);
+    public static final double aziSourceBlue =
+            (Math.atan2(sourceXBlue, sourceY) * 180 / pi);
 
-    public static final double feederRed = (Math.atan2(feederXRed, feederY) * 180 / pi);
+    public static final double feederRed =
+            (Math.atan2(feederXRed, feederY) * 180 / pi);
 
-    public static final double feederBlue = (Math.atan2(feederXBlue, feederY) * 180 / pi);
+    public static final double feederBlue =
+            (Math.atan2(feederXBlue, feederY) * 180 / pi);
 
-    public static final double cleanUp = (Math.atan2(ampXRed, ampY) * 180 / pi);
+    public static final double cleanUp =
+            (Math.atan2(ampXRed, ampY) * 180 / pi);
 
     /* Timeout */
     public static final double aziCommandTimeOut = 1.5;
