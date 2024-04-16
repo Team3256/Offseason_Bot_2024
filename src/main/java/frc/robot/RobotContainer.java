@@ -44,6 +44,7 @@ import frc.robot.subsystems.climb.commands.ZeroClimb;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.commands.*;
 import frc.robot.subsystems.led.LED;
+import frc.robot.subsystems.led.LEDConstants;
 import frc.robot.subsystems.led.commands.*;
 import frc.robot.subsystems.pivotintake.PivotIntake;
 import frc.robot.subsystems.pivotintake.PivotIntakeConstants;
@@ -208,6 +209,7 @@ public class RobotContainer {
                   new IntakeInOverride(intake).withTimeout(2),
                   new ShootSubwoofer(shooter)))); // TODO: tune time in withTimeout
       NamedCommands.registerCommand("aim subwoofer", new PivotShootSubwoofer(pivotShooter));
+      NamedCommands.registerCommand("shooter off", new ShooterOff(shooter));
 
       NamedCommands.registerCommand( // outtake note to feeder
           "safety",
@@ -220,6 +222,10 @@ public class RobotContainer {
           "aim wing side", new PivotShooterSetAngle(pivotShooter, kWingNoteSidePreset));
       NamedCommands.registerCommand(
           "aim wing far side", new PivotShooterSetAngle(pivotShooter, kWingNoteFarSidePreset));
+      NamedCommands.registerCommand(
+          "aim truss", new PivotShooterSetAngle(pivotShooter, kTrussSourceSidePreset));
+      NamedCommands.registerCommand(
+          "aim half truss wing", new PivotShooterSetAngle(pivotShooter, kHalfWingPodiumPreset));
       NamedCommands.registerCommand(
           "zero pivot shooter", new PivotShooterSlamAndVoltage(pivotShooter));
 
@@ -281,8 +287,15 @@ public class RobotContainer {
 
   private void configurePivotShooter() {
     pivotShooter = new PivotShooter();
-    operator.b().onTrue(new bruh(pivotShooter));
+    // operator.b().onTrue(new bruh(pivotShooter));
+    // operator.x().onTrue(new SequentialCommandGroup(new
+    // PivotShootSubwoofer(pivotShooter)));
     operator.x().onTrue(new SequentialCommandGroup(new PivotShootSubwoofer(pivotShooter)));
+    operator
+        .b()
+        .onTrue(
+            new SequentialCommandGroup(
+                new PivotShooterSetAngle(pivotShooter, kTrussSourceSidePreset)));
     operator.povUp().onTrue(new PivotShooterZero(pivotShooter));
   }
 
@@ -297,6 +310,7 @@ public class RobotContainer {
       operator.leftBumper().whileTrue(new IntakeOutArmOff(intake, pivotIntake));
       driver.rightTrigger().whileTrue(new IntakeOutArmOff(intake, pivotIntake));
     } else {
+
       operator.leftBumper().whileTrue(new IntakeOut(intake));
       driver.rightTrigger().whileTrue(new IntakeOut(intake));
     }
@@ -313,6 +327,7 @@ public class RobotContainer {
   private void configureClimb() {
     climb = new Climb();
     // zeroClimb = new ZeroClimb(climb); // NEED FOR SHUFFLEBOARD
+
     operator.povDown().onTrue(new ZeroClimb(climb));
     // new Trigger(() -> operator.getRawAxis(translationAxis) < -0.5).onTrue(new
     // UpClimb(climb));
@@ -343,6 +358,8 @@ public class RobotContainer {
 
   public void configureSwerve() {
     swerveDrive = new SwerveDrive();
+    //    operator.b().whileTrue(new StrafeNoteTuner(swerveDrive, true, false));
+    //    operator.x().whileTrue(new TranslationNoteTuner(swerveDrive, true, false));
 
     swerveDrive.setDefaultCommand(
         new TeleopSwerve(
@@ -578,7 +595,11 @@ public class RobotContainer {
   }
 
   public void configureLED() {
+    int[][] ledList = new int[][] {new int[] {2, 3}};
+
     led = new LED();
+    //    led.setDefaultCommand(new CoordinatesButItsMultiple(led, ledList, 100, 0,0,10));
+    led.setDefaultCommand(new SetLEDsFromBinaryString(led, LEDConstants.based, 100, 0, 0, 5));
 
     /*
      * Intake LED, flashes RED while intake is down and running,
@@ -629,6 +650,7 @@ public class RobotContainer {
     // }
     // if (FeatureFlags.kSwerveEnabled) {
     // if (DriverStation.isAutonomousEnabled() ||
+
     // FeatureFlags.kSwerveUseVisionForPoseEst) {
     // Trigger swerveSpeakerAligned = new Trigger(swerveDrive::isAlignedToSpeaker);
     // swerveSpeakerAligned.whileTrue(new SetRobotAligned(led));
@@ -647,6 +669,7 @@ public class RobotContainer {
     // // azimuthRan.whileTrue(new SetAzimuthRan(led));
     // // }
     // }
+
     // if (FeatureFlags.kClimbEnabled) {
     // Trigger climbRunning =
     // new Trigger(
@@ -664,6 +687,7 @@ public class RobotContainer {
         // happen!
         System.out.println(
             "Swerve is disabled, but the robot is FMS-attached. This probably shouldn't happen!");
+
         DriverStation.reportError(
             "Swerve is disabled, but the robot is FMS-attached. This probably shouldn't happen!",
             false);
