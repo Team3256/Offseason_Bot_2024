@@ -47,7 +47,7 @@ public final class Constants {
 
     // logging
     public static final boolean kDebugEnabled = false;
-    public static final boolean DebugCommandEnabled = true;
+    public static final boolean DebugCommandEnabled = false;
     public static final boolean kRobotVizEnabled = true && !Robot.isReal();
 
     // features
@@ -57,7 +57,8 @@ public final class Constants {
     public static final boolean kLocalizationEnabled = false;
 
     // public static final boolean kSwerveAccelerationLimitingEnabled = true;
-    public static final boolean kSwerveUseVisionForPoseEst = true;
+    public static final boolean kSwerveUseVisionForPoseEst =
+        true; // ummm probably not disabling this
     public static final boolean kLocalizationDataCollectionMode = false;
     public static final boolean kLocalizationStdDistanceBased = false;
 
