@@ -15,7 +15,6 @@ import edu.wpi.first.math.geometry.Translation2d;
 import frc.robot.helpers.DebugCommandBase;
 import frc.robot.limelight.LimelightHelpers;
 import frc.robot.subsystems.swerve.SwerveDrive;
-import java.util.function.DoubleSupplier;
 
 public class TranslationNoteTuner extends DebugCommandBase {
   private Translation2d translation;
@@ -24,20 +23,13 @@ public class TranslationNoteTuner extends DebugCommandBase {
 
   private SwerveDrive swerveSubsystem;
 
-  private DoubleSupplier translationAxis;
-
   private PIDController translationPidController;
 
   /** Driver control */
   public TranslationNoteTuner(
-      SwerveDrive swerveSubsystem,
-      DoubleSupplier translationAxis,
-      boolean fieldRelative,
-      boolean openLoop) {
+      SwerveDrive swerveSubsystem, boolean fieldRelative, boolean openLoop) {
     this.swerveSubsystem = swerveSubsystem;
     addRequirements(swerveSubsystem);
-    this.translationAxis = translationAxis;
-
     this.fieldRelative = fieldRelative;
     this.openLoop = openLoop;
     this.translationPidController =
@@ -62,16 +54,17 @@ public class TranslationNoteTuner extends DebugCommandBase {
     // PID controller takes current robot position (getYaw) and compares to the
     // azimuth angle to
     // calculate error
-    double compensatedMaxVelocity =
-        maxTranslationalVelocity * Math.abs(translationAxis.getAsDouble());
+    double compensatedMaxVelocity = maxTranslationalVelocity * 1;
 
     double translationPIDOutput =
-        translationPidController.calculate(LimelightHelpers.getTY("limelight-note"), 0.0);
+        translationPidController.calculate(LimelightHelpers.getTY("limelight-note"), -9);
     translationPIDOutput =
         MathUtil.clamp(translationPIDOutput, -compensatedMaxVelocity, compensatedMaxVelocity);
+
+    System.out.println("Translation: " + translationPIDOutput);
     translation = new Translation2d(translationPIDOutput, 0);
 
-    swerveSubsystem.drive(translation, 0, fieldRelative, openLoop);
+    swerveSubsystem.drive(translation, 0, false, openLoop);
   }
 
   @Override

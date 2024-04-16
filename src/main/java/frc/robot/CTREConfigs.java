@@ -44,6 +44,9 @@ public final class CTREConfigs {
     swerveAngleFXConfig.Slot0.kP = SwerveConstants.angleKP;
     swerveAngleFXConfig.Slot0.kI = SwerveConstants.angleKI;
     swerveAngleFXConfig.Slot0.kD = SwerveConstants.angleKD;
+    swerveAngleFXConfig.Slot0.kV = 2.7935;
+    swerveAngleFXConfig.Slot0.kA = 0.031543;
+    swerveAngleFXConfig.Slot0.kS = 0.28;
 
     /** Swerve Drive Motor Configuration */
     /* Motor Inverts and Neutral Mode */
@@ -68,9 +71,9 @@ public final class CTREConfigs {
     swerveDriveFXConfig.Slot0.kP = SwerveConstants.driveKP;
     swerveDriveFXConfig.Slot0.kI = SwerveConstants.driveKI;
     swerveDriveFXConfig.Slot0.kD = SwerveConstants.driveKD;
-    swerveDriveFXConfig.Slot0.kV = SwerveConstants.driveKV;
-    swerveDriveFXConfig.Slot0.kA = SwerveConstants.driveKA;
-    swerveDriveFXConfig.Slot0.kS = SwerveConstants.driveKS;
+    // swerveDriveFXConfig.Slot0.kV = SwerveConstants.driveKV;
+    // swerveDriveFXConfig.Slot0.kA = SwerveConstants.driveKA;
+    // swerveDriveFXConfig.Slot0.kS = SwerveConstants.driveKS;
 
     /* Open and Closed Loop Ramping */
     swerveDriveFXConfig.OpenLoopRamps.DutyCycleOpenLoopRampPeriod = SwerveConstants.openLoopRamp;

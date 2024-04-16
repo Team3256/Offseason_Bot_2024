@@ -10,7 +10,7 @@ package frc.robot;
 import static edu.wpi.first.wpilibj.RobotBase.isReal;
 import static frc.robot.Constants.azimuthStickDeadband;
 import static frc.robot.subsystems.pivotintake.PivotIntakeConstants.kPivotGroundAngleDeg;
-import static frc.robot.subsystems.pivotshooter.PivotingShooterConstants.*;
+import static frc.robot.subsystems.pivotshooter.PivotShooterConstants.*;
 import static frc.robot.subsystems.swerve.SwerveConstants.AzimuthConstants.*;
 
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -45,6 +45,7 @@ import frc.robot.subsystems.climb.commands.ZeroClimb;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.commands.*;
 import frc.robot.subsystems.led.LED;
+import frc.robot.subsystems.led.LEDConstants;
 import frc.robot.subsystems.led.commands.*;
 import frc.robot.subsystems.pivotintake.PivotIntake;
 import frc.robot.subsystems.pivotintake.PivotIntakeConstants;
@@ -168,13 +169,29 @@ public class RobotContainer {
       NamedCommands.registerCommand( // shoot preloaded note to speaker, use at match start
           "preload speaker",
           new SequentialCommandGroup(
+              // new PrintCommand("preload im outta blush"),
               new PivotShooterZero(pivotShooter),
               new ParallelDeadlineGroup(
                   new SequentialCommandGroup(
-                      new WaitCommand(0.6), // TODO: maybe need to tune this too
-                      new IntakeAndPassthroughButItEnds(intake)), // TODO: tune time in withTimeout
-                  new ShootSubwoofer(shooter),
-                  new PivotShootSubwoofer(pivotShooter))
+                      new WaitCommand(0.5), // TODO: maybe need to tune this too
+                      new IntakeInOverride(intake)
+                          .withTimeout(0.7)), // TODO: tune time in withTimeout
+                  new PivotShootSubwoofer(pivotShooter),
+                  new ShootSubwoofer(shooter))
+              // new PivotShooterSlamAndVoltage(pivotShooter)));
+              ));
+      NamedCommands.registerCommand( // shoot preloaded note to speaker, use at match start
+          "preload speaker amp side",
+          new SequentialCommandGroup(
+              // new PrintCommand("preload im outta blush"),
+              new PivotShooterZero(pivotShooter),
+              new ParallelDeadlineGroup(
+                  new SequentialCommandGroup(
+                      new WaitCommand(0.8), // TODO: maybe need to tune this too
+                      new IntakeInOverride(intake)
+                          .withTimeout(0.7)), // TODO: tune time in withTimeout
+                  new PivotShootSubwoofer(pivotShooter),
+                  new ShootSubwoofer(shooter))
               // new PivotShooterSlamAndVoltage(pivotShooter)));
               ));
       NamedCommands.registerCommand( // intake ground note, stow to feeder chamber
@@ -193,6 +210,7 @@ public class RobotContainer {
                   new IntakeInOverride(intake).withTimeout(2),
                   new ShootSubwoofer(shooter)))); // TODO: tune time in withTimeout
       NamedCommands.registerCommand("aim subwoofer", new PivotShootSubwoofer(pivotShooter));
+      NamedCommands.registerCommand("shooter off", new ShooterOff(shooter));
 
       NamedCommands.registerCommand( // outtake note to feeder
           "safety",
@@ -205,6 +223,10 @@ public class RobotContainer {
           "aim wing side", new PivotShooterSetAngle(pivotShooter, kWingNoteSidePreset));
       NamedCommands.registerCommand(
           "aim wing far side", new PivotShooterSetAngle(pivotShooter, kWingNoteFarSidePreset));
+      NamedCommands.registerCommand(
+          "aim truss", new PivotShooterSetAngle(pivotShooter, kTrussSourceSidePreset));
+      NamedCommands.registerCommand(
+          "aim half truss wing", new PivotShooterSetAngle(pivotShooter, kHalfWingPodiumPreset));
       NamedCommands.registerCommand(
           "zero pivot shooter", new PivotShooterSlamAndVoltage(pivotShooter));
 
@@ -266,8 +288,15 @@ public class RobotContainer {
 
   private void configurePivotShooter() {
     pivotShooter = new PivotShooter();
-    operator.b().onTrue(new bruh(pivotShooter));
+    // operator.b().onTrue(new bruh(pivotShooter));
+    // operator.x().onTrue(new SequentialCommandGroup(new
+    // PivotShootSubwoofer(pivotShooter)));
     operator.x().onTrue(new SequentialCommandGroup(new PivotShootSubwoofer(pivotShooter)));
+    operator
+        .b()
+        .onTrue(
+            new SequentialCommandGroup(
+                new PivotShooterSetAngle(pivotShooter, kTrussSourceSidePreset)));
     operator.povUp().onTrue(new PivotShooterZero(pivotShooter));
   }
 
@@ -282,6 +311,7 @@ public class RobotContainer {
       operator.leftBumper().whileTrue(new IntakeOutArmOff(intake, pivotIntake));
       driver.rightTrigger().whileTrue(new IntakeOutArmOff(intake, pivotIntake));
     } else {
+
       operator.leftBumper().whileTrue(new IntakeOut(intake));
       driver.rightTrigger().whileTrue(new IntakeOut(intake));
     }
@@ -298,6 +328,7 @@ public class RobotContainer {
   private void configureClimb() {
     climb = new Climb();
     // zeroClimb = new ZeroClimb(climb); // NEED FOR SHUFFLEBOARD
+
     operator.povDown().onTrue(new ZeroClimb(climb));
     // new Trigger(() -> operator.getRawAxis(translationAxis) < -0.5).onTrue(new
     // UpClimb(climb));
@@ -324,6 +355,8 @@ public class RobotContainer {
 
   private void configureSwerve() {
     swerveDrive = new SwerveDrive();
+    //    operator.b().whileTrue(new StrafeNoteTuner(swerveDrive, true, false));
+    //    operator.x().whileTrue(new TranslationNoteTuner(swerveDrive, true, false));
 
     swerveDrive.setDefaultCommand(
         new TeleopSwerve(
@@ -331,6 +364,7 @@ public class RobotContainer {
             () -> driver.getRawAxis(translationAxis),
             () -> driver.getRawAxis(strafeAxis),
             () -> driver.getRawAxis(rotationAxis)));
+
     driver
         .leftTrigger()
         .whileTrue(
@@ -403,6 +437,7 @@ public class RobotContainer {
                       true,
                       true)
                   .withTimeout(aziCommandTimeOut));
+
       driver // SUBWOOFER LEFT
           .x()
           .onTrue(
@@ -475,6 +510,7 @@ public class RobotContainer {
                       true,
                       true)
                   .withTimeout(aziCommandTimeOut));
+
       driver // SUBWOOFER LEFT
           .x()
           .onTrue(
@@ -582,7 +618,11 @@ public class RobotContainer {
   }
 
   public void configureLED() {
+    int[][] ledList = new int[][] {new int[] {2, 3}};
+
     led = new LED();
+    //    led.setDefaultCommand(new CoordinatesButItsMultiple(led, ledList, 100, 0,0,10));
+    led.setDefaultCommand(new SetLEDsFromBinaryString(led, LEDConstants.based, 100, 0, 0, 5));
 
     /*
      * Intake LED, flashes RED while intake is down and running,
@@ -633,6 +673,7 @@ public class RobotContainer {
     // }
     // if (FeatureFlags.kSwerveEnabled) {
     // if (DriverStation.isAutonomousEnabled() ||
+
     // FeatureFlags.kSwerveUseVisionForPoseEst) {
     // Trigger swerveSpeakerAligned = new Trigger(swerveDrive::isAlignedToSpeaker);
     // swerveSpeakerAligned.whileTrue(new SetRobotAligned(led));
@@ -651,6 +692,7 @@ public class RobotContainer {
     // // azimuthRan.whileTrue(new SetAzimuthRan(led));
     // // }
     // }
+
     // if (FeatureFlags.kClimbEnabled) {
     // Trigger climbRunning =
     // new Trigger(
@@ -668,6 +710,7 @@ public class RobotContainer {
         // happen!
         System.out.println(
             "Swerve is disabled, but the robot is FMS-attached. This probably shouldn't happen!");
+
         DriverStation.reportError(
             "Swerve is disabled, but the robot is FMS-attached. This probably shouldn't happen!",
             false);
@@ -717,10 +760,11 @@ public class RobotContainer {
     }
     XboxStalker.stalk(driver, operator);
     // System.out.println(Limelight.getBotpose("limelight").length);
-
+    //
     double ty = Limelight.getTY("limelight");
-
-    // how many degrees back is your limelight rotated from perfectly vertical?
+    //
+    //    // how many degrees back is your limelight rotated from perfectly vertical?
+    //
     double limelightMountAngleDegrees = 21.936;
 
     // distance from the center of the Limelight lens to the floor
@@ -735,8 +779,9 @@ public class RobotContainer {
     // calculate distance
     double distanceFromLimelightToGoalInches =
         (goalHeightInches - limelightLensHeightInches) / Math.tan(angleToGoalRadians);
-    LimelightHelpers.setPriorityTagID("limelight", 4);
-    System.out.println("Distance: " + distanceFromLimelightToGoalInches);
+    LimelightHelpers.setPriorityTagID("limelight", 7);
+    System.out.println("Distance: " + ty);
+    //    System.out.println("Distance: " + distanceFromLimelightToGoalInches);
   }
 
   public void shootSpeaker() {

@@ -36,7 +36,7 @@ public class IntakeIn extends DebugCommandBase {
   @Override
   public void initialize() {
     super.initialize();
-    intakeSubsystem.setOutputVoltagePassthrough(-16);
+    intakeSubsystem.setOutputVoltagePassthrough(-8);
     intakeSubsystem.setOutputVoltageIntake(16);
   }
 

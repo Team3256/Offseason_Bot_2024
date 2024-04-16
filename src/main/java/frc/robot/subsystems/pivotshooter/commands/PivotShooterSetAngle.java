@@ -11,7 +11,7 @@ import frc.robot.Constants;
 import frc.robot.helpers.DebugCommandBase;
 import frc.robot.helpers.TimedBoolean;
 import frc.robot.subsystems.pivotshooter.PivotShooter;
-import frc.robot.subsystems.pivotshooter.PivotingShooterConstants;
+import frc.robot.subsystems.pivotshooter.PivotShooterConstants;
 import org.littletonrobotics.junction.Logger;
 
 public class PivotShooterSetAngle extends DebugCommandBase {
@@ -32,7 +32,7 @@ public class PivotShooterSetAngle extends DebugCommandBase {
   @Override
   public void initialize() {
     super.initialize();
-    pivotShooter.setDegrees(angleDeg * PivotingShooterConstants.kPivotMotorGearing);
+    pivotShooter.setDegrees(angleDeg * PivotShooterConstants.kPivotMotorGearing);
     Logger.recordOutput("PivotSetAngle", angleDeg);
     if (Constants.FeatureFlags.kDebugEnabled) {
       System.out.println("Set pivot at angle: " + angleDeg + " deg)");
@@ -77,7 +77,7 @@ public class PivotShooterSetAngle extends DebugCommandBase {
     // "current pivot position: " + Math.abs((pivotIntake.getDegrees() / 33) -
     // angleDeg));
     if (Math.abs((pivotShooter.getDegrees() / 33) - angleDeg)
-        < PivotingShooterConstants.kPivotPositionToleranceDeg) {
+        < PivotShooterConstants.kPivotPositionToleranceDeg) {
       // System.out.println("pivot reached shooting position");
       return true;
     } else return false;

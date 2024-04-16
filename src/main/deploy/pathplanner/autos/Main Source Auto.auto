@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 15.24,
-      "y": 5.55
+      "x": 15.82,
+      "y": 4.450117887396973
     },
-    "rotation": 180.0
+    "rotation": -120.0
   },
   "command": {
     "type": "sequential",
@@ -14,25 +14,19 @@
         {
           "type": "path",
           "data": {
-            "pathName": "S to wing mid"
+            "pathName": "S to C5 to T"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Straight S to wing top"
+            "pathName": "T to C3 to T"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Straight S to center bottom"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "S to center 3"
+            "pathName": "T to C4 to T"
           }
         }
       ]

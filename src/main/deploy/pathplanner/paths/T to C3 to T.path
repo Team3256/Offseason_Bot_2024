@@ -3,41 +3,57 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 15.24,
-        "y": 5.55
+        "x": 13.0,
+        "y": 3.17
       },
       "prevControl": null,
       "nextControl": {
-        "x": 14.933722535062758,
-        "y": 5.831996599799192
+        "x": 12.111410927529414,
+        "y": 3.5366726368260153
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 13.93830142867133,
-        "y": 6.710309340732804
+        "x": 11.174544003866895,
+        "y": 3.8879977331994606
       },
       "prevControl": {
-        "x": 14.082386147123255,
-        "y": 6.876560938946564
+        "x": 12.193386783349883,
+        "y": 3.548383473371796
       },
       "nextControl": {
-        "x": 13.63381967848101,
-        "y": 6.358984244359359
+        "x": 10.568368207922706,
+        "y": 4.090056331847526
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 15.24,
-        "y": 5.55
+        "x": 8.691846656161214,
+        "y": 4.098792791023527
       },
       "prevControl": {
-        "x": 14.125674813403833,
-        "y": 5.539225686154654
+        "x": 8.62732986326495,
+        "y": 4.281590370896267
+      },
+      "nextControl": {
+        "x": 8.762111675435905,
+        "y": 3.899708569745242
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 13.0,
+        "y": 3.17
+      },
+      "prevControl": {
+        "x": 10.343074609116409,
+        "y": 4.590647925946351
       },
       "nextControl": null,
       "isLocked": false,
@@ -46,22 +62,17 @@
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 1.0,
-      "rotationDegrees": 135.0,
-      "rotateFast": true
-    },
-    {
-      "waypointRelativePos": 1.2,
+      "waypointRelativePos": 2.0,
       "rotationDegrees": 180.0,
-      "rotateFast": false
-    },
-    {
-      "waypointRelativePos": 0.6,
-      "rotationDegrees": 135.0,
       "rotateFast": true
     },
     {
-      "waypointRelativePos": 0.15,
+      "waypointRelativePos": 2.95,
+      "rotationDegrees": -143.0,
+      "rotateFast": true
+    },
+    {
+      "waypointRelativePos": 1.0999999999999999,
       "rotationDegrees": 180.0,
       "rotateFast": true
     }
@@ -69,37 +80,31 @@
   "constraintZones": [
     {
       "name": "New Constraints Zone",
-      "minWaypointRelativePos": 1.0,
-      "maxWaypointRelativePos": 1.1,
+      "minWaypointRelativePos": 2.9,
+      "maxWaypointRelativePos": 3.0,
       "constraints": {
-        "maxVelocity": 0.35,
+        "maxVelocity": 4.28,
+        "maxAcceleration": 3.0,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 720.0
+      }
+    },
+    {
+      "name": "New Constraints Zone",
+      "minWaypointRelativePos": 2.05,
+      "maxWaypointRelativePos": 2.0999999999999996,
+      "constraints": {
+        "maxVelocity": 0.5,
         "maxAcceleration": 2.0,
-        "maxAngularVelocity": 343.77,
+        "maxAngularVelocity": 540.0,
         "maxAngularAcceleration": 720.0
       }
     }
   ],
   "eventMarkers": [
     {
-      "name": "intake",
-      "waypointRelativePos": 0.55,
-      "command": {
-        "type": "sequential",
-        "data": {
-          "commands": [
-            {
-              "type": "named",
-              "data": {
-                "name": "intake sequence"
-              }
-            }
-          ]
-        }
-      }
-    },
-    {
-      "name": "outtake",
-      "waypointRelativePos": 1.85,
+      "name": "shoot",
+      "waypointRelativePos": 2.8,
       "command": {
         "type": "sequential",
         "data": {
@@ -115,8 +120,8 @@
       }
     },
     {
-      "name": "aim subwoofer",
-      "waypointRelativePos": 0,
+      "name": "intake sequence",
+      "waypointRelativePos": 1.25,
       "command": {
         "type": "sequential",
         "data": {
@@ -124,7 +129,7 @@
             {
               "type": "named",
               "data": {
-                "name": "aim subwoofer"
+                "name": "intake sequence"
               }
             }
           ]
@@ -132,8 +137,8 @@
       }
     },
     {
-      "name": "shooter off",
-      "waypointRelativePos": 0.35,
+      "name": "aim truss",
+      "waypointRelativePos": 0.0,
       "command": {
         "type": "sequential",
         "data": {
@@ -141,24 +146,7 @@
             {
               "type": "named",
               "data": {
-                "name": "shooter off"
-              }
-            }
-          ]
-        }
-      }
-    },
-    {
-      "name": "rev shooter",
-      "waypointRelativePos": 1.35,
-      "command": {
-        "type": "sequential",
-        "data": {
-          "commands": [
-            {
-              "type": "named",
-              "data": {
-                "name": "rev speaker"
+                "name": "aim truss"
               }
             }
           ]
@@ -169,19 +157,19 @@
   "globalConstraints": {
     "maxVelocity": 4.28,
     "maxAcceleration": 4.0,
-    "maxAngularVelocity": 343.77,
+    "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 180.0,
+    "rotation": -143.0,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "5 note center",
+  "folder": "Main Source Auto",
   "previewStartingState": {
-    "rotation": 180.0,
-    "velocity": 0
+    "rotation": -143.0,
+    "velocity": 0.0
   },
   "useDefaultConstraints": false
 }

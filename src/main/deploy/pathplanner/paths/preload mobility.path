@@ -65,16 +65,6 @@
           ]
         }
       }
-    },
-    {
-      "name": "New Event Marker",
-      "waypointRelativePos": 0,
-      "command": {
-        "type": "sequential",
-        "data": {
-          "commands": []
-        }
-      }
     }
   ],
   "globalConstraints": {

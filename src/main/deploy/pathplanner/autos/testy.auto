@@ -2,8 +2,8 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 15.254599456417177,
-      "y": 5.550113016135421
+      "x": 15.247114056569078,
+      "y": 5.545975061415772
     },
     "rotation": 180.0
   },
@@ -14,7 +14,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "you spin me right round baby right now"
+            "pathName": "test"
           }
         }
       ]

@@ -7,7 +7,7 @@
 
 package frc.robot.subsystems.pivotshooter.commands;
 
-import static frc.robot.subsystems.pivotshooter.PivotingShooterConstants.kPivotMotorGearing;
+import static frc.robot.subsystems.pivotshooter.PivotShooterConstants.kPivotMotorGearing;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;

@@ -8,24 +8,24 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 11.162833167321114,
-        "y": 6.4292492636340475
+        "x": 10.530447993848911,
+        "y": 6.850839379282182
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 8.598159963794963,
-        "y": 5.808574926707628
+        "x": 8.598159963794965,
+        "y": 4.347050646549195
       },
       "prevControl": {
-        "x": 8.51852627528029,
-        "y": 6.171610859622258
+        "x": 8.350505168538248,
+        "y": 4.500571497987442
       },
       "nextControl": {
-        "x": 8.68270228980939,
-        "y": 5.423161381662987
+        "x": 8.715268329252778,
+        "y": 4.27445533921025
       },
       "isLocked": false,
       "linkedName": null
@@ -36,8 +36,24 @@
         "y": 7.03
       },
       "prevControl": {
-        "x": 11.29165236932471,
-        "y": 6.651755158003897
+        "x": 10.460182974574224,
+        "y": 7.131899456380939
+      },
+      "nextControl": {
+        "x": 12.473898620766814,
+        "y": 7.020368512370173
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 12.45,
+        "y": 6.96
+      },
+      "prevControl": {
+        "x": 12.332891634542186,
+        "y": 6.995132509637344
       },
       "nextControl": null,
       "isLocked": false,
@@ -47,16 +63,21 @@
   "rotationTargets": [
     {
       "waypointRelativePos": 1.0,
-      "rotationDegrees": -171.0,
+      "rotationDegrees": -140.0,
       "rotateFast": true
     },
     {
-      "waypointRelativePos": 0.15,
-      "rotationDegrees": -171.0,
+      "waypointRelativePos": 0.05,
+      "rotationDegrees": -140.0,
       "rotateFast": true
     },
     {
       "waypointRelativePos": 1.1,
+      "rotationDegrees": 161.0,
+      "rotateFast": true
+    },
+    {
+      "waypointRelativePos": 2.0,
       "rotationDegrees": 161.0,
       "rotateFast": true
     }
@@ -64,19 +85,8 @@
   "constraintZones": [
     {
       "name": "New Constraints Zone",
-      "minWaypointRelativePos": 1.9,
-      "maxWaypointRelativePos": 2.0,
-      "constraints": {
-        "maxVelocity": 4.28,
-        "maxAcceleration": 3.0,
-        "maxAngularVelocity": 540.0,
-        "maxAngularAcceleration": 720.0
-      }
-    },
-    {
-      "name": "New Constraints Zone",
-      "minWaypointRelativePos": 0.9,
-      "maxWaypointRelativePos": 1.1,
+      "minWaypointRelativePos": 2.8,
+      "maxWaypointRelativePos": 3.0,
       "constraints": {
         "maxVelocity": 4.28,
         "maxAcceleration": 3.0,
@@ -87,10 +97,21 @@
     {
       "name": "New Constraints Zone",
       "minWaypointRelativePos": 1.0,
-      "maxWaypointRelativePos": 1.05,
+      "maxWaypointRelativePos": 1.0999999999999999,
       "constraints": {
-        "maxVelocity": 0.5,
-        "maxAcceleration": 2.0,
+        "maxVelocity": 0.4,
+        "maxAcceleration": 0.8,
+        "maxAngularVelocity": 343.775,
+        "maxAngularAcceleration": 720.0
+      }
+    },
+    {
+      "name": "New Constraints Zone",
+      "minWaypointRelativePos": 2.0,
+      "maxWaypointRelativePos": 3.0,
+      "constraints": {
+        "maxVelocity": 0.2,
+        "maxAcceleration": 1.0,
         "maxAngularVelocity": 343.775,
         "maxAngularAcceleration": 720.0
       }
@@ -99,7 +120,7 @@
   "eventMarkers": [
     {
       "name": "shoot",
-      "waypointRelativePos": 1.9,
+      "waypointRelativePos": 2.8499999999999996,
       "command": {
         "type": "sequential",
         "data": {
@@ -116,7 +137,7 @@
     },
     {
       "name": "intake sequence",
-      "waypointRelativePos": 0.35,
+      "waypointRelativePos": 0.55,
       "command": {
         "type": "sequential",
         "data": {
@@ -133,7 +154,7 @@
     },
     {
       "name": "aim wing half",
-      "waypointRelativePos": 0.1,
+      "waypointRelativePos": 0.15,
       "command": {
         "type": "sequential",
         "data": {
@@ -158,7 +179,7 @@
   "goalEndState": {
     "velocity": 0,
     "rotation": 161.0,
-    "rotateFast": false
+    "rotateFast": true
   },
   "reversed": false,
   "folder": "5 note amp",

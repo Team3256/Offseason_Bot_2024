@@ -4,28 +4,28 @@
     {
       "anchor": {
         "x": 15.24,
-        "y": 5.55
+        "y": 5.550936522700434
       },
       "prevControl": null,
       "nextControl": {
-        "x": 14.933722535062758,
-        "y": 5.831996599799192
+        "x": 15.238204285253078,
+        "y": 4.602358762492133
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 13.93830142867133,
-        "y": 6.710309340732804
+        "x": 14.090542303766492,
+        "y": 4.11050362756931
       },
       "prevControl": {
-        "x": 14.082386147123255,
-        "y": 6.876560938946564
+        "x": 14.259235310188673,
+        "y": 3.8624256769484546
       },
       "nextControl": {
-        "x": 13.63381967848101,
-        "y": 6.358984244359359
+        "x": 13.891458082488207,
+        "y": 4.403274541213848
       },
       "isLocked": false,
       "linkedName": null
@@ -33,11 +33,11 @@
     {
       "anchor": {
         "x": 15.24,
-        "y": 5.55
+        "y": 5.550936522700434
       },
       "prevControl": {
-        "x": 14.125674813403833,
-        "y": 5.539225686154654
+        "x": 14.231072342315867,
+        "y": 5.562647359246215
       },
       "nextControl": null,
       "isLocked": false,
@@ -47,7 +47,7 @@
   "rotationTargets": [
     {
       "waypointRelativePos": 1.0,
-      "rotationDegrees": 135.0,
+      "rotationDegrees": 180.0,
       "rotateFast": true
     },
     {
@@ -56,12 +56,7 @@
       "rotateFast": false
     },
     {
-      "waypointRelativePos": 0.6,
-      "rotationDegrees": 135.0,
-      "rotateFast": true
-    },
-    {
-      "waypointRelativePos": 0.15,
+      "waypointRelativePos": 0.1,
       "rotationDegrees": 180.0,
       "rotateFast": true
     }
@@ -72,7 +67,7 @@
       "minWaypointRelativePos": 1.0,
       "maxWaypointRelativePos": 1.1,
       "constraints": {
-        "maxVelocity": 0.35,
+        "maxVelocity": 0.4,
         "maxAcceleration": 2.0,
         "maxAngularVelocity": 343.77,
         "maxAngularAcceleration": 720.0
@@ -82,7 +77,7 @@
   "eventMarkers": [
     {
       "name": "intake",
-      "waypointRelativePos": 0.55,
+      "waypointRelativePos": 0.35,
       "command": {
         "type": "sequential",
         "data": {
@@ -133,7 +128,7 @@
     },
     {
       "name": "shooter off",
-      "waypointRelativePos": 0.35,
+      "waypointRelativePos": 0.2,
       "command": {
         "type": "sequential",
         "data": {
@@ -150,7 +145,7 @@
     },
     {
       "name": "rev shooter",
-      "waypointRelativePos": 1.35,
+      "waypointRelativePos": 1.5,
       "command": {
         "type": "sequential",
         "data": {

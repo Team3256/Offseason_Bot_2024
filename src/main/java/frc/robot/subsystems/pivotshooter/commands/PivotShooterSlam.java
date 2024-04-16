@@ -9,7 +9,7 @@ package frc.robot.subsystems.pivotshooter.commands;
 
 import frc.robot.helpers.DebugCommandBase;
 import frc.robot.subsystems.pivotshooter.PivotShooter;
-import frc.robot.subsystems.pivotshooter.PivotingShooterConstants;
+import frc.robot.subsystems.pivotshooter.PivotShooterConstants;
 
 public class PivotShooterSlam extends DebugCommandBase {
   private final PivotShooter pivot;
@@ -29,7 +29,7 @@ public class PivotShooterSlam extends DebugCommandBase {
   public void initialize() {
     if (position == 0) {
       // slam to ground position
-      pivot.setOutputVoltage(PivotingShooterConstants.kPivotSlamShooterVoltage);
+      pivot.setOutputVoltage(PivotShooterConstants.kPivotSlamShooterVoltage);
       System.out.println("pivot slam to ground");
     } else {
       // slam to shooter position
@@ -65,6 +65,6 @@ public class PivotShooterSlam extends DebugCommandBase {
     // }
     // prevCurrent = pivot.getIntakeCurrent();
     // return false;
-    return pivot.getCurrent() > 15;
+    return pivot.getCurrent() > PivotShooterConstants.kCurrentThreshold;
   }
 }

@@ -19,27 +19,25 @@ import java.util.function.DoubleSupplier;
 
 public class HoldForNote extends DebugCommandBase {
   private Translation2d translation;
-  private boolean fieldRelative;
   private boolean openLoop;
 
   private SwerveDrive swerveSubsystem;
 
   private DoubleSupplier translationAxis;
 
+  private double translationPIDOutput = 0;
+  private double strafePIDOutput = 0;
+
   private PIDController translationPidController;
   private PIDController strafePidController;
 
   /** Driver control */
   public HoldForNote(
-      SwerveDrive swerveSubsystem,
-      DoubleSupplier translationAxis,
-      boolean fieldRelative,
-      boolean openLoop) {
+      SwerveDrive swerveSubsystem, DoubleSupplier translationAxis, boolean openLoop) {
     this.swerveSubsystem = swerveSubsystem;
     addRequirements(swerveSubsystem);
     this.translationAxis = translationAxis;
 
-    this.fieldRelative = fieldRelative;
     this.openLoop = openLoop;
     this.translationPidController =
         new PIDController(translationNoteKP, translationNoteKI, translationNoteKD);
@@ -70,17 +68,17 @@ public class HoldForNote extends DebugCommandBase {
     double compensatedMaxVelocity =
         maxTranslationalVelocity * Math.abs(translationAxis.getAsDouble());
 
-    double translationPIDOutput =
-        translationPidController.calculate(LimelightHelpers.getTY("limelight-note"), 0.0);
+    translationPIDOutput =
+        translationPidController.calculate(LimelightHelpers.getTY("limelight-note"), -9);
     translationPIDOutput =
         MathUtil.clamp(translationPIDOutput, -compensatedMaxVelocity, compensatedMaxVelocity);
-    double strafePIDOutput =
-        translationPidController.calculate(LimelightHelpers.getTX("limelight-note"), 0.0);
+    strafePIDOutput =
+        translationPidController.calculate(LimelightHelpers.getTX("limelight-note") * -1, 0.0);
     strafePIDOutput =
         MathUtil.clamp(strafePIDOutput, -compensatedMaxVelocity, compensatedMaxVelocity);
     translation = new Translation2d(translationPIDOutput, strafePIDOutput);
 
-    swerveSubsystem.drive(translation, 0, fieldRelative, openLoop);
+    swerveSubsystem.drive(translation, 0, false, openLoop);
   }
 
   @Override

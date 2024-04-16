@@ -25,7 +25,7 @@ public class IntakeInOverride extends DebugCommandBase {
     super.initialize();
     // intakeSubsystem.setIntakeVelocity(-2500);
     intakeSubsystem.setOutputVoltageIntake(12);
-    intakeSubsystem.setOutputVoltagePassthrough(-12);
+    intakeSubsystem.setOutputVoltagePassthrough(-8);
   }
 
   @Override

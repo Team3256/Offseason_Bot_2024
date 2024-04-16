@@ -16,8 +16,8 @@ public final class ShooterConstants {
   public static int kShooterMotorFollowerID = 23;
   /* PID */
   // Shooter
-  public static double kShooterKV = 0.145; // TODO: Tune PID values
-  public static double kShooterKA = 0; // only for feedforward, might not use
+  public static double kShooterKV = 0.39; // Original 0.145 TODO: Tune PID values
+  public static double kShooterKA = 1.48; // Original 0 only for feedforward, might not use
   public static double kShooterKS = 0;
   public static double kShooterKP = 0.4;
   public static double kShooterKI = 0;
