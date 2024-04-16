@@ -395,19 +395,18 @@ public class RobotContainer {
                   .withTimeout(aziCommandTimeOut));
       /* Feeder */
       driver
-              .povRight()
-              .onTrue(
-                      new Azimuth(
-                              swerveDrive,
-                              driver::getLeftY,
-                              driver::getLeftX,
-                              () -> feederRed,
-                              () -> true,
-                              true,
-                              true));
+          .povRight()
+          .onTrue(
+              new Azimuth(
+                  swerveDrive,
+                  driver::getLeftY,
+                  driver::getLeftX,
+                  () -> feederRed,
+                  () -> true,
+                  true,
+                  true));
 
-    }
-    else /* BLUE ALLIANCE PRESETS */ {
+    } else /* BLUE ALLIANCE PRESETS */ {
       driver // AMP
           .a()
           .onTrue(
@@ -434,16 +433,16 @@ public class RobotContainer {
                   .withTimeout(aziCommandTimeOut));
       /* Feeder */
       driver
-              .povRight()
-              .onTrue(
-                      new Azimuth(
-                              swerveDrive,
-                              driver::getLeftY,
-                              driver::getLeftX,
-                              () -> feederBlue,
-                              () -> true,
-                              true,
-                              true));
+          .povRight()
+          .onTrue(
+              new Azimuth(
+                  swerveDrive,
+                  driver::getLeftY,
+                  driver::getLeftX,
+                  () -> feederBlue,
+                  () -> true,
+                  true,
+                  true));
     }
 
     driver // SUBWOOFER FRONT
@@ -497,7 +496,7 @@ public class RobotContainer {
                     true)
                 .withTimeout(aziCommandTimeOut));
 
-    //SmartDashboard.putNumber("Angular Velocity", swerveDrive.getRotationalVelocity());
+    // SmartDashboard.putNumber("Angular Velocity", swerveDrive.getRotationalVelocity());
   }
 
   private void configureShooter() {
