@@ -222,8 +222,7 @@ public class Robot extends LoggedRobot {
     }
     if (ally.get() == DriverStation.Alliance.Blue) {
       isRedAlliance = false;
-    }
-    else {
+    } else {
       isRedAlliance = true;
     }
 
