@@ -7,10 +7,8 @@
 
 package frc.robot;
 
-import com.pathplanner.lib.commands.FollowPathCommand;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.RobotController;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import java.util.HashMap;
@@ -124,10 +122,7 @@ public class Robot extends LoggedRobot {
     if (Constants.kEnableAdvKit) {
       Logger.start();
     }
-    FollowPathCommand.warmupCommand().schedule();
 
-    // FollowPathCommand warmupCommand = new FollowPathCommand();
-    // warmupCommand.schedule();
     // Start logging! No more data receivers, replay sources, or
     // metadata values
     // may
@@ -198,7 +193,6 @@ public class Robot extends LoggedRobot {
 
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
-      System.out.println("hehe auto startie " + Timer.getFPGATimestamp());
       m_autonomousCommand.schedule();
     }
   }
