@@ -337,7 +337,11 @@ public class RobotContainer {
     // operator.povDownLeft().onTrue(new TestClimbFlip(climb));
   }
 
-  private void configureSwerve() {
+  public void setAllianceCol(boolean col) {
+    isRed = col;
+  }
+
+  public void configureSwerve() {
     swerveDrive = new SwerveDrive();
 
     swerveDrive.setDefaultCommand(
@@ -346,6 +350,7 @@ public class RobotContainer {
             () -> driver.getRawAxis(translationAxis),
             () -> driver.getRawAxis(strafeAxis),
             () -> driver.getRawAxis(rotationAxis)));
+
     driver
         .leftTrigger()
         .whileTrue(
@@ -356,7 +361,7 @@ public class RobotContainer {
                 () -> driver.getRawAxis(rotationAxis)));
 
     driver
-        .leftBumper()
+        .rightTrigger()
         .whileTrue(
             new NoMoreRotation(
                 swerveDrive,
@@ -365,11 +370,14 @@ public class RobotContainer {
                 true,
                 true));
 
-    driver.y().onTrue(new ZeroGyro(swerveDrive));
-    driver.y().onTrue(new ForceResetModulePositions(swerveDrive));
+    /* full reset */
+    driver.povLeft().onTrue(new ZeroGyro(swerveDrive));
+    driver.povLeft().onTrue(new ForceResetModulePositions(swerveDrive));
 
     if (isRed) /* RED ALLIANCE PRESETS */ {
-      driver // AMP
+
+      /* AMP */
+      driver
           .a()
           .onTrue(
               new Azimuth(
@@ -381,7 +389,9 @@ public class RobotContainer {
                       true,
                       true)
                   .withTimeout(aziCommandTimeOut));
-      driver // SOURCE
+
+      /* SOURCE */
+      driver
           .rightBumper()
           .onTrue(
               new Azimuth(
@@ -393,9 +403,10 @@ public class RobotContainer {
                       true,
                       true)
                   .withTimeout(aziCommandTimeOut));
-      /* Feeder */
+
+      /* FEEDER */
       driver
-          .povRight()
+          .leftBumper()
           .onTrue(
               new Azimuth(
                   swerveDrive,
@@ -406,8 +417,11 @@ public class RobotContainer {
                   true,
                   true));
 
-    } else /* BLUE ALLIANCE PRESETS */ {
-      driver // AMP
+    }
+    else /* BLUE ALLIANCE PRESETS */ {
+
+      /* AMP */
+      driver
           .a()
           .onTrue(
               new Azimuth(
@@ -419,7 +433,9 @@ public class RobotContainer {
                       true,
                       true)
                   .withTimeout(aziCommandTimeOut));
-      driver // SOURCE
+
+      /* SOURCE */
+      driver
           .rightBumper()
           .onTrue(
               new Azimuth(
@@ -431,9 +447,10 @@ public class RobotContainer {
                       true,
                       true)
                   .withTimeout(aziCommandTimeOut));
-      /* Feeder */
+
+      /* FEEDER */
       driver
-          .povRight()
+          .leftBumper()
           .onTrue(
               new Azimuth(
                   swerveDrive,
@@ -445,8 +462,9 @@ public class RobotContainer {
                   true));
     }
 
-    driver // SUBWOOFER FRONT
-        .leftBumper()
+    /* SUBWOOFER FRONT */
+    driver
+        .y()
         .onTrue(
             new Azimuth(
                     swerveDrive,
@@ -457,7 +475,9 @@ public class RobotContainer {
                     true,
                     true)
                 .withTimeout(aziCommandTimeOut));
-    driver // SUBWOOFER RIGHT
+
+    /* SUBWOOFER RIGHT */
+    driver
         .b()
         .onTrue(
             new Azimuth(
@@ -469,7 +489,9 @@ public class RobotContainer {
                     true,
                     true)
                 .withTimeout(aziCommandTimeOut));
-    driver // SUBWOOFER LEFT
+
+    /* SUBWOOFER LEFT */
+    driver
         .x()
         .onTrue(
             new Azimuth(
@@ -482,7 +504,7 @@ public class RobotContainer {
                     true)
                 .withTimeout(aziCommandTimeOut));
 
-    /* Clean up */
+    /* CLEANUP */
     driver
         .povDown()
         .onTrue(
@@ -495,8 +517,6 @@ public class RobotContainer {
                     true,
                     true)
                 .withTimeout(aziCommandTimeOut));
-
-    // SmartDashboard.putNumber("Angular Velocity", swerveDrive.getRotationalVelocity());
   }
 
   private void configureShooter() {
@@ -688,6 +708,11 @@ public class RobotContainer {
     shoot.schedule();
   }
 
+  public void shootSpeaker() {
+    Command shoot = new ScheduleCommand(new ShootSpeaker(shooter));
+    shoot.schedule();
+  }
+
   public void periodic(double dt) {
     if (FeatureFlags.kRobotVizEnabled) {
       robotViz.update(dt);
@@ -716,10 +741,5 @@ public class RobotContainer {
     LimelightHelpers.setPriorityTagID("limelight", 7);
     System.out.println("Distance: " + ty);
     //    System.out.println("Distance: " + distanceFromLimelightToGoalInches);
-  }
-
-  public void shootSpeaker() {
-    Command shoot = new ScheduleCommand(new ShootSpeaker(shooter));
-    shoot.schedule();
   }
 }
