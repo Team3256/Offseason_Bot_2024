@@ -63,6 +63,8 @@ import frc.robot.subsystems.swerve.commands.*;
 import io.github.oblarg.oblog.annotations.Config;
 import io.github.oblarg.oblog.annotations.Log;
 
+import java.sql.Driver;
+
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
  * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
@@ -614,21 +616,12 @@ public class RobotContainer {
               new InstantCommand(
                   () -> {
                     operator.getHID().setRumble(GenericHID.RumbleType.kBothRumble, 50);
-                  }))
-          .onFalse(
-              new InstantCommand(
-                  () -> {
-                    operator.getHID().setRumble(GenericHID.RumbleType.kBothRumble, 0);
-                  }));
-      intakeDetectedNote
-          .onTrue(
-              new InstantCommand(
-                  () -> {
                     driver.getHID().setRumble(GenericHID.RumbleType.kBothRumble, 50);
                   }))
           .onFalse(
               new InstantCommand(
                   () -> {
+                    operator.getHID().setRumble(GenericHID.RumbleType.kBothRumble, 0);
                     driver.getHID().setRumble(GenericHID.RumbleType.kBothRumble, 0);
                   }));
 
