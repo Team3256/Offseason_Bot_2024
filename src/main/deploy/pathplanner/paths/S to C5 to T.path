@@ -98,8 +98,19 @@
       "minWaypointRelativePos": 0,
       "maxWaypointRelativePos": 0.1,
       "constraints": {
-        "maxVelocity": 0.1,
+        "maxVelocity": 0.4,
         "maxAcceleration": 0.5,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 720.0
+      }
+    },
+    {
+      "name": "New Constraints Zone",
+      "minWaypointRelativePos": 2.9,
+      "maxWaypointRelativePos": 3.0,
+      "constraints": {
+        "maxVelocity": 4.28,
+        "maxAcceleration": 3.0,
         "maxAngularVelocity": 540.0,
         "maxAngularAcceleration": 720.0
       }
@@ -142,7 +153,7 @@
     },
     {
       "name": "shoot",
-      "waypointRelativePos": 2.8,
+      "waypointRelativePos": 2.7,
       "command": {
         "type": "sequential",
         "data": {

@@ -3,13 +3,47 @@
   "waypoints": [
     {
       "anchor": {
+<<<<<<<< HEAD:src/main/deploy/pathplanner/paths/C2 to C3 (unused).path
+        "x": 12.3,
+        "y": 7.03
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 10.530447993848911,
+        "y": 6.850839379282182
+========
         "x": 13.0,
         "y": 3.17
       },
       "prevControl": null,
       "nextControl": {
-        "x": 10.905194763313919,
-        "y": 0.3864576060107912
+        "x": 12.427603514266906,
+        "y": 2.0962397417009275
+>>>>>>>> 2eb48d79aca081aab4b6c2beefc72611b13181fc:src/main/deploy/pathplanner/paths/T to C4 to T.path
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 10.659267195853895,
+        "y": 1.580962933686541
+      },
+      "prevControl": {
+<<<<<<<< HEAD:src/main/deploy/pathplanner/paths/C2 to C3 (unused).path
+        "x": 8.350505168538248,
+        "y": 4.500571497987442
+      },
+      "nextControl": {
+        "x": 8.715268329252778,
+        "y": 4.27445533921025
+========
+        "x": 11.705676383726392,
+        "y": 1.5098477461612267
+      },
+      "nextControl": {
+        "x": 9.453051031638399,
+        "y": 1.6629387895070102
       },
       "isLocked": false,
       "linkedName": null
@@ -26,6 +60,7 @@
       "nextControl": {
         "x": 8.399075742516676,
         "y": 1.862023010779259
+>>>>>>>> 2eb48d79aca081aab4b6c2beefc72611b13181fc:src/main/deploy/pathplanner/paths/T to C4 to T.path
       },
       "isLocked": false,
       "linkedName": null
@@ -36,8 +71,13 @@
         "y": 3.17
       },
       "prevControl": {
+<<<<<<<< HEAD:src/main/deploy/pathplanner/paths/C2 to C3 (unused).path
+        "x": 10.36649628220797,
+        "y": 7.951658014585645
+========
         "x": 11.888905033159563,
         "y": 1.159372818032369
+>>>>>>>> 2eb48d79aca081aab4b6c2beefc72611b13181fc:src/main/deploy/pathplanner/paths/T to C4 to T.path
       },
       "nextControl": null,
       "isLocked": false,
@@ -46,21 +86,80 @@
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 1.0,
+      "waypointRelativePos": 2.0,
       "rotationDegrees": 140.0,
       "rotateFast": true
     },
     {
-      "waypointRelativePos": 1.7,
+<<<<<<<< HEAD:src/main/deploy/pathplanner/paths/C2 to C3 (unused).path
+      "waypointRelativePos": 0.05,
+      "rotationDegrees": -140.0,
+      "rotateFast": true
+    },
+    {
+      "waypointRelativePos": 1.95,
+      "rotationDegrees": 150.0,
+      "rotateFast": true
+    },
+    {
+      "waypointRelativePos": 1.05,
+      "rotationDegrees": -140.0,
+      "rotateFast": true
+    },
+    {
+      "waypointRelativePos": 1.85,
+      "rotationDegrees": 150.0,
+      "rotateFast": true
+    },
+    {
+      "waypointRelativePos": 1.1,
+      "rotationDegrees": 150.0,
+========
+      "waypointRelativePos": 2.7,
       "rotationDegrees": -143.0,
+>>>>>>>> 2eb48d79aca081aab4b6c2beefc72611b13181fc:src/main/deploy/pathplanner/paths/T to C4 to T.path
       "rotateFast": true
     }
   ],
-  "constraintZones": [],
+  "constraintZones": [
+    {
+      "name": "New Constraints Zone",
+      "minWaypointRelativePos": 2.9,
+      "maxWaypointRelativePos": 3.0,
+      "constraints": {
+        "maxVelocity": 4.28,
+        "maxAcceleration": 3.0,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 720.0
+      }
+    }
+  ],
   "eventMarkers": [
     {
+<<<<<<<< HEAD:src/main/deploy/pathplanner/paths/C2 to C3 (unused).path
+      "name": "shoot",
+      "waypointRelativePos": 1.95,
+      "command": {
+        "type": "sequential",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "outtake speaker"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
       "name": "intake sequence",
-      "waypointRelativePos": 0.4,
+      "waypointRelativePos": 0.55,
+========
+      "name": "intake sequence",
+      "waypointRelativePos": 0.8,
+>>>>>>>> 2eb48d79aca081aab4b6c2beefc72611b13181fc:src/main/deploy/pathplanner/paths/T to C4 to T.path
       "command": {
         "type": "sequential",
         "data": {
@@ -76,7 +175,11 @@
       }
     },
     {
+<<<<<<<< HEAD:src/main/deploy/pathplanner/paths/C2 to C3 (unused).path
+      "name": "aim wing side",
+========
       "name": "aim truss",
+>>>>>>>> 2eb48d79aca081aab4b6c2beefc72611b13181fc:src/main/deploy/pathplanner/paths/T to C4 to T.path
       "waypointRelativePos": 0,
       "command": {
         "type": "sequential",
@@ -85,6 +188,9 @@
             {
               "type": "named",
               "data": {
+<<<<<<<< HEAD:src/main/deploy/pathplanner/paths/C2 to C3 (unused).path
+                "name": "aim wing side"
+========
                 "name": "aim truss "
               }
             }
@@ -94,7 +200,7 @@
     },
     {
       "name": "shoot",
-      "waypointRelativePos": 1.8,
+      "waypointRelativePos": 2.8,
       "command": {
         "type": "sequential",
         "data": {
@@ -103,6 +209,7 @@
               "type": "named",
               "data": {
                 "name": "outtake speaker"
+>>>>>>>> 2eb48d79aca081aab4b6c2beefc72611b13181fc:src/main/deploy/pathplanner/paths/T to C4 to T.path
               }
             }
           ]
@@ -122,9 +229,15 @@
     "rotateFast": true
   },
   "reversed": false,
+<<<<<<<< HEAD:src/main/deploy/pathplanner/paths/C2 to C3 (unused).path
+  "folder": "7 note auto Awwww",
+  "previewStartingState": {
+    "rotation": 157.0,
+========
   "folder": "Main Source Auto",
   "previewStartingState": {
     "rotation": -143.0,
+>>>>>>>> 2eb48d79aca081aab4b6c2beefc72611b13181fc:src/main/deploy/pathplanner/paths/T to C4 to T.path
     "velocity": 0
   },
   "useDefaultConstraints": false

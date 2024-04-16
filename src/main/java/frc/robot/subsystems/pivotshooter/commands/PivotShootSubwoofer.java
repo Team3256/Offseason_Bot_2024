@@ -7,13 +7,13 @@
 
 package frc.robot.subsystems.pivotshooter.commands;
 
-import static frc.robot.subsystems.pivotshooter.PivotingShooterConstants.kSubWooferPreset;
+import static frc.robot.subsystems.pivotshooter.PivotShooterConstants.kSubWooferPreset;
 
 import frc.robot.Constants;
 import frc.robot.helpers.DebugCommandBase;
 import frc.robot.helpers.TimedBoolean;
 import frc.robot.subsystems.pivotshooter.PivotShooter;
-import frc.robot.subsystems.pivotshooter.PivotingShooterConstants;
+import frc.robot.subsystems.pivotshooter.PivotShooterConstants;
 import org.littletonrobotics.junction.Logger;
 
 public class PivotShootSubwoofer extends DebugCommandBase {
@@ -34,7 +34,7 @@ public class PivotShootSubwoofer extends DebugCommandBase {
   @Override
   public void initialize() {
     super.initialize();
-    pivotShooter.setDegrees(angleDeg * PivotingShooterConstants.kPivotMotorGearing);
+    pivotShooter.setDegrees(angleDeg * PivotShooterConstants.kPivotMotorGearing);
     Logger.recordOutput("PivotSetAngle", angleDeg);
     if (Constants.FeatureFlags.kDebugEnabled) {
       System.out.println("Set pivot at angle: " + angleDeg + " deg)");
@@ -79,7 +79,7 @@ public class PivotShootSubwoofer extends DebugCommandBase {
     // "current pivot position: " + Math.abs((pivotIntake.getDegrees() / 33) -
     // angleDeg));
     if (Math.abs((pivotShooter.getDegrees() / 1) - angleDeg)
-        < PivotingShooterConstants.kPivotPositionToleranceDeg) {
+        < PivotShooterConstants.kPivotPositionToleranceDeg) {
       System.out.println("pivotShooter reached shooting position");
       return true;
     } else return false;

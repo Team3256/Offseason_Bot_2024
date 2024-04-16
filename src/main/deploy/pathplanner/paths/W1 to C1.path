@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 14.14,
-        "y": 6.72
+        "x": 14.12,
+        "y": 6.76
       },
       "prevControl": null,
       "nextControl": {
-        "x": 11.924037542796913,
-        "y": 7.026501927468904
+        "x": 13.698679793919784,
+        "y": 7.02923834041333
       },
       "isLocked": false,
       "linkedName": null
@@ -20,12 +20,12 @@
         "y": 7.366116187296568
       },
       "prevControl": {
-        "x": 8.735400115622799,
-        "y": 7.864460658256463
+        "x": 8.720784928756197,
+        "y": 7.643756243636661
       },
       "nextControl": {
         "x": 8.586449127249182,
-        "y": 6.921104398556871
+        "y": 7.06163443710625
       },
       "isLocked": false,
       "linkedName": null
@@ -51,12 +51,40 @@
       "rotateFast": false
     },
     {
-      "waypointRelativePos": 0.2,
-      "rotationDegrees": 160.0,
-      "rotateFast": false
+      "waypointRelativePos": 0.1,
+      "rotationDegrees": 170.0,
+      "rotateFast": true
+    },
+    {
+      "waypointRelativePos": 1.05,
+      "rotationDegrees": 161.0,
+      "rotateFast": true
     }
   ],
-  "constraintZones": [],
+  "constraintZones": [
+    {
+      "name": "New Constraints Zone",
+      "minWaypointRelativePos": 1.9,
+      "maxWaypointRelativePos": 2.0,
+      "constraints": {
+        "maxVelocity": 4.28,
+        "maxAcceleration": 3.0,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 720.0
+      }
+    },
+    {
+      "name": "New Constraints Zone",
+      "minWaypointRelativePos": 1.0,
+      "maxWaypointRelativePos": 1.05,
+      "constraints": {
+        "maxVelocity": 0.5,
+        "maxAcceleration": 2.0,
+        "maxAngularVelocity": 343.77,
+        "maxAngularAcceleration": 720.0
+      }
+    }
+  ],
   "eventMarkers": [
     {
       "name": "intake sequence",
@@ -85,7 +113,7 @@
             {
               "type": "named",
               "data": {
-                "name": "aim wing side"
+                "name": "aim half truss wing"
               }
             }
           ]
@@ -94,7 +122,7 @@
     },
     {
       "name": "shoot",
-      "waypointRelativePos": 1.65,
+      "waypointRelativePos": 1.9,
       "command": {
         "type": "sequential",
         "data": {
@@ -112,17 +140,17 @@
   ],
   "globalConstraints": {
     "maxVelocity": 4.28,
-    "maxAcceleration": 4.5,
-    "maxAngularVelocity": 540.0,
+    "maxAcceleration": 4.0,
+    "maxAngularVelocity": 343.77,
     "maxAngularAcceleration": 720.0
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 157.0,
+    "rotation": 161.0,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "7 note auto Awwww",
+  "folder": "5 note amp",
   "previewStartingState": {
     "rotation": 150.0,
     "velocity": 0

@@ -8,12 +8,14 @@
 package frc.robot;
 
 import static edu.wpi.first.wpilibj.RobotBase.isReal;
+import static frc.robot.Constants.azimuthStickDeadband;
 import static frc.robot.subsystems.pivotintake.PivotIntakeConstants.kPivotGroundAngleDeg;
-import static frc.robot.subsystems.pivotshooter.PivotingShooterConstants.*;
+import static frc.robot.subsystems.pivotshooter.PivotShooterConstants.*;
 import static frc.robot.subsystems.swerve.SwerveConstants.AzimuthConstants.*;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
@@ -23,6 +25,7 @@ import edu.wpi.first.wpilibj2.command.*;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.FeatureFlags;
+import frc.robot.autos.AutoConstants;
 import frc.robot.autos.commands.AutoScoreAmp;
 import frc.robot.autos.commands.AutoScoreSpeaker;
 import frc.robot.autos.commands.IntakeSequence;
@@ -30,6 +33,8 @@ import frc.robot.autos.commands.MoveToNote;
 import frc.robot.autos.commands.RotateToNote;
 import frc.robot.commands.PitRoutine;
 import frc.robot.helpers.XboxStalker;
+import frc.robot.limelight.Limelight;
+import frc.robot.limelight.LimelightHelpers;
 import frc.robot.robotviz.RobotViz;
 import frc.robot.subsystems.ampbar.AmpBar;
 import frc.robot.subsystems.ampbar.commands.AmpPosition;
@@ -42,6 +47,8 @@ import frc.robot.subsystems.climb.commands.ZeroClimb;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.commands.*;
 import frc.robot.subsystems.led.LED;
+import frc.robot.subsystems.led.LEDConstants;
+import frc.robot.subsystems.led.commands.*;
 import frc.robot.subsystems.pivotintake.PivotIntake;
 import frc.robot.subsystems.pivotintake.PivotIntakeConstants;
 import frc.robot.subsystems.pivotintake.commands.PivotIntakeSetAngle;
@@ -58,6 +65,8 @@ import frc.robot.subsystems.swerve.SwerveDrive;
 import frc.robot.subsystems.swerve.commands.*;
 import io.github.oblarg.oblog.annotations.Config;
 import io.github.oblarg.oblog.annotations.Log;
+import java.util.Optional;
+import org.littletonrobotics.junction.Logger;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -164,13 +173,29 @@ public class RobotContainer {
       NamedCommands.registerCommand( // shoot preloaded note to speaker, use at match start
           "preload speaker",
           new SequentialCommandGroup(
+              // new PrintCommand("preload im outta blush"),
               new PivotShooterZero(pivotShooter),
               new ParallelDeadlineGroup(
                   new SequentialCommandGroup(
-                      new WaitCommand(0.6), // TODO: maybe need to tune this too
-                      new IntakeAndPassthroughButItEnds(intake)), // TODO: tune time in withTimeout
-                  new ShootSubwoofer(shooter),
-                  new PivotShootSubwoofer(pivotShooter))
+                      new WaitCommand(0.5), // TODO: maybe need to tune this too
+                      new IntakeInOverride(intake)
+                          .withTimeout(0.7)), // TODO: tune time in withTimeout
+                  new PivotShootSubwoofer(pivotShooter),
+                  new ShootSubwoofer(shooter))
+              // new PivotShooterSlamAndVoltage(pivotShooter)));
+              ));
+      NamedCommands.registerCommand( // shoot preloaded note to speaker, use at match start
+          "preload speaker amp side",
+          new SequentialCommandGroup(
+              // new PrintCommand("preload im outta blush"),
+              new PivotShooterZero(pivotShooter),
+              new ParallelDeadlineGroup(
+                  new SequentialCommandGroup(
+                      new WaitCommand(0.8), // TODO: maybe need to tune this too
+                      new IntakeInOverride(intake)
+                          .withTimeout(0.7)), // TODO: tune time in withTimeout
+                  new PivotShootSubwoofer(pivotShooter),
+                  new ShootSubwoofer(shooter))
               // new PivotShooterSlamAndVoltage(pivotShooter)));
               ));
       NamedCommands.registerCommand( // intake ground note, stow to feeder chamber
@@ -201,10 +226,6 @@ public class RobotContainer {
           "aim wing side", new PivotShooterSetAngle(pivotShooter, kWingNoteSidePreset));
       NamedCommands.registerCommand(
           "aim wing far side", new PivotShooterSetAngle(pivotShooter, kWingNoteFarSidePreset));
-      NamedCommands.registerCommand(
-          "aim truss", new PivotShooterSetAngle(pivotShooter, kTrussSourceSidePreset));
-      NamedCommands.registerCommand(
-          "aim half truss wing", new PivotShooterSetAngle(pivotShooter, kHalfWingPodiumPreset));
       NamedCommands.registerCommand(
           "zero pivot shooter", new PivotShooterSlamAndVoltage(pivotShooter));
 
@@ -280,8 +301,10 @@ public class RobotContainer {
     operator.rightBumper().whileTrue(new IntakeAndPassthrough(intake));
     if (FeatureFlags.kPivotEnabled) {
       operator.leftBumper().whileTrue(new IntakeOutArmOff(intake, pivotIntake));
+      driver.rightTrigger().whileTrue(new IntakeOutArmOff(intake, pivotIntake));
     } else {
       operator.leftBumper().whileTrue(new IntakeOut(intake));
+      driver.rightTrigger().whileTrue(new IntakeOut(intake));
     }
 
     // operator.povDown().onTrue(new IntakeOff(intake));
@@ -320,11 +343,7 @@ public class RobotContainer {
     // operator.povDownLeft().onTrue(new TestClimbFlip(climb));
   }
 
-  public void setAllianceCol(boolean col){
-    isRed = col;
-  }
-
-  public void configureSwerve() {
+  private void configureSwerve() {
     swerveDrive = new SwerveDrive();
 
     swerveDrive.setDefaultCommand(
@@ -344,7 +363,7 @@ public class RobotContainer {
 
     // driver.povDown().whileTrue(new EjectNote(swerveDrive, pivotIntake, intake));
     driver
-        .rightTrigger()
+        .leftBumper()
         .whileTrue(
             new NoMoreRotation(
                 swerveDrive,
@@ -671,26 +690,28 @@ public class RobotContainer {
     }
     XboxStalker.stalk(driver, operator);
     // System.out.println(Limelight.getBotpose("limelight").length);
+    //
+    double ty = Limelight.getTY("limelight");
+    //
+    //    // how many degrees back is your limelight rotated from perfectly vertical?
+    //
+    double limelightMountAngleDegrees = 21.936;
 
-//    double ty = Limelight.getTY("limelight");
-//
-//    // how many degrees back is your limelight rotated from perfectly vertical?
-//    double limelightMountAngleDegrees = 21.936;
-//
-//    // distance from the center of the Limelight lens to the floor
-//    double limelightLensHeightInches = 15.601;
-//
-//    // distance from the target to the floor
-//    double goalHeightInches = 56.375;
-//
-//    double angleToGoalDegrees = limelightMountAngleDegrees + ty;
-//    double angleToGoalRadians = angleToGoalDegrees * (3.14159 / 180.0);
-//
-//    // calculate distance
-//    double distanceFromLimelightToGoalInches =
-//        (goalHeightInches - limelightLensHeightInches) / Math.tan(angleToGoalRadians);
-//    LimelightHelpers.setPriorityTagID("limelight", 4);
-//    System.out.println("Distance: " + distanceFromLimelightToGoalInches);
+    // distance from the center of the Limelight lens to the floor
+    double limelightLensHeightInches = 15.601;
+
+    // distance from the target to the floor
+    double goalHeightInches = 56.375;
+
+    double angleToGoalDegrees = limelightMountAngleDegrees + ty;
+    double angleToGoalRadians = angleToGoalDegrees * (3.14159 / 180.0);
+
+    // calculate distance
+    double distanceFromLimelightToGoalInches =
+        (goalHeightInches - limelightLensHeightInches) / Math.tan(angleToGoalRadians);
+    LimelightHelpers.setPriorityTagID("limelight", 7);
+    System.out.println("Distance: " + ty);
+    //    System.out.println("Distance: " + distanceFromLimelightToGoalInches);
   }
 
   public void shootSpeaker() {

@@ -66,8 +66,8 @@ public final class SwerveConstants {
 
   /* Drive Motor Characterization Values From SysID */
   public static final double driveKS = 0; // TODO: Tune
-  public static final double driveKV = 2.08; //0.13
-  public static final double driveKA = 0.21; //0
+  public static final double driveKV = 2.08; // 0.13
+  public static final double driveKA = 0.21; // 0
 
   // Localization
 
@@ -171,7 +171,7 @@ public final class SwerveConstants {
   public static final double slowMaxTranslationalVelocity =
       maxTranslationalVelocity * 0.2; // TODO: Tune
   public static final double maxAngularVelocity = 6; // TODO: Tune
-  public static final double slowMaxAngularVelocity = maxAngularVelocity * 0.3; // TODO: Tune
+  public static final double slowMaxAngularVelocity = maxAngularVelocity * 0.5; // TODO: Tune
   /* Neutral Modes */
   public static final NeutralModeValue angleNeutralMode = NeutralModeValue.Coast;
   public static final NeutralModeValue driveNeutralMode = NeutralModeValue.Brake;
@@ -266,38 +266,38 @@ public final class SwerveConstants {
     public static final double sourceXRed = -rootThreeTwo;
     public static final double sourceXBlue = rootThreeTwo;
     public static final double sourceY = half;
-    
+
     // FEEDER
     public static final double feederXRed = half;
     public static final double feederXBlue = -half;
     public static final double feederY = -rootThreeTwo;
 
     // Angles
-    
+
     public static final double aziAmpRed =
             (Math.atan2(ampXRed, ampY) * 180 / Math.PI);
-    
+
     public static final double aziAmpBlue =
             (Math.atan2(ampXBlue, ampY) * 180 / Math.PI);
-    
-    public static final double aziSubwooferFront = 
+
+    public static final double aziSubwooferFront =
             (Math.atan2(subwooferFrontX, subwooferFrontY) * 180 / Math.PI) ;
-    
-    public static final double aziSubwooferLeft = 
+
+    public static final double aziSubwooferLeft =
             (Math.atan2(subwooferLeftX, subwooferSideY) * 180 / pi);
-    
-    public static final double aziSubwooferRight = 
+
+    public static final double aziSubwooferRight =
             (Math.atan2(subwooferRightX, subwooferSideY) * 180 / pi);
-    
-    public static final double aziSourceRed = 
+
+    public static final double aziSourceRed =
             (Math.atan2(sourceXRed, sourceY) * 180 / pi) + 120;
-    
-    public static final double aziSourceBlue = 
+
+    public static final double aziSourceBlue =
             (Math.atan2(sourceXBlue, sourceY) * 180 / pi);
-    
-    public static final double cleanUp = 
+
+    public static final double cleanUp =
             (Math.atan2(ampXRed, ampY) * 180 / pi);
-    
+
     public static final double feederRed =
             (Math.atan2(feederXRed, feederY) * 180 / pi);
     public static final double feederBlue =

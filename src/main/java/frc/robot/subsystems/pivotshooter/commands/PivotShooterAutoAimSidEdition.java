@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.helpers.DebugCommandBase;
 import frc.robot.limelight.Limelight;
 import frc.robot.subsystems.pivotshooter.PivotShooter;
-import frc.robot.subsystems.pivotshooter.PivotingShooterConstants;
+import frc.robot.subsystems.pivotshooter.PivotShooterConstants;
 import java.util.Optional;
 
 public class PivotShooterAutoAimSidEdition extends DebugCommandBase {
@@ -29,14 +29,14 @@ public class PivotShooterAutoAimSidEdition extends DebugCommandBase {
   public void initialize() {
     Optional<DriverStation.Alliance> ally = DriverStation.getAlliance();
     if (ally.isPresent() && ally.get() == DriverStation.Alliance.Red) {
-      speakerId = PivotingShooterConstants.kSpeakerAprilTagRed;
-      speakerId2 = PivotingShooterConstants.kSpeakerBackupAprilTagRed;
+      speakerId = PivotShooterConstants.kSpeakerAprilTagRed;
+      speakerId2 = PivotShooterConstants.kSpeakerBackupAprilTagRed;
     } else if (ally.isPresent()) {
-      speakerId = PivotingShooterConstants.kSpeakerAprilTagBlue;
-      speakerId2 = PivotingShooterConstants.kSpeakerBackupAprilTagBlue;
+      speakerId = PivotShooterConstants.kSpeakerAprilTagBlue;
+      speakerId2 = PivotShooterConstants.kSpeakerBackupAprilTagBlue;
     } else {
-      speakerId = PivotingShooterConstants.kSpeakerAprilTagRed;
-      speakerId2 = PivotingShooterConstants.kSpeakerBackupAprilTagRed;
+      speakerId = PivotShooterConstants.kSpeakerAprilTagRed;
+      speakerId2 = PivotShooterConstants.kSpeakerBackupAprilTagRed;
     }
   }
 
