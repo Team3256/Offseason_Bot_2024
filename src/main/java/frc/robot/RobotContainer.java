@@ -309,11 +309,9 @@ public class RobotContainer {
     operator.rightBumper().whileTrue(new IntakeAndPassthrough(intake));
     if (FeatureFlags.kPivotEnabled) {
       operator.leftBumper().whileTrue(new IntakeOutArmOff(intake, pivotIntake));
-      driver.rightTrigger().whileTrue(new IntakeOutArmOff(intake, pivotIntake));
     } else {
 
       operator.leftBumper().whileTrue(new IntakeOut(intake));
-      driver.rightTrigger().whileTrue(new IntakeOut(intake));
     }
 
     // operator.povDown().onTrue(new IntakeOff(intake));
@@ -374,9 +372,8 @@ public class RobotContainer {
                 () -> driver.getRawAxis(strafeAxis),
                 () -> driver.getRawAxis(rotationAxis)));
 
-    // driver.povDown().whileTrue(new EjectNote(swerveDrive, pivotIntake, intake));
     driver
-        .leftBumper()
+        .rightTrigger()
         .whileTrue(
             new NoMoreRotation(
                 swerveDrive,
@@ -410,7 +407,7 @@ public class RobotContainer {
                       true)
                   .withTimeout(aziCommandTimeOut));
       driver // SUBWOOFER FRONT
-          .povDown()
+          .leftBumper()
           .onTrue(
               new Azimuth(
                       swerveDrive,
@@ -483,7 +480,7 @@ public class RobotContainer {
                       true)
                   .withTimeout(aziCommandTimeOut));
       driver // SUBWOOFER FRONT
-          .povDown()
+          .leftBumper()
           .onTrue(
               new Azimuth(
                       swerveDrive,
