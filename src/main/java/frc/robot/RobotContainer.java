@@ -417,9 +417,7 @@ public class RobotContainer {
                   true,
                   true));
 
-    }
-
-    else /* BLUE ALLIANCE PRESETS */ {
+    } else /* BLUE ALLIANCE PRESETS */ {
 
       /* AMP */
       driver
