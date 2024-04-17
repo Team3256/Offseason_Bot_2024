@@ -40,14 +40,14 @@ public final class Constants {
 
     public static final boolean kPivotEnabled = true;
 
-    public static final boolean kClimbEnabled = true;
+    public static final boolean kClimbEnabled = true; 
     public static final boolean kLEDEnabled = true;
 
     public static final boolean kAmpBarEnabled = true;
 
     // logging
     public static final boolean kDebugEnabled = false;
-    public static final boolean DebugCommandEnabled = true;
+    public static final boolean DebugCommandEnabled = false;
     public static final boolean kRobotVizEnabled = true && !Robot.isReal();
 
     // features

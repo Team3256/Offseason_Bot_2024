@@ -297,8 +297,8 @@ public class RobotContainer {
         .b()
         .onTrue(
             new SequentialCommandGroup(
-                new PivotShooterSetAngle(pivotShooter, kTrussSourceSidePreset)));
-    operator.povUp().onTrue(new PivotShooterZero(pivotShooter));
+                new PivotShooterSetAngle(pivotShooter, kWingNoteSidePreset)));
+    operator.povUp().onTrue(new PivotShooterSetAngle(pivotShooter, kFeederPreset));
   }
 
   private void configureIntake() {
@@ -390,8 +390,8 @@ public class RobotContainer {
                 true));
 
     /* full reset */
-    driver.povLeft().onTrue(new ZeroGyro(swerveDrive));
-    driver.povLeft().onTrue(new ForceResetModulePositions(swerveDrive));
+    driver.y().onTrue(new ZeroGyro(swerveDrive));
+    driver.y().onTrue(new ForceResetModulePositions(swerveDrive));
 
     if (isRed) /* RED ALLIANCE PRESETS */ {
 
@@ -425,7 +425,7 @@ public class RobotContainer {
 
       /* FEEDER */
       driver
-          .leftBumper()
+          .povRight()
           .onTrue(
               new Azimuth(
                   swerveDrive,
@@ -468,7 +468,7 @@ public class RobotContainer {
 
       /* FEEDER */
       driver
-          .leftBumper()
+          .povRight()
           .onTrue(
               new Azimuth(
                   swerveDrive,
@@ -482,7 +482,7 @@ public class RobotContainer {
 
     /* SUBWOOFER FRONT */
     driver
-        .y()
+        .leftBumper()
         .onTrue(
             new Azimuth(
                     swerveDrive,
@@ -735,27 +735,27 @@ public class RobotContainer {
     }
     XboxStalker.stalk(driver, operator);
     // System.out.println(Limelight.getBotpose("limelight").length);
-    //
-    double ty = Limelight.getTY("limelight");
-    //
-    //    // how many degrees back is your limelight rotated from perfectly vertical?
-    //
-    double limelightMountAngleDegrees = 21.936;
+    // //
+    // double ty = Limelight.getTY("limelight");
+    // //
+    // //    // how many degrees back is your limelight rotated from perfectly vertical?
+    // //
+    // double limelightMountAngleDegrees = 21.936;
 
-    // distance from the center of the Limelight lens to the floor
-    double limelightLensHeightInches = 15.601;
+    // // distance from the center of the Limelight lens to the floor
+    // double limelightLensHeightInches = 15.601;
 
-    // distance from the target to the floor
-    double goalHeightInches = 56.375;
+    // // distance from the target to the floor
+    // double goalHeightInches = 56.375;
 
-    double angleToGoalDegrees = limelightMountAngleDegrees + ty;
-    double angleToGoalRadians = angleToGoalDegrees * (3.14159 / 180.0);
+    // double angleToGoalDegrees = limelightMountAngleDegrees + ty;
+    // double angleToGoalRadians = angleToGoalDegrees * (3.14159 / 180.0);
 
-    // calculate distance
-    double distanceFromLimelightToGoalInches =
-        (goalHeightInches - limelightLensHeightInches) / Math.tan(angleToGoalRadians);
-    LimelightHelpers.setPriorityTagID("limelight", 7);
-    System.out.println("Distance: " + ty);
+    // // calculate distance
+    // double distanceFromLimelightToGoalInches =
+    //     (goalHeightInches - limelightLensHeightInches) / Math.tan(angleToGoalRadians);
+    // LimelightHelpers.setPriorityTagID("limelight", 7);
+    // System.out.println("Distance: " + ty);
     //    System.out.println("Distance: " + distanceFromLimelightToGoalInches);
   }
 }
