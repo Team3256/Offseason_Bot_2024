@@ -37,7 +37,7 @@ public class CoordinateSystem extends DebugCommandBase {
 
   @Override
   public void initialize() {
-    led.setLedColor(r, g, b, w, getIndex(x, y), 1);
+    led.setLedColor(r, g, b, w, getIndex(x, y)+8, 1);
     super.initialize();
   }
 
