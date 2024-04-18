@@ -37,7 +37,8 @@ public class SinglePositionSubsystem extends SubsystemBase implements Loggable {
   private double currentThreshold = 0;
   private double stallVelocity = 0;
 
-  public void DEFAULT() {}
+  public void DEFAULT() {
+  }
 
   public SinglePositionSubsystem(
       boolean isMotionMagic, double currentThreshold, double stallVelocity) {
@@ -104,16 +105,15 @@ public class SinglePositionSubsystem extends SubsystemBase implements Loggable {
       boolean simulateGravity) {
     positionMotorSim = positionMotor.getSimState();
     positionMotorSim.setSupplyVoltage(12);
-    positionModel =
-        new SingleJointedArmSim(
-            DCMotor.getFalcon500(kNumPositionMotors),
-            kPositionMotorGearing,
-            jKgMetersSquared,
-            kPositionLength,
-            Units.degreesToRadians(kPositionMinAngleDeg),
-            Units.degreesToRadians(kPositionMaxAngleDeg),
-            simulateGravity,
-            kPositionMinAngleDeg);
+    positionModel = new SingleJointedArmSim(
+        DCMotor.getFalcon500(kNumPositionMotors),
+        kPositionMotorGearing,
+        jKgMetersSquared,
+        kPositionLength,
+        Units.degreesToRadians(kPositionMinAngleDeg),
+        Units.degreesToRadians(kPositionMaxAngleDeg),
+        simulateGravity,
+        kPositionMinAngleDeg);
   }
 
   public void off() {
@@ -187,13 +187,16 @@ public class SinglePositionSubsystem extends SubsystemBase implements Loggable {
   }
 
   @Override
-  public void periodic() {}
+  public void periodic() {
+  }
 
   @Override
   public void simulationPeriodic() {
-    positionModel.setInputVoltage(positionMotorSim.getMotorVoltage());
-    positionModel.update(Robot.defaultPeriodSecs);
-    positionMotorSim.setRotorVelocity(positionModel.getVelocityRadPerSec() / (2 * Math.PI));
-    positionMotorSim.setRawRotorPosition(positionModel.getAngleRads() / (2 * Math.PI));
+    // positionModel.setInputVoltage(positionMotorSim.getMotorVoltage());
+    // positionModel.update(Robot.defaultPeriodSecs);
+    // positionMotorSim.setRotorVelocity(positionModel.getVelocityRadPerSec() / (2 *
+    // Math.PI));
+    // positionMotorSim.setRawRotorPosition(positionModel.getAngleRads() / (2 *
+    // Math.PI));
   }
 }
