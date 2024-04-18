@@ -43,8 +43,8 @@ public final class ShooterConstants {
   public static double kShooterAmpRPS = 22.5; // BEFORE: 1200/60 TODO: Tune
   public static double kShooterFollowerAmpRPS = 22.5;
 
-  public static double kShooterFeederRPS =45;
-  public static double kShooterFollowerFeederRPS = 55;
+  public static double kShooterFeederRPS = 42;
+  public static double kShooterFollowerFeederRPS = 45;
 
   /* Misc */
   public static double kShooterAngle = 10; // The fixed angle for the shooter (in degrees)
