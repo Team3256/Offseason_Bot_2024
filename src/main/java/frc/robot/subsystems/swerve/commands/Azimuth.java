@@ -53,6 +53,7 @@ public class Azimuth extends DebugCommandBase {
     this.openLoop = openLoop;
     this.azimuthController = new PIDController(aziDrivekP, aziDrivekI, aziDrivekD);
     azimuthController.enableContinuousInput(-180, 180);
+    azimuthController.setTolerance(5,5);
   }
 
   @Override

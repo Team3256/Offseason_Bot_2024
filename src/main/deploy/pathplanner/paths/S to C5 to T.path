@@ -170,7 +170,7 @@
     },
     {
       "name": "aim truss",
-      "waypointRelativePos": 2.4000000000000004,
+      "waypointRelativePos": 0.5,
       "command": {
         "type": "sequential",
         "data": {

@@ -96,13 +96,19 @@
       "name": "preload",
       "waypointRelativePos": 0.0,
       "command": {
-        "type": "sequential",
+        "type": "parallel",
         "data": {
           "commands": [
             {
               "type": "named",
               "data": {
                 "name": "preload speaker amp side"
+              }
+            },
+            {
+              "type": "named",
+              "data": {
+                "name": "pivot down"
               }
             }
           ]

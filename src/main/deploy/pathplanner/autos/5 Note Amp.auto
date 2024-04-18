@@ -20,13 +20,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "W1 to C2"
+            "pathName": "W1 to C1"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Amp C2 to C1"
+            "pathName": "C1 to C2"
           }
         },
         {

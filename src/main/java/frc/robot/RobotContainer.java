@@ -64,6 +64,7 @@ import io.github.oblarg.oblog.annotations.Config;
 import io.github.oblarg.oblog.annotations.Log;
 
 import java.sql.Driver;
+import java.util.Optional;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -768,5 +769,13 @@ public class RobotContainer {
     // LimelightHelpers.setPriorityTagID("limelight", 7);
     // System.out.println("Distance: " + ty);
     // System.out.println("Distance: " + distanceFromLimelightToGoalInches);
+    // Optional<DriverStation.Alliance> ally = DriverStation.getAlliance();
+    // if (ally.isPresent() && ally.get() == DriverStation.Alliance.Red) {
+    //   System.out.println("red");
+    // } else if (ally.isPresent()) {
+    //   System.out.println("blue");
+    // } else {
+    //   System.out.println("red");
+    // }
   }
 }

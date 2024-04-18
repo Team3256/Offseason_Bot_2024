@@ -20,13 +20,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "T to C3 to T"
+            "pathName": "T to C4 to T"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "T to C4 to T"
+            "pathName": "T to C3 to T"
           }
         }
       ]

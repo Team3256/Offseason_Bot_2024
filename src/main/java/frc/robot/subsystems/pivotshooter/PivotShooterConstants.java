@@ -12,7 +12,7 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
 public final class PivotShooterConstants {
   // public static final double kSubWooferPreset = (3.5 + 0.3) / 138.33; // idk if
   // this works
-  public static final double kSubWooferPreset = 3.2 / 138.33; // 4
+  public static final double kSubWooferPreset = 3.4 / 138.33; // 3.2
   public static final double kFeederPreset =6 / 138.33;
   public static final double kAmpPreset = (4) / 138.33;
   public static final double kWingNoteCenterPreset = 5.8 / 138.33;
