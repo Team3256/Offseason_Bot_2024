@@ -271,26 +271,29 @@ public final class SwerveConstants {
                 /* Angles */
 
                 // TODO: TUNE ALL OF THESE ON PRAC DAY
+                // left is positive
 
-                public static final double aziAmpRed = (Math.atan2(ampXRed, ampY) * 180 / Math.PI);
+                public static final double aziAmpRed = 90; //(Math.atan2(ampXRed, ampY) * 180 / Math.PI);
 
-                public static final double aziAmpBlue = (Math.atan2(ampXBlue, ampY) * 180 / Math.PI) + 180;
+                public static final double aziAmpBlue = -aziAmpRed; //(Math.atan2(ampXBlue, ampY) * 180 / Math.PI) + 180;
 
-                public static final double aziSubwooferFront = (Math.atan2(subwooferFrontX, subwooferFrontY) * 180 / Math.PI) + 180;
+                public static final double aziSubwooferFront = 30; //(Math.atan2(subwooferFrontX, subwooferFrontY) * 180 / Math.PI) + 180;
 
-                public static final double aziSubwooferLeft = (Math.atan2(subwooferLeftX, subwooferSideY) * 180 / pi) + 180;
+                public static final double aziSubwooferLeft = -30; //(Math.atan2(subwooferLeftX, subwooferSideY) * 180 / pi) + 180;
 
-                public static final double aziSubwooferRight = (Math.atan2(subwooferRightX, subwooferSideY) * 180 / pi) + 180;
+                public static final double aziSubwooferRight = 0; //(Math.atan2(subwooferRightX, subwooferSideY) * 180 / pi) + 180;
 
-                public static final double aziSourceRed = -(Math.atan2(sourceXRed, sourceY) * 180 / pi);
+                public static final double aziSourceRed = 60;
+                //-(Math.atan2(sourceXRed, sourceY) * 180 / pi) + 10;
 
-                public static final double aziSourceBlue = (Math.atan2(sourceXBlue, sourceY) * 180 / pi);
+                public static final double aziSourceBlue = -aziSourceRed; //(Math.atan2(sourceXBlue, sourceY) * 180 / pi);
 
-                public static final double feederRed = -(Math.atan2(feederXRed, feederY) * 180 / pi) + 160;
+                public static final double feederRed = 45; //-((Math.atan2(feederXRed, feederY) * 180 / pi) + 130);
+                //-(Math.atan2(feederXRed, feederY) * 180 / pi) + 160;
 
-                public static final double feederBlue = (Math.atan2(feederXBlue, feederY) * 180 / pi) + 180;
+                public static final double feederBlue = -feederRed;//(Math.atan2(feederXBlue, feederY) * 180 / pi) + 180;
 
-                public static final double cleanUp = (Math.atan2(ampXRed, ampY) * 180 / pi) + 90;
+                public static final double cleanUp = 180; //(Math.atan2(ampXRed, ampY) * 180 / pi) + 90;
 
                 /* Timeout */
                 public static final double aziCommandTimeOut = 1.5;

@@ -53,6 +53,7 @@ import frc.robot.subsystems.pivotintake.commands.PivotIntakeZero;
 import frc.robot.subsystems.pivotshooter.PivotShooter;
 import frc.robot.subsystems.pivotshooter.commands.*;
 import frc.robot.subsystems.shooter.Shooter;
+import frc.robot.subsystems.shooter.commands.Shoot;
 import frc.robot.subsystems.shooter.commands.ShootAmp;
 import frc.robot.subsystems.shooter.commands.ShootFeed;
 import frc.robot.subsystems.shooter.commands.ShootSpeaker;
@@ -320,14 +321,10 @@ public class RobotContainer {
     // We assume intake is already enabled, so if pivot is enabled as
     // use IntakeOutWithArm
     operator.rightBumper().whileTrue(new IntakeAndPassthrough(intake));
-    if (FeatureFlags.kPivotEnabled) {
-      operator.leftBumper().whileTrue(new IntakeOutArmOff(intake, pivotIntake));
-      driver.rightTrigger().whileTrue(new IntakeOutArmOff(intake, pivotIntake));
-    } else {
 
-      operator.leftBumper().whileTrue(new IntakeOut(intake));
-      driver.rightTrigger().whileTrue(new IntakeOut(intake));
-    }
+    operator.leftBumper().whileTrue(new SequentialCommandGroup(new PivotShooterSetAngle(pivotShooter, 7),new ParallelCommandGroup(new GetRidOfNote(intake), new Shoot(shooter, 100, 100))));
+    driver.rightTrigger().whileTrue(new IntakeOut(intake));
+
 
     // operator.povDown().onTrue(new IntakeOff(intake));
   }
