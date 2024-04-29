@@ -64,7 +64,7 @@ public final class CTREConfigs {
         SwerveConstants.driveCurrentThreshold;
     swerveDriveFXConfig.CurrentLimits.SupplyTimeThreshold =
         SwerveConstants.driveCurrentThresholdTime;
-    swerveDriveFXConfig.CurrentLimits.StatorCurrentLimit = 60;
+    swerveDriveFXConfig.CurrentLimits.StatorCurrentLimit = 80;
     swerveDriveFXConfig.CurrentLimits.StatorCurrentLimitEnable = true;
 
     /* PID Config */

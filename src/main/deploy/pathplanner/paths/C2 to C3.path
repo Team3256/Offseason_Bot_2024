@@ -119,23 +119,6 @@
   ],
   "eventMarkers": [
     {
-      "name": "shoot",
-      "waypointRelativePos": 2.8499999999999996,
-      "command": {
-        "type": "sequential",
-        "data": {
-          "commands": [
-            {
-              "type": "named",
-              "data": {
-                "name": "outtake speaker"
-              }
-            }
-          ]
-        }
-      }
-    },
-    {
       "name": "intake sequence",
       "waypointRelativePos": 0.55,
       "command": {
@@ -153,7 +136,7 @@
       }
     },
     {
-      "name": "aim wing half",
+      "name": "aim subwoofer",
       "waypointRelativePos": 0.15,
       "command": {
         "type": "sequential",
@@ -162,7 +145,7 @@
             {
               "type": "named",
               "data": {
-                "name": "aim half truss wing"
+                "name": "aim subwoofer"
               }
             }
           ]

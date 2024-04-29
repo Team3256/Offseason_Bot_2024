@@ -38,9 +38,9 @@ public final class SwerveConstants {
   public static final double driveKI = 0;
   public static final double driveKD = 0; // 0.00001*12
   public static final double driveKF = 0.0;
-  public static final double aziDrivekP = 0.02;
+  public static final double aziDrivekP = 0.1; // 0.135;
   public static final double aziDrivekI = 0;
-  public static final double aziDrivekD = 0.015; // 0.01 -> 0.005
+  public static final double aziDrivekD = 0.005; // 0.025; // 0.01 -> 0.005
 
   public static final double aDrivekF = 0.00;
 
@@ -244,42 +244,69 @@ public final class SwerveConstants {
 
   public static final class AzimuthConstants {
     // Quick assignments
-    private static final double meow = (1 / 2);
-    private static final double joshua = (Math.sqrt(3) / 2);
-    private static final double abraham = 0.0;
-    private static final double upputuri = 1.0;
+    private static final double half = 0.5;
+    private static final double rootThreeTwo = (Math.sqrt(3) / 2);
+    private static final double zero = 0.0;
+    private static final double one = 1.0;
+    private static final double pi = Math.PI;
 
     // AMP
-    public static final double ampXRed = upputuri;
-    public static final double ampXBlue = -upputuri;
-    public static final double ampY = abraham;
+    public static final double ampXRed = one;
+    public static final double ampXBlue = -one;
+    public static final double ampY = zero;
 
     // SPEAKER
-    public static final double subwooferFrontX = abraham;
-    public static final double subwooferLeftX = -meow;
-    public static final double subwooferRightX = meow;
-    public static final double subwooferFrontY = -upputuri;
-    public static final double subwooferSideY = -joshua;
+    public static final double subwooferFrontX = zero;
+    public static final double subwooferLeftX = -half;
+    public static final double subwooferRightX = half;
+    public static final double subwooferFrontY = -one;
+    public static final double subwooferSideY = -rootThreeTwo;
 
     // SOURCE
-    public static final double sourceXRed = -joshua;
-    public static final double sourceXBlue = joshua;
-    public static final double sourceY = meow;
+    public static final double sourceXRed = -rootThreeTwo;
+    public static final double sourceXBlue = rootThreeTwo;
+    public static final double sourceY = half;
 
-    // Angles
-    public static final double aziAmpRed = (Math.atan2(ampXRed, ampY) * 180 / Math.PI);
-    public static final double aziAmpBlue = (Math.atan2(ampXBlue, ampY) * 180 / Math.PI);
+    // FEEDER
+    public static final double feederXRed = half;
+    public static final double feederXBlue = -half;
+    public static final double feederY = -rootThreeTwo;
+
+    /* Angles */
+
+    // TODO: TUNE ALL OF THESE ON PRAC DAY
+    // left is positive
+
+    public static final double aziAmpRed = 90; // (Math.atan2(ampXRed, ampY) * 180 / Math.PI);
+
+    public static final double aziAmpBlue =
+        -aziAmpRed; // (Math.atan2(ampXBlue, ampY) * 180 / Math.PI) + 180;
+
     public static final double aziSubwooferFront =
-        (Math.atan2(subwooferFrontX, subwooferFrontY) * 180 / Math.PI) + 180;
+        30; // (Math.atan2(subwooferFrontX, subwooferFrontY) * 180 / Math.PI) + 180;
+
     public static final double aziSubwooferLeft =
-        (Math.atan2(subwooferLeftX, subwooferSideY) * 180 / Math.PI) - 120;
+        -30; // (Math.atan2(subwooferLeftX, subwooferSideY) * 180 / pi) + 180;
+
     public static final double aziSubwooferRight =
-        (Math.atan2(subwooferRightX, subwooferSideY) * 180 / Math.PI) + 120;
-    public static final double aziSourceRed =
-        (Math.atan2(sourceXRed, sourceY) * 180 / Math.PI) - 225;
+        0; // (Math.atan2(subwooferRightX, subwooferSideY) * 180 / pi) + 180;
+
+    public static final double aziSourceRed = 60;
+    // -(Math.atan2(sourceXRed, sourceY) * 180 / pi) + 10;
+
     public static final double aziSourceBlue =
-        (Math.atan2(sourceXBlue, sourceY) * 180 / Math.PI) - 225;
-    public static final double test = (Math.atan2(ampXRed, ampY) * 180 / Math.PI);
-    public static final double aziCommandTimeOut = 0.75;
+        -aziSourceRed; // (Math.atan2(sourceXBlue, sourceY) * 180 / pi);
+
+    public static final double feederRed =
+        45; // -((Math.atan2(feederXRed, feederY) * 180 / pi) + 130);
+    // -(Math.atan2(feederXRed, feederY) * 180 / pi) + 160;
+
+    public static final double feederBlue =
+        -feederRed; // (Math.atan2(feederXBlue, feederY) * 180 / pi) + 180;
+
+    public static final double cleanUp = 180; // (Math.atan2(ampXRed, ampY) * 180 / pi) + 90;
+
+    /* Timeout */
+    public static final double aziCommandTimeOut = 1.5;
   }
 }

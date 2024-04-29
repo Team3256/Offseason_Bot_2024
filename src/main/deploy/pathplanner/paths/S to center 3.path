@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 13.523101698981176,
-        "y": 4.763220961627109
+        "x": 13.417219352957225,
+        "y": 4.968928447116154
       },
       "isLocked": false,
       "linkedName": null
@@ -17,31 +17,31 @@
     {
       "anchor": {
         "x": 11.970880888980037,
-        "y": 4.62
+        "y": 4.68
       },
       "prevControl": {
         "x": 12.989723668463029,
-        "y": 4.877638404007194
+        "y": 4.937638404007194
       },
       "nextControl": {
         "x": 10.895780573323917,
-        "y": 4.34813555236282
+        "y": 4.408135552362819
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 8.691846656161214,
-        "y": 4.087081954477746
+        "x": 8.698655443607183,
+        "y": 4.131311795030998
       },
       "prevControl": {
-        "x": 8.715268329252778,
-        "y": 3.8294435504705535
+        "x": 8.722077116698747,
+        "y": 3.873673391023805
       },
       "nextControl": {
-        "x": 8.67192879203186,
-        "y": 4.30617845990064
+        "x": 8.685075081700806,
+        "y": 4.280695776001153
       },
       "isLocked": false,
       "linkedName": null
@@ -49,15 +49,15 @@
     {
       "anchor": {
         "x": 11.970880888980037,
-        "y": 4.62
+        "y": 4.68
       },
       "prevControl": {
-        "x": 10.359053660870556,
-        "y": 4.228894863767552
+        "x": 10.000598547493391,
+        "y": 4.1433074393926566
       },
       "nextControl": {
-        "x": 13.563554659206323,
-        "y": 5.00645760601079
+        "x": 13.552156118238285,
+        "y": 5.11072946143101
       },
       "isLocked": false,
       "linkedName": null
@@ -95,7 +95,7 @@
   "rotationTargets": [
     {
       "waypointRelativePos": 2.0,
-      "rotationDegrees": -175.0,
+      "rotationDegrees": 180.0,
       "rotateFast": false
     },
     {
@@ -105,29 +105,29 @@
     },
     {
       "waypointRelativePos": 0.9,
-      "rotationDegrees": -170.0,
+      "rotationDegrees": -165.0,
       "rotateFast": true
     },
     {
       "waypointRelativePos": 3.0,
-      "rotationDegrees": -170.0,
+      "rotationDegrees": -165.0,
       "rotateFast": true
     },
     {
       "waypointRelativePos": 0.2,
-      "rotationDegrees": 180.0,
+      "rotationDegrees": -165.0,
       "rotateFast": true
     },
     {
       "waypointRelativePos": 1.6,
-      "rotationDegrees": -175.0,
+      "rotationDegrees": 180.0,
       "rotateFast": false
     }
   ],
   "constraintZones": [
     {
       "name": "New Constraints Zone",
-      "minWaypointRelativePos": 1.8,
+      "minWaypointRelativePos": 1.9,
       "maxWaypointRelativePos": 2.0,
       "constraints": {
         "maxVelocity": 0.4,
@@ -185,7 +185,7 @@
     },
     {
       "name": "aim subwoofer",
-      "waypointRelativePos": 0,
+      "waypointRelativePos": 0.1,
       "command": {
         "type": "sequential",
         "data": {

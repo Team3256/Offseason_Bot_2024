@@ -191,9 +191,11 @@ public class SinglePositionSubsystem extends SubsystemBase implements Loggable {
 
   @Override
   public void simulationPeriodic() {
-    positionModel.setInputVoltage(positionMotorSim.getMotorVoltage());
-    positionModel.update(Robot.defaultPeriodSecs);
-    positionMotorSim.setRotorVelocity(positionModel.getVelocityRadPerSec() / (2 * Math.PI));
-    positionMotorSim.setRawRotorPosition(positionModel.getAngleRads() / (2 * Math.PI));
+    // positionModel.setInputVoltage(positionMotorSim.getMotorVoltage());
+    // positionModel.update(Robot.defaultPeriodSecs);
+    // positionMotorSim.setRotorVelocity(positionModel.getVelocityRadPerSec() / (2 *
+    // Math.PI));
+    // positionMotorSim.setRawRotorPosition(positionModel.getAngleRads() / (2 *
+    // Math.PI));
   }
 }
