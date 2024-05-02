@@ -62,6 +62,7 @@ public final class PivotShooterConstants {
   public static double motionMagicJerk = 420;
   public static boolean enableStatorLimit = true;
   public static double statorLimit = 60; // idk
+  public static double updateFrequency = 50.0;
 
   /* Current Limits */
   public static final class CurrentLimits {
