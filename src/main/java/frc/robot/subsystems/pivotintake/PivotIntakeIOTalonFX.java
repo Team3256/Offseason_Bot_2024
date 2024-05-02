@@ -93,4 +93,9 @@ public class PivotIntakeIOTalonFX implements PivotIntakeIO {
   public void off() {
     pivotIntakeMotor.setControl(new NeutralOut());
   }
+
+  @Override
+  public void zero() {
+    pivotIntakeMotor.setPosition(0);
+  }
 }

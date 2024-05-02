@@ -8,6 +8,7 @@
 package frc.robot;
 
 import static edu.wpi.first.wpilibj.RobotBase.isReal;
+import static frc.robot.subsystems.pivotintake.PivotIntakeConstants.kPivotGroundPos;
 import static frc.robot.subsystems.pivotshooter.PivotShooterConstants.*;
 import static frc.robot.subsystems.swerve.SwerveConstants.AzimuthConstants.*;
 
@@ -41,6 +42,9 @@ import frc.robot.subsystems.intake.commands.*;
 import frc.robot.subsystems.led.LED;
 import frc.robot.subsystems.led.commands.*;
 import frc.robot.subsystems.pivotintake.PivotIntake;
+import frc.robot.subsystems.pivotintake.PivotIntakeConstants;
+import frc.robot.subsystems.pivotintake.PivotIntakeIO;
+import frc.robot.subsystems.pivotintake.PivotIntakeIOTalonFX;
 import frc.robot.subsystems.pivotshooter.PivotShooter;
 import frc.robot.subsystems.pivotshooter.commands.*;
 import frc.robot.subsystems.shooter.Shooter;
@@ -56,9 +60,12 @@ import io.github.oblarg.oblog.annotations.Config;
 import io.github.oblarg.oblog.annotations.Log;
 
 /**
- * This class is where the bulk of the robot should be declared. Since Command-based is a
- * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
- * periodic methods (other than the scheduler calls). Instead, the structure of the robot (including
+ * This class is where the bulk of the robot should be declared. Since
+ * Command-based is a
+ * "declarative" paradigm, very little robot logic should actually be handled in
+ * the {@link Robot}
+ * periodic methods (other than the scheduler calls). Instead, the structure of
+ * the robot (including
  * subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
@@ -77,15 +84,31 @@ public class RobotContainer {
   private boolean isRed = true;
 
   /* Subsystems */
-  @Log @Config public SwerveDrive swerveDrive;
-  @Log @Config public Shooter shooter;
-  @Log @Config public Intake intake;
-  @Log @Config public AmpBar ampbar;
-  @Log @Config public PivotIntake pivotIntake;
-  @Log @Config public Climb climb;
+  @Log
+  @Config
+  public SwerveDrive swerveDrive;
+  @Log
+  @Config
+  public Shooter shooter;
+  @Log
+  @Config
+  public Intake intake;
+  @Log
+  @Config
+  public AmpBar ampbar;
+  @Log
+  @Config
+  public PivotIntake pivotIntake;
+  @Log
+  @Config
+  public Climb climb;
 
-  @Log @Config public PivotShooter pivotShooter;
-  @Log @Config public LED led;
+  @Log
+  @Config
+  public PivotShooter pivotShooter;
+  @Log
+  @Config
+  public LED led;
 
   @Config.Command(name = "Auto Score Speaker")
   private Command autoScoreSpeaker;
@@ -99,7 +122,9 @@ public class RobotContainer {
   /* Auto */
   private SendableChooser<Command> autoChooser;
 
-  /** The container for the robot. Contains subsystems, OI devices, and commands. */
+  /**
+   * The container for the robot. Contains subsystems, OI devices, and commands.
+   */
   public RobotContainer() {
     // Cancel any previous commands running
     CommandScheduler.getInstance().cancelAll();
@@ -112,8 +137,8 @@ public class RobotContainer {
       configureShooter();
     }
 
-    if (FeatureFlags.kPivotEnabled) {
-      configurePivot();
+    if (FeatureFlags.kPivotIntakeEnabled) {
+      configurePivotIntake();
     }
     if (FeatureFlags.kIntakeEnabled) {
       configureIntake();
@@ -125,7 +150,7 @@ public class RobotContainer {
       configureClimb();
     }
     // If all the subsystems are enabled, configure "operator" autos
-    if (FeatureFlags.kIntakeEnabled && FeatureFlags.kShooterEnabled && FeatureFlags.kPivotEnabled) {
+    if (FeatureFlags.kIntakeEnabled && FeatureFlags.kShooterEnabled && FeatureFlags.kPivotIntakeEnabled) {
       configureOperatorAutos();
     }
 
@@ -136,7 +161,7 @@ public class RobotContainer {
     if (FeatureFlags.kSwerveEnabled
         && FeatureFlags.kIntakeEnabled
         && FeatureFlags.kShooterEnabled
-        && FeatureFlags.kPivotEnabled) {
+        && FeatureFlags.kPivotIntakeEnabled) {
       autoScoreSpeaker = new AutoScoreSpeaker(swerveDrive, shooter, intake);
       autoScoreAmp = new AutoScoreAmp(swerveDrive, shooter, intake);
     }
@@ -167,8 +192,8 @@ public class RobotContainer {
                           .withTimeout(0.7)), // TODO: tune time in withTimeout
                   new PivotShootSubwoofer(pivotShooter),
                   new ShootSubwoofer(shooter))
-              // new PivotShooterSlamAndVoltage(pivotShooter)));
-              ));
+
+          ));
       NamedCommands.registerCommand( // shoot preloaded note to speaker, use at match start
           "preload speaker amp side",
           new SequentialCommandGroup(
@@ -181,12 +206,12 @@ public class RobotContainer {
                           .withTimeout(0.7)), // TODO: tune time in withTimeout
                   new PivotShootSubwoofer(pivotShooter),
                   new ShootSubwoofer(shooter))
-              // new PivotShooterSlamAndVoltage(pivotShooter)));
-              ));
+          // new PivotShooterSlamAndVoltage(pivotShooter)));
+          ));
       NamedCommands.registerCommand( // intake ground note, stow to feeder chamber
           "intake sequence",
           new ParallelCommandGroup(
-              // new PivotIntakeSetAngle(pivotIntake, PivotIntakeConstants.kPivotGroundAngleDeg),
+              pivotIntake.setPosition(PivotIntakeConstants.kPivotGroundPos),
               new IntakeIn(intake),
               // new PivotShooterSlamAndVoltage(pivotShooter),
               // new PivotShootSubwoofer(pivotShooter),
@@ -223,17 +248,17 @@ public class RobotContainer {
           "rev speaker", new ShootSpeaker(shooter));
       NamedCommands.registerCommand( // rev shooter to amp presets
           "rev amp", new ShootAmp(shooter));
-      // NamedCommands.registerCommand( // modular pivot down, use for sabotage
-      //     "pivot down",
-      //     new PivotIntakeSetAngle(pivotIntake, kPivotGroundAngleDeg).withTimeout(0.75));
-      // NamedCommands.registerCommand(
-      //     "stow", new PivotIntakeSlamAndVoltage(pivotIntake).withTimeout(0.75));
+      NamedCommands.registerCommand( // modular pivot down, use for sabotage
+          "pivot down",
+          pivotIntake.setPosition(kPivotGroundPos).withTimeout(0.75));
+      NamedCommands.registerCommand(
+          "stow", pivotIntake.slamAndPID().withTimeout(0.75));
       NamedCommands.registerCommand( // intake with no stow, use for sabotage
           "intake", new IntakeIn(intake));
       NamedCommands.registerCommand( // shoot preloaded note to amp, use at match start
           "preload amp",
           new SequentialCommandGroup(
-              // new PivotIntakeZero(pivotIntake),
+              pivotIntake.zero(),
               new ParallelDeadlineGroup(
                   new SequentialCommandGroup(
                       new WaitCommand(0.8), // TODO: maybe need to tune this too
@@ -245,12 +270,12 @@ public class RobotContainer {
           "align to note",
           new SequentialCommandGroup(
               new RotateToNote(swerveDrive), new MoveToNote(swerveDrive, intake)));
-      // NamedCommands.registerCommand(
-      //     "lmao",
-      //     new RepeatCommand(
-      //         new SequentialCommandGroup(
-      //             new PivotIntakeSetAngle(pivotIntake, kPivotGroundAngleDeg).withTimeout(0.75),
-      //             new PivotIntakeSlamAndVoltage(pivotIntake))));
+      NamedCommands.registerCommand(
+          "lmao",
+          new RepeatCommand(
+              new SequentialCommandGroup(
+                  pivotIntake.setPosition(kPivotGroundPos).withTimeout(0.75),
+                  pivotIntake.slamAndPID())));
     }
 
     /* Run checks */
@@ -299,10 +324,10 @@ public class RobotContainer {
     // operator.povDown().onTrue(new IntakeOff(intake));
   }
 
-  private void configurePivot() {
-    // pivotIntake = new PivotIntake();
-    // operator.povRight().onTrue(new PivotIntakeSetAngle(pivotIntake, kPivotGroundAngleDeg));
-    // operator.povLeft().onTrue(new PivotIntakeSlamAndVoltage(pivotIntake));
+  private void configurePivotIntake() {
+    pivotIntake = new PivotIntake(new PivotIntakeIOTalonFX() );
+    operator.povRight().onTrue(pivotIntake.setPosition(kPivotGroundPos));
+    operator.povLeft().onTrue(pivotIntake.slamAndPID());
   }
 
   private void configureClimb() {
@@ -318,8 +343,8 @@ public class RobotContainer {
           .onTrue(
               Commands.sequence(
                   new ParallelCommandGroup(
-                          new AmpPosition(ampbar),
-                          new PivotShooterSetAngle(pivotShooter, 12 / 138.33))
+                      new AmpPosition(ampbar),
+                      new PivotShooterSetAngle(pivotShooter, 12 / 138.33))
                       .withTimeout(1),
                   new UpClimb(climb)));
     } else {
@@ -376,13 +401,13 @@ public class RobotContainer {
           .a()
           .onTrue(
               new Azimuth(
-                      swerveDrive,
-                      driver::getLeftY,
-                      driver::getLeftX,
-                      () -> aziAmpRed,
-                      () -> true,
-                      true,
-                      true)
+                  swerveDrive,
+                  driver::getLeftY,
+                  driver::getLeftX,
+                  () -> aziAmpRed,
+                  () -> true,
+                  true,
+                  true)
                   .withTimeout(aziCommandTimeOut));
 
       /* SOURCE */
@@ -390,13 +415,13 @@ public class RobotContainer {
           .rightBumper()
           .onTrue(
               new Azimuth(
-                      swerveDrive,
-                      driver::getLeftY,
-                      driver::getLeftX,
-                      () -> aziSourceRed,
-                      () -> true,
-                      true,
-                      true)
+                  swerveDrive,
+                  driver::getLeftY,
+                  driver::getLeftX,
+                  () -> aziSourceRed,
+                  () -> true,
+                  true,
+                  true)
                   .withTimeout(aziCommandTimeOut));
 
       /* FEEDER */
@@ -419,13 +444,13 @@ public class RobotContainer {
           .a()
           .onTrue(
               new Azimuth(
-                      swerveDrive,
-                      driver::getLeftY,
-                      driver::getLeftX,
-                      () -> aziAmpBlue,
-                      () -> true,
-                      true,
-                      true)
+                  swerveDrive,
+                  driver::getLeftY,
+                  driver::getLeftX,
+                  () -> aziAmpBlue,
+                  () -> true,
+                  true,
+                  true)
                   .withTimeout(aziCommandTimeOut));
 
       /* SOURCE */
@@ -433,13 +458,13 @@ public class RobotContainer {
           .rightBumper()
           .onTrue(
               new Azimuth(
-                      swerveDrive,
-                      driver::getLeftY,
-                      driver::getLeftX,
-                      () -> aziSourceBlue,
-                      () -> true,
-                      true,
-                      true)
+                  swerveDrive,
+                  driver::getLeftY,
+                  driver::getLeftX,
+                  () -> aziSourceBlue,
+                  () -> true,
+                  true,
+                  true)
                   .withTimeout(aziCommandTimeOut));
 
       /* FEEDER */
@@ -461,13 +486,13 @@ public class RobotContainer {
         .leftBumper()
         .onTrue(
             new Azimuth(
-                    swerveDrive,
-                    driver::getLeftY,
-                    driver::getLeftX,
-                    () -> aziSubwooferFront,
-                    () -> true,
-                    true,
-                    true)
+                swerveDrive,
+                driver::getLeftY,
+                driver::getLeftX,
+                () -> aziSubwooferFront,
+                () -> true,
+                true,
+                true)
                 .withTimeout(aziCommandTimeOut));
 
     /* SUBWOOFER RIGHT */
@@ -475,13 +500,13 @@ public class RobotContainer {
         .b()
         .onTrue(
             new Azimuth(
-                    swerveDrive,
-                    driver::getLeftY,
-                    driver::getLeftX,
-                    () -> aziSubwooferRight,
-                    () -> true,
-                    true,
-                    true)
+                swerveDrive,
+                driver::getLeftY,
+                driver::getLeftX,
+                () -> aziSubwooferRight,
+                () -> true,
+                true,
+                true)
                 .withTimeout(aziCommandTimeOut));
 
     /* SUBWOOFER LEFT */
@@ -489,13 +514,13 @@ public class RobotContainer {
         .x()
         .onTrue(
             new Azimuth(
-                    swerveDrive,
-                    driver::getLeftY,
-                    driver::getLeftX,
-                    () -> aziSubwooferLeft,
-                    () -> true,
-                    true,
-                    true)
+                swerveDrive,
+                driver::getLeftY,
+                driver::getLeftX,
+                () -> aziSubwooferLeft,
+                () -> true,
+                true,
+                true)
                 .withTimeout(aziCommandTimeOut));
 
     /* CLEANUP */
@@ -503,13 +528,13 @@ public class RobotContainer {
         .povDown()
         .onTrue(
             new Azimuth(
-                    swerveDrive,
-                    driver::getLeftY,
-                    driver::getLeftX,
-                    () -> cleanUp,
-                    () -> true,
-                    true,
-                    true)
+                swerveDrive,
+                driver::getLeftY,
+                driver::getLeftX,
+                () -> cleanUp,
+                () -> true,
+                true,
+                true)
                 .withTimeout(aziCommandTimeOut));
   }
 
@@ -579,7 +604,7 @@ public class RobotContainer {
   }
 
   public void configureLED() {
-    int[][] ledList = new int[][] {new int[] {2, 3}, new int[] {1, 1}};
+    int[][] ledList = new int[][] { new int[] { 2, 3 }, new int[] { 1, 1 } };
 
     led = new LED();
     led.setDefaultCommand(new CoordinatesButItsMultiple(led, ledList, 100, 0, 0, 10));
@@ -698,7 +723,8 @@ public class RobotContainer {
   }
 
   public void runPitTestRoutine() {
-    // Command pitRoutine = new PitRoutine(swerveDrive, climb, intake, pivotIntake, shooter);
+    // Command pitRoutine = new PitRoutine(swerveDrive, climb, intake, pivotIntake,
+    // shooter);
     // pitRoutine.schedule();
   }
 
@@ -741,11 +767,11 @@ public class RobotContainer {
     // System.out.println("Distance: " + distanceFromLimelightToGoalInches);
     // Optional<DriverStation.Alliance> ally = DriverStation.getAlliance();
     // if (ally.isPresent() && ally.get() == DriverStation.Alliance.Red) {
-    //   System.out.println("red");
+    // System.out.println("red");
     // } else if (ally.isPresent()) {
-    //   System.out.println("blue");
+    // System.out.println("blue");
     // } else {
-    //   System.out.println("red");
+    // System.out.println("red");
     // }
   }
 }

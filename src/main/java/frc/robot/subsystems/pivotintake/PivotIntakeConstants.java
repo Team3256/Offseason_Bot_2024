@@ -19,8 +19,7 @@ public final class PivotIntakeConstants {
   public static final double kP = 1;
   public static final double kI = 0;
   public static final double kD = 0;
-  public static final TrapezoidProfile.Constraints kPivotProfileContraints =
-      new TrapezoidProfile.Constraints(16, 16);
+  public static final TrapezoidProfile.Constraints kPivotProfileContraints = new TrapezoidProfile.Constraints(16, 16);
 
   /* Tolerance/threshold */
   public static final double kCurrentThreshold = 10;
@@ -29,7 +28,7 @@ public final class PivotIntakeConstants {
 
   /* Physics/geometry */
   public static final double kPivotMotorGearing = 36; // 22 by 1
-  public static final double kPivotGroundAngleDeg = -5.6 / 16;
+  public static final double kPivotGroundPos = -5.6 / 16;
   public static final double kPivotLength = 0.2;
   public static final double kPivotMinAngleDeg = -90;
   public static final double kPivotMaxAngleDeg = 50;
@@ -49,4 +48,6 @@ public final class PivotIntakeConstants {
   public static double statorLimit = 60;
 
   public static double updateFrequency = 50.0;
+
+  protected static double kPivotSlamStallCurrent = 10.0;
 }

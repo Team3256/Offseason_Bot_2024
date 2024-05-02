@@ -38,7 +38,7 @@ public final class Constants {
 
     public static final boolean kSwerveEnabled = true;
 
-    public static final boolean kPivotEnabled = true;
+    public static final boolean kPivotIntakeEnabled = true;
 
     public static final boolean kClimbEnabled = true;
     public static final boolean kLEDEnabled = true;
@@ -57,8 +57,7 @@ public final class Constants {
     public static final boolean kLocalizationEnabled = false;
 
     // public static final boolean kSwerveAccelerationLimitingEnabled = true;
-    public static final boolean kSwerveUseVisionForPoseEst =
-        false; // ummm probably not disabling this
+    public static final boolean kSwerveUseVisionForPoseEst = false; // ummm probably not disabling this
     public static final boolean kLocalizationDataCollectionMode = false;
     public static final boolean kLocalizationStdDistanceBased = false;
 

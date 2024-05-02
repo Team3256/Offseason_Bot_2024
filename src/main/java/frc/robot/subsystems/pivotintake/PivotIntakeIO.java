@@ -27,4 +27,6 @@ public interface PivotIntakeIO {
   public default void setVoltage(double voltage) {}
 
   public default void off() {}
+
+    public default void zero() {}
 }

@@ -173,7 +173,7 @@ public class Robot extends LoggedRobot {
         m_robotContainer.intake.off();
       }
       if (m_robotContainer.pivotIntake != null) {
-        // m_robotContainer.pivotIntake.off();
+        m_robotContainer.pivotIntake.off();
       }
       if (m_robotContainer.shooter != null) {
         m_robotContainer.shooter.off();
