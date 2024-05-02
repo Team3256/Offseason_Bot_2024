@@ -8,24 +8,23 @@
 package frc.robot.subsystems.pivotintake.commands;
 
 import frc.robot.helpers.DebugCommandBase;
-import frc.robot.subsystems.pivotintake.PivotIntake;
 
 public class PivotIntakeSetVoltage extends DebugCommandBase {
-  private PivotIntake pivotIntake;
-  private final double voltage;
+  // private PivotIntake pivotIntake;
+  // private final double voltage;
 
-  public PivotIntakeSetVoltage(PivotIntake pivotIntake, double voltage) {
-    this.pivotIntake = pivotIntake;
-    this.voltage = voltage;
-    addRequirements(pivotIntake);
-  }
+  // public PivotIntakeSetVoltage(PivotIntake pivotIntake, double voltage) {
+  //   this.pivotIntake = pivotIntake;
+  //   this.voltage = voltage;
+  //   addRequirements(pivotIntake);
+  // }
 
-  public void initialize() {
-    pivotIntake.setOutputVoltage(voltage);
-  }
+  // public void initialize() {
+  //   pivotIntake.setOutputVoltage(voltage);
+  // }
 
-  @Override
-  public boolean isFinished() {
-    return true;
-  }
+  // @Override
+  // public boolean isFinished() {
+  //   return true;
+  // }
 }

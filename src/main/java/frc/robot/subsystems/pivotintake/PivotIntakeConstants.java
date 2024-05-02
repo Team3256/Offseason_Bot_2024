@@ -40,7 +40,6 @@ public final class PivotIntakeConstants {
   public static final double kPivotSlamShooterVoltage = 4;
 
   /* Misc */
-  public static final int kNumPivotMotors = 1;
   public static final boolean kUseFOC = false;
   public static boolean kUseMotionMagic = false;
   public static double motionMagicVelocity = 10;
@@ -49,15 +48,5 @@ public final class PivotIntakeConstants {
   public static boolean enableStatorLimit = true;
   public static double statorLimit = 60;
 
-  /* Current Limits */
-  public static final class CurrentLimits {
-    public static final boolean kSetCurrentLimits = false;
-    public static final double kCurrentLimit = 10;
-    public static final double kCurrentThreshold = 40;
-    public static final double kCurrentThresholdTime = 0.1;
-    public static final boolean kEnableCurrentLimit = true;
-
-    public static final boolean kEnableStatorLimits = false;
-    public static final double kStatorLimit = 10;
-  }
+  public static double updateFrequency = 50.0;
 }

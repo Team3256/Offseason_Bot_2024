@@ -8,22 +8,21 @@
 package frc.robot.subsystems.pivotintake.commands;
 
 import frc.robot.helpers.DebugCommandBase;
-import frc.robot.subsystems.pivotintake.PivotIntake;
 
 public class PivotIntakeStop extends DebugCommandBase {
-  private PivotIntake pivotIntake;
+  // private PivotIntake pivotIntake;
 
-  public PivotIntakeStop(PivotIntake pivotIntake) {
-    this.pivotIntake = pivotIntake;
-    addRequirements(pivotIntake);
-  }
+  // public PivotIntakeStop(PivotIntake pivotIntake) {
+  //   this.pivotIntake = pivotIntake;
+  //   addRequirements(pivotIntake);
+  // }
 
-  public void initialize() {
-    pivotIntake.setOutputVoltage(0);
-  }
+  // public void initialize() {
+  //   pivotIntake.setOutputVoltage(0);
+  // }
 
-  @Override
-  public boolean isFinished() {
-    return true;
-  }
+  // @Override
+  // public boolean isFinished() {
+  //   return true;
+  // }
 }

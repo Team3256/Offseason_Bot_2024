@@ -8,7 +8,6 @@
 package frc.robot;
 
 import static edu.wpi.first.wpilibj.RobotBase.isReal;
-import static frc.robot.subsystems.pivotintake.PivotIntakeConstants.kPivotGroundAngleDeg;
 import static frc.robot.subsystems.pivotshooter.PivotShooterConstants.*;
 import static frc.robot.subsystems.swerve.SwerveConstants.AzimuthConstants.*;
 
@@ -28,7 +27,6 @@ import frc.robot.autos.commands.AutoScoreSpeaker;
 import frc.robot.autos.commands.IntakeSequence;
 import frc.robot.autos.commands.MoveToNote;
 import frc.robot.autos.commands.RotateToNote;
-import frc.robot.commands.PitRoutine;
 import frc.robot.helpers.XboxStalker;
 import frc.robot.subsystems.ampbar.AmpBar;
 import frc.robot.subsystems.ampbar.commands.AmpPosition;
@@ -43,10 +41,6 @@ import frc.robot.subsystems.intake.commands.*;
 import frc.robot.subsystems.led.LED;
 import frc.robot.subsystems.led.commands.*;
 import frc.robot.subsystems.pivotintake.PivotIntake;
-import frc.robot.subsystems.pivotintake.PivotIntakeConstants;
-import frc.robot.subsystems.pivotintake.commands.PivotIntakeSetAngle;
-import frc.robot.subsystems.pivotintake.commands.PivotIntakeSlamAndVoltage;
-import frc.robot.subsystems.pivotintake.commands.PivotIntakeZero;
 import frc.robot.subsystems.pivotshooter.PivotShooter;
 import frc.robot.subsystems.pivotshooter.commands.*;
 import frc.robot.subsystems.shooter.Shooter;
@@ -192,7 +186,7 @@ public class RobotContainer {
       NamedCommands.registerCommand( // intake ground note, stow to feeder chamber
           "intake sequence",
           new ParallelCommandGroup(
-              new PivotIntakeSetAngle(pivotIntake, PivotIntakeConstants.kPivotGroundAngleDeg),
+              // new PivotIntakeSetAngle(pivotIntake, PivotIntakeConstants.kPivotGroundAngleDeg),
               new IntakeIn(intake),
               // new PivotShooterSlamAndVoltage(pivotShooter),
               // new PivotShootSubwoofer(pivotShooter),
@@ -229,17 +223,17 @@ public class RobotContainer {
           "rev speaker", new ShootSpeaker(shooter));
       NamedCommands.registerCommand( // rev shooter to amp presets
           "rev amp", new ShootAmp(shooter));
-      NamedCommands.registerCommand( // modular pivot down, use for sabotage
-          "pivot down",
-          new PivotIntakeSetAngle(pivotIntake, kPivotGroundAngleDeg).withTimeout(0.75));
-      NamedCommands.registerCommand(
-          "stow", new PivotIntakeSlamAndVoltage(pivotIntake).withTimeout(0.75));
+      // NamedCommands.registerCommand( // modular pivot down, use for sabotage
+      //     "pivot down",
+      //     new PivotIntakeSetAngle(pivotIntake, kPivotGroundAngleDeg).withTimeout(0.75));
+      // NamedCommands.registerCommand(
+      //     "stow", new PivotIntakeSlamAndVoltage(pivotIntake).withTimeout(0.75));
       NamedCommands.registerCommand( // intake with no stow, use for sabotage
           "intake", new IntakeIn(intake));
       NamedCommands.registerCommand( // shoot preloaded note to amp, use at match start
           "preload amp",
           new SequentialCommandGroup(
-              new PivotIntakeZero(pivotIntake),
+              // new PivotIntakeZero(pivotIntake),
               new ParallelDeadlineGroup(
                   new SequentialCommandGroup(
                       new WaitCommand(0.8), // TODO: maybe need to tune this too
@@ -251,12 +245,12 @@ public class RobotContainer {
           "align to note",
           new SequentialCommandGroup(
               new RotateToNote(swerveDrive), new MoveToNote(swerveDrive, intake)));
-      NamedCommands.registerCommand(
-          "lmao",
-          new RepeatCommand(
-              new SequentialCommandGroup(
-                  new PivotIntakeSetAngle(pivotIntake, kPivotGroundAngleDeg).withTimeout(0.75),
-                  new PivotIntakeSlamAndVoltage(pivotIntake))));
+      // NamedCommands.registerCommand(
+      //     "lmao",
+      //     new RepeatCommand(
+      //         new SequentialCommandGroup(
+      //             new PivotIntakeSetAngle(pivotIntake, kPivotGroundAngleDeg).withTimeout(0.75),
+      //             new PivotIntakeSlamAndVoltage(pivotIntake))));
     }
 
     /* Run checks */
@@ -306,9 +300,9 @@ public class RobotContainer {
   }
 
   private void configurePivot() {
-    pivotIntake = new PivotIntake();
-    operator.povRight().onTrue(new PivotIntakeSetAngle(pivotIntake, kPivotGroundAngleDeg));
-    operator.povLeft().onTrue(new PivotIntakeSlamAndVoltage(pivotIntake));
+    // pivotIntake = new PivotIntake();
+    // operator.povRight().onTrue(new PivotIntakeSetAngle(pivotIntake, kPivotGroundAngleDeg));
+    // operator.povLeft().onTrue(new PivotIntakeSlamAndVoltage(pivotIntake));
   }
 
   private void configureClimb() {
@@ -704,8 +698,8 @@ public class RobotContainer {
   }
 
   public void runPitTestRoutine() {
-    Command pitRoutine = new PitRoutine(swerveDrive, climb, intake, pivotIntake, shooter);
-    pitRoutine.schedule();
+    // Command pitRoutine = new PitRoutine(swerveDrive, climb, intake, pivotIntake, shooter);
+    // pitRoutine.schedule();
   }
 
   public void ccccccc() {
