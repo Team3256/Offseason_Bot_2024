@@ -28,5 +28,5 @@ public interface PivotIntakeIO {
 
   public default void off() {}
 
-    public default void zero() {}
+  public default void zero() {}
 }

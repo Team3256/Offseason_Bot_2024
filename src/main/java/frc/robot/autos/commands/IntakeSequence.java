@@ -7,8 +7,6 @@
 
 package frc.robot.autos.commands;
 
-import static frc.robot.subsystems.pivotintake.PivotIntakeConstants.kPivotGroundPos;
-
 import edu.wpi.first.wpilibj2.command.*;
 import frc.robot.Constants.*;
 import frc.robot.subsystems.ampbar.AmpBar;
@@ -40,8 +38,9 @@ public class IntakeSequence extends SequentialCommandGroup {
     addCommands(
         new ParallelCommandGroup(
             pivotIntake.setPosition(PivotIntakeConstants.kPivotGroundPos).withTimeout(0.75),
-            new IntakeInTeleop(intakeSubsystem), new PivotShooterSlamAndVoltage(pivotShooter)),
-            pivotIntake.slamAndPID(),
+            new IntakeInTeleop(intakeSubsystem),
+            new PivotShooterSlamAndVoltage(pivotShooter)),
+        pivotIntake.slamAndPID(),
         // new PivotShootSubwoofer(shooterPivot).withTimeout(0.5),
         new ParallelCommandGroup(
             new StowPosition(ampBar),

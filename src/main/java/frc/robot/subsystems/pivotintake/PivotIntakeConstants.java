@@ -19,7 +19,8 @@ public final class PivotIntakeConstants {
   public static final double kP = 1;
   public static final double kI = 0;
   public static final double kD = 0;
-  public static final TrapezoidProfile.Constraints kPivotProfileContraints = new TrapezoidProfile.Constraints(16, 16);
+  public static final TrapezoidProfile.Constraints kPivotProfileContraints =
+      new TrapezoidProfile.Constraints(16, 16);
 
   /* Tolerance/threshold */
   public static final double kCurrentThreshold = 10;

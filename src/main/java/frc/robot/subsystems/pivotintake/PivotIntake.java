@@ -8,7 +8,6 @@
 package frc.robot.subsystems.pivotintake;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -29,30 +28,28 @@ public class PivotIntake extends SubsystemBase {
     pivotIntakeIO.updateInputs(pivotIntakeIOAutoLogged);
     Logger.processInputs(getName(), pivotIntakeIOAutoLogged);
   }
+
   public Command setPosition(double position) {
     return new StartEndCommand(
-        () -> pivotIntakeIO.setPosition(position),
-        () -> pivotIntakeIO.setPosition(0),
-        this);
+        () -> pivotIntakeIO.setPosition(position), () -> pivotIntakeIO.setPosition(0), this);
   }
+
   public Command setVoltage(double voltage) {
     return new StartEndCommand(
-        () -> pivotIntakeIO.setVoltage(voltage),
-        () -> pivotIntakeIO.setVoltage(0),
-        this);
+        () -> pivotIntakeIO.setVoltage(voltage), () -> pivotIntakeIO.setVoltage(0), this);
   }
+
   public Command off() {
-    return new StartEndCommand(
-        () -> pivotIntakeIO.off(),
-        () -> pivotIntakeIO.off(),
-        this);
+    return new StartEndCommand(() -> pivotIntakeIO.off(), () -> pivotIntakeIO.off(), this);
   }
+
   public Command slamZero() {
     return new Command() {
-      @Override 
+      @Override
       public void initialize() {
         pivotIntakeIO.setVoltage(PivotIntakeConstants.kPivotSlamShooterVoltage);
       }
+
       @Override
       public void end(boolean interrupted) {
         pivotIntakeIO.off();
@@ -60,20 +57,20 @@ public class PivotIntake extends SubsystemBase {
           pivotIntakeIO.zero();
         }
       }
+
       @Override
       public boolean isFinished() {
-        return pivotIntakeIOAutoLogged.pivotIntakeMotorStatorCurrent > PivotIntakeConstants.kPivotSlamStallCurrent;
+        return pivotIntakeIOAutoLogged.pivotIntakeMotorStatorCurrent
+            > PivotIntakeConstants.kPivotSlamStallCurrent;
       }
     };
   }
+
   public Command slamAndPID() {
     return new SequentialCommandGroup(this.setPosition(0), this.slamZero());
   }
-  public Command zero(){
-    return new StartEndCommand(()->pivotIntakeIO.zero(), ()->pivotIntakeIO.zero(), this);
+
+  public Command zero() {
+    return new StartEndCommand(() -> pivotIntakeIO.zero(), () -> pivotIntakeIO.zero(), this);
   }
-
-
-
-
 }
