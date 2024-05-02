@@ -7,6 +7,8 @@
 
 package frc.robot.autos.commands;
 
+import static frc.robot.subsystems.pivotintake.PivotIntakeConstants.kPivotGroundPos;
+
 import edu.wpi.first.wpilibj2.command.*;
 import frc.robot.Constants.*;
 import frc.robot.subsystems.ampbar.AmpBar;
@@ -14,6 +16,7 @@ import frc.robot.subsystems.ampbar.commands.StowPosition;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.commands.IntakeInTeleop;
 import frc.robot.subsystems.pivotintake.PivotIntake;
+import frc.robot.subsystems.pivotintake.PivotIntakeConstants;
 import frc.robot.subsystems.pivotshooter.PivotShooter;
 import frc.robot.subsystems.pivotshooter.commands.PivotShooterSlamAndVoltage;
 import frc.robot.subsystems.shooter.Shooter;
@@ -34,21 +37,11 @@ public class IntakeSequence extends SequentialCommandGroup {
     shooter = shoot;
     this.ampBar = ampBar;
     addRequirements(pivotIntake, pivotShooter, ampBar);
-    // addCommands(
-    // new ParallelCommandGroup(
-    // new PivotSetAngle(pivotSubsystem, PivotConstants.kPivotGroundAngleDeg)
-    // .withTimeout(0.75),
-    // new IntakeIn(intakeSubsystem)),
-    // new ParallelDeadlineGroup(
-    // new PivotSlamAndVoltage(pivotSubsystem).withTimeout(0.75),
-    // new IntakeSetVoltage(intakeSubsystem, 8)),
-    // new ScheduleCommand(new ShootSpeaker(shooterSubsystem)));
     addCommands(
         new ParallelCommandGroup(
-            // new PivotIntakeSetAngle(pivotIntake, PivotIntakeConstants.kPivotGroundAngleDeg)
-            // .withTimeout(0.75),
+            pivotIntake.setPosition(PivotIntakeConstants.kPivotGroundPos).withTimeout(0.75),
             new IntakeInTeleop(intakeSubsystem), new PivotShooterSlamAndVoltage(pivotShooter)),
-        // new PivotIntakeSlamAndVoltage(pivotIntake).withTimeout(1),
+            pivotIntake.slamAndPID(),
         // new PivotShootSubwoofer(shooterPivot).withTimeout(0.5),
         new ParallelCommandGroup(
             new StowPosition(ampBar),
