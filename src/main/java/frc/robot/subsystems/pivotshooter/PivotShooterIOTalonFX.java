@@ -1,17 +1,25 @@
 package frc.robot.subsystems.pivotshooter;
 
 import frc.robot.drivers.MonitoredTalonFX;
+import frc.robot.limelight.LimelightHelpers;
+
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.NeutralOut;
 import com.ctre.phoenix6.controls.PositionVoltage;
+
+import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
 import frc.robot.utils.PhoenixUtil;
 import frc.robot.utils.TalonUtil;
 
 public class PivotShooterIOTalonFX implements PivotShooterIO {
 
+    private final InterpolatingDoubleTreeMap aprilTagMap = new InterpolatingDoubleTreeMap(){{
+        put(0.0, 0.0);
+        put(1.0, 1.0);
+    }};
   private final MonitoredTalonFX pivotShooterMotor =
       new MonitoredTalonFX(PivotShooterConstants.kPivotMotorID);
   final PositionVoltage positionRequest = new PositionVoltage(0).withSlot(0);
@@ -66,6 +74,11 @@ public class PivotShooterIOTalonFX implements PivotShooterIO {
     inputs.pivotShooterMotorStatorCurrent = pivotShooterMotorStatorCurrent.getValueAsDouble();
     inputs.pivotShooterMotorSupplyCurrent = pivotShooterMotorSupplyCurrent.getValueAsDouble();
     inputs.pivotShooterMotorTemperature = pivotShooterMotorTemperature.getValueAsDouble();
+    inputs.lastLastCenterLimelightTY = inputs.lastCenterLimelightTY;
+    inputs.lastCenterLimelightTY = inputs.currentCenterLimelightTY;
+    inputs.centerLimelightTYOffset = (inputs.lastCenterLimelightTY - inputs.lastLastCenterLimelightTY) + inputs.currentCenterLimelightTY;
+    inputs.currentCenterLimelightTY = LimelightHelpers.getTY("limelight");
+    inputs.interpolatedPivotPosition = aprilTagMap.get(inputs.centerLimelightTYOffset);
   }
 
   @Override
@@ -92,4 +105,3 @@ public class PivotShooterIOTalonFX implements PivotShooterIO {
     pivotShooterMotor.setPosition(0);
   }
 }
-

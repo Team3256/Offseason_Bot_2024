@@ -16,7 +16,6 @@ import frc.robot.subsystems.intake.commands.IntakeInTeleop;
 import frc.robot.subsystems.pivotintake.PivotIntake;
 import frc.robot.subsystems.pivotintake.PivotIntakeConstants;
 import frc.robot.subsystems.pivotshooter.PivotShooter;
-import frc.robot.subsystems.pivotshooter.commands.PivotShooterSlamAndVoltage;
 import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.subsystems.shooter.commands.ShootSpeaker;
 
@@ -39,7 +38,7 @@ public class IntakeSequence extends SequentialCommandGroup {
         new ParallelCommandGroup(
             pivotIntake.setPosition(PivotIntakeConstants.kPivotGroundPos).withTimeout(0.75),
             new IntakeInTeleop(intakeSubsystem),
-            new PivotShooterSlamAndVoltage(pivotShooter)),
+            pivotShooter.slamAndPID()),
         pivotIntake.slamAndPID(),
         // new PivotShootSubwoofer(shooterPivot).withTimeout(0.5),
         new ParallelCommandGroup(
