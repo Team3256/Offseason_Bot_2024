@@ -31,8 +31,8 @@ public final class ClimbConstants {
   public static final double kS = 0;
   public static final double kV = 0;
   public static double kCurrentThreshold = 4.5;
-  // TODO: Tune constants for the robot
-  // XXX: Do we need feed-forward as well?
+  
+
   // // What about the tension from the spring?
   // public static double gyroRollStableThreshold = 1; // 1 degree of error is
   // tolerated

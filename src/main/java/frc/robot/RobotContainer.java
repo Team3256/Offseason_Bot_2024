@@ -163,9 +163,9 @@ public class RobotContainer {
               pivotShooter.zero(),
               new ParallelDeadlineGroup(
                   new SequentialCommandGroup(
-                      new WaitCommand(0.5), // TODO: maybe need to tune this too
+                      new WaitCommand(0.5), 
                       new IntakeInOverride(intake)
-                          .withTimeout(0.7)), // TODO: tune time in withTimeout
+                          .withTimeout(0.7)),
                   pivotShooter.setPosition(PivotShooterConstants.kSubWooferPreset),
                   shooter.setVelocity(
                       ShooterConstants.kShooterSubwooferRPS,
@@ -178,9 +178,9 @@ public class RobotContainer {
               pivotShooter.zero(),
               new ParallelDeadlineGroup(
                   new SequentialCommandGroup(
-                      new WaitCommand(0.8), // TODO: maybe need to tune this too
+                      new WaitCommand(0.8), 
                       new IntakeInOverride(intake)
-                          .withTimeout(0.7)), // TODO: tune time in withTimeout
+                          .withTimeout(0.7)), 
                   pivotShooter.setPosition(PivotShooterConstants.kSubWooferPreset),
                   shooter.setVelocity(
                       ShooterConstants.kShooterSubwooferRPS,
@@ -206,7 +206,7 @@ public class RobotContainer {
                   shooter.setVelocity(
                       ShooterConstants.kShooterSubwooferRPS,
                       ShooterConstants
-                          .kShooterFollowerSubwooferRPS)))); // TODO: tune time in withTimeout
+                          .kShooterFollowerSubwooferRPS)))); 
       NamedCommands.registerCommand(
           "aim subwoofer", pivotShooter.setPosition(PivotShooterConstants.kSubWooferPreset));
       NamedCommands.registerCommand("shooter off", shooter.off());
@@ -217,7 +217,7 @@ public class RobotContainer {
               new IntakeIn(intake).withTimeout(1),
               shooter.setVelocity(
                   ShooterConstants.kShooterAmpRPS,
-                  ShooterConstants.kShooterFollowerAmpRPS))); // TODO: tune time in withTimeout
+                  ShooterConstants.kShooterFollowerAmpRPS)));
       NamedCommands.registerCommand(
           "aim wing center",
           pivotShooter.setPosition(
@@ -259,8 +259,8 @@ public class RobotContainer {
               pivotIntake.zero(),
               new ParallelDeadlineGroup(
                   new SequentialCommandGroup(
-                      new WaitCommand(0.8), // TODO: maybe need to tune this too
-                      new IntakeOut(intake).withTimeout(1.5)), // TODO: tune time in withTimeout
+                      new WaitCommand(0.8), 
+                      new IntakeOut(intake).withTimeout(1.5)), 
                   shooter.setVelocity(
                       ShooterConstants.kShooterAmpRPS, ShooterConstants.kShooterFollowerAmpRPS))));
       NamedCommands.registerCommand(

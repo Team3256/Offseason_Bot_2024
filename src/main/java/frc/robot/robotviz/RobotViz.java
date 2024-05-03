@@ -105,7 +105,7 @@ public class RobotViz {
   }
 
   public void update(double dt) {
-    // TODO: implement these when the subsystems are created
+    
     if (FeatureFlags.kSwerveEnabled) {
       field.getObject("Robot").setPose(swerveSubsystem.getPose());
     }

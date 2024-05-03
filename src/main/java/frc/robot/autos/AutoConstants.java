@@ -13,7 +13,7 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import frc.robot.subsystems.swerve.SwerveConstants;
 
 public final class AutoConstants {
-  // TODO: The below constants are used in the example auto, and must be tuned to
+  
   // specific robot
   public static final double kMaxSpeedMetersPerSecond = 4.275;
   public static final double kDriveBaseRadiusMeters = SwerveConstants.driveBaseRadius;

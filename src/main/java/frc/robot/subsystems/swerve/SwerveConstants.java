@@ -26,7 +26,7 @@ public final class SwerveConstants {
 
   // Motor
   public static final COTSTalonFXSwerveConstants
-      chosenModule = // TODO: This must be tuned to specific robot
+      chosenModule = 
       COTSTalonFXSwerveConstants.SDS.MK4i.Falcon500(
               COTSTalonFXSwerveConstants.SDS.MK4i.driveRatios.L3);
 
@@ -65,7 +65,7 @@ public final class SwerveConstants {
   public static final double noteTurnkF = 0;
 
   /* Drive Motor Characterization Values From SysID */
-  public static final double driveKS = 0; // TODO: Tune
+  public static final double driveKS = 0; 
   public static final double driveKV = 2.08; // 0.13
   public static final double driveKA = 0.21; // 0
 
@@ -93,8 +93,8 @@ public final class SwerveConstants {
   public static final double kSwervePoseEstimatorMaxValue = 7.128826;
 
   /* Drivetrain Constants */
-  public static final double trackWidth = Units.inchesToMeters(20.75); // Drive base x TODO: Tune
-  public static final double wheelBase = Units.inchesToMeters(20.75); // Drive base y TODO: Tune
+  public static final double trackWidth = Units.inchesToMeters(20.75); 
+  public static final double wheelBase = Units.inchesToMeters(20.75);
   /*
    * We calculate the drive base radius using the Pythagorean theorem
    * Assuming we know the sides of the robot, which is square.
@@ -167,11 +167,11 @@ public final class SwerveConstants {
   public static final double openLoopRamp = 0.25;
   public static final double closedLoopRamp = 0.0;
   /* Swerve Profiling Values */
-  public static final double maxTranslationalVelocity = 4.6; // TODO: Tune
+  public static final double maxTranslationalVelocity = 4.6; 
   public static final double slowMaxTranslationalVelocity =
-      maxTranslationalVelocity * 0.2; // TODO: Tune
-  public static final double maxAngularVelocity = 6; // TODO: Tune
-  public static final double slowMaxAngularVelocity = maxAngularVelocity * 0.5; // TODO: Tune
+      maxTranslationalVelocity * 0.2; 
+  public static final double maxAngularVelocity = 6; 
+  public static final double slowMaxAngularVelocity = maxAngularVelocity * 0.5;
   /* Neutral Modes */
   public static final NeutralModeValue angleNeutralMode = NeutralModeValue.Brake;
   public static final NeutralModeValue driveNeutralMode = NeutralModeValue.Brake;
@@ -203,7 +203,7 @@ public final class SwerveConstants {
 
   /* Module Specific Constants */
   /* Front Left Module - Module 0 */
-  public static final class Mod0 { // TODO: This must be tuned to specific robot
+  public static final class Mod0 { 
     public static final int driveMotorID = 1;
     public static final int angleMotorID = 8;
     public static final int canCoderID = 2;
@@ -213,7 +213,7 @@ public final class SwerveConstants {
   }
 
   /* Front Right Module - Module 1 */
-  public static final class Mod1 { // TODO: This must be tuned to specific robot
+  public static final class Mod1 { 
     public static final int driveMotorID = 6;
     public static final int angleMotorID = 7;
     public static final int canCoderID = 9;
@@ -223,7 +223,7 @@ public final class SwerveConstants {
   }
 
   /* Back Left Module - Module 2 */
-  public static final class Mod2 { // TODO: This must be tuned to specific robot
+  public static final class Mod2 { 
     public static final int driveMotorID = 2;
     public static final int angleMotorID = 4;
     public static final int canCoderID = 1;
@@ -233,7 +233,7 @@ public final class SwerveConstants {
   }
 
   /* Back Right Module - Module 3 */
-  public static final class Mod3 { // TODO: This must be tuned to specific robot
+  public static final class Mod3 { 
     public static final int driveMotorID = 5;
     public static final int angleMotorID = 0;
     public static final int canCoderID = 0;
@@ -274,7 +274,7 @@ public final class SwerveConstants {
 
     /* Angles */
 
-    // TODO: TUNE ALL OF THESE ON PRAC DAY
+    
     // left is positive
 
     public static final double aziAmpRed = 90; // (Math.atan2(ampXRed, ampY) * 180 / Math.PI);

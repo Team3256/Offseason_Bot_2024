@@ -16,7 +16,7 @@ public final class ShooterConstants {
   public static int kShooterMotorFollowerID = 23;
   /* PID */
   // Shooter
-  public static double kV = 0.39; // Original 0.145 TODO: Tune PID values
+  public static double kV = 0.39; // Original 0.145 
   public static double kA = 1.48; // Original 0 only for feedforward, might not use
   public static double kS = 0;
   public static double kP = 0.4;
@@ -24,7 +24,7 @@ public final class ShooterConstants {
   public static double kD = 0;
 
   // unused,
-  // public static double kShooterFollowerKV = 0.13; // TODO: Tune PID values
+  // public static double kShooterFollowerKV = 0.13; 
   // public static double kShooterFollowerKA = 0; // only for feedforward, might
   // not use
   // public static double kShooterFollowerKS = 0;
@@ -34,13 +34,13 @@ public final class ShooterConstants {
   // Shooter follower
   // Feeder
 
-  public static double kShooterSpeakerRPS = 42; // TODO: Tune
+  public static double kShooterSpeakerRPS = 42; 
   public static double kShooterFollowerSpeakerRPS = 45; // really 80
 
   public static double kShooterSubwooferRPS = 60;
   public static double kShooterFollowerSubwooferRPS = 70;
 
-  public static double kShooterAmpRPS = 22.5; // BEFORE: 1200/60 TODO: Tune
+  public static double kShooterAmpRPS = 22.5; // BEFORE: 1200/60 
   public static double kShooterFollowerAmpRPS = 22.5;
 
   public static double kShooterFeederRPS = 42;

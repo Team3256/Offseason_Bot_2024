@@ -16,7 +16,7 @@ public final class IntakeConstants {
   public static final double kIntakeIntakeVoltage = 12;
 
   /* PID */
-  public static final double kIntakeKV = 0.1; // TODO: Tune PID values
+  public static final double kIntakeKV = 0.1; 
   public static final double kIntakeKA = 0; // only for feedforward but idk if we gonna use it
   public static final double kIntakeKS = 0;
   public static final double kIntakeKP = 1;

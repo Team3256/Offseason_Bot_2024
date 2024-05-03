@@ -21,7 +21,7 @@ public class RotateToNote extends PIDCommand {
         new PIDController(
             SwerveConstants.noteTurnkP,
             SwerveConstants.noteTurnkI,
-            SwerveConstants.noteTurnkD), // TODO: Tune PID so it doesn't act like a bang-bang
+            SwerveConstants.noteTurnkD), 
         () -> {
           double dx;
           double dy;

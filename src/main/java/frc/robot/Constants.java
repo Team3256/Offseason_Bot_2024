@@ -62,11 +62,11 @@ public final class Constants {
     public static final boolean kLocalizationDataCollectionMode = false;
     public static final boolean kLocalizationStdDistanceBased = false;
 
-    // TODO:Setup the Limelight offset in the CAD into the LL config.
+    
     // Make sure the pose is CORRECT WITHOUT VISION BEFORE ENAVLINGTHIS!!!!
     public static final boolean kSwerveVelocityLimitingEnabled = false;
     public static final boolean kIntakeAutoScoreDistanceSensorOffset = false;
-    public static final boolean kShuffleboardLayoutEnabled = true; // TODO: use this
+    public static final boolean kShuffleboardLayoutEnabled = true;
     public static final boolean kGamePieceDetection = false;
     public static final boolean kUsePrefs = true;
 

@@ -18,7 +18,7 @@ public final class PivotShooterConstants {
   public static final double kWingNoteCenterPreset = 5.8 / 138.33;
   public static final double kWingNoteSidePreset =
       5.5 / 138.33; // old value: 5.7 distance: -1.5 //old ish?: 5.4
-  public static final double kWingNoteFarSidePreset = 0 / 138.33; // TODO: tune
+  public static final double kWingNoteFarSidePreset = 0 / 138.33; 
   public static final double kTrussSourceSidePreset = 6.7 / 138.33; // -10.6875
   public static final double kHalfWingPodiumPreset =
       6.55 / 138.33; // old value: 6.7 distance: -11.5275
