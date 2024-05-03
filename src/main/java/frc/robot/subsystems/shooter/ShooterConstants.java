@@ -16,12 +16,12 @@ public final class ShooterConstants {
   public static int kShooterMotorFollowerID = 23;
   /* PID */
   // Shooter
-  public static double kShooterKV = 0.39; // Original 0.145 TODO: Tune PID values
-  public static double kShooterKA = 1.48; // Original 0 only for feedforward, might not use
-  public static double kShooterKS = 0;
-  public static double kShooterKP = 0.4;
-  public static double kShooterKI = 0;
-  public static double kShooterKD = 0;
+  public static double kV = 0.39; // Original 0.145 TODO: Tune PID values
+  public static double kA = 1.48; // Original 0 only for feedforward, might not use
+  public static double kS = 0;
+  public static double kP = 0.4;
+  public static double kI = 0;
+  public static double kD = 0;
 
   // unused,
   // public static double kShooterFollowerKV = 0.13; // TODO: Tune PID values
@@ -49,4 +49,11 @@ public final class ShooterConstants {
   /* Misc */
   public static double kShooterAngle = 10; // The fixed angle for the shooter (in degrees)
   // before: 1800/6
+  public static double statorLimit = 60;
+public static boolean enableStatorLimit = true;
+public static double motionMagicJerk = 1600;
+public static double motionMagicAcceleration = 300;
+public static double motionMagicVelocity = 100;
+public static double updateFrequency = 50.0;
+public static boolean kUseMotionMagic = false ;
 }

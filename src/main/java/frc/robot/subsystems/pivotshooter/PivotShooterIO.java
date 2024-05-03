@@ -13,11 +13,13 @@ public interface PivotShooterIO {
   @AutoLog
   public static class PivotShooterIOInputs {
     public double pivotShooterMotorVoltage = 0.0;
+    public double pivotShooterMotorVelocity = 0.0;
     public double pivotShooterMotorPosition = 0.0;
     public double pivotShooterMotorDegrees = 0.0;
     public double pivotShooterMotorStatorCurrent = 0.0;
     public double pivotShooterMotorSupplyCurrent = 0.0;
     public double pivotShooterMotorTemperature = 0.0;
+    public double pivotShooterMotorReferenceSlope = 0.0;
 
     public double lastCenterLimelightTY = 0.0;
     public double lastLastCenterLimelightTY = 0.0;

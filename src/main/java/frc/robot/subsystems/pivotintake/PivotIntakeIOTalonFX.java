@@ -25,12 +25,15 @@ public class PivotIntakeIOTalonFX implements PivotIntakeIO {
   final MotionMagicVoltage motionMagicRequest = new MotionMagicVoltage(0).withSlot(0);
 
   private final StatusSignal<Double> pivotIntakeMotorVoltage = pivotIntakeMotor.getMotorVoltage();
+  private final StatusSignal<Double> pivotIntakeMotorVelocity = pivotIntakeMotor.getVelocity();
   private final StatusSignal<Double> pivotIntakeMotorPosition = pivotIntakeMotor.getPosition();
   private final StatusSignal<Double> pivotIntakeMotorStatorCurrent =
       pivotIntakeMotor.getStatorCurrent();
   private final StatusSignal<Double> pivotIntakeMotorSupplyCurrent =
       pivotIntakeMotor.getSupplyCurrent();
   private final StatusSignal<Double> pivotIntakeMotorTemperature = pivotIntakeMotor.getDeviceTemp();
+  private final StatusSignal<Double> pivotIntakeMotorReferenceSlope =
+      pivotIntakeMotor.getClosedLoopReferenceSlope();
 
   public PivotIntakeIOTalonFX() {
     var motorConfig = new TalonFXConfiguration();
@@ -51,10 +54,12 @@ public class PivotIntakeIOTalonFX implements PivotIntakeIO {
     BaseStatusSignal.setUpdateFrequencyForAll(
         PivotIntakeConstants.updateFrequency,
         pivotIntakeMotorVoltage,
+        pivotIntakeMotorVelocity,
         pivotIntakeMotorPosition,
         pivotIntakeMotorStatorCurrent,
         pivotIntakeMotorSupplyCurrent,
-        pivotIntakeMotorTemperature);
+        pivotIntakeMotorTemperature,
+        pivotIntakeMotorReferenceSlope);
     pivotIntakeMotor.optimizeBusUtilization();
   }
 
@@ -62,17 +67,21 @@ public class PivotIntakeIOTalonFX implements PivotIntakeIO {
   public void updateInputs(PivotIntakeIOInputs inputs) {
     BaseStatusSignal.refreshAll(
         pivotIntakeMotorVoltage,
+        pivotIntakeMotorVelocity,
         pivotIntakeMotorPosition,
         pivotIntakeMotorStatorCurrent,
         pivotIntakeMotorSupplyCurrent,
-        pivotIntakeMotorTemperature);
+        pivotIntakeMotorTemperature,
+        pivotIntakeMotorReferenceSlope);
     inputs.pivotIntakeMotorVoltage = pivotIntakeMotorVoltage.getValueAsDouble();
+    inputs.pivotIntakeMotorVelocity = pivotIntakeMotorVelocity.getValueAsDouble();
     inputs.pivotIntakeMotorPosition = pivotIntakeMotorPosition.getValueAsDouble();
     inputs.pivotIntakeMotorDegrees =
         (inputs.pivotIntakeMotorPosition / PivotIntakeConstants.kPivotMotorGearing) * 360;
     inputs.pivotIntakeMotorStatorCurrent = pivotIntakeMotorStatorCurrent.getValueAsDouble();
     inputs.pivotIntakeMotorSupplyCurrent = pivotIntakeMotorSupplyCurrent.getValueAsDouble();
     inputs.pivotIntakeMotorTemperature = pivotIntakeMotorTemperature.getValueAsDouble();
+    inputs.pivotIntakeMotorReferenceSlope = pivotIntakeMotorReferenceSlope.getValueAsDouble();
   }
 
   @Override

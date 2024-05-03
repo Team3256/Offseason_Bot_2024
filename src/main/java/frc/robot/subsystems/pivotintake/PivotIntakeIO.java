@@ -14,10 +14,12 @@ public interface PivotIntakeIO {
   public static class PivotIntakeIOInputs {
     public double pivotIntakeMotorVoltage = 0.0;
     public double pivotIntakeMotorPosition = 0.0;
+    public double pivotIntakeMotorVelocity = 0.0;
     public double pivotIntakeMotorDegrees = 0.0;
     public double pivotIntakeMotorStatorCurrent = 0.0;
     public double pivotIntakeMotorSupplyCurrent = 0.0;
     public double pivotIntakeMotorTemperature = 0.0;
+    public double pivotIntakeMotorReferenceSlope = 0.0;
   }
 
   public default void updateInputs(PivotIntakeIOInputs inputs) {}

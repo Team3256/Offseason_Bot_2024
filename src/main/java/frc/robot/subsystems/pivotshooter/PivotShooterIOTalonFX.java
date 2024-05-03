@@ -34,6 +34,7 @@ public class PivotShooterIOTalonFX implements PivotShooterIO {
   final MotionMagicVoltage motionMagicRequest = new MotionMagicVoltage(0).withSlot(0);
 
   private final StatusSignal<Double> pivotShooterMotorVoltage = pivotShooterMotor.getMotorVoltage();
+  private final StatusSignal<Double> pivotShooterMotorVelocity = pivotShooterMotor.getVelocity();
   private final StatusSignal<Double> pivotShooterMotorPosition = pivotShooterMotor.getPosition();
   private final StatusSignal<Double> pivotShooterMotorStatorCurrent =
       pivotShooterMotor.getStatorCurrent();
@@ -41,6 +42,8 @@ public class PivotShooterIOTalonFX implements PivotShooterIO {
       pivotShooterMotor.getSupplyCurrent();
   private final StatusSignal<Double> pivotShooterMotorTemperature =
       pivotShooterMotor.getDeviceTemp();
+  private final StatusSignal<Double> pivotShooterMotorReferenceSlope =
+      pivotShooterMotor.getClosedLoopReferenceSlope();
 
   public PivotShooterIOTalonFX() {
     var motorConfig = new TalonFXConfiguration();
@@ -61,10 +64,12 @@ public class PivotShooterIOTalonFX implements PivotShooterIO {
     BaseStatusSignal.setUpdateFrequencyForAll(
         PivotShooterConstants.updateFrequency,
         pivotShooterMotorVoltage,
+        pivotShooterMotorVelocity,
         pivotShooterMotorPosition,
         pivotShooterMotorStatorCurrent,
         pivotShooterMotorSupplyCurrent,
-        pivotShooterMotorTemperature);
+        pivotShooterMotorTemperature,
+        pivotShooterMotorReferenceSlope);
     pivotShooterMotor.optimizeBusUtilization();
   }
 
@@ -72,17 +77,23 @@ public class PivotShooterIOTalonFX implements PivotShooterIO {
   public void updateInputs(PivotShooterIOInputs inputs) {
     BaseStatusSignal.refreshAll(
         pivotShooterMotorVoltage,
+        pivotShooterMotorVelocity,
         pivotShooterMotorPosition,
         pivotShooterMotorStatorCurrent,
         pivotShooterMotorSupplyCurrent,
-        pivotShooterMotorTemperature);
+        pivotShooterMotorTemperature,
+        pivotShooterMotorReferenceSlope);
     inputs.pivotShooterMotorVoltage = pivotShooterMotorVoltage.getValueAsDouble();
+    inputs.pivotShooterMotorVelocity = pivotShooterMotorVelocity.getValueAsDouble();
     inputs.pivotShooterMotorPosition = pivotShooterMotorPosition.getValueAsDouble();
     inputs.pivotShooterMotorDegrees =
         (inputs.pivotShooterMotorPosition / PivotShooterConstants.kPivotMotorGearing) * 360;
     inputs.pivotShooterMotorStatorCurrent = pivotShooterMotorStatorCurrent.getValueAsDouble();
     inputs.pivotShooterMotorSupplyCurrent = pivotShooterMotorSupplyCurrent.getValueAsDouble();
     inputs.pivotShooterMotorTemperature = pivotShooterMotorTemperature.getValueAsDouble();
+    inputs.pivotShooterMotorReferenceSlope = pivotShooterMotorReferenceSlope.getValueAsDouble();
+
+
     inputs.lastLastCenterLimelightTY = inputs.lastCenterLimelightTY;
     inputs.lastCenterLimelightTY = inputs.currentCenterLimelightTY;
     inputs.centerLimelightTYOffset =
