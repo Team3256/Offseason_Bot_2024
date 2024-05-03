@@ -21,7 +21,7 @@ import frc.robot.helpers.DebugCommandBase;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.commands.IntakeOut;
 import frc.robot.subsystems.shooter.Shooter;
-import frc.robot.subsystems.shooter.commands.ShootSpeaker;
+import frc.robot.subsystems.shooter.ShooterConstants;
 import frc.robot.subsystems.swerve.SwerveDrive;
 import java.util.Optional;
 
@@ -73,7 +73,7 @@ public class AutoScoreSpeaker extends DebugCommandBase {
 
     moveToScoringLocation = AutoBuilder.pathfindToPose(scoringLocation, constraints, 0.0, 0.0);
     //    shootSpeaker = new ShootSpeaker(shooterSubsystem);
-    revShooter = new ShootSpeaker(shooterSubsystem);
+    revShooter = shooterSubsystem.setVelocity(ShooterConstants.kShooterSubwooferRPS, ShooterConstants.kShooterFollowerSubwooferRPS);
     intakeOut = new IntakeOut(intakeSubsystem);
 
     autoScore = Commands.parallel(Commands.sequence(moveToScoringLocation, intakeOut), revShooter);

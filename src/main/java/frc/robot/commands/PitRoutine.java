@@ -20,9 +20,7 @@ import frc.robot.subsystems.intake.commands.IntakeOut;
 import frc.robot.subsystems.pivotintake.PivotIntake;
 import frc.robot.subsystems.pivotintake.PivotIntakeConstants;
 import frc.robot.subsystems.shooter.Shooter;
-import frc.robot.subsystems.shooter.commands.ShootAmp;
-import frc.robot.subsystems.shooter.commands.ShootSpeaker;
-import frc.robot.subsystems.shooter.commands.ShooterOff;
+import frc.robot.subsystems.shooter.ShooterConstants;
 import frc.robot.subsystems.swerve.SwerveDrive;
 import frc.robot.subsystems.swerve.commands.TeleopSwerve;
 import frc.robot.subsystems.swerve.commands.ZeroGyro;
@@ -77,9 +75,9 @@ public class PitRoutine extends DebugCommandBase {
 
     // shooter
     if (Constants.FeatureFlags.kShooterEnabled) {
-      Command shootSpeaker = new ShootSpeaker(shooter);
-      Command shootAmp = new ShootAmp(shooter);
-      Command shooterOff = new ShooterOff(shooter);
+      Command shootSpeaker = shooter.setVelocity(ShooterConstants.kShooterSubwooferRPS, ShooterConstants.kShooterFollowerSubwooferRPS);
+      Command shootAmp = shooter.setVelocity(ShooterConstants.kShooterAmpRPS, ShooterConstants.kShooterFollowerAmpRPS);
+      Command shooterOff = shooter.off();
       CommandList.add(shootSpeaker);
       CommandList.add(shootAmp);
       CommandList.add(shooterOff);

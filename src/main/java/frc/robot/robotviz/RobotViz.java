@@ -116,7 +116,7 @@ public class RobotViz {
     if (FeatureFlags.kShooterEnabled) {
       shooter.setAngle(
           shooter.getAngle()
-              + shooterSubsystem.getShooterRps() * 360 * dt * shooterVelocitySimDamp);
+              + 10 * 360 * dt * shooterVelocitySimDamp);
       feeder.setAngle(0);
     }
     if (FeatureFlags.kPivotIntakeEnabled) {

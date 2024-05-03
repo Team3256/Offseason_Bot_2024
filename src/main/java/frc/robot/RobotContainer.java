@@ -7,7 +7,6 @@
 
 package frc.robot;
 
-import static edu.wpi.first.wpilibj.RobotBase.isReal;
 import static frc.robot.subsystems.pivotintake.PivotIntakeConstants.kPivotGroundPos;
 import static frc.robot.subsystems.pivotshooter.PivotShooterConstants.*;
 import static frc.robot.subsystems.swerve.SwerveConstants.AzimuthConstants.*;
@@ -48,12 +47,8 @@ import frc.robot.subsystems.pivotshooter.PivotShooter;
 import frc.robot.subsystems.pivotshooter.PivotShooterConstants;
 import frc.robot.subsystems.pivotshooter.PivotShooterIOTalonFX;
 import frc.robot.subsystems.shooter.Shooter;
-import frc.robot.subsystems.shooter.commands.Shoot;
-import frc.robot.subsystems.shooter.commands.ShootAmp;
-import frc.robot.subsystems.shooter.commands.ShootFeed;
-import frc.robot.subsystems.shooter.commands.ShootSpeaker;
-import frc.robot.subsystems.shooter.commands.ShootSubwoofer;
-import frc.robot.subsystems.shooter.commands.ShooterOff;
+import frc.robot.subsystems.shooter.ShooterConstants;
+import frc.robot.subsystems.shooter.ShooterIOTalonFX;
 import frc.robot.subsystems.swerve.SwerveDrive;
 import frc.robot.subsystems.swerve.commands.*;
 import io.github.oblarg.oblog.annotations.Config;
@@ -172,7 +167,7 @@ public class RobotContainer {
                       new IntakeInOverride(intake)
                           .withTimeout(0.7)), // TODO: tune time in withTimeout
                   pivotShooter.setPosition(PivotShooterConstants.kSubWooferPreset),
-                  new ShootSubwoofer(shooter))));
+                  shooter.setVelocity(ShooterConstants.kShooterSubwooferRPS, ShooterConstants.kShooterFollowerSubwooferRPS))));
 
       NamedCommands.registerCommand( // shoot preloaded note to speaker, use at match start
           "preload speaker amp side",
@@ -185,7 +180,7 @@ public class RobotContainer {
                       new IntakeInOverride(intake)
                           .withTimeout(0.7)), // TODO: tune time in withTimeout
                   pivotShooter.setPosition(PivotShooterConstants.kSubWooferPreset),
-                  new ShootSubwoofer(shooter))
+                  shooter.setVelocity(ShooterConstants.kShooterSubwooferRPS, ShooterConstants.kShooterFollowerSubwooferRPS))
               // new PivotShooterSlamAndVoltage(pivotShooter)));
               ));
       NamedCommands.registerCommand( // intake ground note, stow to feeder chamber
@@ -195,23 +190,23 @@ public class RobotContainer {
               new IntakeIn(intake),
               // new PivotShooterSlamAndVoltage(pivotShooter),
               // new PivotShootSubwoofer(pivotShooter),
-              new ShootSubwoofer(shooter)));
+              shooter.setVelocity(ShooterConstants.kShooterSubwooferRPS, ShooterConstants.kShooterFollowerSubwooferRPS)));
       NamedCommands.registerCommand( // outtake note to feeder
           "outtake speaker",
           new SequentialCommandGroup(
               // new ScheduleCommand(new PivotShootSubwoofer(pivotShooter)).asProxy(),
               new ParallelCommandGroup(
                   new IntakeInOverride(intake).withTimeout(2),
-                  new ShootSubwoofer(shooter)))); // TODO: tune time in withTimeout
+                  shooter.setVelocity(ShooterConstants.kShooterSubwooferRPS, ShooterConstants.kShooterFollowerSubwooferRPS)))); // TODO: tune time in withTimeout
       NamedCommands.registerCommand(
           "aim subwoofer", pivotShooter.setPosition(PivotShooterConstants.kSubWooferPreset));
-      NamedCommands.registerCommand("shooter off", new ShooterOff(shooter));
+      NamedCommands.registerCommand("shooter off", shooter.off());
 
       NamedCommands.registerCommand( // outtake note to feeder
           "safety",
           new ParallelCommandGroup(
               new IntakeIn(intake).withTimeout(1),
-              new ShootAmp(shooter))); // TODO: tune time in withTimeout
+              shooter.setVelocity(ShooterConstants.kShooterAmpRPS, ShooterConstants.kShooterFollowerAmpRPS))); // TODO: tune time in withTimeout
       NamedCommands.registerCommand(
           "aim wing center",
           pivotShooter.setPosition(
@@ -234,9 +229,9 @@ public class RobotContainer {
       NamedCommands.registerCommand("zero pivot shooter", pivotShooter.slamAndPID());
 
       NamedCommands.registerCommand( // rev shooter to speaker presets
-          "rev speaker", new ShootSpeaker(shooter));
+          "rev speaker", shooter.setVelocity(ShooterConstants.kShooterSubwooferRPS, ShooterConstants.kShooterFollowerSubwooferRPS));
       NamedCommands.registerCommand( // rev shooter to amp presets
-          "rev amp", new ShootAmp(shooter));
+          "rev amp", shooter.setVelocity(ShooterConstants.kShooterAmpRPS, ShooterConstants.kShooterFollowerAmpRPS));
       NamedCommands.registerCommand( // modular pivot down, use for sabotage
           "pivot down", pivotIntake.setPosition(kPivotGroundPos).withTimeout(0.75));
       NamedCommands.registerCommand("stow", pivotIntake.slamAndPID().withTimeout(0.75));
@@ -250,9 +245,9 @@ public class RobotContainer {
                   new SequentialCommandGroup(
                       new WaitCommand(0.8), // TODO: maybe need to tune this too
                       new IntakeOut(intake).withTimeout(1.5)), // TODO: tune time in withTimeout
-                  new ShootAmp(shooter))));
+                  shooter.setVelocity(ShooterConstants.kShooterAmpRPS, ShooterConstants.kShooterFollowerAmpRPS))));
       NamedCommands.registerCommand(
-          "scheduled shoot speaker", new ScheduleCommand(new ShootSpeaker(shooter)));
+          "scheduled shoot speaker", new ScheduleCommand(shooter.setVelocity(ShooterConstants.kShooterSubwooferRPS, ShooterConstants.kShooterFollowerSubwooferRPS)));
       NamedCommands.registerCommand(
           "align to note",
           new SequentialCommandGroup(
@@ -309,7 +304,7 @@ public class RobotContainer {
         .whileTrue(
             new SequentialCommandGroup(
                 pivotShooter.setPosition(7),
-                new ParallelCommandGroup(new GetRidOfNote(intake), new Shoot(shooter, 100, 100))));
+                new ParallelCommandGroup(new GetRidOfNote(intake), shooter.setVelocity(100, 100))));
     driver.rightTrigger().whileTrue(new IntakeOut(intake));
 
     // operator.povDown().onTrue(new IntakeOff(intake));
@@ -529,11 +524,7 @@ public class RobotContainer {
   }
 
   private void configureShooter() {
-    if (isReal()) {
-      shooter = new Shooter();
-    } else {
-      shooter = new Shooter();
-    }
+    shooter = new Shooter(new ShooterIOTalonFX());
     // new Trigger(() -> Math.abs(shooter.getShooterRps() - 100) <= 5)
     // .onTrue(
     // new InstantCommand(
@@ -549,25 +540,25 @@ public class RobotContainer {
       ampbar = new AmpBar();
       operator
           .rightTrigger()
-          .onTrue(Commands.parallel(new ShootSpeaker(shooter), new StowPosition(ampbar)));
+          .onTrue(Commands.parallel(shooter.setVelocity(ShooterConstants.kShooterSubwooferRPS, ShooterConstants.kShooterFollowerSubwooferRPS), new StowPosition(ampbar)));
       operator
           .leftTrigger()
           .onTrue(
               new ParallelCommandGroup(
-                  new ShootAmp(shooter),
+                  shooter.setVelocity(ShooterConstants.kShooterAmpRPS, ShooterConstants.kShooterFollowerAmpRPS),
                   new AmpPosition(ampbar),
                   pivotShooter.setPosition(kAmpPreset)));
       operator
           .y()
           .onTrue(
               new ParallelCommandGroup(
-                  new ShooterOff(shooter), new StowPosition(ampbar), pivotShooter.slamAndPID()));
+                  shooter.off(), new StowPosition(ampbar), pivotShooter.slamAndPID()));
     } else {
-      operator.rightTrigger().onTrue(new ShootSpeaker(shooter));
-      operator.leftTrigger().onTrue(new ShootAmp(shooter));
+      operator.rightTrigger().onTrue(shooter.setVelocity(ShooterConstants.kShooterSubwooferRPS, ShooterConstants.kShooterFollowerSubwooferRPS));
+      operator.leftTrigger().onTrue(shooter.setVelocity(ShooterConstants.kShooterAmpRPS, ShooterConstants.kShooterFollowerAmpRPS));
       operator
           .y()
-          .onTrue(new ParallelCommandGroup(new ShooterOff(shooter), pivotShooter.slamAndPID()));
+          .onTrue(new ParallelCommandGroup(shooter.off(), pivotShooter.slamAndPID()));
     }
   }
 
@@ -578,7 +569,7 @@ public class RobotContainer {
         .onTrue(
             new ParallelCommandGroup(
                 pivotShooter.setPosition(PivotShooterConstants.kFeederPreset),
-                new ShootFeed(shooter)));
+                shooter.setVelocity(ShooterConstants.kShooterFeederRPS, ShooterConstants.kShooterFollowerFeederRPS)));
   }
 
   // operator.x().onTrue(new AutoScoreAmp(swerveDrive, shooter, intake));
@@ -694,12 +685,6 @@ public class RobotContainer {
     }
   }
 
-  private void systemCheeks() {
-    if (FeatureFlags.kSwerveEnabled && swerveDrive != null) {
-      swerveDrive.CANTest();
-    }
-  }
-
   public Command getAutonomousCommand() {
     return autoChooser.getSelected();
   }
@@ -713,16 +698,6 @@ public class RobotContainer {
     // Command pitRoutine = new PitRoutine(swerveDrive, climb, intake, pivotIntake,
     // shooter);
     // pitRoutine.schedule();
-  }
-
-  public void ccccccc() {
-    Command shoot = new ShootSpeaker(shooter);
-    shoot.schedule();
-  }
-
-  public void shootSpeaker() {
-    Command shoot = new ScheduleCommand(new ShootSpeaker(shooter));
-    shoot.schedule();
   }
 
   public void periodic(double dt) {
