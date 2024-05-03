@@ -31,7 +31,9 @@ public class PivotIntake extends SubsystemBase {
 
   public Command setPosition(double position) {
     return new StartEndCommand(
-        () -> pivotIntakeIO.setPosition(position*PivotIntakeConstants.kPivotMotorGearing), null, this);
+        () -> pivotIntakeIO.setPosition(position * PivotIntakeConstants.kPivotMotorGearing),
+        null,
+        this);
   }
 
   public Command setVoltage(double voltage) {

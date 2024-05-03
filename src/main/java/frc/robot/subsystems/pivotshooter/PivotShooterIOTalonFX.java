@@ -1,7 +1,11 @@
-package frc.robot.subsystems.pivotshooter;
+// Copyright (c) 2024 FRC 3256
+// https://github.com/Team3256
+//
+// Use of this source code is governed by a 
+// license that can be found in the LICENSE file at
+// the root directory of this project.
 
-import frc.robot.drivers.MonitoredTalonFX;
-import frc.robot.limelight.LimelightHelpers;
+package frc.robot.subsystems.pivotshooter;
 
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
@@ -9,17 +13,21 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.NeutralOut;
 import com.ctre.phoenix6.controls.PositionVoltage;
-
 import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
+import frc.robot.drivers.MonitoredTalonFX;
+import frc.robot.limelight.LimelightHelpers;
 import frc.robot.utils.PhoenixUtil;
 import frc.robot.utils.TalonUtil;
 
 public class PivotShooterIOTalonFX implements PivotShooterIO {
 
-    private final InterpolatingDoubleTreeMap aprilTagMap = new InterpolatingDoubleTreeMap(){{
-        put(0.0, 0.0);
-        put(1.0, 1.0);
-    }};
+  private final InterpolatingDoubleTreeMap aprilTagMap =
+      new InterpolatingDoubleTreeMap() {
+        {
+          put(0.0, 0.0);
+          put(1.0, 1.0);
+        }
+      };
   private final MonitoredTalonFX pivotShooterMotor =
       new MonitoredTalonFX(PivotShooterConstants.kPivotMotorID);
   final PositionVoltage positionRequest = new PositionVoltage(0).withSlot(0);
@@ -31,7 +39,8 @@ public class PivotShooterIOTalonFX implements PivotShooterIO {
       pivotShooterMotor.getStatorCurrent();
   private final StatusSignal<Double> pivotShooterMotorSupplyCurrent =
       pivotShooterMotor.getSupplyCurrent();
-  private final StatusSignal<Double> pivotShooterMotorTemperature = pivotShooterMotor.getDeviceTemp();
+  private final StatusSignal<Double> pivotShooterMotorTemperature =
+      pivotShooterMotor.getDeviceTemp();
 
   public PivotShooterIOTalonFX() {
     var motorConfig = new TalonFXConfiguration();
@@ -76,7 +85,9 @@ public class PivotShooterIOTalonFX implements PivotShooterIO {
     inputs.pivotShooterMotorTemperature = pivotShooterMotorTemperature.getValueAsDouble();
     inputs.lastLastCenterLimelightTY = inputs.lastCenterLimelightTY;
     inputs.lastCenterLimelightTY = inputs.currentCenterLimelightTY;
-    inputs.centerLimelightTYOffset = (inputs.lastCenterLimelightTY - inputs.lastLastCenterLimelightTY) + inputs.currentCenterLimelightTY;
+    inputs.centerLimelightTYOffset =
+        (inputs.lastCenterLimelightTY - inputs.lastLastCenterLimelightTY)
+            + inputs.currentCenterLimelightTY;
     inputs.currentCenterLimelightTY = LimelightHelpers.getTY("limelight");
     inputs.interpolatedPivotPosition = aprilTagMap.get(inputs.centerLimelightTYOffset);
   }

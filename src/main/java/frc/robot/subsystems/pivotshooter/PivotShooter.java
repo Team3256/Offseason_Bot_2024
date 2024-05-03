@@ -7,24 +7,18 @@
 
 package frc.robot.subsystems.pivotshooter;
 
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.autos.AutoConstants;
-import frc.robot.limelight.LimelightHelpers;
-
-import static frc.robot.subsystems.pivotshooter.PivotShooterConstants.kPivotMotorGearing;
-
 import org.littletonrobotics.junction.Logger;
 
 public class PivotShooter extends SubsystemBase {
 
   private final PivotShooterIO pivotShooterIO;
-  private final PivotShooterIOInputsAutoLogged pivotShooterIOAutoLogged = new PivotShooterIOInputsAutoLogged();
+  private final PivotShooterIOInputsAutoLogged pivotShooterIOAutoLogged =
+      new PivotShooterIOInputsAutoLogged();
 
   public PivotShooter(PivotShooterIO pivotShooterIO) {
     this.pivotShooterIO = pivotShooterIO;
@@ -38,7 +32,9 @@ public class PivotShooter extends SubsystemBase {
 
   public Command setPosition(double position) {
     return new StartEndCommand(
-        () -> pivotShooterIO.setPosition(position * PivotShooterConstants.kPivotMotorGearing), null, this);
+        () -> pivotShooterIO.setPosition(position * PivotShooterConstants.kPivotMotorGearing),
+        null,
+        this);
   }
 
   public Command setVoltage(double voltage) {
@@ -67,7 +63,8 @@ public class PivotShooter extends SubsystemBase {
 
       @Override
       public boolean isFinished() {
-        return pivotShooterIOAutoLogged.pivotShooterMotorStatorCurrent > PivotShooterConstants.kPivotSlamStallCurrent;
+        return pivotShooterIOAutoLogged.pivotShooterMotorStatorCurrent
+            > PivotShooterConstants.kPivotSlamStallCurrent;
       }
     };
   }
@@ -81,7 +78,7 @@ public class PivotShooter extends SubsystemBase {
   }
 
   public Command bruh() {
-    return new RunCommand(()-> pivotShooterIO.setPosition(pivotShooterIOAutoLogged.centerLimelightTYOffset), this);
+    return new RunCommand(
+        () -> pivotShooterIO.setPosition(pivotShooterIOAutoLogged.centerLimelightTYOffset), this);
   }
-
 }
