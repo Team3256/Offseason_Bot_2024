@@ -73,7 +73,9 @@ public class AutoScoreSpeaker extends DebugCommandBase {
 
     moveToScoringLocation = AutoBuilder.pathfindToPose(scoringLocation, constraints, 0.0, 0.0);
     //    shootSpeaker = new ShootSpeaker(shooterSubsystem);
-    revShooter = shooterSubsystem.setVelocity(ShooterConstants.kShooterSubwooferRPS, ShooterConstants.kShooterFollowerSubwooferRPS);
+    revShooter =
+        shooterSubsystem.setVelocity(
+            ShooterConstants.kShooterSubwooferRPS, ShooterConstants.kShooterFollowerSubwooferRPS);
     intakeOut = new IntakeOut(intakeSubsystem);
 
     autoScore = Commands.parallel(Commands.sequence(moveToScoringLocation, intakeOut), revShooter);

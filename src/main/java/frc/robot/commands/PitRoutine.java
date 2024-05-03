@@ -75,8 +75,12 @@ public class PitRoutine extends DebugCommandBase {
 
     // shooter
     if (Constants.FeatureFlags.kShooterEnabled) {
-      Command shootSpeaker = shooter.setVelocity(ShooterConstants.kShooterSubwooferRPS, ShooterConstants.kShooterFollowerSubwooferRPS);
-      Command shootAmp = shooter.setVelocity(ShooterConstants.kShooterAmpRPS, ShooterConstants.kShooterFollowerAmpRPS);
+      Command shootSpeaker =
+          shooter.setVelocity(
+              ShooterConstants.kShooterSubwooferRPS, ShooterConstants.kShooterFollowerSubwooferRPS);
+      Command shootAmp =
+          shooter.setVelocity(
+              ShooterConstants.kShooterAmpRPS, ShooterConstants.kShooterFollowerAmpRPS);
       Command shooterOff = shooter.off();
       CommandList.add(shootSpeaker);
       CommandList.add(shootAmp);

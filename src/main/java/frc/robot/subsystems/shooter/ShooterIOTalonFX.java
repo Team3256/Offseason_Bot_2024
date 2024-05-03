@@ -1,153 +1,167 @@
+// Copyright (c) 2024 FRC 3256
+// https://github.com/Team3256
+//
+// Use of this source code is governed by a 
+// license that can be found in the LICENSE file at
+// the root directory of this project.
+
 package frc.robot.subsystems.shooter;
 
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.MotionMagicVelocityVoltage;
-import com.ctre.phoenix6.controls.VelocityVoltage;
-
-import edu.wpi.first.units.Velocity;
 import com.ctre.phoenix6.controls.NeutralOut;
-import edu.wpi.first.wpilibj.motorcontrol.Talon;
+import com.ctre.phoenix6.controls.VelocityVoltage;
 import frc.robot.drivers.MonitoredTalonFX;
 import frc.robot.utils.PhoenixUtil;
 import frc.robot.utils.TalonUtil;
 
-public class ShooterIOTalonFX implements ShooterIO{
-    private final MonitoredTalonFX shooterMotor = new MonitoredTalonFX(ShooterConstants.kShooterMotorID);
-    final VelocityVoltage velocityRequest = new VelocityVoltage(0).withSlot(0);
-    final MotionMagicVelocityVoltage motionMagicRequest = new MotionMagicVelocityVoltage(0).withSlot(0);
+public class ShooterIOTalonFX implements ShooterIO {
+  private final MonitoredTalonFX shooterMotor =
+      new MonitoredTalonFX(ShooterConstants.kShooterMotorID);
+  final VelocityVoltage velocityRequest = new VelocityVoltage(0).withSlot(0);
+  final MotionMagicVelocityVoltage motionMagicRequest =
+      new MotionMagicVelocityVoltage(0).withSlot(0);
 
-    private final StatusSignal<Double> shooterMotorVoltage = shooterMotor.getMotorVoltage();
-    private final StatusSignal<Double> shooterMotorVelocity = shooterMotor.getVelocity();
-    private final StatusSignal<Double> shooterMotorStatorCurrent = shooterMotor.getStatorCurrent();
-    private final StatusSignal<Double> shooterMotorSupplyCurrent = shooterMotor.getSupplyCurrent();
-    private final StatusSignal<Double> shooterMotorTemperature = shooterMotor.getDeviceTemp();
-    private final StatusSignal<Double> shooterMotorReferenceSlope = shooterMotor.getClosedLoopReferenceSlope();
+  private final StatusSignal<Double> shooterMotorVoltage = shooterMotor.getMotorVoltage();
+  private final StatusSignal<Double> shooterMotorVelocity = shooterMotor.getVelocity();
+  private final StatusSignal<Double> shooterMotorStatorCurrent = shooterMotor.getStatorCurrent();
+  private final StatusSignal<Double> shooterMotorSupplyCurrent = shooterMotor.getSupplyCurrent();
+  private final StatusSignal<Double> shooterMotorTemperature = shooterMotor.getDeviceTemp();
+  private final StatusSignal<Double> shooterMotorReferenceSlope =
+      shooterMotor.getClosedLoopReferenceSlope();
 
-    private final MonitoredTalonFX shooterMotorFollower = new MonitoredTalonFX(ShooterConstants.kShooterMotorFollowerID);
-    final VelocityVoltage velocityRequestFollower = new VelocityVoltage(0).withSlot(0);
-    final MotionMagicVelocityVoltage motionMagicRequestFollower = new MotionMagicVelocityVoltage(0).withSlot(0);
+  private final MonitoredTalonFX shooterMotorFollower =
+      new MonitoredTalonFX(ShooterConstants.kShooterMotorFollowerID);
+  final VelocityVoltage velocityRequestFollower = new VelocityVoltage(0).withSlot(0);
+  final MotionMagicVelocityVoltage motionMagicRequestFollower =
+      new MotionMagicVelocityVoltage(0).withSlot(0);
 
-    private final StatusSignal<Double> shooterMotorFollowerVoltage = shooterMotorFollower.getMotorVoltage();
-    private final StatusSignal<Double> shooterMotorFollowerVelocity = shooterMotorFollower.getVelocity();
-    private final StatusSignal<Double> shooterMotorFollowerStatorCurrent = shooterMotorFollower.getStatorCurrent();
-    private final StatusSignal<Double> shooterMotorFollowerSupplyCurrent = shooterMotorFollower.getSupplyCurrent();
-    private final StatusSignal<Double> shooterMotorFollowerTemperature = shooterMotorFollower.getDeviceTemp();
-    private final StatusSignal<Double> shooterMotorFollowerReferenceSlope = shooterMotorFollower.getClosedLoopReferenceSlope();
-    
+  private final StatusSignal<Double> shooterMotorFollowerVoltage =
+      shooterMotorFollower.getMotorVoltage();
+  private final StatusSignal<Double> shooterMotorFollowerVelocity =
+      shooterMotorFollower.getVelocity();
+  private final StatusSignal<Double> shooterMotorFollowerStatorCurrent =
+      shooterMotorFollower.getStatorCurrent();
+  private final StatusSignal<Double> shooterMotorFollowerSupplyCurrent =
+      shooterMotorFollower.getSupplyCurrent();
+  private final StatusSignal<Double> shooterMotorFollowerTemperature =
+      shooterMotorFollower.getDeviceTemp();
+  private final StatusSignal<Double> shooterMotorFollowerReferenceSlope =
+      shooterMotorFollower.getClosedLoopReferenceSlope();
 
-    public ShooterIOTalonFX() {
-        var motorConfig = new TalonFXConfiguration();
-        PhoenixUtil.checkErrorAndRetry(() -> shooterMotor.getConfigurator().refresh(motorConfig));
-        motorConfig.Slot0.kS = ShooterConstants.kS;
-        motorConfig.Slot0.kV = ShooterConstants.kV;
-        motorConfig.Slot0.kP = ShooterConstants.kP;
-        motorConfig.Slot0.kI = ShooterConstants.kI;
-        motorConfig.Slot0.kD = ShooterConstants.kD;
-        motorConfig.MotionMagic.MotionMagicAcceleration = ShooterConstants.motionMagicVelocity;
-        motorConfig.MotionMagic.MotionMagicCruiseVelocity = ShooterConstants.motionMagicAcceleration;
-        motorConfig.MotionMagic.MotionMagicJerk = ShooterConstants.motionMagicJerk;
-        motorConfig.CurrentLimits.StatorCurrentLimitEnable = ShooterConstants.enableStatorLimit;
-        motorConfig.CurrentLimits.StatorCurrentLimit = ShooterConstants.statorLimit;
-        TalonUtil.applyAndCheckConfiguration(shooterMotor, motorConfig);
+  public ShooterIOTalonFX() {
+    var motorConfig = new TalonFXConfiguration();
+    PhoenixUtil.checkErrorAndRetry(() -> shooterMotor.getConfigurator().refresh(motorConfig));
+    motorConfig.Slot0.kS = ShooterConstants.kS;
+    motorConfig.Slot0.kV = ShooterConstants.kV;
+    motorConfig.Slot0.kP = ShooterConstants.kP;
+    motorConfig.Slot0.kI = ShooterConstants.kI;
+    motorConfig.Slot0.kD = ShooterConstants.kD;
+    motorConfig.MotionMagic.MotionMagicAcceleration = ShooterConstants.motionMagicVelocity;
+    motorConfig.MotionMagic.MotionMagicCruiseVelocity = ShooterConstants.motionMagicAcceleration;
+    motorConfig.MotionMagic.MotionMagicJerk = ShooterConstants.motionMagicJerk;
+    motorConfig.CurrentLimits.StatorCurrentLimitEnable = ShooterConstants.enableStatorLimit;
+    motorConfig.CurrentLimits.StatorCurrentLimit = ShooterConstants.statorLimit;
+    TalonUtil.applyAndCheckConfiguration(shooterMotor, motorConfig);
 
-        var motorConfigFollower = new TalonFXConfiguration();
-        PhoenixUtil.checkErrorAndRetry(() -> shooterMotorFollower.getConfigurator().refresh(motorConfigFollower));
-        motorConfigFollower.Slot0.kS = ShooterConstants.kS;
-        motorConfigFollower.Slot0.kV = ShooterConstants.kV;
-        motorConfigFollower.Slot0.kP = ShooterConstants.kP;
-        motorConfigFollower.Slot0.kI = ShooterConstants.kI;
-        motorConfigFollower.Slot0.kD = ShooterConstants.kD;
-        motorConfigFollower.MotionMagic.MotionMagicAcceleration = ShooterConstants.motionMagicVelocity;
-        motorConfigFollower.MotionMagic.MotionMagicCruiseVelocity = ShooterConstants.motionMagicAcceleration;
-        motorConfigFollower.MotionMagic.MotionMagicJerk = ShooterConstants.motionMagicJerk;
-        motorConfigFollower.CurrentLimits.StatorCurrentLimitEnable = ShooterConstants.enableStatorLimit;
-        motorConfigFollower.CurrentLimits.StatorCurrentLimit = ShooterConstants.statorLimit;
-        TalonUtil.applyAndCheckConfiguration(shooterMotorFollower, motorConfigFollower);
+    var motorConfigFollower = new TalonFXConfiguration();
+    PhoenixUtil.checkErrorAndRetry(
+        () -> shooterMotorFollower.getConfigurator().refresh(motorConfigFollower));
+    motorConfigFollower.Slot0.kS = ShooterConstants.kS;
+    motorConfigFollower.Slot0.kV = ShooterConstants.kV;
+    motorConfigFollower.Slot0.kP = ShooterConstants.kP;
+    motorConfigFollower.Slot0.kI = ShooterConstants.kI;
+    motorConfigFollower.Slot0.kD = ShooterConstants.kD;
+    motorConfigFollower.MotionMagic.MotionMagicAcceleration = ShooterConstants.motionMagicVelocity;
+    motorConfigFollower.MotionMagic.MotionMagicCruiseVelocity =
+        ShooterConstants.motionMagicAcceleration;
+    motorConfigFollower.MotionMagic.MotionMagicJerk = ShooterConstants.motionMagicJerk;
+    motorConfigFollower.CurrentLimits.StatorCurrentLimitEnable = ShooterConstants.enableStatorLimit;
+    motorConfigFollower.CurrentLimits.StatorCurrentLimit = ShooterConstants.statorLimit;
+    TalonUtil.applyAndCheckConfiguration(shooterMotorFollower, motorConfigFollower);
 
-        BaseStatusSignal.setUpdateFrequencyForAll(
-            ShooterConstants.updateFrequency,
-            shooterMotorVoltage,
-            shooterMotorVelocity,
-            shooterMotorStatorCurrent,
-            shooterMotorSupplyCurrent,
-            shooterMotorTemperature,
-            shooterMotorReferenceSlope,
-            shooterMotorFollowerVoltage,
-            shooterMotorFollowerVelocity,
-            shooterMotorFollowerStatorCurrent,
-            shooterMotorFollowerSupplyCurrent,
-            shooterMotorFollowerTemperature,
-            shooterMotorFollowerReferenceSlope);
-        shooterMotor.optimizeBusUtilization();
-        shooterMotorFollower.optimizeBusUtilization();
+    BaseStatusSignal.setUpdateFrequencyForAll(
+        ShooterConstants.updateFrequency,
+        shooterMotorVoltage,
+        shooterMotorVelocity,
+        shooterMotorStatorCurrent,
+        shooterMotorSupplyCurrent,
+        shooterMotorTemperature,
+        shooterMotorReferenceSlope,
+        shooterMotorFollowerVoltage,
+        shooterMotorFollowerVelocity,
+        shooterMotorFollowerStatorCurrent,
+        shooterMotorFollowerSupplyCurrent,
+        shooterMotorFollowerTemperature,
+        shooterMotorFollowerReferenceSlope);
+    shooterMotor.optimizeBusUtilization();
+    shooterMotorFollower.optimizeBusUtilization();
+  }
 
+  @Override
+  public void updateInputs(ShooterIOInputs inputs) {
+    BaseStatusSignal.refreshAll(
+        shooterMotorVoltage,
+        shooterMotorVelocity,
+        shooterMotorStatorCurrent,
+        shooterMotorSupplyCurrent,
+        shooterMotorTemperature,
+        shooterMotorReferenceSlope,
+        shooterMotorFollowerVoltage,
+        shooterMotorFollowerVelocity,
+        shooterMotorFollowerStatorCurrent,
+        shooterMotorFollowerSupplyCurrent,
+        shooterMotorFollowerTemperature,
+        shooterMotorFollowerReferenceSlope);
+    inputs.shooterMotorVoltage = shooterMotorVoltage.getValueAsDouble();
+    inputs.shooterMotorVelocity = shooterMotorVelocity.getValueAsDouble();
+    inputs.shooterMotorStatorCurrent = shooterMotorStatorCurrent.getValueAsDouble();
+    inputs.shooterMotorSupplyCurrent = shooterMotorSupplyCurrent.getValueAsDouble();
+    inputs.shooterMotorTemperature = shooterMotorTemperature.getValueAsDouble();
+    inputs.shooterMotorReferenceSlope = shooterMotorReferenceSlope.getValueAsDouble();
+
+    inputs.shooterMotorFollowerVoltage = shooterMotorFollowerVoltage.getValueAsDouble();
+    inputs.shooterMotorFollowerVelocity = shooterMotorFollowerVelocity.getValueAsDouble();
+    inputs.shooterMotorFollowerStatorCurrent = shooterMotorFollowerStatorCurrent.getValueAsDouble();
+    inputs.shooterMotorFollowerSupplyCurrent = shooterMotorFollowerSupplyCurrent.getValueAsDouble();
+    inputs.shooterMotorFollowerTemperature = shooterMotorFollowerTemperature.getValueAsDouble();
+    inputs.shooterMotorFollowerReferenceSlope =
+        shooterMotorFollowerReferenceSlope.getValueAsDouble();
+  }
+
+  @Override
+  public void setShooterVoltage(double voltage) {
+    shooterMotor.setVoltage(voltage);
+  }
+
+  @Override
+  public void setShooterVelocity(double velocity) {
+    if (ShooterConstants.kUseMotionMagic) {
+      shooterMotor.setControl(motionMagicRequest.withVelocity(velocity));
+    } else {
+      shooterMotor.setControl(velocityRequest.withVelocity(velocity));
     }
+  }
 
-    @Override
-    public void updateInputs(ShooterIOInputs inputs) {
-        BaseStatusSignal.refreshAll(
-            shooterMotorVoltage,
-            shooterMotorVelocity,
-            shooterMotorStatorCurrent,
-            shooterMotorSupplyCurrent,
-            shooterMotorTemperature,
-            shooterMotorReferenceSlope,
-            shooterMotorFollowerVoltage,
-            shooterMotorFollowerVelocity,
-            shooterMotorFollowerStatorCurrent,
-            shooterMotorFollowerSupplyCurrent,
-            shooterMotorFollowerTemperature,
-            shooterMotorFollowerReferenceSlope);
-        inputs.shooterMotorVoltage = shooterMotorVoltage.getValueAsDouble();
-        inputs.shooterMotorVelocity = shooterMotorVelocity.getValueAsDouble();
-        inputs.shooterMotorStatorCurrent = shooterMotorStatorCurrent.getValueAsDouble();
-        inputs.shooterMotorSupplyCurrent = shooterMotorSupplyCurrent.getValueAsDouble();
-        inputs.shooterMotorTemperature = shooterMotorTemperature.getValueAsDouble();
-        inputs.shooterMotorReferenceSlope = shooterMotorReferenceSlope.getValueAsDouble();
+  @Override
+  public void setShooterFollowerVoltage(double voltage) {
+    shooterMotorFollower.setVoltage(voltage);
+  }
 
-
-        inputs.shooterMotorFollowerVoltage = shooterMotorFollowerVoltage.getValueAsDouble();
-        inputs.shooterMotorFollowerVelocity = shooterMotorFollowerVelocity.getValueAsDouble();
-        inputs.shooterMotorFollowerStatorCurrent = shooterMotorFollowerStatorCurrent.getValueAsDouble();
-        inputs.shooterMotorFollowerSupplyCurrent = shooterMotorFollowerSupplyCurrent.getValueAsDouble();
-        inputs.shooterMotorFollowerTemperature = shooterMotorFollowerTemperature.getValueAsDouble();
-        inputs.shooterMotorFollowerReferenceSlope = shooterMotorFollowerReferenceSlope.getValueAsDouble();
+  @Override
+  public void setShooterFollowerVelocity(double velocity) {
+    if (ShooterConstants.kUseMotionMagic) {
+      shooterMotorFollower.setControl(motionMagicRequestFollower.withVelocity(velocity));
+    } else {
+      shooterMotorFollower.setControl(velocityRequestFollower.withVelocity(velocity));
     }
+  }
 
-    @Override
-    public void setShooterVoltage(double voltage) {
-        shooterMotor.setVoltage(voltage);
-    }
-
-    @Override
-    public void setShooterVelocity(double velocity) {
-        if (ShooterConstants.kUseMotionMagic) {
-            shooterMotor.setControl(motionMagicRequest.withVelocity(velocity));
-        } else {
-            shooterMotor.setControl(velocityRequest.withVelocity(velocity));
-        }
-    }
-
-    @Override
-    public void setShooterFollowerVoltage(double voltage) {
-        shooterMotorFollower.setVoltage(voltage);
-    }
-
-    @Override
-    public void setShooterFollowerVelocity(double velocity) {
-        if (ShooterConstants.kUseMotionMagic) {
-            shooterMotorFollower.setControl(motionMagicRequestFollower.withVelocity(velocity));
-        } else {
-            shooterMotorFollower.setControl(velocityRequestFollower.withVelocity(velocity));
-        }
-    }
-
-    @Override
-    public void off() {
-        shooterMotor.setControl(new NeutralOut());
-        shooterMotorFollower.setControl(new NeutralOut());
-    }
-
+  @Override
+  public void off() {
+    shooterMotor.setControl(new NeutralOut());
+    shooterMotorFollower.setControl(new NeutralOut());
+  }
 }

@@ -78,7 +78,9 @@ public class AutoScoreAmp extends DebugCommandBase {
             AutoConstants.kPathGenerationEndGoalVelocity,
             AutoConstants.kPathGenerationRotationalDelay);
     //    shootAmp = new ShootAmp(shooterSubsystem);
-    revShooter = shooterSubsystem.setVelocity(ShooterConstants.kShooterAmpRPS, ShooterConstants.kShooterFollowerAmpRPS);
+    revShooter =
+        shooterSubsystem.setVelocity(
+            ShooterConstants.kShooterAmpRPS, ShooterConstants.kShooterFollowerAmpRPS);
     intakeOut = new IntakeOut(intakeSubsystem).withTimeout(2);
     autoScore = Commands.parallel(Commands.sequence(moveToScoringLocation, intakeOut), revShooter);
 

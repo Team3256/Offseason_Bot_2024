@@ -43,6 +43,10 @@ public class IntakeSequence extends SequentialCommandGroup {
         // new PivotShootSubwoofer(shooterPivot).withTimeout(0.5),
         new ParallelCommandGroup(
             new StowPosition(ampBar),
-            new ScheduleCommand(new ParallelCommandGroup(shooter.setVelocity(ShooterConstants.kShooterSubwooferRPS, ShooterConstants.kShooterFollowerSubwooferRPS)))));
+            new ScheduleCommand(
+                new ParallelCommandGroup(
+                    shooter.setVelocity(
+                        ShooterConstants.kShooterSubwooferRPS,
+                        ShooterConstants.kShooterFollowerSubwooferRPS)))));
   }
 }

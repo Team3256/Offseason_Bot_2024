@@ -93,7 +93,6 @@ public class PivotShooterIOTalonFX implements PivotShooterIO {
     inputs.pivotShooterMotorTemperature = pivotShooterMotorTemperature.getValueAsDouble();
     inputs.pivotShooterMotorReferenceSlope = pivotShooterMotorReferenceSlope.getValueAsDouble();
 
-
     inputs.lastLastCenterLimelightTY = inputs.lastCenterLimelightTY;
     inputs.lastCenterLimelightTY = inputs.currentCenterLimelightTY;
     inputs.centerLimelightTYOffset =

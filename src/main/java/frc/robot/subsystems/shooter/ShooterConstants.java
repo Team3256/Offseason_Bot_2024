@@ -50,10 +50,10 @@ public final class ShooterConstants {
   public static double kShooterAngle = 10; // The fixed angle for the shooter (in degrees)
   // before: 1800/6
   public static double statorLimit = 60;
-public static boolean enableStatorLimit = true;
-public static double motionMagicJerk = 1600;
-public static double motionMagicAcceleration = 300;
-public static double motionMagicVelocity = 100;
-public static double updateFrequency = 50.0;
-public static boolean kUseMotionMagic = false ;
+  public static boolean enableStatorLimit = true;
+  public static double motionMagicJerk = 1600;
+  public static double motionMagicAcceleration = 300;
+  public static double motionMagicVelocity = 100;
+  public static double updateFrequency = 50.0;
+  public static boolean kUseMotionMagic = false;
 }

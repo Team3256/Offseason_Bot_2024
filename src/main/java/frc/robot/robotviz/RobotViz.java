@@ -114,9 +114,7 @@ public class RobotViz {
       rightClimb.setLength(0);
     }
     if (FeatureFlags.kShooterEnabled) {
-      shooter.setAngle(
-          shooter.getAngle()
-              + 10 * 360 * dt * shooterVelocitySimDamp);
+      shooter.setAngle(shooter.getAngle() + 10 * 360 * dt * shooterVelocitySimDamp);
       feeder.setAngle(0);
     }
     if (FeatureFlags.kPivotIntakeEnabled) {

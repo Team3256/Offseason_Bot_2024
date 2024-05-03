@@ -7,11 +7,10 @@
 
 package frc.robot.subsystems.shooter;
 
-import org.littletonrobotics.junction.Logger;
-
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import org.littletonrobotics.junction.Logger;
 
 public class Shooter extends SubsystemBase {
 
@@ -33,7 +32,9 @@ public class Shooter extends SubsystemBase {
         () -> {
           shooterIO.setShooterVoltage(voltage);
           shooterIO.setShooterFollowerVoltage(followerVoltage);
-        }, () -> shooterIO.off(), this);
+        },
+        () -> shooterIO.off(),
+        this);
   }
 
   public Command setVelocity(double velocity, double followerVelocity) {
@@ -41,7 +42,9 @@ public class Shooter extends SubsystemBase {
         () -> {
           shooterIO.setShooterVelocity(velocity);
           shooterIO.setShooterFollowerVelocity(followerVelocity);
-        }, () -> shooterIO.off(), this);
+        },
+        () -> shooterIO.off(),
+        this);
   }
 
   public Command off() {
