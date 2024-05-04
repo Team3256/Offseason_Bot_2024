@@ -79,13 +79,15 @@ public class SwerveDrive extends SubsystemBase implements Loggable {
     }
   }
 
+  private final GyroIO gyroIO;
+  private final GyroIOInputsAutoLogged gyroInputs = new GyroIOInputsAutoLogged();
+
   private final SwerveDrivePoseEstimator poseEstimator;
   private final Field2d limelightLocalizationField = new Field2d();
   // private Pose2d PP_currentPose = new Pose2d();
   // private Pose2d PP_targetPose = new Pose2d();
   public SwerveDriveOdometry swerveOdometry;
   public SwerveModule[] mSwerveMods;
-  public MonitoredPigeon2 gyro;
   public ChassisSpeeds curChassisSpeeds = new ChassisSpeeds();
   private Thread odometryThread;
   public static final Lock odometryLock = new ReentrantLock();
@@ -98,25 +100,25 @@ public class SwerveDrive extends SubsystemBase implements Loggable {
 
   public Pose2d simPose = new Pose2d();
 
-  public SwerveDrive() {
-    gyro = new MonitoredPigeon2(24, "mani");
+  public SwerveDrive(GyroIO gyroIO, ModuleIO mod0, ModuleIO mod1, ModuleIO mod2, ModuleIO mod3) {
+    this.gyroIO = gyroIO;
     // gyro.getConfigurator().apply(new Pigeon2Configuration());
     var allianceBruh = DriverStation.getAlliance();
     if (allianceBruh.isPresent()) {
       if (allianceBruh.get() == DriverStation.Alliance.Blue) {
-        gyro.setYaw(180);
+        gyroIO.setYaw(180);
         LimelightHelpers.setPipelineIndex("limelight", 1);
       } else {
-        gyro.setYaw(0);
+        gyroIO.setYaw(0);
         LimelightHelpers.setPipelineIndex("limelight", 0);
       }
     }
     mSwerveMods =
         new SwerveModule[] {
-          new SwerveModule(0, SwerveConstants.Mod0.constants),
-          new SwerveModule(1, SwerveConstants.Mod1.constants),
-          new SwerveModule(2, SwerveConstants.Mod2.constants),
-          new SwerveModule(3, SwerveConstants.Mod3.constants)
+          new SwerveModule(mod0, 0),
+          new SwerveModule(mod1, 1),
+          new SwerveModule(mod2, 2),
+          new SwerveModule(mod3, 3)
         };
 
     /*
@@ -250,13 +252,13 @@ public class SwerveDrive extends SubsystemBase implements Loggable {
   }
 
   public void resetGyro() {
-    gyro.setYaw(0);
+    gyroIO.setYaw(0);
     Timer.delay(0.125);
     System.out.println("Gyro reset!");
   }
 
   public void flipGyro() {
-    gyro.setYaw(180);
+    gyroIO.setYaw(180);
     Timer.delay(0.125);
     System.out.println("Gyro flipped!");
   }
@@ -519,7 +521,7 @@ public class SwerveDrive extends SubsystemBase implements Loggable {
   // @Log(name = "Gyro Yaw")
   public Rotation2d getGyroYaw() {
     Rotation2d yaw;
-    if (Robot.isReal()) yaw = Rotation2d.fromDegrees(gyro.getYaw().getValue() % 360);
+    if (Robot.isReal()) yaw = gyroInputs.yawPosition;
     else yaw = simPose.getRotation();
     return yaw;
   }

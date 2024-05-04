@@ -193,6 +193,8 @@ public final class SwerveConstants {
   public static double strafeNoteTolerance = 0;
   public static double strafeNoteToleranceVel = 5;
 
+public static double updateFrequency = 50;
+
   public static final double kPixelToDegreesMagicNumber = 69;
 
   // We KNOW the robot is a square, so we can assert this. REMOVE THIS IF ROBOT
