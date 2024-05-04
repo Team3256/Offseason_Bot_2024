@@ -26,11 +26,11 @@ public final class AmpBarConstants {
   public static double kAmpBarMaxAngleDeg = 90;
   public static Double kStallVelocityThreshold = 0.1;
 
-public static double updateFrequency = 50;
+  public static double updateFrequency = 50;
 
-public static double statorLimit = 20;
+  public static double statorLimit = 20;
 
-public static boolean enableStatorLimit = true;
-public static final NeutralModeValue neutralMode = NeutralModeValue.Brake;
-public static final InvertedValue ampBarInverted = InvertedValue.Clockwise_Positive;
+  public static boolean enableStatorLimit = true;
+  public static final NeutralModeValue neutralMode = NeutralModeValue.Brake;
+  public static final InvertedValue ampBarInverted = InvertedValue.Clockwise_Positive;
 }

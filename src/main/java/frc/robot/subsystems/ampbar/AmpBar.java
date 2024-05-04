@@ -7,12 +7,10 @@
 
 package frc.robot.subsystems.ampbar;
 
-import org.littletonrobotics.junction.Logger;
-
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.subsystems.ampbar.AmpBarIO.AmpBarIOInputs;
+import org.littletonrobotics.junction.Logger;
 
 public class AmpBar extends SubsystemBase {
 
@@ -30,8 +28,7 @@ public class AmpBar extends SubsystemBase {
   }
 
   public Command setVoltage(double voltage) {
-    return new StartEndCommand(
-        () -> ampBarIO.setVoltage(voltage), () -> ampBarIO.off(), this);
+    return new StartEndCommand(() -> ampBarIO.setVoltage(voltage), () -> ampBarIO.off(), this);
   }
 
   public Command setAmpPosition() {
@@ -52,6 +49,7 @@ public class AmpBar extends SubsystemBase {
       }
     };
   }
+
   public Command setStowPosition() {
     return new Command() {
       @Override

@@ -659,7 +659,7 @@ public class SwerveDrive extends SubsystemBase implements Loggable {
     updatePose(getGyroYaw(), getModulePositions());
     odometryLock.unlock();
     Logger.processInputs("Drive/Gryo", gyroInputs);
-    for (SwerveModule mod: mSwerveMods) {
+    for (SwerveModule mod : mSwerveMods) {
       mod.periodic();
     }
     // if (Timer.getFPGATimestamp() - lastLocalizeTime >

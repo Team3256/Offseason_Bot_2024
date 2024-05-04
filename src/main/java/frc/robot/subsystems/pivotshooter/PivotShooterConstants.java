@@ -9,7 +9,6 @@ package frc.robot.subsystems.pivotshooter;
 
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
-
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 
 public final class PivotShooterConstants {
