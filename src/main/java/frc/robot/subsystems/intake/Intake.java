@@ -76,7 +76,7 @@ public class Intake extends SubsystemBase {
   }
 
   public Command off() {
-    return new StartEndCommand(() -> intakeIO.off(), null, this);
+    return new StartEndCommand(() -> intakeIO.off(), () -> {}, this);
   }
 
   public Command intakeIn() {
@@ -97,6 +97,10 @@ public class Intake extends SubsystemBase {
         return beamBreak.hasBeenTrueForThreshold();
       }
     };
+  }
+
+  public boolean isBeamBroken() {
+    return intakeIO.isBeamBroken();
   }
 
 }

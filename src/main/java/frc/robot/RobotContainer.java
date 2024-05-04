@@ -37,7 +37,8 @@ import frc.robot.subsystems.climb.commands.DownClimb;
 import frc.robot.subsystems.climb.commands.UpClimb;
 import frc.robot.subsystems.climb.commands.ZeroClimb;
 import frc.robot.subsystems.intake.Intake;
-import frc.robot.subsystems.intake.commands.*;
+import frc.robot.subsystems.intake.IntakeConstants;
+import frc.robot.subsystems.intake.IntakeIOTalonFX;
 import frc.robot.subsystems.led.LED;
 import frc.robot.subsystems.led.commands.*;
 import frc.robot.subsystems.pivotintake.PivotIntake;
@@ -144,7 +145,7 @@ public class RobotContainer {
     // Named commands
     {
       // Auto named commands
-      NamedCommands.registerCommand("test intake", new IntakeSetVoltage(intake, 12).withTimeout(1));
+      NamedCommands.registerCommand("test intake", intake.setIntakeVoltage(12).withTimeout(1));
       // NamedCommands.registerCommand( // intake ground note, stow to feeder chamber
       // "intake sequence new",
       // new SequentialCommandGroup(
@@ -164,7 +165,7 @@ public class RobotContainer {
               new ParallelDeadlineGroup(
                   new SequentialCommandGroup(
                       new WaitCommand(0.5), 
-                      new IntakeInOverride(intake)
+                      intake.setVoltage(IntakeConstants.kIntakeIntakeVoltage, IntakeConstants.kPassthroughIntakeVoltage)
                           .withTimeout(0.7)),
                   pivotShooter.setPosition(PivotShooterConstants.kSubWooferPreset),
                   shooter.setVelocity(
@@ -179,7 +180,7 @@ public class RobotContainer {
               new ParallelDeadlineGroup(
                   new SequentialCommandGroup(
                       new WaitCommand(0.8), 
-                      new IntakeInOverride(intake)
+                      intake.setVoltage(IntakeConstants.kIntakeIntakeVoltage, IntakeConstants.kPassthroughIntakeVoltage)
                           .withTimeout(0.7)), 
                   pivotShooter.setPosition(PivotShooterConstants.kSubWooferPreset),
                   shooter.setVelocity(
@@ -191,7 +192,7 @@ public class RobotContainer {
           "intake sequence",
           new ParallelCommandGroup(
               pivotIntake.setPosition(PivotIntakeConstants.kPivotGroundPos),
-              new IntakeIn(intake),
+              intake.intakeIn(),
               // new PivotShooterSlamAndVoltage(pivotShooter),
               // new PivotShootSubwoofer(pivotShooter),
               shooter.setVelocity(
@@ -202,7 +203,7 @@ public class RobotContainer {
           new SequentialCommandGroup(
               // new ScheduleCommand(new PivotShootSubwoofer(pivotShooter)).asProxy(),
               new ParallelCommandGroup(
-                  new IntakeInOverride(intake).withTimeout(2),
+                  intake.setVoltage(IntakeConstants.kIntakeIntakeVoltage, IntakeConstants.kPassthroughIntakeVoltage).withTimeout(2),
                   shooter.setVelocity(
                       ShooterConstants.kShooterSubwooferRPS,
                       ShooterConstants
@@ -214,7 +215,7 @@ public class RobotContainer {
       NamedCommands.registerCommand( // outtake note to feeder
           "safety",
           new ParallelCommandGroup(
-              new IntakeIn(intake).withTimeout(1),
+              intake.intakeIn().withTimeout(1),
               shooter.setVelocity(
                   ShooterConstants.kShooterAmpRPS,
                   ShooterConstants.kShooterFollowerAmpRPS)));
@@ -252,7 +253,7 @@ public class RobotContainer {
           "pivot down", pivotIntake.setPosition(kPivotGroundPos).withTimeout(0.75));
       NamedCommands.registerCommand("stow", pivotIntake.slamAndPID().withTimeout(0.75));
       NamedCommands.registerCommand( // intake with no stow, use for sabotage
-          "intake", new IntakeIn(intake));
+          "intake", intake.intakeIn());
       NamedCommands.registerCommand( // shoot preloaded note to amp, use at match start
           "preload amp",
           new SequentialCommandGroup(
@@ -260,7 +261,7 @@ public class RobotContainer {
               new ParallelDeadlineGroup(
                   new SequentialCommandGroup(
                       new WaitCommand(0.8), 
-                      new IntakeOut(intake).withTimeout(1.5)), 
+                      intake.intakeIn().withTimeout(1.5)), 
                   shooter.setVelocity(
                       ShooterConstants.kShooterAmpRPS, ShooterConstants.kShooterFollowerAmpRPS))));
       NamedCommands.registerCommand(
@@ -313,20 +314,19 @@ public class RobotContainer {
   }
 
   private void configureIntake() {
-    intake = new Intake();
+    intake = new Intake(new IntakeIOTalonFX());
     // intake.setDefaultCommand(new IntakeSetVoltage(intake, 0));
     // operator.rightBumper().whileTrue(new IntakeInOverride(intake));
     // We assume intake is already enabled, so if pivot is enabled as
     // use IntakeOutWithArm
-    operator.rightBumper().whileTrue(new IntakeAndPassthrough(intake));
+    operator.rightBumper().whileTrue(intake.setVoltage(IntakeConstants.kIntakeIntakeVoltage, IntakeConstants.kPassthroughIntakeVoltage));
 
     operator
         .leftBumper()
         .whileTrue(
-            new SequentialCommandGroup(
-                pivotShooter.setPosition(7),
-                new ParallelCommandGroup(new GetRidOfNote(intake), shooter.setVelocity(100, 100))));
-    driver.rightTrigger().whileTrue(new IntakeOut(intake));
+            intake.setVoltage(
+                -IntakeConstants.kIntakeIntakeVoltage, -IntakeConstants.kPassthroughIntakeVoltage));
+    driver.rightTrigger().whileTrue(intake.intakeIn());
 
     // operator.povDown().onTrue(new IntakeOff(intake));
   }
@@ -630,22 +630,22 @@ public class RobotContainer {
      * flashes GREEN on successful intake
      */
     if (FeatureFlags.kIntakeEnabled) {
-      Trigger intakeDetectedNote = new Trigger(intake::isBeamBroken);
-      // intakeDetectedNote.whileTrue(new SetSuccessfulIntake(led));
+    //   Trigger intakeDetectedNote = new Trigger(intake::isBeamBroken);
+    //   // intakeDetectedNote.whileTrue(new SetSuccessfulIntake(led));
 
-      intakeDetectedNote
-          .onTrue(
-              new InstantCommand(
-                  () -> {
-                    operator.getHID().setRumble(GenericHID.RumbleType.kBothRumble, 50);
-                    driver.getHID().setRumble(GenericHID.RumbleType.kBothRumble, 50);
-                  }))
-          .onFalse(
-              new InstantCommand(
-                  () -> {
-                    operator.getHID().setRumble(GenericHID.RumbleType.kBothRumble, 0);
-                    driver.getHID().setRumble(GenericHID.RumbleType.kBothRumble, 0);
-                  }));
+    //   intakeDetectedNote
+    //       .onTrue(
+    //           new InstantCommand(
+    //               () -> {
+    //                 operator.getHID().setRumble(GenericHID.RumbleType.kBothRumble, 50);
+    //                 driver.getHID().setRumble(GenericHID.RumbleType.kBothRumble, 50);
+    //               }))
+    //       .onFalse(
+    //           new InstantCommand(
+    //               () -> {
+    //                 operator.getHID().setRumble(GenericHID.RumbleType.kBothRumble, 0);
+    //                 driver.getHID().setRumble(GenericHID.RumbleType.kBothRumble, 0);
+    //               }));
 
       // This boolean is true when velocity is LESS than 0.
       // Trigger intakeRunning = new Trigger(intake::isMotorSpinning);

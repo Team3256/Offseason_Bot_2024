@@ -19,7 +19,6 @@ import edu.wpi.first.wpilibj2.command.*;
 import frc.robot.autos.AutoConstants;
 import frc.robot.helpers.DebugCommandBase;
 import frc.robot.subsystems.intake.Intake;
-import frc.robot.subsystems.intake.commands.IntakeOut;
 import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.subsystems.shooter.ShooterConstants;
 import frc.robot.subsystems.swerve.SwerveDrive;
@@ -76,7 +75,7 @@ public class AutoScoreSpeaker extends DebugCommandBase {
     revShooter =
         shooterSubsystem.setVelocity(
             ShooterConstants.kShooterSubwooferRPS, ShooterConstants.kShooterFollowerSubwooferRPS);
-    intakeOut = new IntakeOut(intakeSubsystem);
+    intakeOut = intakeSubsystem.intakeIn();
 
     autoScore = Commands.parallel(Commands.sequence(moveToScoringLocation, intakeOut), revShooter);
 

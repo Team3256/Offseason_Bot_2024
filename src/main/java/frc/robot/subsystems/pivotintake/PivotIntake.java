@@ -32,7 +32,7 @@ public class PivotIntake extends SubsystemBase {
   public Command setPosition(double position) {
     return new StartEndCommand(
         () -> pivotIntakeIO.setPosition(position * PivotIntakeConstants.kPivotMotorGearing),
-        null,
+        () -> {},
         this);
   }
 
@@ -42,7 +42,7 @@ public class PivotIntake extends SubsystemBase {
   }
 
   public Command off() {
-    return new StartEndCommand(() -> pivotIntakeIO.off(), null, this);
+    return new StartEndCommand(() -> pivotIntakeIO.off(), () -> {}, this);
   }
 
   public Command slamZero() {
@@ -73,6 +73,6 @@ public class PivotIntake extends SubsystemBase {
   }
 
   public Command zero() {
-    return new StartEndCommand(() -> pivotIntakeIO.zero(), null, this);
+    return new StartEndCommand(() -> pivotIntakeIO.zero(), () -> {}, this);
   }
 }

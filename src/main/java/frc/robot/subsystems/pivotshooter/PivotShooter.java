@@ -33,7 +33,7 @@ public class PivotShooter extends SubsystemBase {
   public Command setPosition(double position) {
     return new StartEndCommand(
         () -> pivotShooterIO.setPosition(position * PivotShooterConstants.kPivotMotorGearing),
-        null,
+        () -> {},
         this);
   }
 
@@ -43,7 +43,7 @@ public class PivotShooter extends SubsystemBase {
   }
 
   public Command off() {
-    return new StartEndCommand(() -> pivotShooterIO.off(), null, this);
+    return new StartEndCommand(() -> pivotShooterIO.off(), () -> {}, this);
   }
 
   public Command slamZero() {
@@ -74,7 +74,7 @@ public class PivotShooter extends SubsystemBase {
   }
 
   public Command zero() {
-    return new StartEndCommand(() -> pivotShooterIO.zero(), null, this);
+    return new StartEndCommand(() -> pivotShooterIO.zero(), () -> {}, this);
   }
 
   public Command bruh() {

@@ -15,8 +15,6 @@ import frc.robot.Constants;
 import frc.robot.helpers.DebugCommandBase;
 import frc.robot.subsystems.climb.Climb;
 import frc.robot.subsystems.intake.Intake;
-import frc.robot.subsystems.intake.commands.IntakeIn;
-import frc.robot.subsystems.intake.commands.IntakeOut;
 import frc.robot.subsystems.pivotintake.PivotIntake;
 import frc.robot.subsystems.pivotintake.PivotIntakeConstants;
 import frc.robot.subsystems.shooter.Shooter;
@@ -90,8 +88,8 @@ public class PitRoutine extends DebugCommandBase {
     // intake
 
     if (Constants.FeatureFlags.kIntakeEnabled) {
-      Command intakeIn = new IntakeIn(intake);
-      Command intakeOut = new IntakeOut(intake);
+      Command intakeIn = intake.intakeIn().withTimeout(2);
+      Command intakeOut = intake.intakeIn().withTimeout(1);
       CommandList.add(intakeIn);
       CommandList.add(intakeOut);
     }
