@@ -8,7 +8,6 @@
 package frc.robot.subsystems.climb;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.littletonrobotics.junction.Logger;
@@ -16,8 +15,7 @@ import org.littletonrobotics.junction.Logger;
 public class Climb extends SubsystemBase {
 
   private final ClimbIO climbIO;
-  private final ClimbIOInputsAutoLogged climbIOAutoLogged =
-      new ClimbIOInputsAutoLogged();
+  private final ClimbIOInputsAutoLogged climbIOAutoLogged = new ClimbIOInputsAutoLogged();
 
   public Climb(ClimbIO climbIO) {
     this.climbIO = climbIO;
@@ -31,9 +29,7 @@ public class Climb extends SubsystemBase {
 
   public Command setPosition(double position) {
     return new StartEndCommand(
-        () -> climbIO.setPosition(position * ClimbConstants.gearRatio),
-        () -> {},
-        this);
+        () -> climbIO.setPosition(position * ClimbConstants.gearRatio), () -> {}, this);
   }
 
   public Command setVoltage(double voltage) {
@@ -52,6 +48,7 @@ public class Climb extends SubsystemBase {
   public Command setUp() {
     return setPosition(ClimbConstants.kClimbUpPosition);
   }
+
   public Command setDown() {
     return setPosition(ClimbConstants.kClimbDownPosition);
   }

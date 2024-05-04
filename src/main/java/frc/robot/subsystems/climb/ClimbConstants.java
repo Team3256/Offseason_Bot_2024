@@ -41,8 +41,8 @@ public final class ClimbConstants {
   public static double motionMagicVelocity = 100;
   public static double motionMagicAcceleration = 100;
   public static double motionMagicJerk = 300;
-public static NeutralModeValue neutralMode = NeutralModeValue.Brake;
-public static InvertedValue climbInverted = InvertedValue.Clockwise_Positive;
-public static double updateFrequency;
-public static boolean kUseMotionMagic = false;
+  public static NeutralModeValue neutralMode = NeutralModeValue.Brake;
+  public static InvertedValue climbInverted = InvertedValue.Clockwise_Positive;
+  public static double updateFrequency;
+  public static boolean kUseMotionMagic = false;
 }

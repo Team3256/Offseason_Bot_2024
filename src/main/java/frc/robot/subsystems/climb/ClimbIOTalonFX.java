@@ -27,10 +27,8 @@ public class ClimbIOTalonFX implements ClimbIO {
   private final StatusSignal<Double> climbMotorVoltage = climbMotor.getMotorVoltage();
   private final StatusSignal<Double> climbMotorVelocity = climbMotor.getVelocity();
   private final StatusSignal<Double> climbMotorPosition = climbMotor.getPosition();
-  private final StatusSignal<Double> climbMotorStatorCurrent =
-      climbMotor.getStatorCurrent();
-  private final StatusSignal<Double> climbMotorSupplyCurrent =
-      climbMotor.getSupplyCurrent();
+  private final StatusSignal<Double> climbMotorStatorCurrent = climbMotor.getStatorCurrent();
+  private final StatusSignal<Double> climbMotorSupplyCurrent = climbMotor.getSupplyCurrent();
   private final StatusSignal<Double> climbMotorTemperature = climbMotor.getDeviceTemp();
   private final StatusSignal<Double> climbMotorReferenceSlope =
       climbMotor.getClosedLoopReferenceSlope();
@@ -46,8 +44,7 @@ public class ClimbIOTalonFX implements ClimbIO {
     motorConfig.MotorOutput.NeutralMode = ClimbConstants.neutralMode;
     motorConfig.MotorOutput.Inverted = ClimbConstants.climbInverted;
     motorConfig.MotionMagic.MotionMagicAcceleration = ClimbConstants.motionMagicVelocity;
-    motorConfig.MotionMagic.MotionMagicCruiseVelocity =
-        ClimbConstants.motionMagicAcceleration;
+    motorConfig.MotionMagic.MotionMagicCruiseVelocity = ClimbConstants.motionMagicAcceleration;
     motorConfig.MotionMagic.MotionMagicJerk = ClimbConstants.motionMagicJerk;
     motorConfig.CurrentLimits.StatorCurrentLimitEnable = ClimbConstants.enableStatorLimit;
     motorConfig.CurrentLimits.StatorCurrentLimit = ClimbConstants.statorLimit;
