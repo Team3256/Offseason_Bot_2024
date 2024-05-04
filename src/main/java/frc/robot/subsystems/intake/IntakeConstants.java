@@ -16,7 +16,7 @@ public final class IntakeConstants {
   public static final double kIntakeIntakeVoltage = 12;
 
   /* PID */
-  public static final double kIntakeKV = 0.1; 
+  public static final double kIntakeKV = 0.1;
   public static final double kIntakeKA = 0; // only for feedforward but idk if we gonna use it
   public static final double kIntakeKS = 0;
   public static final double kIntakeKP = 1;
@@ -24,8 +24,7 @@ public final class IntakeConstants {
   public static final double kIntakeKD = 0;
 
   public static final int kIntakeCurrentThreshold = 16;
-  public static final double kIntakeToFDistanceThreshold =
-      450; // todo: tune | meters probably needs to be tuned
+  public static final double kIntakeToFDistanceThreshold = 450; // todo: tune | meters probably needs to be tuned
 
   /* Presets */
   public static final double kIntakeNoteRPM = 6000; // 1000
@@ -58,5 +57,17 @@ public final class IntakeConstants {
   public static boolean kUsePassthroughMotionMagic = false;
 
   public static final double kPassthroughVelocitySpiking = 94;
-  public static double kPassthroughOuttakeSpeed;
+  public static double kIntakeMotionMagicVelocity = 60;
+  public static double kIntakeMotionMagicAcceleration = 120;
+  public static double kIntakeMotionMagicJerk = 1200;
+  public static boolean kIntakeCurrentLimitEnable = true;
+  public static double kIntakeCurrentLimit = 80;
+public static double kPassthroughMotionMagicAcceleration = 120;
+public static double kPassthroughMotionMagicVelocity =60;
+public static double kPassthroughMotionMagicJerk = 1200;
+public static boolean kPassthroughCurrentLimitEnable= true;
+public static double kPassthroughCurrentLimit  =80;
+public static double updateFrequency = 50;
+public static boolean kIntakeMotionMagic = false;
+public static boolean kPassthroughMotionMagic = false;
 }
