@@ -418,7 +418,6 @@ public class SwerveDrive extends SubsystemBase implements Loggable {
     return distancetostdDevAngle.value(clampDistanceForInterpolation(distance));
   }
 
-  @AutoLogOutput
   public SwerveModuleState[] getModuleStates() {
     SwerveModuleState[] states = new SwerveModuleState[4];
     for (SwerveModule mod : mSwerveMods) {
@@ -427,7 +426,6 @@ public class SwerveDrive extends SubsystemBase implements Loggable {
     return states;
   }
 
-  @AutoLogOutput
   public SwerveModulePosition[] getModulePositions() {
     SwerveModulePosition[] positions = new SwerveModulePosition[4];
     for (SwerveModule mod : mSwerveMods) {
@@ -465,7 +463,6 @@ public class SwerveDrive extends SubsystemBase implements Loggable {
     }
   }
 
-  @Config(name = "Set Pose")
   public void setPose(Pose2d pose) {
     if (FeatureFlags.kSwerveUseVisionForPoseEst) {
       poseEstimator.resetPosition(getGyroYaw(), getModulePositions(), pose);
@@ -486,7 +483,6 @@ public class SwerveDrive extends SubsystemBase implements Loggable {
     return something.omegaRadiansPerSecond;
   }
 
-  @Config(name = "Set Heading")
   public void setHeading(Rotation2d heading) {
     if (FeatureFlags.kSwerveUseVisionForPoseEst) {
       poseEstimator.resetPosition(
@@ -516,7 +512,6 @@ public class SwerveDrive extends SubsystemBase implements Loggable {
     return getPose().getRotation();
   }
 
-  @AutoLogOutput
   // @Log(name = "Gyro Yaw")
   public Rotation2d getGyroYaw() {
     Rotation2d yaw;
