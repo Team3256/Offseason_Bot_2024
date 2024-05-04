@@ -10,7 +10,6 @@ package frc.robot.autos.commands;
 import edu.wpi.first.wpilibj2.command.*;
 import frc.robot.Constants.*;
 import frc.robot.subsystems.ampbar.AmpBar;
-import frc.robot.subsystems.ampbar.commands.StowPosition;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.pivotintake.PivotIntake;
 import frc.robot.subsystems.pivotintake.PivotIntakeConstants;
@@ -41,7 +40,7 @@ public class IntakeSequence extends SequentialCommandGroup {
         pivotIntake.slamAndPID(),
         // new PivotShootSubwoofer(shooterPivot).withTimeout(0.5),
         new ParallelCommandGroup(
-            new StowPosition(ampBar),
+            ampBar.setStowPosition(),
             new ScheduleCommand(
                 new ParallelCommandGroup(
                     shooter.setVelocity(

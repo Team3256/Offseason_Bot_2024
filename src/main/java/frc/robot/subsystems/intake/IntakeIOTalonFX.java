@@ -58,6 +58,8 @@ public class IntakeIOTalonFX implements IntakeIO {
     motorConfig.Slot0.kP = IntakeConstants.kIntakeKP;
     motorConfig.Slot0.kI = IntakeConstants.kIntakeKI;
     motorConfig.Slot0.kD = IntakeConstants.kIntakeKD;
+    motorConfig.MotorOutput.Inverted = IntakeConstants.intakeInverted;
+    motorConfig.MotorOutput.NeutralMode = IntakeConstants.intakeNeutralMode;
     motorConfig.MotionMagic.MotionMagicAcceleration =
         IntakeConstants.kIntakeMotionMagicAcceleration;
     motorConfig.MotionMagic.MotionMagicCruiseVelocity = IntakeConstants.kIntakeMotionMagicVelocity;
@@ -74,6 +76,8 @@ public class IntakeIOTalonFX implements IntakeIO {
     passthroughConfig.Slot0.kP = IntakeConstants.kPassthroughkP;
     passthroughConfig.Slot0.kI = IntakeConstants.kPassthroughkI;
     passthroughConfig.Slot0.kD = IntakeConstants.kPassthroughkD;
+    passthroughConfig.MotorOutput.Inverted = IntakeConstants.passthroughInverted;
+    passthroughConfig.MotorOutput.NeutralMode = IntakeConstants.passthroughNeutralMode;
     motorConfig.MotionMagic.MotionMagicAcceleration =
         IntakeConstants.kPassthroughMotionMagicAcceleration;
     motorConfig.MotionMagic.MotionMagicCruiseVelocity =

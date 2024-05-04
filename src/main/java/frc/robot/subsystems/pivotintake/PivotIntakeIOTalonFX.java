@@ -43,6 +43,8 @@ public class PivotIntakeIOTalonFX implements PivotIntakeIO {
     motorConfig.Slot0.kP = PivotIntakeConstants.kP;
     motorConfig.Slot0.kI = PivotIntakeConstants.kI;
     motorConfig.Slot0.kD = PivotIntakeConstants.kD;
+    motorConfig.MotorOutput.NeutralMode = PivotIntakeConstants.neutralMode;
+    motorConfig.MotorOutput.Inverted = PivotIntakeConstants.pivotInverted;
     motorConfig.MotionMagic.MotionMagicAcceleration = PivotIntakeConstants.motionMagicVelocity;
     motorConfig.MotionMagic.MotionMagicCruiseVelocity =
         PivotIntakeConstants.motionMagicAcceleration;

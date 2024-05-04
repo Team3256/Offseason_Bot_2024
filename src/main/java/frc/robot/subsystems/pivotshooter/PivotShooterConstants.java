@@ -7,6 +7,9 @@
 
 package frc.robot.subsystems.pivotshooter;
 
+import com.ctre.phoenix6.signals.InvertedValue;
+import com.ctre.phoenix6.signals.NeutralModeValue;
+
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 
 public final class PivotShooterConstants {
@@ -69,4 +72,7 @@ public final class PivotShooterConstants {
 
   public static final int kSpeakerBackupAprilTagRed = 5;
   public static final int kSpeakerBackupAprilTagBlue = 1;
+
+  public static final NeutralModeValue neutralMode = NeutralModeValue.Brake;
+  public static final InvertedValue pivotInverted = InvertedValue.Clockwise_Positive;
 }

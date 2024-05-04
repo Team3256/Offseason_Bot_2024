@@ -59,6 +59,8 @@ public class ShooterIOTalonFX implements ShooterIO {
     motorConfig.Slot0.kP = ShooterConstants.kP;
     motorConfig.Slot0.kI = ShooterConstants.kI;
     motorConfig.Slot0.kD = ShooterConstants.kD;
+    motorConfig.MotorOutput.NeutralMode = ShooterConstants.neutralMode;
+    motorConfig.MotorOutput.Inverted = ShooterConstants.shooterInverted;
     motorConfig.MotionMagic.MotionMagicAcceleration = ShooterConstants.motionMagicVelocity;
     motorConfig.MotionMagic.MotionMagicCruiseVelocity = ShooterConstants.motionMagicAcceleration;
     motorConfig.MotionMagic.MotionMagicJerk = ShooterConstants.motionMagicJerk;
@@ -74,6 +76,8 @@ public class ShooterIOTalonFX implements ShooterIO {
     motorConfigFollower.Slot0.kP = ShooterConstants.kP;
     motorConfigFollower.Slot0.kI = ShooterConstants.kI;
     motorConfigFollower.Slot0.kD = ShooterConstants.kD;
+    motorConfigFollower.MotorOutput.Inverted = ShooterConstants.shooterFollowerInverted;
+    motorConfigFollower.MotorOutput.NeutralMode = ShooterConstants.neutralMode;
     motorConfigFollower.MotionMagic.MotionMagicAcceleration = ShooterConstants.motionMagicVelocity;
     motorConfigFollower.MotionMagic.MotionMagicCruiseVelocity =
         ShooterConstants.motionMagicAcceleration;

@@ -53,6 +53,8 @@ public class PivotShooterIOTalonFX implements PivotShooterIO {
     motorConfig.Slot0.kP = PivotShooterConstants.kP;
     motorConfig.Slot0.kI = PivotShooterConstants.kI;
     motorConfig.Slot0.kD = PivotShooterConstants.kD;
+    motorConfig.MotorOutput.NeutralMode = PivotShooterConstants.neutralMode;
+    motorConfig.MotorOutput.Inverted = PivotShooterConstants.pivotInverted;
     motorConfig.MotionMagic.MotionMagicAcceleration = PivotShooterConstants.motionMagicVelocity;
     motorConfig.MotionMagic.MotionMagicCruiseVelocity =
         PivotShooterConstants.motionMagicAcceleration;

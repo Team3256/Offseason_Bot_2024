@@ -7,6 +7,9 @@
 
 package frc.robot.subsystems.pivotintake;
 
+import com.ctre.phoenix6.signals.InvertedValue;
+import com.ctre.phoenix6.signals.NeutralModeValue;
+
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 
 public final class PivotIntakeConstants {
@@ -51,4 +54,7 @@ public final class PivotIntakeConstants {
   public static double updateFrequency = 50.0;
 
   protected static double kPivotSlamStallCurrent = 10.0;
+
+  public static NeutralModeValue neutralMode = NeutralModeValue.Brake;
+  public static final InvertedValue pivotInverted = InvertedValue.Clockwise_Positive;
 }

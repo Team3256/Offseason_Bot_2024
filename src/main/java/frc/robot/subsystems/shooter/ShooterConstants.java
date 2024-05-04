@@ -7,6 +7,9 @@
 
 package frc.robot.subsystems.shooter;
 
+import com.ctre.phoenix6.signals.InvertedValue;
+import com.ctre.phoenix6.signals.NeutralModeValue;
+
 public final class ShooterConstants {
   /* Misc */
   public static final boolean kUseShooterMotionMagic = false;
@@ -56,4 +59,8 @@ public final class ShooterConstants {
   public static double motionMagicVelocity = 100;
   public static double updateFrequency = 50.0;
   public static boolean kUseMotionMagic = false;
+
+  public static NeutralModeValue neutralMode = NeutralModeValue.Brake;
+  public static InvertedValue shooterInverted = InvertedValue.Clockwise_Positive;
+  public static InvertedValue shooterFollowerInverted = InvertedValue.CounterClockwise_Positive;
 }

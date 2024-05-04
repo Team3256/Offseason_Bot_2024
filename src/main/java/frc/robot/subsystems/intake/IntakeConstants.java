@@ -7,6 +7,9 @@
 
 package frc.robot.subsystems.intake;
 
+import com.ctre.phoenix6.signals.InvertedValue;
+import com.ctre.phoenix6.signals.NeutralModeValue;
+
 public final class IntakeConstants {
   /* CAN */
   public static final int kIntakeMotorID = 33;
@@ -71,4 +74,8 @@ public final class IntakeConstants {
   public static double updateFrequency = 50;
   public static boolean kIntakeMotionMagic = false;
   public static boolean kPassthroughMotionMagic = false;
+  public static NeutralModeValue intakeNeutralMode = NeutralModeValue.Brake;
+  public static final InvertedValue intakeInverted = InvertedValue.CounterClockwise_Positive;
+  public static NeutralModeValue passthroughNeutralMode = NeutralModeValue.Brake;
+  public static final InvertedValue passthroughInverted = InvertedValue.Clockwise_Positive;
 }

@@ -7,6 +7,9 @@
 
 package frc.robot.subsystems.ampbar;
 
+import com.ctre.phoenix6.signals.InvertedValue;
+import com.ctre.phoenix6.signals.NeutralModeValue;
+
 public final class AmpBarConstants {
   public static final double kAmpBarVelocityThreshold = 1.5;
 
@@ -22,4 +25,12 @@ public final class AmpBarConstants {
   public static double kAmpBarMinAngleDeg = 0;
   public static double kAmpBarMaxAngleDeg = 90;
   public static Double kStallVelocityThreshold = 0.1;
+
+public static double updateFrequency = 50;
+
+public static double statorLimit = 20;
+
+public static boolean enableStatorLimit = true;
+public static final NeutralModeValue neutralMode = NeutralModeValue.Brake;
+public static final InvertedValue ampBarInverted = InvertedValue.Clockwise_Positive;
 }
