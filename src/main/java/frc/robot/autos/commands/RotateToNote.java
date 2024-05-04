@@ -19,9 +19,7 @@ public class RotateToNote extends PIDCommand {
   public RotateToNote(SwerveDrive swerve) {
     super(
         new PIDController(
-            SwerveConstants.noteTurnkP,
-            SwerveConstants.noteTurnkI,
-            SwerveConstants.noteTurnkD), 
+            SwerveConstants.noteTurnkP, SwerveConstants.noteTurnkI, SwerveConstants.noteTurnkD),
         () -> {
           double dx;
           double dy;

@@ -32,7 +32,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.FeatureFlags;
 import frc.robot.Robot;
 import frc.robot.autos.AutoConstants;
-import frc.robot.drivers.MonitoredPigeon2;
 import frc.robot.limelight.Limelight;
 import frc.robot.limelight.LimelightHelpers;
 import io.github.oblarg.oblog.Loggable;

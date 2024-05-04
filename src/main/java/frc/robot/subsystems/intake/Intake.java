@@ -49,30 +49,22 @@ public class Intake extends SubsystemBase {
 
   public Command setIntakeVoltage(double voltage) {
     return new StartEndCommand(
-        () -> intakeIO.setIntakeVoltage(voltage),
-        () -> intakeIO.off(),
-        this);
+        () -> intakeIO.setIntakeVoltage(voltage), () -> intakeIO.off(), this);
   }
 
   public Command setIntakeVelocity(double velocity) {
     return new StartEndCommand(
-        () -> intakeIO.setIntakeVelocity(velocity),
-        () -> intakeIO.off(),
-        this);
+        () -> intakeIO.setIntakeVelocity(velocity), () -> intakeIO.off(), this);
   }
 
   public Command setPassthroughVoltage(double voltage) {
     return new StartEndCommand(
-        () -> intakeIO.setPassthroughVoltage(voltage),
-        () -> intakeIO.off(),
-        this);
+        () -> intakeIO.setPassthroughVoltage(voltage), () -> intakeIO.off(), this);
   }
 
   public Command setPassthroughVelocity(double velocity) {
     return new StartEndCommand(
-        () -> intakeIO.setPassthroughVelocity(velocity),
-        () -> intakeIO.off(),
-        this);
+        () -> intakeIO.setPassthroughVelocity(velocity), () -> intakeIO.off(), this);
   }
 
   public Command off() {
@@ -81,12 +73,15 @@ public class Intake extends SubsystemBase {
 
   public Command intakeIn() {
     return new Command() {
-      TimedBoolean beamBreak = new TimedBoolean(intakeIO::isBeamBroken, IntakeConstants.kBeamBreakDelayTime);
+      TimedBoolean beamBreak =
+          new TimedBoolean(intakeIO::isBeamBroken, IntakeConstants.kBeamBreakDelayTime);
+
       @Override
       public void initialize() {
         intakeIO.setIntakeVoltage(IntakeConstants.kIntakeIntakeVoltage);
         intakeIO.setPassthroughVoltage(IntakeConstants.kPassthroughIntakeVoltage);
       }
+
       @Override
       public void execute() {
         beamBreak.update();
@@ -102,5 +97,4 @@ public class Intake extends SubsystemBase {
   public boolean isBeamBroken() {
     return intakeIO.isBeamBroken();
   }
-
 }

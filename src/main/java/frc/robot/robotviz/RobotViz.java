@@ -105,7 +105,7 @@ public class RobotViz {
   }
 
   public void update(double dt) {
-    
+
     if (FeatureFlags.kSwerveEnabled) {
       field.getObject("Robot").setPose(swerveSubsystem.getPose());
     }

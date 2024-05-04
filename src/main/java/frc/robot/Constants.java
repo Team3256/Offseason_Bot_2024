@@ -62,7 +62,6 @@ public final class Constants {
     public static final boolean kLocalizationDataCollectionMode = false;
     public static final boolean kLocalizationStdDistanceBased = false;
 
-    
     // Make sure the pose is CORRECT WITHOUT VISION BEFORE ENAVLINGTHIS!!!!
     public static final boolean kSwerveVelocityLimitingEnabled = false;
     public static final boolean kIntakeAutoScoreDistanceSensorOffset = false;

@@ -25,10 +25,9 @@ public final class SwerveConstants {
   public static final int pigeonID = 24;
 
   // Motor
-  public static final COTSTalonFXSwerveConstants
-      chosenModule = 
+  public static final COTSTalonFXSwerveConstants chosenModule =
       COTSTalonFXSwerveConstants.SDS.MK4i.Falcon500(
-              COTSTalonFXSwerveConstants.SDS.MK4i.driveRatios.L3);
+          COTSTalonFXSwerveConstants.SDS.MK4i.driveRatios.L3);
 
   // PID
   public static final double angleKP = chosenModule.angleKP;
@@ -65,7 +64,7 @@ public final class SwerveConstants {
   public static final double noteTurnkF = 0;
 
   /* Drive Motor Characterization Values From SysID */
-  public static final double driveKS = 0; 
+  public static final double driveKS = 0;
   public static final double driveKV = 2.08; // 0.13
   public static final double driveKA = 0.21; // 0
 
@@ -93,7 +92,7 @@ public final class SwerveConstants {
   public static final double kSwervePoseEstimatorMaxValue = 7.128826;
 
   /* Drivetrain Constants */
-  public static final double trackWidth = Units.inchesToMeters(20.75); 
+  public static final double trackWidth = Units.inchesToMeters(20.75);
   public static final double wheelBase = Units.inchesToMeters(20.75);
   /*
    * We calculate the drive base radius using the Pythagorean theorem
@@ -167,10 +166,9 @@ public final class SwerveConstants {
   public static final double openLoopRamp = 0.25;
   public static final double closedLoopRamp = 0.0;
   /* Swerve Profiling Values */
-  public static final double maxTranslationalVelocity = 4.6; 
-  public static final double slowMaxTranslationalVelocity =
-      maxTranslationalVelocity * 0.2; 
-  public static final double maxAngularVelocity = 6; 
+  public static final double maxTranslationalVelocity = 4.6;
+  public static final double slowMaxTranslationalVelocity = maxTranslationalVelocity * 0.2;
+  public static final double maxAngularVelocity = 6;
   public static final double slowMaxAngularVelocity = maxAngularVelocity * 0.5;
   /* Neutral Modes */
   public static final NeutralModeValue angleNeutralMode = NeutralModeValue.Brake;
@@ -193,7 +191,7 @@ public final class SwerveConstants {
   public static double strafeNoteTolerance = 0;
   public static double strafeNoteToleranceVel = 5;
 
-public static double updateFrequency = 50;
+  public static double updateFrequency = 50;
 
   public static final double kPixelToDegreesMagicNumber = 69;
 
@@ -205,7 +203,7 @@ public static double updateFrequency = 50;
 
   /* Module Specific Constants */
   /* Front Left Module - Module 0 */
-  public static final class Mod0 { 
+  public static final class Mod0 {
     public static final int driveMotorID = 1;
     public static final int angleMotorID = 8;
     public static final int canCoderID = 2;
@@ -215,7 +213,7 @@ public static double updateFrequency = 50;
   }
 
   /* Front Right Module - Module 1 */
-  public static final class Mod1 { 
+  public static final class Mod1 {
     public static final int driveMotorID = 6;
     public static final int angleMotorID = 7;
     public static final int canCoderID = 9;
@@ -225,7 +223,7 @@ public static double updateFrequency = 50;
   }
 
   /* Back Left Module - Module 2 */
-  public static final class Mod2 { 
+  public static final class Mod2 {
     public static final int driveMotorID = 2;
     public static final int angleMotorID = 4;
     public static final int canCoderID = 1;
@@ -235,7 +233,7 @@ public static double updateFrequency = 50;
   }
 
   /* Back Right Module - Module 3 */
-  public static final class Mod3 { 
+  public static final class Mod3 {
     public static final int driveMotorID = 5;
     public static final int angleMotorID = 0;
     public static final int canCoderID = 0;
@@ -276,7 +274,6 @@ public static double updateFrequency = 50;
 
     /* Angles */
 
-    
     // left is positive
 
     public static final double aziAmpRed = 90; // (Math.atan2(ampXRed, ampY) * 180 / Math.PI);

@@ -24,7 +24,8 @@ public final class IntakeConstants {
   public static final double kIntakeKD = 0;
 
   public static final int kIntakeCurrentThreshold = 16;
-  public static final double kIntakeToFDistanceThreshold = 450; // todo: tune | meters probably needs to be tuned
+  public static final double kIntakeToFDistanceThreshold =
+      450; // todo: tune | meters probably needs to be tuned
 
   /* Presets */
   public static final double kIntakeNoteRPM = 6000; // 1000
@@ -62,12 +63,12 @@ public final class IntakeConstants {
   public static double kIntakeMotionMagicJerk = 1200;
   public static boolean kIntakeCurrentLimitEnable = true;
   public static double kIntakeCurrentLimit = 80;
-public static double kPassthroughMotionMagicAcceleration = 120;
-public static double kPassthroughMotionMagicVelocity =60;
-public static double kPassthroughMotionMagicJerk = 1200;
-public static boolean kPassthroughCurrentLimitEnable= true;
-public static double kPassthroughCurrentLimit  =80;
-public static double updateFrequency = 50;
-public static boolean kIntakeMotionMagic = false;
-public static boolean kPassthroughMotionMagic = false;
+  public static double kPassthroughMotionMagicAcceleration = 120;
+  public static double kPassthroughMotionMagicVelocity = 60;
+  public static double kPassthroughMotionMagicJerk = 1200;
+  public static boolean kPassthroughCurrentLimitEnable = true;
+  public static double kPassthroughCurrentLimit = 80;
+  public static double updateFrequency = 50;
+  public static boolean kIntakeMotionMagic = false;
+  public static boolean kPassthroughMotionMagic = false;
 }

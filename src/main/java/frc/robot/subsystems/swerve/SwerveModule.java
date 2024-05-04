@@ -17,13 +17,11 @@ public class SwerveModule {
   private final ModuleIO io;
   private final ModuleIOInputsAutoLogged inputs = new ModuleIOInputsAutoLogged();
   public final int moduleNumber;
- 
 
   public SwerveModule(ModuleIO io, int index) {
 
     this.io = io;
     this.moduleNumber = index;
-
   }
 
   public void updateInputs() {
@@ -34,7 +32,6 @@ public class SwerveModule {
     Logger.processInputs("Swerve/Module" + Integer.toString(moduleNumber), inputs);
   }
 
-  
   public void setDesiredState(SwerveModuleState desiredState, boolean isOpenLoop) {
     desiredState = SwerveModuleState.optimize(desiredState, inputs.currentState.angle);
     io.setAnglePosition(desiredState.angle.getRotations());
@@ -61,8 +58,5 @@ public class SwerveModule {
     return io.getCANcoder();
   }
 
-  public void off() {
-
-  }
-
+  public void off() {}
 }

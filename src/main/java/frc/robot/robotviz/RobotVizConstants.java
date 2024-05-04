@@ -52,7 +52,7 @@ public class RobotVizConstants {
   // --Spoof--
   // IRL motor RPM is very high and we won't be able to understand the data we see. So, we slow
   // down the visualization of the motor speeds by a large constant factor.
-  public static final double shooterVelocitySimDamp = 0.1; 
-  public static final double intakeVelocitySimDamp = 0.1; 
-  public static final double feederVelocitySimDamp = 0.1; 
+  public static final double shooterVelocitySimDamp = 0.1;
+  public static final double intakeVelocitySimDamp = 0.1;
+  public static final double feederVelocitySimDamp = 0.1;
 }
