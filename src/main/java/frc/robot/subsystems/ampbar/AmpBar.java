@@ -70,4 +70,8 @@ public class AmpBar extends SubsystemBase {
       }
     };
   }
+
+  public Command off() {
+    return new StartEndCommand(() -> ampBarIO.off(), () -> {}, this);
+  }
 }

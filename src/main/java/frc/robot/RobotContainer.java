@@ -29,8 +29,7 @@ import frc.robot.autos.commands.MoveToNote;
 import frc.robot.autos.commands.RotateToNote;
 import frc.robot.helpers.XboxStalker;
 import frc.robot.subsystems.ampbar.AmpBar;
-import frc.robot.subsystems.ampbar.commands.AmpPosition;
-import frc.robot.subsystems.ampbar.commands.StowPosition;
+import frc.robot.subsystems.ampbar.AmpBarIOTalonFX;
 import frc.robot.subsystems.climb.Climb;
 import frc.robot.subsystems.climb.commands.DehookClimb;
 import frc.robot.subsystems.climb.commands.DownClimb;
@@ -364,7 +363,7 @@ public class RobotContainer {
           .onTrue(
               Commands.sequence(
                   new ParallelCommandGroup(
-                          new AmpPosition(ampbar), pivotShooter.setPosition(12 / 138.33))
+                          ampbar.setAmpPosition(), pivotShooter.setPosition(12 / 138.33))
                       .withTimeout(1),
                   new UpClimb(climb)));
     } else {
@@ -578,7 +577,7 @@ public class RobotContainer {
     // operator.getHID().setRumble(GenericHID.RumbleType.kBothRumble, 0);
     // }));
     if (FeatureFlags.kAmpBarEnabled) {
-      ampbar = new AmpBar();
+      ampbar = new AmpBar(new AmpBarIOTalonFX());
       operator
           .rightTrigger()
           .onTrue(
@@ -586,20 +585,20 @@ public class RobotContainer {
                   shooter.setVelocity(
                       ShooterConstants.kShooterSubwooferRPS,
                       ShooterConstants.kShooterFollowerSubwooferRPS),
-                  new StowPosition(ampbar)));
+                  ampbar.setStowPosition()));
       operator
           .leftTrigger()
           .onTrue(
               new ParallelCommandGroup(
                   shooter.setVelocity(
                       ShooterConstants.kShooterAmpRPS, ShooterConstants.kShooterFollowerAmpRPS),
-                  new AmpPosition(ampbar),
+                  ampbar.setAmpPosition(),
                   pivotShooter.setPosition(kAmpPreset)));
       operator
           .y()
           .onTrue(
               new ParallelCommandGroup(
-                  shooter.off(), new StowPosition(ampbar), pivotShooter.slamAndPID()));
+                  shooter.off(), ampbar.setStowPosition(), pivotShooter.slamAndPID()));
     } else {
       operator
           .rightTrigger()

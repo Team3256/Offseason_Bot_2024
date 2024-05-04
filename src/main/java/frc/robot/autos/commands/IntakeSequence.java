@@ -8,7 +8,6 @@
 package frc.robot.autos.commands;
 
 import edu.wpi.first.wpilibj2.command.*;
-import frc.robot.Constants.*;
 import frc.robot.subsystems.ampbar.AmpBar;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.pivotintake.PivotIntake;
