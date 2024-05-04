@@ -79,6 +79,6 @@ public class PivotShooter extends SubsystemBase {
 
   public Command bruh() {
     return new RunCommand(
-        () -> pivotShooterIO.setPosition(pivotShooterIOAutoLogged.centerLimelightTYOffset), this);
+        () -> pivotShooterIO.setPosition(pivotShooterIOAutoLogged.interpolatedPivotPosition*PivotShooterConstants.kPivotMotorGearing), this);
   }
 }

@@ -7,91 +7,52 @@
 
 package frc.robot.subsystems.climb;
 
-import com.ctre.phoenix6.signals.NeutralModeValue;
-import frc.robot.Constants;
-import frc.robot.utils.SinglePositionSubsystem;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.StartEndCommand;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import org.littletonrobotics.junction.Logger;
 
-public class Climb extends SinglePositionSubsystem {
-  public Climb() {
-    super(ClimbConstants.kUseClimbMotionMagic, ClimbConstants.kCurrentThreshold, 0);
-    super.configureRealHardware(
-        ClimbConstants.kLeftClimbMotorID,
-        NeutralModeValue.Brake,
-        ClimbConstants.kS,
-        ClimbConstants.kV,
-        ClimbConstants.kP,
-        ClimbConstants.kI,
-        ClimbConstants.kD,
-        ClimbConstants.motionMagicVelocity,
-        ClimbConstants.motionMagicAcceleration,
-        ClimbConstants.motionMagicJerk,
-        ClimbConstants.enableStatorLimit,
-        ClimbConstants.statorLimit);
+public class Climb extends SubsystemBase {
+
+  private final ClimbIO climbIO;
+  private final ClimbIOInputsAutoLogged climbIOAutoLogged =
+      new ClimbIOInputsAutoLogged();
+
+  public Climb(ClimbIO climbIO) {
+    this.climbIO = climbIO;
   }
 
-  public void setLeftMotor(double position) {
-    super.setDegrees(position);
+  @Override
+  public void periodic() {
+    climbIO.updateInputs(climbIOAutoLogged);
+    Logger.processInputs(getName(), climbIOAutoLogged);
   }
 
-  public void lock() {
-    super.setControlStaticBrake();
+  public Command setPosition(double position) {
+    return new StartEndCommand(
+        () -> climbIO.setPosition(position * ClimbConstants.gearRatio),
+        () -> {},
+        this);
   }
 
-  public double getLeftPosition() {
-    return super.getDegrees();
+  public Command setVoltage(double voltage) {
+    return new StartEndCommand(
+        () -> climbIO.setVoltage(voltage), () -> climbIO.setVoltage(0), this);
   }
 
-  public void off() {
-    super.off();
-    if (Constants.FeatureFlags.kDebugEnabled) {
-      System.out.println("Climb off");
-    }
+  public Command off() {
+    return new StartEndCommand(() -> climbIO.off(), () -> {}, this);
   }
 
-  public void leftArmZero() {
-    if (Constants.FeatureFlags.kDebugEnabled) {
-      System.out.println("[LeftClimb] Setting zero position to: " + getLeftPosition());
-    }
-    super.zero();
+  public Command zero() {
+    return new StartEndCommand(() -> climbIO.zero(), () -> {}, this);
   }
 
-  public void setLeftOutputVoltage(double voltage) {
-    super.setOutputVoltage(voltage);
-    if (Constants.FeatureFlags.kDebugEnabled) {
-      System.out.println("Left Climb voltage set to: " + voltage);
-    }
+  public Command setUp() {
+    return setPosition(ClimbConstants.kClimbUpPosition);
   }
-
-  public double getLeftVelocity() {
-    return super.getVelocity();
-  }
-
-  public double getLeftCurrent() {
-    return super.getCurrent();
-  }
-
-  public boolean isLeftClimbSpiking() {
-    return super.isCurrentSpiking();
-
-    // public void up() {
-    // // Sets both arms to max height (4ft as per Crescendo rules)
-    // leftArm.release();
-    // rightArm.release();
-    // }
-    //
-    // public void down() {
-    // // Sets both arms to min height
-    // leftArm.setPosition(0);
-    // rightArm.setPosition(0);
-    // }
-    //
-    // public void setLeftPosition(double meters) {
-    // leftArm.setPosition(convertMetersToRotations(meters));
-    // }
-    //
-    // public void setRightPosition(double meters) {
-    // rightArm.setPosition(convertMetersToRotations(meters));
-    // }
-
+  public Command setDown() {
+    return setPosition(ClimbConstants.kClimbDownPosition);
   }
 }

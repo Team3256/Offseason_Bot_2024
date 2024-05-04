@@ -31,10 +31,7 @@ import frc.robot.helpers.XboxStalker;
 import frc.robot.subsystems.ampbar.AmpBar;
 import frc.robot.subsystems.ampbar.AmpBarIOTalonFX;
 import frc.robot.subsystems.climb.Climb;
-import frc.robot.subsystems.climb.commands.DehookClimb;
-import frc.robot.subsystems.climb.commands.DownClimb;
-import frc.robot.subsystems.climb.commands.UpClimb;
-import frc.robot.subsystems.climb.commands.ZeroClimb;
+import frc.robot.subsystems.climb.ClimbIOTalonFX;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.IntakeConstants;
 import frc.robot.subsystems.intake.IntakeIOTalonFX;
@@ -351,13 +348,13 @@ public class RobotContainer {
   }
 
   private void configureClimb() {
-    climb = new Climb();
+    climb = new Climb(new ClimbIOTalonFX());
     // zeroClimb = new ZeroClimb(climb); // NEED FOR SHUFFLEBOARD
 
-    operator.povDown().onTrue(new ZeroClimb(climb));
+    operator.povDown().onTrue(climb.zero());
     // new Trigger(() -> operator.getRawAxis(translationAxis) < -0.5).onTrue(new
     // UpClimb(climb));
-    new Trigger(() -> operator.getRawAxis(translationAxis) > 0.5).onTrue(new DownClimb(climb));
+    new Trigger(() -> operator.getRawAxis(translationAxis) > 0.5).onTrue(climb.setDown());
     if (this.ampbar != null && this.pivotShooter != null) {
       new Trigger(() -> operator.getRawAxis(translationAxis) < -0.5)
           .onTrue(
@@ -365,10 +362,10 @@ public class RobotContainer {
                   new ParallelCommandGroup(
                           ampbar.setAmpPosition(), pivotShooter.setPosition(12 / 138.33))
                       .withTimeout(1),
-                  new UpClimb(climb)));
+                  climb.setUp()));
     } else {
       new Trigger(() -> Math.abs(operator.getRawAxis(secondaryAxis)) > 0.5)
-          .onTrue(new DehookClimb(climb));
+          .onTrue(new PrintCommand("u suck")); // old command waws dehook climb
     }
     // Josh: HangSequence is broken and Rhea does not want to use it; we should
     // rmove this

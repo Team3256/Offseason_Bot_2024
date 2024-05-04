@@ -7,15 +7,18 @@
 
 package frc.robot.subsystems.climb;
 
+import com.ctre.phoenix6.signals.InvertedValue;
+import com.ctre.phoenix6.signals.NeutralModeValue;
+
 public final class ClimbConstants {
 
   public static final int kLeftClimbMotorID = 18;
   public static final boolean kUseClimbMotionMagic = false;
   public static final double gearRatio = 20; // needs to be tuned
 
-  public static final double kClimbUpPosition = 81.6 / 20;
+  public static final double kClimbUpPosition = 150 / 20;
 
-  public static final double kClimbDownPosition = 0.65;
+  public static final double kClimbDownPosition = 0;
   public static final double wheelRadius = 1;
   public static final double climbVelocity = 80;
   public static final double climbAcceleration = 400;
@@ -38,4 +41,8 @@ public final class ClimbConstants {
   public static double motionMagicVelocity = 100;
   public static double motionMagicAcceleration = 100;
   public static double motionMagicJerk = 300;
+public static NeutralModeValue neutralMode = NeutralModeValue.Brake;
+public static InvertedValue climbInverted = InvertedValue.Clockwise_Positive;
+public static double updateFrequency;
+public static boolean kUseMotionMagic = false;
 }
