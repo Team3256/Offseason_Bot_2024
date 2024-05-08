@@ -45,11 +45,11 @@ public class Climb extends SubsystemBase {
     return new StartEndCommand(() -> climbIO.zero(), () -> {}, this);
   }
 
-  public Command setUp() {
+  public Command extendClimber() {
     return setPosition(ClimbConstants.kClimbUpPosition);
   }
 
-  public Command setDown() {
+  public Command retractClimber() {
     return setPosition(ClimbConstants.kClimbDownPosition);
   }
 }

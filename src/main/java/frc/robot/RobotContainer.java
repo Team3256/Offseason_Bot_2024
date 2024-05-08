@@ -354,7 +354,7 @@ public class RobotContainer {
     operator.povDown().onTrue(climb.zero());
     // new Trigger(() -> operator.getRawAxis(translationAxis) < -0.5).onTrue(new
     // UpClimb(climb));
-    new Trigger(() -> operator.getRawAxis(translationAxis) > 0.5).onTrue(climb.setDown());
+    new Trigger(() -> operator.getRawAxis(translationAxis) > 0.5).onTrue(climb.retractClimber());
     if (this.ampbar != null && this.pivotShooter != null) {
       new Trigger(() -> operator.getRawAxis(translationAxis) < -0.5)
           .onTrue(
@@ -362,7 +362,7 @@ public class RobotContainer {
                   new ParallelCommandGroup(
                           ampbar.setAmpPosition(), pivotShooter.setPosition(12 / 138.33))
                       .withTimeout(1),
-                  climb.setUp()));
+                  climb.extendClimber()));
     } else {
       new Trigger(() -> Math.abs(operator.getRawAxis(secondaryAxis)) > 0.5)
           .onTrue(new PrintCommand("u suck")); // old command waws dehook climb

@@ -42,7 +42,7 @@ public class HangSequence extends DebugCommandBase {
 
     if (Constants.FeatureFlags.kClimbEnabled) {
       // Command un_hooker = new DehookClimb(climbSubsystem);
-      Command grave = climbSubsystem.setDown(); // we dont use this so idc that i broke it
+      Command grave = climbSubsystem.retractClimber(); // we dont use this so idc that i broke it
 
       // CommandList.add(un_hooker);
       CommandList.add(grave);
