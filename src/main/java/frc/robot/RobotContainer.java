@@ -51,6 +51,7 @@ import frc.robot.subsystems.swerve.ModuleIOTalonFX;
 import frc.robot.subsystems.swerve.SwerveConstants;
 import frc.robot.subsystems.swerve.SwerveDrive;
 import frc.robot.subsystems.swerve.commands.*;
+import frc.robot.utils.CommandQueue;
 import io.github.oblarg.oblog.annotations.Config;
 import io.github.oblarg.oblog.annotations.Log;
 
@@ -76,15 +77,16 @@ public class RobotContainer {
   private boolean isRed = true;
 
   /* Subsystems */
-  @Log @Config public SwerveDrive swerveDrive;
-  @Log @Config public Shooter shooter;
-  @Log @Config public Intake intake;
-  @Log @Config public AmpBar ampbar;
-  @Log @Config public PivotIntake pivotIntake;
-  @Log @Config public Climb climb;
+  public SwerveDrive swerveDrive;
+  public Shooter shooter;
+  public Intake intake;
+  public AmpBar ampbar;
+  public PivotIntake pivotIntake;
+  public Climb climb;
+  public CommandQueue commandQueue;
 
-  @Log @Config public PivotShooter pivotShooter;
-  @Log @Config public LED led;
+  public PivotShooter pivotShooter;
+  public LED led;
 
   @Config.Command(name = "Auto Score Speaker")
   private Command autoScoreSpeaker;
@@ -102,6 +104,8 @@ public class RobotContainer {
   public RobotContainer() {
     // Cancel any previous commands running
     CommandScheduler.getInstance().cancelAll();
+
+    commandQueue = new CommandQueue();
 
     // Setup subsystems & button-bindings
     if (FeatureFlags.kPivotShooterEnabled) {
