@@ -36,21 +36,8 @@ public class PivotIntakeIOTalonFX implements PivotIntakeIO {
       pivotIntakeMotor.getClosedLoopReferenceSlope();
 
   public PivotIntakeIOTalonFX() {
-    var motorConfig = new TalonFXConfiguration();
+    var motorConfig = PivotIntakeConstants.motorConfig;
     PhoenixUtil.checkErrorAndRetry(() -> pivotIntakeMotor.getConfigurator().refresh(motorConfig));
-    motorConfig.Slot0.kS = PivotIntakeConstants.kS;
-    motorConfig.Slot0.kV = PivotIntakeConstants.kV;
-    motorConfig.Slot0.kP = PivotIntakeConstants.kP;
-    motorConfig.Slot0.kI = PivotIntakeConstants.kI;
-    motorConfig.Slot0.kD = PivotIntakeConstants.kD;
-    motorConfig.MotorOutput.NeutralMode = PivotIntakeConstants.neutralMode;
-    motorConfig.MotorOutput.Inverted = PivotIntakeConstants.pivotInverted;
-    motorConfig.MotionMagic.MotionMagicAcceleration = PivotIntakeConstants.motionMagicVelocity;
-    motorConfig.MotionMagic.MotionMagicCruiseVelocity =
-        PivotIntakeConstants.motionMagicAcceleration;
-    motorConfig.MotionMagic.MotionMagicJerk = PivotIntakeConstants.motionMagicJerk;
-    motorConfig.CurrentLimits.StatorCurrentLimitEnable = PivotIntakeConstants.enableStatorLimit;
-    motorConfig.CurrentLimits.StatorCurrentLimit = PivotIntakeConstants.statorLimit;
     TalonUtil.applyAndCheckConfiguration(pivotIntakeMotor, motorConfig);
 
     BaseStatusSignal.setUpdateFrequencyForAll(

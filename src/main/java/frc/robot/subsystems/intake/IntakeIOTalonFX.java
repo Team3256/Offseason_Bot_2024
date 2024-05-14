@@ -48,44 +48,16 @@ public class IntakeIOTalonFX implements IntakeIO {
   private final StatusSignal<Double> passthroughMotorReferenceSlope =
       passthroughMotor.getClosedLoopReferenceSlope();
 
-  private DigitalInput beamBreakInput = new DigitalInput(IntakeConstants.kIntakeBeamBreakDIONew);
+  private DigitalInput beamBreakInput = new DigitalInput(IntakeConstants.kIntakeBeamBreakDIO);
 
   public IntakeIOTalonFX() {
-    var motorConfig = new TalonFXConfiguration();
+    var motorConfig = IntakeConstants.intakeMotorConfig;
     PhoenixUtil.checkErrorAndRetry(() -> intakeMotor.getConfigurator().refresh(motorConfig));
-    motorConfig.Slot0.kS = IntakeConstants.kIntakeKS;
-    motorConfig.Slot0.kV = IntakeConstants.kIntakeKV;
-    motorConfig.Slot0.kP = IntakeConstants.kIntakeKP;
-    motorConfig.Slot0.kI = IntakeConstants.kIntakeKI;
-    motorConfig.Slot0.kD = IntakeConstants.kIntakeKD;
-    motorConfig.MotorOutput.Inverted = IntakeConstants.intakeInverted;
-    motorConfig.MotorOutput.NeutralMode = IntakeConstants.intakeNeutralMode;
-    motorConfig.MotionMagic.MotionMagicAcceleration =
-        IntakeConstants.kIntakeMotionMagicAcceleration;
-    motorConfig.MotionMagic.MotionMagicCruiseVelocity = IntakeConstants.kIntakeMotionMagicVelocity;
-    motorConfig.MotionMagic.MotionMagicJerk = IntakeConstants.kIntakeMotionMagicJerk;
-    motorConfig.CurrentLimits.StatorCurrentLimitEnable = IntakeConstants.kIntakeCurrentLimitEnable;
-    motorConfig.CurrentLimits.StatorCurrentLimit = IntakeConstants.kIntakeCurrentLimit;
     TalonUtil.applyAndCheckConfiguration(intakeMotor, motorConfig);
 
-    var passthroughConfig = new TalonFXConfiguration();
+    var passthroughConfig = IntakeConstants.passthroughMotorConfig;
     PhoenixUtil.checkErrorAndRetry(
         () -> passthroughMotor.getConfigurator().refresh(passthroughConfig));
-    passthroughConfig.Slot0.kS = IntakeConstants.kPassthroughkS;
-    passthroughConfig.Slot0.kV = IntakeConstants.kPassthroughkV;
-    passthroughConfig.Slot0.kP = IntakeConstants.kPassthroughkP;
-    passthroughConfig.Slot0.kI = IntakeConstants.kPassthroughkI;
-    passthroughConfig.Slot0.kD = IntakeConstants.kPassthroughkD;
-    passthroughConfig.MotorOutput.Inverted = IntakeConstants.passthroughInverted;
-    passthroughConfig.MotorOutput.NeutralMode = IntakeConstants.passthroughNeutralMode;
-    motorConfig.MotionMagic.MotionMagicAcceleration =
-        IntakeConstants.kPassthroughMotionMagicAcceleration;
-    motorConfig.MotionMagic.MotionMagicCruiseVelocity =
-        IntakeConstants.kPassthroughMotionMagicVelocity;
-    motorConfig.MotionMagic.MotionMagicJerk = IntakeConstants.kPassthroughMotionMagicJerk;
-    motorConfig.CurrentLimits.StatorCurrentLimitEnable =
-        IntakeConstants.kPassthroughCurrentLimitEnable;
-    motorConfig.CurrentLimits.StatorCurrentLimit = IntakeConstants.kPassthroughCurrentLimit;
     TalonUtil.applyAndCheckConfiguration(passthroughMotor, passthroughConfig);
 
     BaseStatusSignal.setUpdateFrequencyForAll(
