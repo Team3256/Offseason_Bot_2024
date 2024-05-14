@@ -7,6 +7,7 @@
 
 package frc.robot.subsystems.pivotshooter;
 
+import com.ctre.phoenix6.configs.*;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
@@ -30,11 +31,6 @@ public final class PivotShooterConstants {
   public static final int kPivotMotorID = 12;
 
   /* PID */
-  public static final double kS = 0;
-  public static final double kV = 0.05;
-  public static final double kP = 25;
-  public static final double kI = 0;
-  public static final double kD = 0;
   public static final TrapezoidProfile.Constraints kPivotProfileContraints =
       new TrapezoidProfile.Constraints(16, 16);
 
@@ -57,14 +53,9 @@ public final class PivotShooterConstants {
   /* Misc */
   public static final int kNumPivotMotors = 1;
   public static final boolean kUseFOC = false;
-  public static boolean kUseMotionMagic = true;
-  public static double motionMagicVelocity = 100;
-  public static double motionMagicAcceleration = 100;
-  public static double motionMagicJerk = 420;
-  public static boolean enableStatorLimit = true;
-  public static double statorLimit = 60; // idk
+  public static boolean kUseMotionMagic = true; // idk
   public static double updateFrequency = 50.0;
-  protected static double kPivotSlamStallCurrent = 50;
+  static double kPivotSlamStallCurrent = 50;
 
   public static final int kSpeakerAprilTagRed = 4;
   public static final int kSpeakerAprilTagBlue = 0;
@@ -72,6 +63,27 @@ public final class PivotShooterConstants {
   public static final int kSpeakerBackupAprilTagRed = 5;
   public static final int kSpeakerBackupAprilTagBlue = 1;
 
-  public static final NeutralModeValue neutralMode = NeutralModeValue.Brake;
-  public static final InvertedValue pivotInverted = InvertedValue.Clockwise_Positive;
+  public static final TalonFXConfiguration motorConfigs =
+      new TalonFXConfiguration()
+          .withSlot0(
+              new Slot0Configs()
+                  .withKS(0)
+                  .withKV(0.05)
+                  .withKP(25)
+                  .withKI(0)
+                  .withKD(0) // Original 0.145
+              )
+          .withMotorOutput(
+              new MotorOutputConfigs()
+                  .withNeutralMode(NeutralModeValue.Brake)
+                  .withInverted(InvertedValue.Clockwise_Positive))
+          .withMotionMagic(
+              new MotionMagicConfigs()
+                  .withMotionMagicAcceleration(100)
+                  .withMotionMagicCruiseVelocity(100)
+                  .withMotionMagicJerk(420))
+          .withCurrentLimits(
+              new CurrentLimitsConfigs()
+                  .withStatorCurrentLimitEnable(true)
+                  .withStatorCurrentLimit(60));
 }

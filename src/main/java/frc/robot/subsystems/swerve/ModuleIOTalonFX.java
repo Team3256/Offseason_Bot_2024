@@ -15,8 +15,6 @@ import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.CANcoder;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.kinematics.SwerveModulePosition;
-import edu.wpi.first.math.kinematics.SwerveModuleState;
 import frc.robot.Robot;
 import frc.robot.drivers.MonitoredTalonFX;
 import frc.robot.helpers.Conversions;
@@ -168,5 +166,4 @@ public class ModuleIOTalonFX implements ModuleIO {
     double absolutePosition = getCANcoder().getRotations() - angleOffset.getRotations();
     mAngleMotor.setPosition(absolutePosition);
   }
-
 }

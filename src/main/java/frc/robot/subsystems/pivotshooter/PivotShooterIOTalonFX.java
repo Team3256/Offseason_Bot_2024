@@ -9,7 +9,6 @@ package frc.robot.subsystems.pivotshooter;
 
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
-import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.NeutralOut;
 import com.ctre.phoenix6.controls.PositionVoltage;
@@ -46,21 +45,8 @@ public class PivotShooterIOTalonFX implements PivotShooterIO {
       pivotShooterMotor.getClosedLoopReferenceSlope();
 
   public PivotShooterIOTalonFX() {
-    var motorConfig = new TalonFXConfiguration();
+    var motorConfig = PivotShooterConstants.motorConfigs;
     PhoenixUtil.checkErrorAndRetry(() -> pivotShooterMotor.getConfigurator().refresh(motorConfig));
-    motorConfig.Slot0.kS = PivotShooterConstants.kS;
-    motorConfig.Slot0.kV = PivotShooterConstants.kV;
-    motorConfig.Slot0.kP = PivotShooterConstants.kP;
-    motorConfig.Slot0.kI = PivotShooterConstants.kI;
-    motorConfig.Slot0.kD = PivotShooterConstants.kD;
-    motorConfig.MotorOutput.NeutralMode = PivotShooterConstants.neutralMode;
-    motorConfig.MotorOutput.Inverted = PivotShooterConstants.pivotInverted;
-    motorConfig.MotionMagic.MotionMagicAcceleration = PivotShooterConstants.motionMagicVelocity;
-    motorConfig.MotionMagic.MotionMagicCruiseVelocity =
-        PivotShooterConstants.motionMagicAcceleration;
-    motorConfig.MotionMagic.MotionMagicJerk = PivotShooterConstants.motionMagicJerk;
-    motorConfig.CurrentLimits.StatorCurrentLimitEnable = PivotShooterConstants.enableStatorLimit;
-    motorConfig.CurrentLimits.StatorCurrentLimit = PivotShooterConstants.statorLimit;
     TalonUtil.applyAndCheckConfiguration(pivotShooterMotor, motorConfig);
 
     BaseStatusSignal.setUpdateFrequencyForAll(

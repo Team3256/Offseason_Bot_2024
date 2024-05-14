@@ -47,17 +47,17 @@ public class SwerveModule {
   @AutoLogOutput
   public SwerveModuleState getState() {
     return new SwerveModuleState(
-            Conversions.RPSToMPS(
-                    inputs.driveMotorVelocity, SwerveConstants.wheelCircumference),
-            Rotation2d.fromRotations(inputs.angleMotorPosition));
+        Conversions.RPSToMPS(inputs.driveMotorVelocity, SwerveConstants.wheelCircumference),
+        Rotation2d.fromRotations(inputs.angleMotorPosition));
   }
+
   @AutoLogOutput
   public SwerveModulePosition getPosition() {
 
     return new SwerveModulePosition(
-            Conversions.rotationsToMeters(
-                    inputs.driveMotorPosition, SwerveConstants.wheelCircumference),
-            Rotation2d.fromRotations(inputs.angleMotorPosition));
+        Conversions.rotationsToMeters(
+            inputs.driveMotorPosition, SwerveConstants.wheelCircumference),
+        Rotation2d.fromRotations(inputs.angleMotorPosition));
   }
 
   public void resetToAbsolute() {
