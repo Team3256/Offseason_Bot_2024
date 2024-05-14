@@ -34,20 +34,8 @@ public class ClimbIOTalonFX implements ClimbIO {
       climbMotor.getClosedLoopReferenceSlope();
 
   public ClimbIOTalonFX() {
-    var motorConfig = new TalonFXConfiguration();
+    var motorConfig = ClimbConstants.motorConfig;
     PhoenixUtil.checkErrorAndRetry(() -> climbMotor.getConfigurator().refresh(motorConfig));
-    motorConfig.Slot0.kS = ClimbConstants.kS;
-    motorConfig.Slot0.kV = ClimbConstants.kV;
-    motorConfig.Slot0.kP = ClimbConstants.kP;
-    motorConfig.Slot0.kI = ClimbConstants.kI;
-    motorConfig.Slot0.kD = ClimbConstants.kD;
-    motorConfig.MotorOutput.NeutralMode = ClimbConstants.neutralMode;
-    motorConfig.MotorOutput.Inverted = ClimbConstants.climbInverted;
-    motorConfig.MotionMagic.MotionMagicAcceleration = ClimbConstants.motionMagicVelocity;
-    motorConfig.MotionMagic.MotionMagicCruiseVelocity = ClimbConstants.motionMagicAcceleration;
-    motorConfig.MotionMagic.MotionMagicJerk = ClimbConstants.motionMagicJerk;
-    motorConfig.CurrentLimits.StatorCurrentLimitEnable = ClimbConstants.enableStatorLimit;
-    motorConfig.CurrentLimits.StatorCurrentLimit = ClimbConstants.statorLimit;
     TalonUtil.applyAndCheckConfiguration(climbMotor, motorConfig);
 
     BaseStatusSignal.setUpdateFrequencyForAll(
