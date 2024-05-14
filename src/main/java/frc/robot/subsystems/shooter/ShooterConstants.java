@@ -7,6 +7,11 @@
 
 package frc.robot.subsystems.shooter;
 
+import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
+import com.ctre.phoenix6.configs.MotionMagicConfigs;
+import com.ctre.phoenix6.configs.MotorOutputConfigs;
+import com.ctre.phoenix6.configs.Slot0Configs;
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
@@ -19,23 +24,33 @@ public final class ShooterConstants {
   public static int kShooterMotorFollowerID = 23;
   /* PID */
   // Shooter
-  public static double kV = 0.39; // Original 0.145
-  public static double kA = 1.48; // Original 0 only for feedforward, might not use
-  public static double kS = 0;
-  public static double kP = 0.4;
-  public static double kI = 0;
-  public static double kD = 0;
-
-  // unused,
-  // public static double kShooterFollowerKV = 0.13;
-  // public static double kShooterFollowerKA = 0; // only for feedforward, might
-  // not use
-  // public static double kShooterFollowerKS = 0;
-  // public static double kShooterFollowerKP = 0.5;
-  // public static double kShooterFollowerKI = 0;
-  // public static double kShooterFollowerKD = 0.001;
-  // Shooter follower
-  // Feeder
+  public static MotorOutputConfigs motorOutputConfigs =
+      new MotorOutputConfigs()
+          .withNeutralMode(NeutralModeValue.Brake)
+          .withInverted(InvertedValue.Clockwise_Positive);
+  public static TalonFXConfiguration motorConfigs =
+      new TalonFXConfiguration()
+          .withSlot0(
+              new Slot0Configs()
+                  .withKS(0)
+                  .withKV(0.39) // Original 0.145
+                  // .withKA(1.48)// Original 0 only for feedforward, might not use
+                  .withKP(0.4)
+                  .withKI(0)
+                  .withKD(0))
+          .withMotorOutput(motorOutputConfigs)
+          .withMotionMagic(
+              new MotionMagicConfigs()
+                  .withMotionMagicAcceleration(100)
+                  .withMotionMagicCruiseVelocity(300)
+                  .withMotionMagicJerk(1600))
+          .withCurrentLimits(
+              new CurrentLimitsConfigs()
+                  .withStatorCurrentLimitEnable(true)
+                  .withStatorCurrentLimit(60));
+  public static TalonFXConfiguration followerMotorConfigs =
+      motorConfigs.withMotorOutput(
+          motorOutputConfigs.withInverted(InvertedValue.CounterClockwise_Positive));
 
   public static double kShooterSpeakerRPS = 42;
   public static double kShooterFollowerSpeakerRPS = 45; // really 80
@@ -52,11 +67,6 @@ public final class ShooterConstants {
   /* Misc */
   public static double kShooterAngle = 10; // The fixed angle for the shooter (in degrees)
   // before: 1800/6
-  public static double statorLimit = 60;
-  public static boolean enableStatorLimit = true;
-  public static double motionMagicJerk = 1600;
-  public static double motionMagicAcceleration = 300;
-  public static double motionMagicVelocity = 100;
   public static double updateFrequency = 50.0;
   public static boolean kUseMotionMagic = false;
 

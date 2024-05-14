@@ -9,7 +9,6 @@ package frc.robot.subsystems.shooter;
 
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
-import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.MotionMagicVelocityVoltage;
 import com.ctre.phoenix6.controls.NeutralOut;
 import com.ctre.phoenix6.controls.VelocityVoltage;
@@ -52,38 +51,13 @@ public class ShooterIOTalonFX implements ShooterIO {
       shooterMotorFollower.getClosedLoopReferenceSlope();
 
   public ShooterIOTalonFX() {
-    var motorConfig = new TalonFXConfiguration();
+    var motorConfig = ShooterConstants.motorConfigs;
     PhoenixUtil.checkErrorAndRetry(() -> shooterMotor.getConfigurator().refresh(motorConfig));
-    motorConfig.Slot0.kS = ShooterConstants.kS;
-    motorConfig.Slot0.kV = ShooterConstants.kV;
-    motorConfig.Slot0.kP = ShooterConstants.kP;
-    motorConfig.Slot0.kI = ShooterConstants.kI;
-    motorConfig.Slot0.kD = ShooterConstants.kD;
-    motorConfig.MotorOutput.NeutralMode = ShooterConstants.neutralMode;
-    motorConfig.MotorOutput.Inverted = ShooterConstants.shooterInverted;
-    motorConfig.MotionMagic.MotionMagicAcceleration = ShooterConstants.motionMagicVelocity;
-    motorConfig.MotionMagic.MotionMagicCruiseVelocity = ShooterConstants.motionMagicAcceleration;
-    motorConfig.MotionMagic.MotionMagicJerk = ShooterConstants.motionMagicJerk;
-    motorConfig.CurrentLimits.StatorCurrentLimitEnable = ShooterConstants.enableStatorLimit;
-    motorConfig.CurrentLimits.StatorCurrentLimit = ShooterConstants.statorLimit;
     TalonUtil.applyAndCheckConfiguration(shooterMotor, motorConfig);
 
-    var motorConfigFollower = new TalonFXConfiguration();
+    var motorConfigFollower = ShooterConstants.followerMotorConfigs;
     PhoenixUtil.checkErrorAndRetry(
         () -> shooterMotorFollower.getConfigurator().refresh(motorConfigFollower));
-    motorConfigFollower.Slot0.kS = ShooterConstants.kS;
-    motorConfigFollower.Slot0.kV = ShooterConstants.kV;
-    motorConfigFollower.Slot0.kP = ShooterConstants.kP;
-    motorConfigFollower.Slot0.kI = ShooterConstants.kI;
-    motorConfigFollower.Slot0.kD = ShooterConstants.kD;
-    motorConfigFollower.MotorOutput.Inverted = ShooterConstants.shooterFollowerInverted;
-    motorConfigFollower.MotorOutput.NeutralMode = ShooterConstants.neutralMode;
-    motorConfigFollower.MotionMagic.MotionMagicAcceleration = ShooterConstants.motionMagicVelocity;
-    motorConfigFollower.MotionMagic.MotionMagicCruiseVelocity =
-        ShooterConstants.motionMagicAcceleration;
-    motorConfigFollower.MotionMagic.MotionMagicJerk = ShooterConstants.motionMagicJerk;
-    motorConfigFollower.CurrentLimits.StatorCurrentLimitEnable = ShooterConstants.enableStatorLimit;
-    motorConfigFollower.CurrentLimits.StatorCurrentLimit = ShooterConstants.statorLimit;
     TalonUtil.applyAndCheckConfiguration(shooterMotorFollower, motorConfigFollower);
 
     BaseStatusSignal.setUpdateFrequencyForAll(
