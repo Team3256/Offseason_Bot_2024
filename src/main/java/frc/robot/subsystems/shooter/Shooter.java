@@ -48,7 +48,6 @@ public class Shooter extends SubsystemBase {
   }
 
   public Command off() {
-    return new StartEndCommand(() -> shooterIO.off(), () -> {
-    }, this);
+    return new StartEndCommand(() -> shooterIO.off(), () -> {}, this);
   }
 }

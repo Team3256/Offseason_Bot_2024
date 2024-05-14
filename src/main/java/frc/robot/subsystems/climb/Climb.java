@@ -29,8 +29,7 @@ public class Climb extends SubsystemBase {
 
   public Command setPosition(double position) {
     return new StartEndCommand(
-        () -> climbIO.setPosition(position * ClimbConstants.gearRatio), () -> {
-        }, this);
+        () -> climbIO.setPosition(position * ClimbConstants.gearRatio), () -> {}, this);
   }
 
   public Command setVoltage(double voltage) {
@@ -39,13 +38,11 @@ public class Climb extends SubsystemBase {
   }
 
   public Command off() {
-    return new StartEndCommand(() -> climbIO.off(), () -> {
-    }, this);
+    return new StartEndCommand(() -> climbIO.off(), () -> {}, this);
   }
 
   public Command zero() {
-    return new StartEndCommand(() -> climbIO.zero(), () -> {
-    }, this);
+    return new StartEndCommand(() -> climbIO.zero(), () -> {}, this);
   }
 
   public Command extendClimber() {

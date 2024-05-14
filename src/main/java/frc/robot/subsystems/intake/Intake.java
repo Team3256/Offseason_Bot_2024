@@ -68,13 +68,13 @@ public class Intake extends SubsystemBase {
   }
 
   public Command off() {
-    return new StartEndCommand(() -> intakeIO.off(), () -> {
-    }, this);
+    return new StartEndCommand(() -> intakeIO.off(), () -> {}, this);
   }
 
   public Command intakeIn() {
     return new Command() {
-      TimedBoolean beamBreak = new TimedBoolean(intakeIO::isBeamBroken, IntakeConstants.kBeamBreakDelayTime);
+      TimedBoolean beamBreak =
+          new TimedBoolean(intakeIO::isBeamBroken, IntakeConstants.kBeamBreakDelayTime);
 
       @Override
       public void initialize() {
