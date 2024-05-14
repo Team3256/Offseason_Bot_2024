@@ -31,17 +31,14 @@ public final class AmpBarConstants {
 
   public static double updateFrequency = 50;
 
-
   public static final TalonFXConfiguration motorConfig =
-          new TalonFXConfiguration()
-                  .withMotorOutput(
-                          new MotorOutputConfigs()
-                                  .withNeutralMode(NeutralModeValue.Brake)
-                                  .withInverted(InvertedValue.Clockwise_Positive)
-                  )
-                  .withCurrentLimits(
-                          new CurrentLimitsConfigs()
-                                  .withStatorCurrentLimitEnable(true)
-                                  .withStatorCurrentLimit(20)
-                  );
+      new TalonFXConfiguration()
+          .withMotorOutput(
+              new MotorOutputConfigs()
+                  .withNeutralMode(NeutralModeValue.Brake)
+                  .withInverted(InvertedValue.Clockwise_Positive))
+          .withCurrentLimits(
+              new CurrentLimitsConfigs()
+                  .withStatorCurrentLimitEnable(true)
+                  .withStatorCurrentLimit(20));
 }
