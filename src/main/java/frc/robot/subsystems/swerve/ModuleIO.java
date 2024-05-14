@@ -31,9 +31,6 @@ public interface ModuleIO {
     public double angleMotorSupplyCurrent = 0.0;
     public double angleMotorTemperature = 0.0;
     public double angleMotorReferenceSlope = 0.0;
-
-    public SwerveModuleState currentState = new SwerveModuleState();
-    public SwerveModulePosition currentPosition = new SwerveModulePosition();
   }
 
   public default void updateInputs(ModuleIOInputs inputs) {}
@@ -43,14 +40,6 @@ public interface ModuleIO {
   public default void setAnglePosition(double position) {}
 
   public default void resetToAbsolute() {}
-
-  public default SwerveModuleState getState() {
-    return new SwerveModuleState();
-  }
-
-  public default SwerveModulePosition getPosition() {
-    return new SwerveModulePosition();
-  }
 
   public default Rotation2d getCANcoder() {
     return new Rotation2d();

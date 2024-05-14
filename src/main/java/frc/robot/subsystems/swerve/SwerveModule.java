@@ -10,6 +10,8 @@ package frc.robot.subsystems.swerve;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import frc.robot.helpers.Conversions;
+import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
 public class SwerveModule {
@@ -33,7 +35,7 @@ public class SwerveModule {
   }
 
   public void setDesiredState(SwerveModuleState desiredState, boolean isOpenLoop) {
-    desiredState = SwerveModuleState.optimize(desiredState, inputs.currentState.angle);
+    desiredState = SwerveModuleState.optimize(desiredState, getState().angle);
     io.setAnglePosition(desiredState.angle.getRotations());
     setSpeed(desiredState, isOpenLoop);
   }
@@ -42,12 +44,20 @@ public class SwerveModule {
     io.setDriveVelocity(desiredState.speedMetersPerSecond, isOpenLoop);
   }
 
+  @AutoLogOutput
   public SwerveModuleState getState() {
-    return io.getState();
+    return new SwerveModuleState(
+            Conversions.RPSToMPS(
+                    inputs.driveMotorVelocity, SwerveConstants.wheelCircumference),
+            Rotation2d.fromRotations(inputs.angleMotorPosition));
   }
-
+  @AutoLogOutput
   public SwerveModulePosition getPosition() {
-    return io.getPosition();
+
+    return new SwerveModulePosition(
+            Conversions.rotationsToMeters(
+                    inputs.driveMotorPosition, SwerveConstants.wheelCircumference),
+            Rotation2d.fromRotations(inputs.angleMotorPosition));
   }
 
   public void resetToAbsolute() {

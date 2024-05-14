@@ -138,8 +138,6 @@ public class ModuleIOTalonFX implements ModuleIO {
     inputs.driveMotorReferenceSlope = driveMotorReferenceSlope.getValueAsDouble();
 
     inputs.absolutePosition = getCANcoder();
-    inputs.currentState = getState();
-    inputs.currentPosition = getPosition();
   }
 
   @Override
@@ -171,19 +169,4 @@ public class ModuleIOTalonFX implements ModuleIO {
     mAngleMotor.setPosition(absolutePosition);
   }
 
-  @Override
-  public SwerveModuleState getState() {
-    return new SwerveModuleState(
-        Conversions.RPSToMPS(
-            mDriveMotor.getVelocity().getValue(), SwerveConstants.wheelCircumference),
-        Rotation2d.fromRotations(mAngleMotor.getPosition().getValue()));
-  }
-
-  @Override
-  public SwerveModulePosition getPosition() {
-    return new SwerveModulePosition(
-        Conversions.rotationsToMeters(
-            mDriveMotor.getPosition().getValue(), SwerveConstants.wheelCircumference),
-        Rotation2d.fromRotations(mAngleMotor.getPosition().getValue()));
-  }
 }
