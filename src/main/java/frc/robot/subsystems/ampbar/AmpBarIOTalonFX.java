@@ -27,12 +27,8 @@ public class AmpBarIOTalonFX implements AmpBarIO {
   private final StatusSignal<Double> ampBarMotorTemperature = ampBarMotor.getDeviceTemp();
 
   public AmpBarIOTalonFX() {
-    var motorConfig = new TalonFXConfiguration();
+    var motorConfig = AmpBarConstants.motorConfig;
     PhoenixUtil.checkErrorAndRetry(() -> ampBarMotor.getConfigurator().refresh(motorConfig));
-    motorConfig.MotorOutput.NeutralMode = AmpBarConstants.neutralMode;
-    motorConfig.MotorOutput.Inverted = AmpBarConstants.ampBarInverted;
-    motorConfig.CurrentLimits.StatorCurrentLimitEnable = AmpBarConstants.enableStatorLimit;
-    motorConfig.CurrentLimits.StatorCurrentLimit = AmpBarConstants.statorLimit;
     TalonUtil.applyAndCheckConfiguration(ampBarMotor, motorConfig);
 
     BaseStatusSignal.setUpdateFrequencyForAll(

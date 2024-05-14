@@ -7,6 +7,9 @@
 
 package frc.robot.subsystems.ampbar;
 
+import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
+import com.ctre.phoenix6.configs.MotorOutputConfigs;
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
@@ -28,9 +31,17 @@ public final class AmpBarConstants {
 
   public static double updateFrequency = 50;
 
-  public static double statorLimit = 20;
 
-  public static boolean enableStatorLimit = true;
-  public static final NeutralModeValue neutralMode = NeutralModeValue.Brake;
-  public static final InvertedValue ampBarInverted = InvertedValue.Clockwise_Positive;
+  public static final TalonFXConfiguration motorConfig =
+          new TalonFXConfiguration()
+                  .withMotorOutput(
+                          new MotorOutputConfigs()
+                                  .withNeutralMode(NeutralModeValue.Brake)
+                                  .withInverted(InvertedValue.Clockwise_Positive)
+                  )
+                  .withCurrentLimits(
+                          new CurrentLimitsConfigs()
+                                  .withStatorCurrentLimitEnable(true)
+                                  .withStatorCurrentLimit(20)
+                  );
 }
