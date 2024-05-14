@@ -24,12 +24,13 @@ public class Climb extends SubsystemBase {
   @Override
   public void periodic() {
     climbIO.updateInputs(climbIOAutoLogged);
-    Logger.processInputs(getName(), climbIOAutoLogged);
+    Logger.processInputs(this.getClass().getName(), climbIOAutoLogged);
   }
 
   public Command setPosition(double position) {
     return new StartEndCommand(
-        () -> climbIO.setPosition(position * ClimbConstants.gearRatio), () -> {}, this);
+        () -> climbIO.setPosition(position * ClimbConstants.gearRatio), () -> {
+        }, this);
   }
 
   public Command setVoltage(double voltage) {
@@ -38,11 +39,13 @@ public class Climb extends SubsystemBase {
   }
 
   public Command off() {
-    return new StartEndCommand(() -> climbIO.off(), () -> {}, this);
+    return new StartEndCommand(() -> climbIO.off(), () -> {
+    }, this);
   }
 
   public Command zero() {
-    return new StartEndCommand(() -> climbIO.zero(), () -> {}, this);
+    return new StartEndCommand(() -> climbIO.zero(), () -> {
+    }, this);
   }
 
   public Command extendClimber() {

@@ -24,7 +24,7 @@ public class Shooter extends SubsystemBase {
   @Override
   public void periodic() {
     shooterIO.updateInputs(shooterIOAutoLogged);
-    Logger.processInputs(getName(), shooterIOAutoLogged);
+    Logger.processInputs(this.getClass().getName(), shooterIOAutoLogged);
   }
 
   public Command setVoltage(double voltage, double followerVoltage) {
@@ -48,6 +48,7 @@ public class Shooter extends SubsystemBase {
   }
 
   public Command off() {
-    return new StartEndCommand(() -> shooterIO.off(), () -> {}, this);
+    return new StartEndCommand(() -> shooterIO.off(), () -> {
+    }, this);
   }
 }

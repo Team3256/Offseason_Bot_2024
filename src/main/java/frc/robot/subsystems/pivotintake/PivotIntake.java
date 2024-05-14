@@ -16,8 +16,7 @@ import org.littletonrobotics.junction.Logger;
 public class PivotIntake extends SubsystemBase {
 
   private final PivotIntakeIO pivotIntakeIO;
-  private final PivotIntakeIOInputsAutoLogged pivotIntakeIOAutoLogged =
-      new PivotIntakeIOInputsAutoLogged();
+  private final PivotIntakeIOInputsAutoLogged pivotIntakeIOAutoLogged = new PivotIntakeIOInputsAutoLogged();
 
   public PivotIntake(PivotIntakeIO pivotIntakeIO) {
     this.pivotIntakeIO = pivotIntakeIO;
@@ -26,13 +25,14 @@ public class PivotIntake extends SubsystemBase {
   @Override
   public void periodic() {
     pivotIntakeIO.updateInputs(pivotIntakeIOAutoLogged);
-    Logger.processInputs(getName(), pivotIntakeIOAutoLogged);
+    Logger.processInputs(this.getClass().getName(), pivotIntakeIOAutoLogged);
   }
 
   public Command setPosition(double position) {
     return new StartEndCommand(
         () -> pivotIntakeIO.setPosition(position * PivotIntakeConstants.kPivotMotorGearing),
-        () -> {},
+        () -> {
+        },
         this);
   }
 
@@ -42,7 +42,8 @@ public class PivotIntake extends SubsystemBase {
   }
 
   public Command off() {
-    return new StartEndCommand(() -> pivotIntakeIO.off(), () -> {}, this);
+    return new StartEndCommand(() -> pivotIntakeIO.off(), () -> {
+    }, this);
   }
 
   public Command slamZero() {
@@ -62,8 +63,7 @@ public class PivotIntake extends SubsystemBase {
 
       @Override
       public boolean isFinished() {
-        return pivotIntakeIOAutoLogged.pivotIntakeMotorStatorCurrent
-            > PivotIntakeConstants.kPivotSlamStallCurrent;
+        return pivotIntakeIOAutoLogged.pivotIntakeMotorStatorCurrent > PivotIntakeConstants.kPivotSlamStallCurrent;
       }
     };
   }
@@ -73,6 +73,7 @@ public class PivotIntake extends SubsystemBase {
   }
 
   public Command zero() {
-    return new StartEndCommand(() -> pivotIntakeIO.zero(), () -> {}, this);
+    return new StartEndCommand(() -> pivotIntakeIO.zero(), () -> {
+    }, this);
   }
 }

@@ -24,7 +24,7 @@ public class Intake extends SubsystemBase {
   @Override
   public void periodic() {
     intakeIO.updateInputs(intakeIOAutoLogged);
-    Logger.processInputs(getName(), intakeIOAutoLogged);
+    Logger.processInputs(this.getClass().getName(), intakeIOAutoLogged);
   }
 
   public Command setVoltage(double voltage, double passthroughVoltage) {
@@ -68,13 +68,13 @@ public class Intake extends SubsystemBase {
   }
 
   public Command off() {
-    return new StartEndCommand(() -> intakeIO.off(), () -> {}, this);
+    return new StartEndCommand(() -> intakeIO.off(), () -> {
+    }, this);
   }
 
   public Command intakeIn() {
     return new Command() {
-      TimedBoolean beamBreak =
-          new TimedBoolean(intakeIO::isBeamBroken, IntakeConstants.kBeamBreakDelayTime);
+      TimedBoolean beamBreak = new TimedBoolean(intakeIO::isBeamBroken, IntakeConstants.kBeamBreakDelayTime);
 
       @Override
       public void initialize() {

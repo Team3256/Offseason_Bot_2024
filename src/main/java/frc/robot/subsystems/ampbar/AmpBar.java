@@ -24,7 +24,7 @@ public class AmpBar extends SubsystemBase {
   @Override
   public void periodic() {
     ampBarIO.updateInputs(ampBarIOAutoLogged);
-    Logger.processInputs(getName(), ampBarIOAutoLogged);
+    Logger.processInputs(this.getClass().getName(), ampBarIOAutoLogged);
   }
 
   public Command setVoltage(double voltage) {
@@ -70,6 +70,7 @@ public class AmpBar extends SubsystemBase {
   }
 
   public Command off() {
-    return new StartEndCommand(() -> ampBarIO.off(), () -> {}, this);
+    return new StartEndCommand(() -> ampBarIO.off(), () -> {
+    }, this);
   }
 }

@@ -17,8 +17,7 @@ import org.littletonrobotics.junction.Logger;
 public class PivotShooter extends SubsystemBase {
 
   private final PivotShooterIO pivotShooterIO;
-  private final PivotShooterIOInputsAutoLogged pivotShooterIOAutoLogged =
-      new PivotShooterIOInputsAutoLogged();
+  private final PivotShooterIOInputsAutoLogged pivotShooterIOAutoLogged = new PivotShooterIOInputsAutoLogged();
 
   public PivotShooter(PivotShooterIO pivotShooterIO) {
     this.pivotShooterIO = pivotShooterIO;
@@ -27,13 +26,14 @@ public class PivotShooter extends SubsystemBase {
   @Override
   public void periodic() {
     pivotShooterIO.updateInputs(pivotShooterIOAutoLogged);
-    Logger.processInputs(getName(), pivotShooterIOAutoLogged);
+    Logger.processInputs(this.getClass().getName(), pivotShooterIOAutoLogged);
   }
 
   public Command setPosition(double position) {
     return new StartEndCommand(
         () -> pivotShooterIO.setPosition(position * PivotShooterConstants.kPivotMotorGearing),
-        () -> {},
+        () -> {
+        },
         this);
   }
 
@@ -43,7 +43,8 @@ public class PivotShooter extends SubsystemBase {
   }
 
   public Command off() {
-    return new StartEndCommand(() -> pivotShooterIO.off(), () -> {}, this);
+    return new StartEndCommand(() -> pivotShooterIO.off(), () -> {
+    }, this);
   }
 
   public Command slamZero() {
@@ -63,8 +64,7 @@ public class PivotShooter extends SubsystemBase {
 
       @Override
       public boolean isFinished() {
-        return pivotShooterIOAutoLogged.pivotShooterMotorStatorCurrent
-            > PivotShooterConstants.kPivotSlamStallCurrent;
+        return pivotShooterIOAutoLogged.pivotShooterMotorStatorCurrent > PivotShooterConstants.kPivotSlamStallCurrent;
       }
     };
   }
@@ -74,15 +74,15 @@ public class PivotShooter extends SubsystemBase {
   }
 
   public Command zero() {
-    return new StartEndCommand(() -> pivotShooterIO.zero(), () -> {}, this);
+    return new StartEndCommand(() -> pivotShooterIO.zero(), () -> {
+    }, this);
   }
 
   public Command bruh() {
     return new RunCommand(
-        () ->
-            pivotShooterIO.setPosition(
-                pivotShooterIOAutoLogged.interpolatedPivotPosition
-                    * PivotShooterConstants.kPivotMotorGearing),
+        () -> pivotShooterIO.setPosition(
+            pivotShooterIOAutoLogged.interpolatedPivotPosition
+                * PivotShooterConstants.kPivotMotorGearing),
         this);
   }
 }
