@@ -51,6 +51,8 @@ import frc.robot.subsystems.swerve.ModuleIOTalonFX;
 import frc.robot.subsystems.swerve.SwerveConstants;
 import frc.robot.subsystems.swerve.SwerveDrive;
 import frc.robot.subsystems.swerve.commands.*;
+import frc.robot.subsystems.vision.Vision;
+import frc.robot.subsystems.vision.VisionIOLimelight;
 import frc.robot.utils.CommandQueue;
 import io.github.oblarg.oblog.annotations.Config;
 
@@ -84,6 +86,8 @@ public class RobotContainer {
   public Climb climb;
   public CommandQueue commandQueue;
 
+  public Vision vision;
+
   public PivotShooter pivotShooter;
   public LED led;
 
@@ -105,6 +109,9 @@ public class RobotContainer {
     CommandScheduler.getInstance().cancelAll();
 
     commandQueue = new CommandQueue();
+    vision = new Vision(new VisionIOLimelight());
+
+
 
     // Setup subsystems & button-bindings
     if (FeatureFlags.kPivotShooterEnabled) {

@@ -20,13 +20,7 @@ import frc.robot.utils.TalonUtil;
 
 public class PivotShooterIOTalonFX implements PivotShooterIO {
 
-  private final InterpolatingDoubleTreeMap aprilTagMap =
-      new InterpolatingDoubleTreeMap() {
-        {
-          put(0.0, 0.0);
-          put(1.0, 1.0);
-        }
-      };
+
   private final MonitoredTalonFX pivotShooterMotor =
       new MonitoredTalonFX(PivotShooterConstants.kPivotMotorID);
   final PositionVoltage positionRequest = new PositionVoltage(0).withSlot(0);
@@ -81,13 +75,6 @@ public class PivotShooterIOTalonFX implements PivotShooterIO {
     inputs.pivotShooterMotorTemperature = pivotShooterMotorTemperature.getValueAsDouble();
     inputs.pivotShooterMotorReferenceSlope = pivotShooterMotorReferenceSlope.getValueAsDouble();
 
-    inputs.lastLastCenterLimelightTY = inputs.lastCenterLimelightTY;
-    inputs.lastCenterLimelightTY = inputs.currentCenterLimelightTY;
-    inputs.centerLimelightTYOffset =
-        (inputs.lastCenterLimelightTY - inputs.lastLastCenterLimelightTY)
-            + inputs.currentCenterLimelightTY;
-    inputs.currentCenterLimelightTY = LimelightHelpers.getTY("limelight");
-    inputs.interpolatedPivotPosition = aprilTagMap.get(inputs.centerLimelightTYOffset);
   }
 
   @Override

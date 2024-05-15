@@ -7,11 +7,13 @@
 
 package frc.robot.subsystems.pivotshooter;
 
+import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.subsystems.vision.Vision;
 import org.littletonrobotics.junction.Logger;
 
 public class PivotShooter extends SubsystemBase {
@@ -19,6 +21,14 @@ public class PivotShooter extends SubsystemBase {
   private final PivotShooterIO pivotShooterIO;
   private final PivotShooterIOInputsAutoLogged pivotShooterIOAutoLogged =
       new PivotShooterIOInputsAutoLogged();
+
+  private final InterpolatingDoubleTreeMap aprilTagMap =
+          new InterpolatingDoubleTreeMap() {
+            {
+              put(0.0, 0.0);
+              put(1.0, 1.0);
+            }
+          };
 
   public PivotShooter(PivotShooterIO pivotShooterIO) {
     this.pivotShooterIO = pivotShooterIO;
@@ -77,11 +87,11 @@ public class PivotShooter extends SubsystemBase {
     return new StartEndCommand(() -> pivotShooterIO.zero(), () -> {}, this);
   }
 
-  public Command bruh() {
+  public Command bruh(Vision vision) {
     return new RunCommand(
         () ->
             pivotShooterIO.setPosition(
-                pivotShooterIOAutoLogged.interpolatedPivotPosition
+                    aprilTagMap.get((vision.getLastCenterLimelightY()-vision.getLastLastCenterLimelightY()) + vision.getCenterLimelightY())
                     * PivotShooterConstants.kPivotMotorGearing),
         this);
   }
