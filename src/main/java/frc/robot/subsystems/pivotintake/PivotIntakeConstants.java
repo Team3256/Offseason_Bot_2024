@@ -46,29 +46,19 @@ public final class PivotIntakeConstants {
   protected static double kPivotSlamStallCurrent = 10.0;
 
   public static final TalonFXConfiguration motorConfig =
-          new TalonFXConfiguration()
-                  .withSlot0(
-                          new Slot0Configs()
-                                  .withKS(0)
-                                  .withKV(0.05)
-                                  .withKP(1)
-                                  .withKI(0)
-                                  .withKD(0)
-                  )
-                  .withMotorOutput(
-                          new MotorOutputConfigs()
-                                  .withNeutralMode(NeutralModeValue.Brake)
-                                  .withInverted(InvertedValue.Clockwise_Positive)
-                  )
-                  .withMotionMagic(
-                          new MotionMagicConfigs()
-                                  .withMotionMagicAcceleration(20)
-                                  .withMotionMagicCruiseVelocity(10)
-                                  .withMotionMagicJerk(100)
-                  )
-                  .withCurrentLimits(
-                          new CurrentLimitsConfigs()
-                                  .withStatorCurrentLimitEnable(true)
-                                  .withStatorCurrentLimit(60)
-                  );
+      new TalonFXConfiguration()
+          .withSlot0(new Slot0Configs().withKS(0).withKV(0.05).withKP(1).withKI(0).withKD(0))
+          .withMotorOutput(
+              new MotorOutputConfigs()
+                  .withNeutralMode(NeutralModeValue.Brake)
+                  .withInverted(InvertedValue.Clockwise_Positive))
+          .withMotionMagic(
+              new MotionMagicConfigs()
+                  .withMotionMagicAcceleration(20)
+                  .withMotionMagicCruiseVelocity(10)
+                  .withMotionMagicJerk(100))
+          .withCurrentLimits(
+              new CurrentLimitsConfigs()
+                  .withStatorCurrentLimitEnable(true)
+                  .withStatorCurrentLimit(60));
 }

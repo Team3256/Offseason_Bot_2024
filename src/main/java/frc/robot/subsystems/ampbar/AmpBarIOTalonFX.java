@@ -9,7 +9,6 @@ package frc.robot.subsystems.ampbar;
 
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
-import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.NeutralOut;
 import frc.robot.drivers.MonitoredTalonFX;
 import frc.robot.utils.PhoenixUtil;

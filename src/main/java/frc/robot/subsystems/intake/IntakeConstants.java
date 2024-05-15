@@ -18,8 +18,6 @@ public final class IntakeConstants {
   public static final double kPassthroughIntakeVoltage = -8;
   public static final double kIntakeIntakeVoltage = 12;
 
-
-
   // Time of Flight constants
   public static final double kBeamBreakDelayTime = 0;
 
@@ -31,57 +29,35 @@ public final class IntakeConstants {
   public static boolean kPassthroughMotionMagic = false;
 
   public static final TalonFXConfiguration intakeMotorConfig =
-          new TalonFXConfiguration()
-                  .withSlot0(
-                          new Slot0Configs()
-                                  .withKS(0)
-                                  .withKV(0.1)
-                                  .withKP(1)
-                                  .withKI(0)
-                                  .withKD(0)
-                  )
-                  .withMotorOutput(
-                          new MotorOutputConfigs()
-                                  .withNeutralMode(NeutralModeValue.Brake)
-                                  .withInverted(InvertedValue.Clockwise_Positive)
-                  )
-                  .withMotionMagic(
-                          new MotionMagicConfigs()
-                                  .withMotionMagicAcceleration(120)
-                                  .withMotionMagicCruiseVelocity(60)
-                                  .withMotionMagicJerk(1200)
-                  )
-                  .withCurrentLimits(
-                          new CurrentLimitsConfigs()
-                                  .withStatorCurrentLimitEnable(true)
-                                  .withStatorCurrentLimit(80)
-                  );
+      new TalonFXConfiguration()
+          .withSlot0(new Slot0Configs().withKS(0).withKV(0.1).withKP(1).withKI(0).withKD(0))
+          .withMotorOutput(
+              new MotorOutputConfigs()
+                  .withNeutralMode(NeutralModeValue.Brake)
+                  .withInverted(InvertedValue.Clockwise_Positive))
+          .withMotionMagic(
+              new MotionMagicConfigs()
+                  .withMotionMagicAcceleration(120)
+                  .withMotionMagicCruiseVelocity(60)
+                  .withMotionMagicJerk(1200))
+          .withCurrentLimits(
+              new CurrentLimitsConfigs()
+                  .withStatorCurrentLimitEnable(true)
+                  .withStatorCurrentLimit(80));
   public static final TalonFXConfiguration passthroughMotorConfig =
-          new TalonFXConfiguration()
-                  .withSlot0(
-                          new Slot0Configs()
-                                  .withKS(0)
-                                  .withKV(0)
-                                  .withKP(1)
-                                  .withKI(0)
-                                  .withKD(0)
-                  )
-                  .withMotorOutput(
-                          new MotorOutputConfigs()
-                                  .withNeutralMode(NeutralModeValue.Brake)
-                                  .withInverted(InvertedValue.Clockwise_Positive)
-                  )
-                  .withMotionMagic(
-                          new MotionMagicConfigs()
-                                  .withMotionMagicAcceleration(120)
-                                  .withMotionMagicCruiseVelocity(60)
-                                  .withMotionMagicJerk(1200)
-                  )
-                  .withCurrentLimits(
-                          new CurrentLimitsConfigs()
-                                  .withStatorCurrentLimitEnable(true)
-                                  .withStatorCurrentLimit(80)
-                  );
-
-
+      new TalonFXConfiguration()
+          .withSlot0(new Slot0Configs().withKS(0).withKV(0).withKP(1).withKI(0).withKD(0))
+          .withMotorOutput(
+              new MotorOutputConfigs()
+                  .withNeutralMode(NeutralModeValue.Brake)
+                  .withInverted(InvertedValue.Clockwise_Positive))
+          .withMotionMagic(
+              new MotionMagicConfigs()
+                  .withMotionMagicAcceleration(120)
+                  .withMotionMagicCruiseVelocity(60)
+                  .withMotionMagicJerk(1200))
+          .withCurrentLimits(
+              new CurrentLimitsConfigs()
+                  .withStatorCurrentLimitEnable(true)
+                  .withStatorCurrentLimit(80));
 }

@@ -21,7 +21,6 @@ public final class ClimbConstants {
   public static final double kClimbDownPosition = 0;
   public static final double wheelRadius = 1;
 
-
   public static double kCurrentThreshold = 4.5;
 
   // // What about the tension from the spring?
@@ -31,29 +30,19 @@ public final class ClimbConstants {
   public static boolean kUseMotionMagic = false;
 
   public static final TalonFXConfiguration motorConfig =
-          new TalonFXConfiguration()
-                  .withSlot0(
-                          new Slot0Configs()
-                                  .withKS(0)
-                                  .withKV(0)
-                                  .withKP(1)
-                                  .withKI(0)
-                                  .withKD(0)
-                  )
-                  .withMotorOutput(
-                          new MotorOutputConfigs()
-                                  .withNeutralMode(NeutralModeValue.Brake)
-                                  .withInverted(InvertedValue.Clockwise_Positive)
-                  )
-                  .withMotionMagic(
-                          new MotionMagicConfigs()
-                                  .withMotionMagicAcceleration(100)
-                                  .withMotionMagicCruiseVelocity(100)
-                                  .withMotionMagicJerk(300)
-                  )
-                  .withCurrentLimits(
-                          new CurrentLimitsConfigs()
-                                  .withStatorCurrentLimitEnable(true)
-                                  .withStatorCurrentLimit(60)
-                  );
+      new TalonFXConfiguration()
+          .withSlot0(new Slot0Configs().withKS(0).withKV(0).withKP(1).withKI(0).withKD(0))
+          .withMotorOutput(
+              new MotorOutputConfigs()
+                  .withNeutralMode(NeutralModeValue.Brake)
+                  .withInverted(InvertedValue.Clockwise_Positive))
+          .withMotionMagic(
+              new MotionMagicConfigs()
+                  .withMotionMagicAcceleration(100)
+                  .withMotionMagicCruiseVelocity(100)
+                  .withMotionMagicJerk(300))
+          .withCurrentLimits(
+              new CurrentLimitsConfigs()
+                  .withStatorCurrentLimitEnable(true)
+                  .withStatorCurrentLimit(60));
 }
