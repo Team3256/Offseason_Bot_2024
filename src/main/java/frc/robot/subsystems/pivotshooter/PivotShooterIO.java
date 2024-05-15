@@ -20,13 +20,6 @@ public interface PivotShooterIO {
     public double pivotShooterMotorSupplyCurrent = 0.0;
     public double pivotShooterMotorTemperature = 0.0;
     public double pivotShooterMotorReferenceSlope = 0.0;
-
-    public double lastCenterLimelightTY = 0.0;
-    public double lastLastCenterLimelightTY = 0.0;
-    public double centerLimelightTYOffset = 0.0;
-
-    public double currentCenterLimelightTY = 0.0;
-    public double interpolatedPivotPosition = 0.0;
   }
 
   public default void updateInputs(PivotShooterIOInputs inputs) {}
