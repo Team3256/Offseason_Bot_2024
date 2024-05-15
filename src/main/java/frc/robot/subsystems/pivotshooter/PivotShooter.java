@@ -23,12 +23,12 @@ public class PivotShooter extends SubsystemBase {
       new PivotShooterIOInputsAutoLogged();
 
   private final InterpolatingDoubleTreeMap aprilTagMap =
-          new InterpolatingDoubleTreeMap() {
-            {
-              put(0.0, 0.0);
-              put(1.0, 1.0);
-            }
-          };
+      new InterpolatingDoubleTreeMap() {
+        {
+          put(0.0, 0.0);
+          put(1.0, 1.0);
+        }
+      };
 
   public PivotShooter(PivotShooterIO pivotShooterIO) {
     this.pivotShooterIO = pivotShooterIO;
@@ -91,7 +91,9 @@ public class PivotShooter extends SubsystemBase {
     return new RunCommand(
         () ->
             pivotShooterIO.setPosition(
-                    aprilTagMap.get((vision.getLastCenterLimelightY()-vision.getLastLastCenterLimelightY()) + vision.getCenterLimelightY())
+                aprilTagMap.get(
+                        (vision.getLastCenterLimelightY() - vision.getLastLastCenterLimelightY())
+                            + vision.getCenterLimelightY())
                     * PivotShooterConstants.kPivotMotorGearing),
         this);
   }

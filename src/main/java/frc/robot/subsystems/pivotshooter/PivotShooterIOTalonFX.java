@@ -12,14 +12,11 @@ import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.NeutralOut;
 import com.ctre.phoenix6.controls.PositionVoltage;
-import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
 import frc.robot.drivers.MonitoredTalonFX;
-import frc.robot.limelight.LimelightHelpers;
 import frc.robot.utils.PhoenixUtil;
 import frc.robot.utils.TalonUtil;
 
 public class PivotShooterIOTalonFX implements PivotShooterIO {
-
 
   private final MonitoredTalonFX pivotShooterMotor =
       new MonitoredTalonFX(PivotShooterConstants.kPivotMotorID);
@@ -74,7 +71,6 @@ public class PivotShooterIOTalonFX implements PivotShooterIO {
     inputs.pivotShooterMotorSupplyCurrent = pivotShooterMotorSupplyCurrent.getValueAsDouble();
     inputs.pivotShooterMotorTemperature = pivotShooterMotorTemperature.getValueAsDouble();
     inputs.pivotShooterMotorReferenceSlope = pivotShooterMotorReferenceSlope.getValueAsDouble();
-
   }
 
   @Override

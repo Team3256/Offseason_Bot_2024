@@ -111,8 +111,6 @@ public class RobotContainer {
     commandQueue = new CommandQueue();
     vision = new Vision(new VisionIOLimelight());
 
-
-
     // Setup subsystems & button-bindings
     if (FeatureFlags.kPivotShooterEnabled) {
       configurePivotShooter();
