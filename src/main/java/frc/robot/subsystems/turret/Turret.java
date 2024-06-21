@@ -13,6 +13,7 @@ public class Turret extends SubsystemBase {
 
     public Turret(TurretIO turretIO) {
         this.turretIO = turretIO;
+        this.setDefaultCommand(reset());
     }
 
     public Command setPositionRelativeToSwerve(Rotation2d position, Rotation2d swerveAngle) {
@@ -35,5 +36,15 @@ public class Turret extends SubsystemBase {
                 (output)->turretIO.setVoltage(output),
                 this
         );
+    }
+
+    public Command reset() {
+        return new StartEndCommand(()->{
+            if (turretIOInputs.turretMotorPosition > TurretConstants.kForwardLimit) {
+                turretIO.setPosition(0);
+            } else if (turretIOInputs.turretMotorPosition < TurretConstants.kReverseLimit) {
+                turretIO.setPosition(0);
+            }
+        }, () -> {}, this);
     }
 }
