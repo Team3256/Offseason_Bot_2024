@@ -8,9 +8,8 @@
 package frc.robot.subsystems.vision;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import org.littletonrobotics.junction.AutoLogOutput;
-
 import java.util.function.DoubleSupplier;
+import org.littletonrobotics.junction.AutoLogOutput;
 
 public class Vision extends SubsystemBase {
 
@@ -73,11 +72,12 @@ public class Vision extends SubsystemBase {
   public double getCompensatedCenterLimelightY() {
     return centerLimelightY + (lastCenterLimelightY - lastLastCenterLimelightY);
   }
+
   public DoubleSupplier getCompensatedCenterLimelightXSupplier() {
     return this::getCompensatedCenterLimelightX;
   }
 
-    public DoubleSupplier getCompensatedCenterLimelightYSupplier() {
-        return this::getCompensatedCenterLimelightY;
-    }
+  public DoubleSupplier getCompensatedCenterLimelightYSupplier() {
+    return this::getCompensatedCenterLimelightY;
+  }
 }
