@@ -2,6 +2,7 @@ package frc.robot.subsystems.turret;
 
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
+import com.ctre.phoenix6.configs.ClosedLoopGeneralConfigs;
 import com.ctre.phoenix6.controls.MotionMagicExpoVoltage;
 import com.ctre.phoenix6.controls.NeutralOut;
 import com.ctre.phoenix6.controls.PositionVoltage;
@@ -25,6 +26,9 @@ public class TurretIOTalonFX implements TurretIO{
 
     public TurretIOTalonFX() {
         var motorConfig = TurretConstants.motorConfigs;
+        ClosedLoopGeneralConfigs closedLoopGeneralConfigs = new ClosedLoopGeneralConfigs();
+        closedLoopGeneralConfigs.ContinuousWrap = true;
+        motorConfig.ClosedLoopGeneral = closedLoopGeneralConfigs;
         PhoenixUtil.checkErrorAndRetry(() -> turretMotor.getConfigurator().refresh(motorConfig));
         TalonUtil.applyAndCheckConfiguration(turretMotor, motorConfig);
 

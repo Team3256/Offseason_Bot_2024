@@ -49,8 +49,11 @@ public final class TurretConstants {
                                     .withFeedbackRemoteSensorID(kCanCoderID)
                                     .withFeedbackSensorSource(FeedbackSensorSourceValue.FusedCANcoder)
                                     .withRotorToSensorRatio(1)
-                                    .withSensorToMechanismRatio(1) //TODO: TUNE IMPORTANT
+                                    .withSensorToMechanismRatio(1)//TODO: TUNE IMPORTANT
                     );
 
     public static boolean kUseMotionMagic = false;
+
+    public static double kForwardLimit = 69; //TODO: Set limit
+    public static double kReverseLimit = -69; //TODO: Set limit
 }
