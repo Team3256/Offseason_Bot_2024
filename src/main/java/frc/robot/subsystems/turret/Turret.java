@@ -40,8 +40,8 @@ public class Turret extends SubsystemBase {
   public Command followLimelight(Vision vision) {
     return new PIDCommand(
         new PIDController(1, 0, 0),
-        () -> turretIOInputs.turretMotorPosition,
         vision.getCompensatedCenterLimelightXSupplier(),
+        0,
         (output) -> turretIO.setVoltage(output),
         this);
   }
