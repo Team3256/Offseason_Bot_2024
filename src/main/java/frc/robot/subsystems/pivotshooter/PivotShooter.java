@@ -37,7 +37,7 @@ public class PivotShooter extends SubsystemBase {
   @Override
   public void periodic() {
     pivotShooterIO.updateInputs(pivotShooterIOAutoLogged);
-    Logger.processInputs(this.getClass().getName(), pivotShooterIOAutoLogged);
+    Logger.processInputs(this.getClass().getSimpleName(), pivotShooterIOAutoLogged);
   }
 
   public Command setPosition(double position) {

@@ -24,7 +24,7 @@ public class Intake extends SubsystemBase {
   @Override
   public void periodic() {
     intakeIO.updateInputs(intakeIOAutoLogged);
-    Logger.processInputs(this.getClass().getName(), intakeIOAutoLogged);
+    Logger.processInputs(this.getClass().getSimpleName(), intakeIOAutoLogged);
   }
 
   public Command setVoltage(double voltage, double passthroughVoltage) {

@@ -11,15 +11,28 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.*;
 import frc.robot.subsystems.vision.Vision;
+import org.littletonrobotics.junction.Logger;
 
 public class Turret extends SubsystemBase {
 
   private final TurretIO turretIO;
   private final TurretIOInputsAutoLogged turretIOInputs = new TurretIOInputsAutoLogged();
 
-  public Turret(TurretIO turretIO) {
+  private final EncoderIO encoderIO;
+  private final EncoderIOInputsAutoLogged encoderIOInputs = new EncoderIOInputsAutoLogged();
+
+  public Turret(TurretIO turretIO, EncoderIO encoderIO) {
     this.turretIO = turretIO;
+    this.encoderIO = encoderIO;
     this.setDefaultCommand(reset());
+  }
+
+  @Override
+  public void periodic() {
+    turretIO.updateInputs(turretIOInputs);
+    Logger.processInputs(this.getClass().getSimpleName(), turretIOInputs);
+    encoderIO.updateInputs(encoderIOInputs);
+    Logger.processInputs(this.getClass().getSimpleName()+"/encoder", encoderIOInputs);
   }
 
   public Command setPositionRelativeToSwerve(Rotation2d position, Rotation2d swerveAngle) {

@@ -24,7 +24,7 @@ public class Climb extends SubsystemBase {
   @Override
   public void periodic() {
     climbIO.updateInputs(climbIOAutoLogged);
-    Logger.processInputs(this.getClass().getName(), climbIOAutoLogged);
+    Logger.processInputs(this.getClass().getSimpleName(), climbIOAutoLogged);
   }
 
   public Command setPosition(double position) {

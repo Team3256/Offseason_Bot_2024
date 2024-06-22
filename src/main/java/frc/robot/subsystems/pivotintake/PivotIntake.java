@@ -26,7 +26,7 @@ public class PivotIntake extends SubsystemBase {
   @Override
   public void periodic() {
     pivotIntakeIO.updateInputs(pivotIntakeIOAutoLogged);
-    Logger.processInputs(this.getClass().getName(), pivotIntakeIOAutoLogged);
+    Logger.processInputs(this.getClass().getSimpleName(), pivotIntakeIOAutoLogged);
   }
 
   public Command setPosition(double position) {
