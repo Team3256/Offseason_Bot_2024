@@ -10,6 +10,7 @@ package frc.robot.subsystems.vision;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import java.util.function.DoubleSupplier;
 import org.littletonrobotics.junction.AutoLogOutput;
+import org.littletonrobotics.junction.Logger;
 
 public class Vision extends SubsystemBase {
 
@@ -30,6 +31,7 @@ public class Vision extends SubsystemBase {
   @Override
   public void periodic() {
     visionIO.updateInputs(visionIOAutoLogged);
+    Logger.processInputs(this.getClass().getSimpleName(), visionIOAutoLogged);
 
     lastLastCenterLimelightX = lastCenterLimelightX;
     lastLastCenterLimelightY = lastCenterLimelightY;
