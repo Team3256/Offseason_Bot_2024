@@ -49,13 +49,15 @@ public final class TurretConstants {
           .withFeedback(
               new FeedbackConfigs()
                   .withFeedbackRemoteSensorID(kCanCoderID)
-                  .withFeedbackSensorSource(FeedbackSensorSourceValue.FusedCANcoder)
-                  .withRotorToSensorRatio(1)
+                  .withFeedbackSensorSource(FeedbackSensorSourceValue.RotorSensor)
                   .withSensorToMechanismRatio(1) // TODO: TUNE IMPORTANT
               );
 
-  public static boolean kUseMotionMagic = false;
+  public static final int gearToothCountE1 = 1; // TODO: Set gear ratio
+  public static final int gearToothCountE2 = 1; // TODO: Set gear ratio
 
-  public static double kForwardLimit = 69; // TODO: Set limit
-  public static double kReverseLimit = -69; // TODO: Set limit
+  public static final boolean kUseMotionMagic = false;
+
+  public static final double kForwardLimit = 69; // TODO: Set limit
+  public static final double kReverseLimit = -69; // TODO: Set limit
 }

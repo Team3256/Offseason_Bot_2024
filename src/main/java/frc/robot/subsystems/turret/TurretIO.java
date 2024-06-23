@@ -26,6 +26,8 @@ public interface TurretIO {
 
   public default void setPosition(double position) {}
 
+  public default void setSensorPosition(double position) {}
+
   public default void zero() {}
 
   public default void off() {}
