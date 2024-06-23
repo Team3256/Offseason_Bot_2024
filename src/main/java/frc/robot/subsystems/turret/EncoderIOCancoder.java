@@ -10,6 +10,7 @@ package frc.robot.subsystems.turret;
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.hardware.CANcoder;
+import edu.wpi.first.math.util.Units;
 
 public class EncoderIOCancoder implements EncoderIO {
 
@@ -30,7 +31,7 @@ public class EncoderIOCancoder implements EncoderIO {
               + response.getDescription());
     }
 
-    encoderPosition = encoder.getPosition();
+    encoderPosition = encoder.getAbsolutePosition();
     encoderVelocity = encoder.getVelocity();
 
     BaseStatusSignal.setUpdateFrequencyForAll(
@@ -40,7 +41,8 @@ public class EncoderIOCancoder implements EncoderIO {
 
   @Override
   public void updateInputs(EncoderIOInputs inputs) {
-    inputs.encoderPosition = encoderPosition.getValueAsDouble();
+    BaseStatusSignal.refreshAll(encoderPosition, encoderVelocity);
+    inputs.encoderPositionDegrees = Units.rotationsToDegrees(encoderPosition.getValueAsDouble());
     inputs.encoderVelocity = encoderVelocity.getValueAsDouble();
   }
 

@@ -14,7 +14,7 @@ public interface EncoderIO {
 
   @AutoLog
   public static class EncoderIOInputs {
-    public double encoderPosition = 0.0;
+    public double encoderPositionDegrees = 0.0;
     public double encoderVelocity = 0.0;
 
     public Rotation2d turretMotorAbsolutePosition = new Rotation2d();
