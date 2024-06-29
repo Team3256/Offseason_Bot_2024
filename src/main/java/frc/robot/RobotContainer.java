@@ -9,10 +9,15 @@ package frc.robot;
 
 import static frc.robot.subsystems.pivotintake.PivotIntakeConstants.kPivotGroundPos;
 import static frc.robot.subsystems.pivotshooter.PivotShooterConstants.*;
-import static frc.robot.subsystems.swerve.SwerveConstants.AzimuthConstants.*;
 
+import com.ctre.phoenix6.Utils;
+import com.ctre.phoenix6.mechanisms.swerve.SwerveModule;
+import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
@@ -22,11 +27,7 @@ import edu.wpi.first.wpilibj2.command.*;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.FeatureFlags;
-import frc.robot.autos.commands.AutoScoreAmp;
-import frc.robot.autos.commands.AutoScoreSpeaker;
 import frc.robot.autos.commands.IntakeSequence;
-import frc.robot.autos.commands.MoveToNote;
-import frc.robot.autos.commands.RotateToNote;
 import frc.robot.helpers.XboxStalker;
 import frc.robot.subsystems.ampbar.AmpBar;
 import frc.robot.subsystems.ampbar.AmpBarIOTalonFX;
@@ -46,11 +47,9 @@ import frc.robot.subsystems.pivotshooter.PivotShooterIOTalonFX;
 import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.subsystems.shooter.ShooterConstants;
 import frc.robot.subsystems.shooter.ShooterIOTalonFX;
-import frc.robot.subsystems.swerve.GyroIOPigeon2;
-import frc.robot.subsystems.swerve.ModuleIOTalonFX;
-import frc.robot.subsystems.swerve.SwerveConstants;
-import frc.robot.subsystems.swerve.SwerveDrive;
-import frc.robot.subsystems.swerve.commands.*;
+import frc.robot.subsystems.swerve.CommandSwerveDrivetrain;
+import frc.robot.subsystems.swerve.Telemetry;
+import frc.robot.subsystems.swerve.TunerConstants;
 import frc.robot.subsystems.vision.Vision;
 import frc.robot.subsystems.vision.VisionIOLimelight;
 import frc.robot.utils.CommandQueue;
@@ -66,7 +65,6 @@ public class RobotContainer {
   /* Controllers */
   private final CommandXboxController driver = new CommandXboxController(0);
   private final CommandXboxController operator = new CommandXboxController(1);
-  // private final CommandXboxController tester = new CommandXboxController(2);
 
   /* Drive Controls */
   private final int translationAxis = XboxController.Axis.kLeftY.value;
@@ -74,11 +72,20 @@ public class RobotContainer {
   private final int rotationAxis = XboxController.Axis.kRightX.value;
   private final int secondaryAxis = XboxController.Axis.kRightY.value;
 
-  /* Swerve Helpers */
-  private boolean isRed = true;
-
   /* Subsystems */
-  public SwerveDrive swerveDrive;
+  private boolean isRed;
+
+  private final CommandSwerveDrivetrain drivetrain = TunerConstants.DriveTrain;
+  private double MaxSpeed = TunerConstants.kSpeedAt12VoltsMps; // kSpeedAt12VoltsMps desired top speed
+  private double MaxAngularRate = 1.5 * Math.PI;// My drivetrain
+
+  private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
+          .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
+          .withDriveRequestType(SwerveModule.DriveRequestType.OpenLoopVoltage); // I want field-centric
+  // driving in open loop
+  private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
+  private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
+  private final Telemetry logger = new Telemetry(MaxSpeed);
   public Shooter shooter;
   public Intake intake;
   public AmpBar ampbar;
@@ -90,12 +97,6 @@ public class RobotContainer {
 
   public PivotShooter pivotShooter;
   public LED led;
-
-  @Config.Command(name = "Auto Score Speaker")
-  private Command autoScoreSpeaker;
-
-  @Config.Command(name = "Auto Score Amp")
-  private Command autoScoreAmp;
 
   @Config.Command(name = "Climb Zero")
   private Command zeroClimb;
@@ -142,13 +143,6 @@ public class RobotContainer {
       configureLED();
     }
 
-    if (FeatureFlags.kSwerveEnabled
-        && FeatureFlags.kIntakeEnabled
-        && FeatureFlags.kShooterEnabled
-        && FeatureFlags.kPivotIntakeEnabled) {
-      autoScoreSpeaker = new AutoScoreSpeaker(swerveDrive, shooter, intake);
-      autoScoreAmp = new AutoScoreAmp(swerveDrive, shooter, intake);
-    }
     // Named commands
     {
       // Auto named commands
@@ -285,10 +279,6 @@ public class RobotContainer {
                   ShooterConstants.kShooterSubwooferRPS,
                   ShooterConstants.kShooterFollowerSubwooferRPS)));
       NamedCommands.registerCommand(
-          "align to note",
-          new SequentialCommandGroup(
-              new RotateToNote(swerveDrive), new MoveToNote(swerveDrive, intake)));
-      NamedCommands.registerCommand(
           "lmao",
           new RepeatCommand(
               new SequentialCommandGroup(
@@ -387,185 +377,24 @@ public class RobotContainer {
   }
 
   public void configureSwerve() {
-    swerveDrive =
-        new SwerveDrive(
-            new GyroIOPigeon2(),
-            new ModuleIOTalonFX(0, SwerveConstants.Mod0.constants),
-            new ModuleIOTalonFX(1, SwerveConstants.Mod1.constants),
-            new ModuleIOTalonFX(2, SwerveConstants.Mod2.constants),
-            new ModuleIOTalonFX(3, SwerveConstants.Mod3.constants));
-    swerveDrive.setDefaultCommand(
-        new TeleopSwerve(
-            swerveDrive,
-            () -> driver.getRawAxis(translationAxis),
-            () -> driver.getRawAxis(strafeAxis),
-            () -> driver.getRawAxis(rotationAxis)));
+    drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
+            drivetrain.applyRequest(() -> drive.withVelocityX(-driver.getLeftY() * MaxSpeed) // Drive forward with
+                    // negative Y (forward)
+                    .withVelocityY(-driver.getLeftX() * MaxSpeed) // Drive left with negative X (left)
+                    .withRotationalRate(-driver.getRightX() * MaxAngularRate) // Drive counterclockwise with negative X (left)
+            ));
 
-    driver
-        .leftTrigger()
-        .whileTrue(
-            new TeleopSwerveLimited(
-                swerveDrive,
-                () -> driver.getRawAxis(translationAxis),
-                () -> driver.getRawAxis(strafeAxis),
-                () -> driver.getRawAxis(rotationAxis)));
+    driver.a().whileTrue(drivetrain.applyRequest(() -> brake));
+    driver.b().whileTrue(drivetrain
+            .applyRequest(() -> point.withModuleDirection(new Rotation2d(-driver.getLeftY(), -driver.getLeftX()))));
 
-    driver
-        .rightTrigger()
-        .whileTrue(
-            new NoMoreRotation(
-                swerveDrive,
-                () -> driver.getRawAxis(translationAxis),
-                () -> driver.getRawAxis(strafeAxis),
-                true,
-                true));
+    // reset the field-centric heading on left bumper press
+    driver.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
 
-    /* full reset */
-    driver.y().onTrue(new ZeroGyro(swerveDrive));
-    // driver.y().onTrue(new ForceResetModulePositions(swerveDrive));
-
-    if (isRed) /* RED ALLIANCE PRESETS */ {
-
-      /* AMP */
-      driver
-          .a()
-          .onTrue(
-              new Azimuth(
-                      swerveDrive,
-                      driver::getLeftY,
-                      driver::getLeftX,
-                      () -> aziAmpRed,
-                      () -> true,
-                      true,
-                      true)
-                  .withTimeout(aziCommandTimeOut));
-
-      /* SOURCE */
-      driver
-          .rightBumper()
-          .onTrue(
-              new Azimuth(
-                      swerveDrive,
-                      driver::getLeftY,
-                      driver::getLeftX,
-                      () -> aziSourceRed,
-                      () -> true,
-                      true,
-                      true)
-                  .withTimeout(aziCommandTimeOut));
-
-      /* FEEDER */
-      driver
-          .povRight()
-          .onTrue(
-              new Azimuth(
-                  swerveDrive,
-                  driver::getLeftY,
-                  driver::getLeftX,
-                  () -> feederRed,
-                  () -> true,
-                  true,
-                  true));
-
-    } else /* BLUE ALLIANCE PRESETS */ {
-
-      /* AMP */
-      driver
-          .a()
-          .onTrue(
-              new Azimuth(
-                      swerveDrive,
-                      driver::getLeftY,
-                      driver::getLeftX,
-                      () -> aziAmpBlue,
-                      () -> true,
-                      true,
-                      true)
-                  .withTimeout(aziCommandTimeOut));
-
-      /* SOURCE */
-      driver
-          .rightBumper()
-          .onTrue(
-              new Azimuth(
-                      swerveDrive,
-                      driver::getLeftY,
-                      driver::getLeftX,
-                      () -> aziSourceBlue,
-                      () -> true,
-                      true,
-                      true)
-                  .withTimeout(aziCommandTimeOut));
-
-      /* FEEDER */
-      driver
-          .povRight()
-          .onTrue(
-              new Azimuth(
-                  swerveDrive,
-                  driver::getLeftY,
-                  driver::getLeftX,
-                  () -> feederBlue,
-                  () -> true,
-                  true,
-                  true));
+    if (Utils.isSimulation()) {
+      drivetrain.seedFieldRelative(new Pose2d(new Translation2d(), Rotation2d.fromDegrees(90)));
     }
-
-    /* SUBWOOFER FRONT */
-    driver
-        .leftBumper()
-        .onTrue(
-            new Azimuth(
-                    swerveDrive,
-                    driver::getLeftY,
-                    driver::getLeftX,
-                    () -> aziSubwooferFront,
-                    () -> true,
-                    true,
-                    true)
-                .withTimeout(aziCommandTimeOut));
-
-    /* SUBWOOFER RIGHT */
-    driver
-        .b()
-        .onTrue(
-            new Azimuth(
-                    swerveDrive,
-                    driver::getLeftY,
-                    driver::getLeftX,
-                    () -> aziSubwooferRight,
-                    () -> true,
-                    true,
-                    true)
-                .withTimeout(aziCommandTimeOut));
-
-    /* SUBWOOFER LEFT */
-    driver
-        .x()
-        .onTrue(
-            new Azimuth(
-                    swerveDrive,
-                    driver::getLeftY,
-                    driver::getLeftX,
-                    () -> aziSubwooferLeft,
-                    () -> true,
-                    true,
-                    true)
-                .withTimeout(aziCommandTimeOut));
-
-    /* CLEANUP */
-    driver
-        .povDown()
-        .onTrue(
-            new Azimuth(
-                    swerveDrive,
-                    driver::getLeftY,
-                    driver::getLeftX,
-                    () -> cleanUp,
-                    () -> true,
-                    true,
-                    true)
-                .withTimeout(aziCommandTimeOut));
+    drivetrain.registerTelemetry(logger::telemeterize);
   }
 
   private void configureShooter() {
@@ -750,9 +579,7 @@ public class RobotContainer {
   }
 
   /* Test Routines */
-  public boolean CANTest() {
-    return swerveDrive.CANTest();
-  }
+
 
   public void runPitTestRoutine() {
     // Command pitRoutine = new PitRoutine(swerveDrive, climb, intake, pivotIntake,
