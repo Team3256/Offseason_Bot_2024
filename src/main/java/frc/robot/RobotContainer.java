@@ -102,7 +102,7 @@ public class RobotContainer {
   private Command zeroClimb;
 
   /* Auto */
-  private SendableChooser<Command> autoChooser;
+//  private SendableChooser<Command> autoChooser;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -291,13 +291,13 @@ public class RobotContainer {
 
     // operator.povLeft().onTrue(cancelCommand);
     // Configure the auto
-    if (FeatureFlags.kSwerveEnabled) {
-      autoChooser = AutoBuilder.buildAutoChooser();
-    } else {
-      autoChooser = new SendableChooser<>();
-    }
-    // Autos
-    SmartDashboard.putData("Auto Chooser", autoChooser);
+//    if (FeatureFlags.kSwerveEnabled) {
+//      autoChooser = AutoBuilder.buildAutoChooser();
+//    } else {
+//      autoChooser = new SendableChooser<>();
+//    }
+//    // Autos
+//    SmartDashboard.putData("Auto Chooser", autoChooser);
   }
 
   private void configurePivotShooter() {
@@ -574,9 +574,9 @@ public class RobotContainer {
     }
   }
 
-  public Command getAutonomousCommand() {
-    return autoChooser.getSelected();
-  }
+//  public Command getAutonomousCommand() {
+//    return autoChooser.getSelected();
+//  }
 
   /* Test Routines */
 
