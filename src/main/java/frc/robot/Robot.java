@@ -11,7 +11,6 @@ import com.pathplanner.lib.commands.FollowPathCommand;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.RobotController;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import java.util.HashMap;
@@ -30,7 +29,6 @@ import org.littletonrobotics.junction.wpilog.WPILOGWriter;
  * project.
  */
 public class Robot extends LoggedRobot {
-
 
   private RobotContainer m_robotContainer;
 
@@ -188,15 +186,16 @@ public class Robot extends LoggedRobot {
 
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
-  public void autonomousInit() {;
-//    m_autonomousCommand = m_robotContainer.getAutonomousCommand();
-//    // m_robotContainer.shootSpeaker();
-//
-//    // schedule the autonomous command (example)
-//    if (m_autonomousCommand != null) {
-//      System.out.println("hehe auto startie " + Timer.getFPGATimestamp());
-//      m_autonomousCommand.schedule();
-//    }
+  public void autonomousInit() {
+    ;
+    //    m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+    //    // m_robotContainer.shootSpeaker();
+    //
+    //    // schedule the autonomous command (example)
+    //    if (m_autonomousCommand != null) {
+    //      System.out.println("hehe auto startie " + Timer.getFPGATimestamp());
+    //      m_autonomousCommand.schedule();
+    //    }
   }
 
   /** This function is called periodically during autonomous. */
@@ -209,9 +208,9 @@ public class Robot extends LoggedRobot {
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove
     // this line or comment it out.
-//    if (m_autonomousCommand != null) {
-//      m_autonomousCommand.cancel();
-//    }
+    //    if (m_autonomousCommand != null) {
+    //      m_autonomousCommand.cancel();
+    //    }
     CommandScheduler.getInstance().cancelAll();
 
     boolean isRedAlliance = true;
