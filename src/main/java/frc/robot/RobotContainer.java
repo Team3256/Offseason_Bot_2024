@@ -76,12 +76,16 @@ public class RobotContainer {
   private boolean isRed;
 
   private final CommandSwerveDrivetrain drivetrain = TunerConstants.DriveTrain;
-  private double MaxSpeed = TunerConstants.kSpeedAt12VoltsMps; // kSpeedAt12VoltsMps desired top speed
-  private double MaxAngularRate = 1.5 * Math.PI;// My drivetrain
+  private double MaxSpeed =
+      TunerConstants.kSpeedAt12VoltsMps; // kSpeedAt12VoltsMps desired top speed
+  private double MaxAngularRate = 1.5 * Math.PI; // My drivetrain
 
-  private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
-          .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
-          .withDriveRequestType(SwerveModule.DriveRequestType.OpenLoopVoltage); // I want field-centric
+  private final SwerveRequest.FieldCentric drive =
+      new SwerveRequest.FieldCentric()
+          .withDeadband(MaxSpeed * 0.1)
+          .withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
+          .withDriveRequestType(
+              SwerveModule.DriveRequestType.OpenLoopVoltage); // I want field-centric
   // driving in open loop
   private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
   private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
@@ -378,15 +382,26 @@ public class RobotContainer {
 
   public void configureSwerve() {
     drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
-            drivetrain.applyRequest(() -> drive.withVelocityX(-driver.getLeftY() * MaxSpeed) // Drive forward with
+        drivetrain.applyRequest(
+            () ->
+                drive
+                    .withVelocityX(-driver.getLeftY() * MaxSpeed) // Drive forward with
                     // negative Y (forward)
-                    .withVelocityY(-driver.getLeftX() * MaxSpeed) // Drive left with negative X (left)
-                    .withRotationalRate(-driver.getRightX() * MaxAngularRate) // Drive counterclockwise with negative X (left)
+                    .withVelocityY(
+                        -driver.getLeftX() * MaxSpeed) // Drive left with negative X (left)
+                    .withRotationalRate(
+                        -driver.getRightX()
+                            * MaxAngularRate) // Drive counterclockwise with negative X (left)
             ));
 
     driver.a().whileTrue(drivetrain.applyRequest(() -> brake));
-    driver.b().whileTrue(drivetrain
-            .applyRequest(() -> point.withModuleDirection(new Rotation2d(-driver.getLeftY(), -driver.getLeftX()))));
+    driver
+        .b()
+        .whileTrue(
+            drivetrain.applyRequest(
+                () ->
+                    point.withModuleDirection(
+                        new Rotation2d(-driver.getLeftY(), -driver.getLeftX()))));
 
     // reset the field-centric heading on left bumper press
     driver.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
@@ -579,7 +594,6 @@ public class RobotContainer {
   }
 
   /* Test Routines */
-
 
   public void runPitTestRoutine() {
     // Command pitRoutine = new PitRoutine(swerveDrive, climb, intake, pivotIntake,
