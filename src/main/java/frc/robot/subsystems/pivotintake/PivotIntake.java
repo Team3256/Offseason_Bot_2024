@@ -7,71 +7,72 @@
 
 package frc.robot.subsystems.pivotintake;
 
-import com.ctre.phoenix6.signals.NeutralModeValue;
-import edu.wpi.first.wpilibj.RobotBase;
-import frc.robot.Constants;
-import frc.robot.utils.SinglePositionSubsystem;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.StartEndCommand;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import org.littletonrobotics.junction.Logger;
 
-public class PivotIntake extends SinglePositionSubsystem {
-  public PivotIntake() {
-    super(
-        PivotIntakeConstants.kUseMotionMagic,
-        PivotIntakeConstants.kCurrentThreshold,
-        PivotIntakeConstants.kStallVelocityThreshold);
-    super.configureRealHardware(
-        PivotIntakeConstants.kPivotMotorID,
-        NeutralModeValue.Brake,
-        PivotIntakeConstants.kS,
-        PivotIntakeConstants.kV,
-        PivotIntakeConstants.kP,
-        PivotIntakeConstants.kI,
-        PivotIntakeConstants.kD,
-        PivotIntakeConstants.motionMagicVelocity,
-        PivotIntakeConstants.motionMagicAcceleration,
-        PivotIntakeConstants.motionMagicJerk,
-        PivotIntakeConstants.enableStatorLimit,
-        PivotIntakeConstants.statorLimit);
-    if (!RobotBase.isReal()) {
-      super.configureSimHardware(
-          PivotIntakeConstants.kNumPivotMotors,
-          PivotIntakeConstants.kPivotMotorGearing,
-          PivotIntakeConstants.jKgMetersSquared,
-          PivotIntakeConstants.kPivotLength,
-          PivotIntakeConstants.kPivotMinAngleDeg,
-          PivotIntakeConstants.kPivotMaxAngleDeg,
-          false);
-    }
+public class PivotIntake extends SubsystemBase {
+
+  private final PivotIntakeIO pivotIntakeIO;
+  private final PivotIntakeIOInputsAutoLogged pivotIntakeIOAutoLogged =
+      new PivotIntakeIOInputsAutoLogged();
+
+  public PivotIntake(PivotIntakeIO pivotIntakeIO) {
+    this.pivotIntakeIO = pivotIntakeIO;
   }
 
   @Override
-  public void off() {
-    super.off();
-    if (Constants.FeatureFlags.kDebugEnabled) {
-      System.out.println("Pivot Intake off");
-    }
+  public void periodic() {
+    pivotIntakeIO.updateInputs(pivotIntakeIOAutoLogged);
+    Logger.processInputs(this.getClass().getName(), pivotIntakeIOAutoLogged);
   }
 
-  @Override
-  public void setOutputVoltage(double voltage) {
-    super.setOutputVoltage(voltage);
-    if (Constants.FeatureFlags.kDebugEnabled) {
-      System.out.println("Pivot Intake voltage set to: " + voltage);
-    }
+  public Command setPosition(double position) {
+    return new StartEndCommand(
+        () -> pivotIntakeIO.setPosition(position * PivotIntakeConstants.kPivotMotorGearing),
+        () -> {},
+        this);
   }
 
-  @Override
-  public void setDegrees(double degrees) {
-    super.setDegrees(degrees);
-    if (Constants.FeatureFlags.kDebugEnabled) {
-      System.out.println("Pivot Intake set to: " + degrees);
-    }
+  public Command setVoltage(double voltage) {
+    return new StartEndCommand(
+        () -> pivotIntakeIO.setVoltage(voltage), () -> pivotIntakeIO.setVoltage(0), this);
   }
 
-  @Override
-  public void zero() {
-    super.zero();
-    if (Constants.FeatureFlags.kDebugEnabled) {
-      System.out.println("[PivotIntake] Setting zero position to: " + getDegrees());
-    }
+  public Command off() {
+    return new StartEndCommand(() -> pivotIntakeIO.off(), () -> {}, this);
+  }
+
+  public Command slamZero() {
+    return new Command() {
+      @Override
+      public void initialize() {
+        pivotIntakeIO.setVoltage(PivotIntakeConstants.kPivotSlamShooterVoltage);
+      }
+
+      @Override
+      public void end(boolean interrupted) {
+        pivotIntakeIO.off();
+        if (!interrupted) {
+          pivotIntakeIO.zero();
+        }
+      }
+
+      @Override
+      public boolean isFinished() {
+        return pivotIntakeIOAutoLogged.pivotIntakeMotorStatorCurrent
+            > PivotIntakeConstants.kPivotSlamStallCurrent;
+      }
+    };
+  }
+
+  public Command slamAndPID() {
+    return new SequentialCommandGroup(this.setPosition(0), this.slamZero());
+  }
+
+  public Command zero() {
+    return new StartEndCommand(() -> pivotIntakeIO.zero(), () -> {}, this);
   }
 }

@@ -7,144 +7,94 @@
 
 package frc.robot.subsystems.intake;
 
-import com.ctre.phoenix6.signals.InvertedValue;
-import com.ctre.phoenix6.signals.NeutralModeValue;
-import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.RobotBase;
-import frc.robot.Constants;
-import frc.robot.utils.DualVelocitySubsystem;
-import org.littletonrobotics.junction.AutoLogOutput;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.StartEndCommand;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.helpers.TimedBoolean;
+import org.littletonrobotics.junction.Logger;
 
-public class Intake extends DualVelocitySubsystem {
-  private DigitalInput beamBreakInput;
+public class Intake extends SubsystemBase {
+  private final IntakeIO intakeIO;
+  private final IntakeIOInputsAutoLogged intakeIOAutoLogged = new IntakeIOInputsAutoLogged();
 
-  public Intake() {
-    super(
-        IntakeConstants.kUseIntakeMotionMagic,
-        IntakeConstants.kUsePassthroughMotionMagic,
-        IntakeConstants.kIntakeCurrentThreshold,
-        IntakeConstants.kIntakeCurrentThreshold,
-        IntakeConstants.kIntakeVelocitySpiking,
-        IntakeConstants.kPassthroughVelocitySpiking);
-    beamBreakInput = new DigitalInput(IntakeConstants.kIntakeBeamBreakDIONew);
-    super.configureRealHardware(
-        IntakeConstants.kIntakeMotorID,
-        IntakeConstants.kPassthroughMotorID,
-        NeutralModeValue.Coast,
-        NeutralModeValue.Brake,
-        IntakeConstants.kIntakeKS,
-        IntakeConstants.kIntakeKV,
-        IntakeConstants.kPassthroughkA,
-        IntakeConstants.kIntakeKP,
-        IntakeConstants.kIntakeKI,
-        IntakeConstants.kIntakeKD,
-        IntakeConstants.kPassthroughkS,
-        IntakeConstants.kPassthroughkV,
-        IntakeConstants.kPassthroughkA,
-        IntakeConstants.kPassthroughkP,
-        IntakeConstants.kPassthroughkI,
-        IntakeConstants.kPassthroughkD,
-        InvertedValue.CounterClockwise_Positive,
-        InvertedValue.Clockwise_Positive);
-    if (!RobotBase.isReal()) {
-      super.configureSimHardware();
-    }
-  }
-
-  public void setOutputVoltageIntake(double voltage) {
-    super.setOutputVoltageUno(voltage);
-  }
-
-  public void setOutputVoltagePassthrough(double voltage) {
-    super.setOutputVoltageDos(voltage);
-  }
-
-  public void setIntakeVelocity(double velocity) {
-    super.setUnoVelocity(velocity);
-    if (Constants.FeatureFlags.kDebugEnabled) {
-      System.out.println("Intake velocity set to: " + velocity);
-    }
-  }
-
-  public void setPassthroughVelocity(double velocity) {
-    super.setDosVelocity(velocity);
-    if (Constants.FeatureFlags.kDebugEnabled) {
-      System.out.println("Intake velocity set to: " + velocity);
-    }
-  }
-
-  @AutoLogOutput
-  public boolean isIntakeMotorCurrentSpiking() {
-    return super.isUnoMotorCurrentSpiking();
-  }
-
-  @AutoLogOutput
-  public boolean isPassthroughMotorCurrentSpiking() {
-    return super.isDosMotorCurrentSpiking();
-  }
-
-  @AutoLogOutput(key = "intake velocity")
-  public double getIntakeVelocity() {
-    return super.getUnoVelocity();
-  }
-
-  @AutoLogOutput(key = "passthrough velocity")
-  public double getPassthroughVelocity() {
-    return super.getDosVelocity();
-  }
-
-  @AutoLogOutput(key = "intake velocity spiking")
-  public boolean isIntakeMotorVelocitySpiking() {
-    return super.isUnoMotorVelocitySpiking();
-  }
-
-  @AutoLogOutput(key = "passthrough velocity spiking")
-  public boolean isPassthroughMotorVelocitySpiking() {
-    return super.isDosMotorVelocitySpiking();
-  }
-
-  @AutoLogOutput
-  public double getIntakeMotorVoltage() {
-    return super.getUnoMotorVoltage();
-  }
-
-  @AutoLogOutput
-  public double getIntakeCurrent() {
-    return super.getUnoCurrent();
-  }
-
-  @AutoLogOutput
-  public double getPassthroughMotorVoltage() {
-    return super.getDosMotorVoltage();
-  }
-
-  @AutoLogOutput
-  public double getPassthroughCurrent() {
-    return super.getDosCurrent();
-  }
-
-  public void off() {
-    super.off();
-    if (Constants.FeatureFlags.kDebugEnabled) {
-      System.out.println("Intake off");
-    }
-  }
-
-  @AutoLogOutput
-  public boolean isBeamBroken() {
-    return !beamBreakInput.get();
+  public Intake(IntakeIO intakeIO) {
+    this.intakeIO = intakeIO;
   }
 
   @Override
   public void periodic() {
-    // System.out.println("TOF DISTANCE: " + getTOFDistance());
+    intakeIO.updateInputs(intakeIOAutoLogged);
+    Logger.processInputs(this.getClass().getName(), intakeIOAutoLogged);
   }
 
-  public void intakeIn() {
-    setIntakeVelocity(IntakeConstants.kIntakeNoteRPM / 60);
+  public Command setVoltage(double voltage, double passthroughVoltage) {
+    return new StartEndCommand(
+        () -> {
+          intakeIO.setIntakeVoltage(voltage);
+          intakeIO.setPassthroughVoltage(passthroughVoltage);
+        },
+        () -> intakeIO.off(),
+        this);
   }
 
-  public void intakeOut() {
-    setIntakeVelocity(IntakeConstants.kOuttakeNoteRPM / 60);
+  public Command setVelocity(double velocity, double passthroughVelocity) {
+    return new StartEndCommand(
+        () -> {
+          intakeIO.setIntakeVelocity(velocity);
+          intakeIO.setPassthroughVelocity(passthroughVelocity);
+        },
+        () -> intakeIO.off(),
+        this);
+  }
+
+  public Command setIntakeVoltage(double voltage) {
+    return new StartEndCommand(
+        () -> intakeIO.setIntakeVoltage(voltage), () -> intakeIO.off(), this);
+  }
+
+  public Command setIntakeVelocity(double velocity) {
+    return new StartEndCommand(
+        () -> intakeIO.setIntakeVelocity(velocity), () -> intakeIO.off(), this);
+  }
+
+  public Command setPassthroughVoltage(double voltage) {
+    return new StartEndCommand(
+        () -> intakeIO.setPassthroughVoltage(voltage), () -> intakeIO.off(), this);
+  }
+
+  public Command setPassthroughVelocity(double velocity) {
+    return new StartEndCommand(
+        () -> intakeIO.setPassthroughVelocity(velocity), () -> intakeIO.off(), this);
+  }
+
+  public Command off() {
+    return new StartEndCommand(() -> intakeIO.off(), () -> {}, this);
+  }
+
+  public Command intakeIn() {
+    return new Command() {
+      TimedBoolean beamBreak =
+          new TimedBoolean(intakeIO::isBeamBroken, IntakeConstants.kBeamBreakDelayTime);
+
+      @Override
+      public void initialize() {
+        intakeIO.setIntakeVoltage(IntakeConstants.kIntakeIntakeVoltage);
+        intakeIO.setPassthroughVoltage(IntakeConstants.kPassthroughIntakeVoltage);
+      }
+
+      @Override
+      public void execute() {
+        beamBreak.update();
+      }
+
+      @Override
+      public boolean isFinished() {
+        return beamBreak.hasBeenTrueForThreshold();
+      }
+    };
+  }
+
+  public boolean isBeamBroken() {
+    return intakeIO.isBeamBroken();
   }
 }

@@ -7,6 +7,9 @@
 
 package frc.robot.subsystems.pivotintake;
 
+import com.ctre.phoenix6.configs.*;
+import com.ctre.phoenix6.signals.InvertedValue;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 
 public final class PivotIntakeConstants {
@@ -14,11 +17,6 @@ public final class PivotIntakeConstants {
   public static final int kPivotMotorID = 34;
 
   /* PID */
-  public static final double kS = 0;
-  public static final double kV = 0.05;
-  public static final double kP = 1;
-  public static final double kI = 0;
-  public static final double kD = 0;
   public static final TrapezoidProfile.Constraints kPivotProfileContraints =
       new TrapezoidProfile.Constraints(16, 16);
 
@@ -29,7 +27,7 @@ public final class PivotIntakeConstants {
 
   /* Physics/geometry */
   public static final double kPivotMotorGearing = 36; // 22 by 1
-  public static final double kPivotGroundAngleDeg = -5.6 / 16;
+  public static final double kPivotGroundPos = -5.6 / 16;
   public static final double kPivotLength = 0.2;
   public static final double kPivotMinAngleDeg = -90;
   public static final double kPivotMaxAngleDeg = 50;
@@ -40,24 +38,27 @@ public final class PivotIntakeConstants {
   public static final double kPivotSlamShooterVoltage = 4;
 
   /* Misc */
-  public static final int kNumPivotMotors = 1;
   public static final boolean kUseFOC = false;
   public static boolean kUseMotionMagic = false;
-  public static double motionMagicVelocity = 10;
-  public static double motionMagicAcceleration = 20;
-  public static double motionMagicJerk = 100;
-  public static boolean enableStatorLimit = true;
-  public static double statorLimit = 60;
 
-  /* Current Limits */
-  public static final class CurrentLimits {
-    public static final boolean kSetCurrentLimits = false;
-    public static final double kCurrentLimit = 10;
-    public static final double kCurrentThreshold = 40;
-    public static final double kCurrentThresholdTime = 0.1;
-    public static final boolean kEnableCurrentLimit = true;
+  public static double updateFrequency = 50.0;
 
-    public static final boolean kEnableStatorLimits = false;
-    public static final double kStatorLimit = 10;
-  }
+  protected static double kPivotSlamStallCurrent = 10.0;
+
+  public static final TalonFXConfiguration motorConfig =
+      new TalonFXConfiguration()
+          .withSlot0(new Slot0Configs().withKS(0).withKV(0.05).withKP(1).withKI(0).withKD(0))
+          .withMotorOutput(
+              new MotorOutputConfigs()
+                  .withNeutralMode(NeutralModeValue.Brake)
+                  .withInverted(InvertedValue.Clockwise_Positive))
+          .withMotionMagic(
+              new MotionMagicConfigs()
+                  .withMotionMagicAcceleration(20)
+                  .withMotionMagicCruiseVelocity(10)
+                  .withMotionMagicJerk(100))
+          .withCurrentLimits(
+              new CurrentLimitsConfigs()
+                  .withStatorCurrentLimitEnable(true)
+                  .withStatorCurrentLimit(60));
 }

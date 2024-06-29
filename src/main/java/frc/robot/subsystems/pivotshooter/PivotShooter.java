@@ -7,95 +7,94 @@
 
 package frc.robot.subsystems.pivotshooter;
 
-import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
-import edu.wpi.first.wpilibj.RobotBase;
-import frc.robot.Constants;
-import frc.robot.utils.SinglePositionSubsystem;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.StartEndCommand;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.subsystems.vision.Vision;
+import org.littletonrobotics.junction.Logger;
 
-public class PivotShooter extends SinglePositionSubsystem {
-  public InterpolatingDoubleTreeMap pivotMotorData = new InterpolatingDoubleTreeMap();
-  public InterpolatingDoubleTreeMap pivotMotorDataNotGlobalPose = new InterpolatingDoubleTreeMap();
-  public InterpolatingDoubleTreeMap pivotMotorDataNotGlobalPose2 =
-      new InterpolatingDoubleTreeMap(); // for second april
+public class PivotShooter extends SubsystemBase {
 
-  public PivotShooter() {
-    super(
-        PivotShooterConstants.kUseMotionMagic,
-        PivotShooterConstants.kCurrentThreshold,
-        PivotShooterConstants.kStallVelocityThreshold);
-    super.configureRealHardware(
-        PivotShooterConstants.kPivotMotorID,
-        NeutralModeValue.Brake,
-        PivotShooterConstants.kS,
-        PivotShooterConstants.kV,
-        PivotShooterConstants.kP,
-        PivotShooterConstants.kI,
-        PivotShooterConstants.kD,
-        PivotShooterConstants.motionMagicVelocity,
-        PivotShooterConstants.motionMagicAcceleration,
-        PivotShooterConstants.motionMagicJerk,
-        PivotShooterConstants.enableStatorLimit,
-        PivotShooterConstants.statorLimit);
-    if (!RobotBase.isReal()) {
-      super.configureSimHardware(
-          PivotShooterConstants.kNumPivotMotors,
-          PivotShooterConstants.kPivotMotorGearing,
-          PivotShooterConstants.jKgMetersSquared,
-          PivotShooterConstants.kPivotLength,
-          PivotShooterConstants.kPivotMinAngleDeg,
-          PivotShooterConstants.kPivotMaxAngleDeg,
-          false);
-    }
-    setupPivotShooterData();
-  }
+  private final PivotShooterIO pivotShooterIO;
+  private final PivotShooterIOInputsAutoLogged pivotShooterIOAutoLogged =
+      new PivotShooterIOInputsAutoLogged();
 
-  private void setupPivotShooterData() {
+  private final InterpolatingDoubleTreeMap aprilTagMap =
+      new InterpolatingDoubleTreeMap() {
+        {
+          put(0.0, 0.0);
+          put(1.0, 1.0);
+        }
+      };
 
-    // pivotMotorData.put(0.051, kSubWooferPreset);
-    // pivotMotorData.put(1.4, 6.25 / 138.333);
-    // pivotMotorData.put(0.945, 5.8 / 138.333);
-    // pivotMotorData.put(1.69, 6.5 / 138.333);
-    // pivotMotorData.put(0.485, 5.25 / 138.333);
-    pivotMotorData.put(19.771, PivotShooterConstants.kSubWooferPreset);
-    // pivotMotorData.put(3.19, 5.6/138.333); // DO NOT use to interpolate for now
-    // distance to speaker and then angle
-  }
-
-  private void setupPivotShooterDataNotGlobalPose() {
-    pivotMotorDataNotGlobalPose.put(69.2, 2.1); // distance to speaker and then angle
-    pivotMotorDataNotGlobalPose2.put(69.1, 69.2); // distance to speaker and then angle
+  public PivotShooter(PivotShooterIO pivotShooterIO) {
+    this.pivotShooterIO = pivotShooterIO;
   }
 
   @Override
-  public void off() {
-    super.off();
-    if (Constants.FeatureFlags.kDebugEnabled) {
-      System.out.println("Pivot off");
-    }
+  public void periodic() {
+    pivotShooterIO.updateInputs(pivotShooterIOAutoLogged);
+    Logger.processInputs(this.getClass().getName(), pivotShooterIOAutoLogged);
   }
 
-  @Override
-  public void setOutputVoltage(double voltage) {
-    super.setOutputVoltage(voltage);
-    if (Constants.FeatureFlags.kDebugEnabled) {
-      System.out.println("Pivot Shooter voltage set to: " + voltage);
-    }
+  public Command setPosition(double position) {
+    return new StartEndCommand(
+        () -> pivotShooterIO.setPosition(position * PivotShooterConstants.kPivotMotorGearing),
+        () -> {},
+        this);
   }
 
-  @Override
-  public void setDegrees(double degrees) {
-    super.setDegrees(degrees);
-    if (Constants.FeatureFlags.kDebugEnabled) {
-      System.out.println("Pivot Shooter set to: " + degrees);
-    }
+  public Command setVoltage(double voltage) {
+    return new StartEndCommand(
+        () -> pivotShooterIO.setVoltage(voltage), () -> pivotShooterIO.setVoltage(0), this);
   }
 
-  @Override
-  public void zero() {
-    super.zero();
-    if (Constants.FeatureFlags.kDebugEnabled) {
-      System.out.println("[PivotShooter] Setting zero position to: " + getDegrees());
-    }
+  public Command off() {
+    return new StartEndCommand(() -> pivotShooterIO.off(), () -> {}, this);
+  }
+
+  public Command slamZero() {
+    return new Command() {
+      @Override
+      public void initialize() {
+        pivotShooterIO.setVoltage(PivotShooterConstants.kPivotSlamShooterVoltage);
+      }
+
+      @Override
+      public void end(boolean interrupted) {
+        pivotShooterIO.off();
+        if (!interrupted) {
+          pivotShooterIO.zero();
+        }
+      }
+
+      @Override
+      public boolean isFinished() {
+        return pivotShooterIOAutoLogged.pivotShooterMotorStatorCurrent
+            > PivotShooterConstants.kPivotSlamStallCurrent;
+      }
+    };
+  }
+
+  public Command slamAndPID() {
+    return new SequentialCommandGroup(this.setPosition(0), this.slamZero());
+  }
+
+  public Command zero() {
+    return new StartEndCommand(() -> pivotShooterIO.zero(), () -> {}, this);
+  }
+
+  public Command bruh(Vision vision) {
+    return new RunCommand(
+        () ->
+            pivotShooterIO.setPosition(
+                aprilTagMap.get(
+                        (vision.getLastCenterLimelightY() - vision.getLastLastCenterLimelightY())
+                            + vision.getCenterLimelightY())
+                    * PivotShooterConstants.kPivotMotorGearing),
+        this);
   }
 }

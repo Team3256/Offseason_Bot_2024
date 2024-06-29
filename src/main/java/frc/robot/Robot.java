@@ -30,7 +30,6 @@ import org.littletonrobotics.junction.wpilog.WPILOGWriter;
  * project.
  */
 public class Robot extends LoggedRobot {
-  public static final CTREConfigs ctreConfigs = new CTREConfigs();
 
   private Command m_autonomousCommand;
 
@@ -102,7 +101,7 @@ public class Robot extends LoggedRobot {
           String name = command.getName();
           int count = commandCounts.getOrDefault(name, 0) + (active ? 1 : -1);
           commandCounts.put(name, count);
-          // TODO: Switch this to WBLogger
+
           Logger.recordOutput(
               "CommandsUnique/" + name + "_" + Integer.toHexString(command.hashCode()), active);
           Logger.recordOutput("CommandsAll/" + name, count > 0);
@@ -163,9 +162,6 @@ public class Robot extends LoggedRobot {
   @Override
   public void disabledInit() {
     if (Constants.kDisableSubsystemsOnDisableInit) {
-      if (m_robotContainer.swerveDrive != null) {
-        m_robotContainer.swerveDrive.off();
-      }
       if (m_robotContainer.climb != null) {
         m_robotContainer.climb.off();
       }
@@ -194,7 +190,7 @@ public class Robot extends LoggedRobot {
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
-    m_robotContainer.swerveDrive.resetModulesToAbsolute();
+    ;
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
     // m_robotContainer.shootSpeaker();
 
@@ -218,7 +214,6 @@ public class Robot extends LoggedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
-    m_robotContainer.swerveDrive.resetModulesToAbsolute();
     CommandScheduler.getInstance().cancelAll();
 
     boolean isRedAlliance = true;

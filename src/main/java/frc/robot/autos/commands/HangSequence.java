@@ -15,8 +15,6 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants;
 import frc.robot.helpers.DebugCommandBase;
 import frc.robot.subsystems.climb.Climb;
-import frc.robot.subsystems.climb.commands.DehookClimb;
-import frc.robot.subsystems.climb.commands.DownClimb;
 import java.util.LinkedList;
 
 public class HangSequence extends DebugCommandBase {
@@ -43,10 +41,10 @@ public class HangSequence extends DebugCommandBase {
             });
 
     if (Constants.FeatureFlags.kClimbEnabled) {
-      Command un_hooker = new DehookClimb(climbSubsystem);
-      Command grave = new DownClimb(climbSubsystem);
+      // Command un_hooker = new DehookClimb(climbSubsystem);
+      Command grave = climbSubsystem.retractClimber(); // we dont use this so idc that i broke it
 
-      CommandList.add(un_hooker);
+      // CommandList.add(un_hooker);
       CommandList.add(grave);
     }
 
