@@ -10,6 +10,7 @@ package frc.robot;
 import static frc.robot.subsystems.pivotintake.PivotIntakeConstants.kPivotGroundPos;
 import static frc.robot.subsystems.pivotshooter.PivotShooterConstants.*;
 
+import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
@@ -23,6 +24,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.*;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants.FeatureFlags;
 import frc.robot.autos.commands.IntakeSequence;
 import frc.robot.helpers.XboxStalker;
@@ -62,6 +64,7 @@ public class RobotContainer {
   /* Controllers */
   private final CommandXboxController driver = new CommandXboxController(0);
   private final CommandXboxController operator = new CommandXboxController(1);
+  private final CommandXboxController test = new CommandXboxController(2);
 
   /* Drive Controls */
   private final int translationAxis = XboxController.Axis.kLeftY.value;
@@ -123,6 +126,12 @@ public class RobotContainer {
 
     if (FeatureFlags.kPivotIntakeEnabled) {
       configurePivotIntake();
+      test.leftBumper().onTrue(Commands.runOnce(SignalLogger::start));
+      test.rightBumper().onTrue(Commands.runOnce(SignalLogger::stop));
+      test.y().whileTrue(pivotIntake.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
+      test.a().whileTrue(pivotIntake.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
+      test.b().whileTrue(pivotIntake.sysIdDynamic(SysIdRoutine.Direction.kForward));
+      test.x().whileTrue(pivotIntake.sysIdDynamic(SysIdRoutine.Direction.kReverse));
     }
     if (FeatureFlags.kIntakeEnabled) {
       configureIntake();

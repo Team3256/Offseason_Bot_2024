@@ -7,9 +7,12 @@
 
 package frc.robot.subsystems.pivotintake;
 
+import com.ctre.phoenix6.controls.VoltageOut;
+import frc.robot.drivers.MonitoredTalonFX;
 import org.littletonrobotics.junction.AutoLog;
 
 public interface PivotIntakeIO {
+
   @AutoLog
   public static class PivotIntakeIOInputs {
     public double pivotIntakeMotorVoltage = 0.0;
@@ -25,6 +28,11 @@ public interface PivotIntakeIO {
   public default void updateInputs(PivotIntakeIOInputs inputs) {}
 
   public default void setPosition(double position) {}
+
+  public default MonitoredTalonFX getMotor() {return new MonitoredTalonFX(0);}
+
+  public default VoltageOut getVoltageRequest() {return new VoltageOut(0);}
+
 
   public default void setVoltage(double voltage) {}
 
