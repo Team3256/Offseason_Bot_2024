@@ -50,10 +50,10 @@ import frc.robot.subsystems.swerve.CommandSwerveDrivetrain;
 import frc.robot.subsystems.swerve.SwerveConstants;
 import frc.robot.subsystems.swerve.SwerveTelemetry;
 import frc.robot.subsystems.swerve.TunerConstants;
+import frc.robot.subsystems.swerve.requests.SwerveFieldCentricFacingAngle;
 import frc.robot.subsystems.vision.Vision;
 import frc.robot.subsystems.vision.VisionIOLimelight;
 import frc.robot.utils.CommandQueue;
-import frc.robot.utils.SwerveFieldCentricFacingAngle;
 import frc.robot.utils.Util;
 import io.github.oblarg.oblog.annotations.Config;
 

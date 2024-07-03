@@ -5,7 +5,7 @@
 // license that can be found in the LICENSE file at
 // the root directory of this project.
 
-package frc.robot.utils;
+package frc.robot.subsystems.swerve.requests;
 
 import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule;
@@ -151,6 +151,7 @@ public class SwerveFieldCentricFacingAngle implements SwerveRequest {
     this.Deadband = deadband;
     return this;
   }
+
   /**
    * Sets the rotational deadband of the request.
    *
@@ -161,6 +162,7 @@ public class SwerveFieldCentricFacingAngle implements SwerveRequest {
     this.RotationalDeadband = rotationalDeadband;
     return this;
   }
+
   /**
    * Sets the center of rotation of the request
    *
@@ -183,6 +185,7 @@ public class SwerveFieldCentricFacingAngle implements SwerveRequest {
     this.DriveRequestType = driveRequestType;
     return this;
   }
+
   /**
    * Sets the type of control request to use for the steer motor.
    *
