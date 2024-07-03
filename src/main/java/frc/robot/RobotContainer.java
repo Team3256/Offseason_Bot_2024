@@ -49,12 +49,13 @@ import frc.robot.subsystems.shooter.ShooterConstants;
 import frc.robot.subsystems.shooter.ShooterIOTalonFX;
 import frc.robot.subsystems.swerve.CommandSwerveDrivetrain;
 import frc.robot.subsystems.swerve.SwerveConstants;
-import frc.robot.subsystems.swerve.Telemetry;
+import frc.robot.subsystems.swerve.SwerveTelemetry;
 import frc.robot.subsystems.swerve.TunerConstants;
 import frc.robot.subsystems.vision.Vision;
 import frc.robot.subsystems.vision.VisionIOLimelight;
 import frc.robot.utils.CommandQueue;
 import frc.robot.utils.SwerveFieldCentricFacingAngle;
+import frc.robot.utils.Util;
 import io.github.oblarg.oblog.annotations.Config;
 
 /**
@@ -407,7 +408,7 @@ public class RobotContainer {
                     .withVelocityY(
                         -driver.getLeftX() * MaxSpeed) // Drive left with negative X (left)
                     .withTargetDirection(
-                            new Rotation2d(-driver.getRightY(), -driver.getRightX()))
+                            Rotation2d.fromDegrees(Util.snapToZone(SwerveConstants.azimuthAngles, new Rotation2d(-driver.getRightY(), -driver.getRightX()).getDegrees(), SwerveConstants.azimuthEpsilon)))
             ));
     driver.rightTrigger().whileTrue(
             drivetrain.applyRequest(
