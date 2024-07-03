@@ -35,16 +35,15 @@ public class Shooter extends SubsystemBase {
   }
 
   public Command setVelocity(double velocity, double followerVelocity) {
-    return new StartEndCommand(
+    return this.run(
         () -> {
           shooterIO.setShooterVelocity(velocity);
           shooterIO.setShooterFollowerVelocity(followerVelocity);
-        },
-        () -> shooterIO.off(),
-        this);
+        }).finallyDo(shooterIO::off);
   }
 
   public Command off() {
-    return new StartEndCommand(() -> shooterIO.off(), () -> {}, this);
+    return this.runOnce(shooterIO::off);
+
   }
 }
