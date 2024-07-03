@@ -121,8 +121,8 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
             this::seedFieldRelative,  // Consumer for seeding pose against auto
             this::getCurrentRobotChassisSpeeds,
             (speeds)->this.setControl(AutoRequest.withSpeeds(speeds)), // Consumer of ChassisSpeeds to drive the robot
-            new HolonomicPathFollowerConfig(new PIDConstants(10, 0, 0),
-                    new PIDConstants(10, 0, 0),
+            new HolonomicPathFollowerConfig(SwerveConstants.autoTranslationalController,
+                    SwerveConstants.autoRotationalController,
                     TunerConstants.kSpeedAt12VoltsMps,
                     driveBaseRadius,
                     new ReplanningConfig()),
@@ -169,5 +169,21 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
               updateSimState(deltaTime, RobotController.getBatteryVoltage());
             });
     m_simNotifier.startPeriodic(kSimLoopPeriod);
+  }
+  @Override
+  public void periodic() {
+    /* Periodically try to apply the operator perspective */
+    /* If we haven't applied the operator perspective before, then we should apply it regardless of DS state */
+    /* This allows us to correct the perspective in case the robot code restarts mid-match */
+    /* Otherwise, only check and apply the operator perspective if the DS is disabled */
+    /* This ensures driving behavior doesn't change until an explicit disable event occurs during testing*/
+    if (!hasAppliedOperatorPerspective || DriverStation.isDisabled()) {
+      DriverStation.getAlliance().ifPresent((allianceColor) -> {
+        this.setOperatorPerspectiveForward(
+                allianceColor == DriverStation.Alliance.Red ? RedAlliancePerspectiveRotation
+                        : BlueAlliancePerspectiveRotation);
+        hasAppliedOperatorPerspective = true;
+      });
+    }
   }
 }
