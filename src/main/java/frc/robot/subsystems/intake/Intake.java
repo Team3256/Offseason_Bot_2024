@@ -8,17 +8,16 @@
 package frc.robot.subsystems.intake;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.helpers.TimedBoolean;
 import org.littletonrobotics.junction.Logger;
 
 public class Intake extends SubsystemBase {
   private final IntakeIO intakeIO;
   private final IntakeIOInputsAutoLogged intakeIOAutoLogged = new IntakeIOInputsAutoLogged();
 
-  private final Trigger debouncedBeamBreak = new Trigger(this::isBeamBroken).debounce(0.1);;
+  private final Trigger debouncedBeamBreak = new Trigger(this::isBeamBroken).debounce(0.1);
+  ;
 
   public Intake(IntakeIO intakeIO) {
     this.intakeIO = intakeIO;
@@ -31,18 +30,21 @@ public class Intake extends SubsystemBase {
   }
 
   public Command setVoltage(double voltage, double passthroughVoltage) {
-    return this.run(()->{
-      intakeIO.setIntakeVoltage(voltage);
-        intakeIO.setPassthroughVoltage(passthroughVoltage);
-    }).finallyDo(intakeIO::off);
+    return this.run(
+            () -> {
+              intakeIO.setIntakeVoltage(voltage);
+              intakeIO.setPassthroughVoltage(passthroughVoltage);
+            })
+        .finallyDo(intakeIO::off);
   }
 
   public Command setVelocity(double velocity, double passthroughVelocity) {
     return this.run(
-        () -> {
-          intakeIO.setIntakeVelocity(velocity);
-          intakeIO.setPassthroughVelocity(passthroughVelocity);
-        }).finallyDo(intakeIO::off);
+            () -> {
+              intakeIO.setIntakeVelocity(velocity);
+              intakeIO.setPassthroughVelocity(passthroughVelocity);
+            })
+        .finallyDo(intakeIO::off);
   }
 
   public Command setIntakeVoltage(double voltage) {
@@ -66,10 +68,13 @@ public class Intake extends SubsystemBase {
   }
 
   public Command intakeIn() {
-    return this.run(()->{
-      intakeIO.setIntakeVoltage(IntakeConstants.kIntakeIntakeVoltage);
-      intakeIO.setPassthroughVoltage(IntakeConstants.kPassthroughIntakeVoltage);
-    }).until(debouncedBeamBreak).andThen(this.off());
+    return this.run(
+            () -> {
+              intakeIO.setIntakeVoltage(IntakeConstants.kIntakeIntakeVoltage);
+              intakeIO.setPassthroughVoltage(IntakeConstants.kPassthroughIntakeVoltage);
+            })
+        .until(debouncedBeamBreak)
+        .andThen(this.off());
   }
 
   public boolean isBeamBroken() {

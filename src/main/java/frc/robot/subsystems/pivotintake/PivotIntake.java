@@ -39,7 +39,12 @@ public class PivotIntake extends SubsystemBase {
   }
 
   public Command slamZero() {
-    return this.run(()->pivotIntakeIO.setVoltage(PivotIntakeConstants.kPivotSlamShooterVoltage)).until(()->pivotIntakeIOAutoLogged.pivotIntakeMotorStatorCurrent > PivotIntakeConstants.kPivotSlamStallCurrent).andThen(this.zero());
+    return this.run(() -> pivotIntakeIO.setVoltage(PivotIntakeConstants.kPivotSlamShooterVoltage))
+        .until(
+            () ->
+                pivotIntakeIOAutoLogged.pivotIntakeMotorStatorCurrent
+                    > PivotIntakeConstants.kPivotSlamStallCurrent)
+        .andThen(this.zero());
   }
 
   public Command slamAndPID() {

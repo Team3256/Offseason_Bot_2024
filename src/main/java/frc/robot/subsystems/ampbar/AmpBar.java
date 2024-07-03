@@ -8,7 +8,6 @@
 package frc.robot.subsystems.ampbar;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.littletonrobotics.junction.Logger;
 
@@ -32,11 +31,15 @@ public class AmpBar extends SubsystemBase {
   }
 
   public Command setAmpPosition() {
-    return this.run(()->ampBarIO.setVoltage(AmpBarConstants.kAmpBarAmpVoltage)).until(ampBarIO::isCurrentSpiking).andThen(this.off());
+    return this.run(() -> ampBarIO.setVoltage(AmpBarConstants.kAmpBarAmpVoltage))
+        .until(ampBarIO::isCurrentSpiking)
+        .andThen(this.off());
   }
 
   public Command setStowPosition() {
-    return this.run(()->ampBarIO.setVoltage(AmpBarConstants.kAmpBarStowVoltage)).until(ampBarIO::isCurrentSpiking).andThen(this.off());
+    return this.run(() -> ampBarIO.setVoltage(AmpBarConstants.kAmpBarStowVoltage))
+        .until(ampBarIO::isCurrentSpiking)
+        .andThen(this.off());
   }
 
   public Command off() {

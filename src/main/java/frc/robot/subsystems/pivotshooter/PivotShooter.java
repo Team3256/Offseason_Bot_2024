@@ -50,8 +50,12 @@ public class PivotShooter extends SubsystemBase {
   }
 
   public Command slamZero() {
-    return this.run(()->pivotShooterIO.setVoltage(PivotShooterConstants.kPivotSlamShooterVoltage)).until(()->pivotShooterIOAutoLogged.pivotShooterMotorStatorCurrent
-            > PivotShooterConstants.kPivotSlamStallCurrent).andThen(this.zero());
+    return this.run(() -> pivotShooterIO.setVoltage(PivotShooterConstants.kPivotSlamShooterVoltage))
+        .until(
+            () ->
+                pivotShooterIOAutoLogged.pivotShooterMotorStatorCurrent
+                    > PivotShooterConstants.kPivotSlamStallCurrent)
+        .andThen(this.zero());
   }
 
   public Command slamAndPID() {
@@ -64,12 +68,13 @@ public class PivotShooter extends SubsystemBase {
   }
 
   public Command bruh(Vision vision) {
-    return this.run(() -> {
-      pivotShooterIO.setPosition(
+    return this.run(
+        () -> {
+          pivotShooterIO.setPosition(
               aprilTagMap.get(
                       (vision.getLastCenterLimelightY() - vision.getLastLastCenterLimelightY())
-                              + vision.getCenterLimelightY())
-                      * PivotShooterConstants.kPivotMotorGearing);
-    });
+                          + vision.getCenterLimelightY())
+                  * PivotShooterConstants.kPivotMotorGearing);
+        });
   }
 }
