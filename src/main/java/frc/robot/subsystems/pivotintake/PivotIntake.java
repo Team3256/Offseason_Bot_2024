@@ -7,17 +7,15 @@
 
 package frc.robot.subsystems.pivotintake;
 
+import static edu.wpi.first.units.Units.*;
+
 import com.ctre.phoenix6.SignalLogger;
-import edu.wpi.first.units.Time;
-import edu.wpi.first.units.Velocity;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import org.littletonrobotics.junction.Logger;
-
-import static edu.wpi.first.units.Units.*;
 
 public class PivotIntake extends SubsystemBase {
 
@@ -29,20 +27,21 @@ public class PivotIntake extends SubsystemBase {
   public PivotIntake(PivotIntakeIO pivotIntakeIO) {
 
     this.pivotIntakeIO = pivotIntakeIO;
-    m_sysIdRoutine = new SysIdRoutine(
+    m_sysIdRoutine =
+        new SysIdRoutine(
             new SysIdRoutine.Config(
-                    Volts.of(0.2).per(Seconds.of(1)),        // Use default ramp rate (1 V/s)
-                    Volts.of(6), // Reduce dynamic step voltage to 4 to prevent brownout
-                    null,        // Use default timeout (10 s)
-                    // Log state with Phoenix SignalLogger class
-                    (state) -> SignalLogger.writeString("state", state.toString())
-            ),
+                Volts.of(0.2).per(Seconds.of(1)), // Use default ramp rate (1 V/s)
+                Volts.of(6), // Reduce dynamic step voltage to 4 to prevent brownout
+                null, // Use default timeout (10 s)
+                // Log state with Phoenix SignalLogger class
+                (state) -> SignalLogger.writeString("state", state.toString())),
             new SysIdRoutine.Mechanism(
-                    (volts) -> pivotIntakeIO.getMotor().setControl(pivotIntakeIO.getVoltageRequest().withOutput(volts.in(Volts))),
-                    null,
-                    this
-            )
-    );
+                (volts) ->
+                    pivotIntakeIO
+                        .getMotor()
+                        .setControl(pivotIntakeIO.getVoltageRequest().withOutput(volts.in(Volts))),
+                null,
+                this));
   }
 
   @Override
@@ -89,6 +88,7 @@ public class PivotIntake extends SubsystemBase {
       }
     };
   }
+
   public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {
     return m_sysIdRoutine.quasistatic(direction);
   }

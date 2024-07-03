@@ -39,9 +39,13 @@ public interface ShooterIO {
 
   public default void setShooterFollowerVelocity(double velocity) {}
 
-  public default MonitoredTalonFX getMotor() {return new MonitoredTalonFX(0);}
+  public default MonitoredTalonFX getMotor() {
+    return new MonitoredTalonFX(0);
+  }
 
-  public default VoltageOut getVoltageRequest() {return new VoltageOut(0);}
+  public default VoltageOut getVoltageRequest() {
+    return new VoltageOut(0);
+  }
 
   public default void off() {}
 }

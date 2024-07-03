@@ -30,9 +30,13 @@ public interface PivotShooterIO {
 
   public default void setVoltage(double voltage) {}
 
-  public default MonitoredTalonFX getMotor() {return new MonitoredTalonFX(0);}
+  public default MonitoredTalonFX getMotor() {
+    return new MonitoredTalonFX(0);
+  }
 
-  public default VoltageOut getVoltageRequest() {return new VoltageOut(0);}
+  public default VoltageOut getVoltageRequest() {
+    return new VoltageOut(0);
+  }
 
   public default void off() {}
 

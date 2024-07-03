@@ -87,7 +87,8 @@ public class Util {
     }
     return closest;
   }
-  public static double snapToZone(final List<Double> list, double value, double epsilon){
+
+  public static double snapToZone(final List<Double> list, double value, double epsilon) {
     double closest = Double.MAX_VALUE;
     double minDiff = Double.MAX_VALUE;
 
@@ -98,7 +99,7 @@ public class Util {
         closest = value_in;
       }
     }
-    if (minDiff < epsilon){
+    if (minDiff < epsilon) {
       return closest;
     }
     return value;

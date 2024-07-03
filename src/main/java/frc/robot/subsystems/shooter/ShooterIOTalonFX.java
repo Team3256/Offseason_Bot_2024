@@ -144,6 +144,7 @@ public class ShooterIOTalonFX implements ShooterIO {
     shooterMotor.setControl(new NeutralOut());
     shooterMotorFollower.setControl(new NeutralOut());
   }
+
   @Override
   public MonitoredTalonFX getMotor() {
     return shooterMotor;

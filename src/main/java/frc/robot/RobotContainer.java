@@ -14,7 +14,6 @@ import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
-import com.ctre.phoenix6.mechanisms.swerve.utility.PhoenixPIDController;
 import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -92,12 +91,11 @@ public class RobotContainer {
           .withDriveRequestType(
               SwerveModule.DriveRequestType.OpenLoopVoltage); // I want field-centric
   private SwerveFieldCentricFacingAngle azi =
-          new SwerveFieldCentricFacingAngle()
-                  .withDeadband(MaxSpeed*.1)
-                  .withRotationalDeadband(MaxAngularRate*.1)
-                  .withHeadingController(SwerveConstants.azimuthController)
-                  .withDriveRequestType(
-                          SwerveModule.DriveRequestType.OpenLoopVoltage);
+      new SwerveFieldCentricFacingAngle()
+          .withDeadband(MaxSpeed * .1)
+          .withRotationalDeadband(MaxAngularRate * .1)
+          .withHeadingController(SwerveConstants.azimuthController)
+          .withDriveRequestType(SwerveModule.DriveRequestType.OpenLoopVoltage);
   // driving in open loop
   private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
   private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
@@ -402,38 +400,45 @@ public class RobotContainer {
     drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
         drivetrain.applyRequest(
             () ->
-                azi
-                    .withVelocityX(-driver.getLeftY() * MaxSpeed) // Drive forward with
+                azi.withVelocityX(-driver.getLeftY() * MaxSpeed) // Drive forward with
                     // negative Y (forward)
                     .withVelocityY(
                         -driver.getLeftX() * MaxSpeed) // Drive left with negative X (left)
                     .withTargetDirection(
-                            Rotation2d.fromDegrees(Util.snapToZone(SwerveConstants.azimuthAngles, new Rotation2d(-driver.getRightY(), -driver.getRightX()).getDegrees(), SwerveConstants.azimuthEpsilon)))
-            ));
-    driver.rightTrigger().whileTrue(
+                        Rotation2d.fromDegrees(
+                            Util.snapToZone(
+                                SwerveConstants.azimuthAngles,
+                                new Rotation2d(-driver.getRightY(), -driver.getRightX())
+                                    .getDegrees(),
+                                SwerveConstants.azimuthEpsilon)))));
+    driver
+        .rightTrigger()
+        .whileTrue(
             drivetrain.applyRequest(
-                    () ->
-                            drive
-                                    .withVelocityX(-driver.getLeftY() * MaxSpeed) // Drive forward with
-                                    // negative Y (forward)
-                                    .withVelocityY(
-                                            -driver.getLeftX() * MaxSpeed) // Drive left with negative X (left)
-                                    .withRotationalRate(
-                                            driver.getRightTriggerAxis()
-                                                    * MaxAngularRate) // Drive counterclockwise with negative X (left)
-            ));
-    driver.leftTrigger().whileTrue(
+                () ->
+                    drive
+                        .withVelocityX(-driver.getLeftY() * MaxSpeed) // Drive forward with
+                        // negative Y (forward)
+                        .withVelocityY(
+                            -driver.getLeftX() * MaxSpeed) // Drive left with negative X (left)
+                        .withRotationalRate(
+                            driver.getRightTriggerAxis()
+                                * MaxAngularRate) // Drive counterclockwise with negative X (left)
+                ));
+    driver
+        .leftTrigger()
+        .whileTrue(
             drivetrain.applyRequest(
-                    () ->
-                            drive
-                                    .withVelocityX(-driver.getLeftY() * MaxSpeed) // Drive forward with
-                                    // negative Y (forward)
-                                    .withVelocityY(
-                                            -driver.getLeftX() * MaxSpeed) // Drive left with negative X (left)
-                                    .withRotationalRate(
-                                            -driver.getLeftTriggerAxis()
-                                                    * MaxAngularRate) // Drive counterclockwise with negative X (left)
-            ));
+                () ->
+                    drive
+                        .withVelocityX(-driver.getLeftY() * MaxSpeed) // Drive forward with
+                        // negative Y (forward)
+                        .withVelocityY(
+                            -driver.getLeftX() * MaxSpeed) // Drive left with negative X (left)
+                        .withRotationalRate(
+                            -driver.getLeftTriggerAxis()
+                                * MaxAngularRate) // Drive counterclockwise with negative X (left)
+                ));
     driver.a().whileTrue(drivetrain.applyRequest(() -> brake));
     driver
         .b()

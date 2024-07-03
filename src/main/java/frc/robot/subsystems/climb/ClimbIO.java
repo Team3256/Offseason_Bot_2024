@@ -32,7 +32,12 @@ public interface ClimbIO {
   public default void off() {}
 
   public default void zero() {}
-  public default MonitoredTalonFX getMotor() {return new MonitoredTalonFX(0);}
 
-  public default VoltageOut getVoltageRequest() {return new VoltageOut(0);}
+  public default MonitoredTalonFX getMotor() {
+    return new MonitoredTalonFX(0);
+  }
+
+  public default VoltageOut getVoltageRequest() {
+    return new VoltageOut(0);
+  }
 }

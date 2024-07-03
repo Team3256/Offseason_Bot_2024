@@ -150,22 +150,24 @@ public class IntakeIOTalonFX implements IntakeIO {
   public boolean isBeamBroken() {
     return !beamBreakInput.get();
   }
+
   @Override
   public MonitoredTalonFX getIntakeMotor() {
     return intakeMotor;
   }
+
   @Override
   public VoltageOut getIntakeVoltageRequest() {
     return intakeVoltageReq;
   }
 
-    @Override
-    public MonitoredTalonFX getPassthroughMotor() {
-        return passthroughMotor;
-    }
+  @Override
+  public MonitoredTalonFX getPassthroughMotor() {
+    return passthroughMotor;
+  }
 
-    @Override
-    public VoltageOut getPassthroughVoltageRequest() {
-        return passthroughVoltageReq;
-    }
+  @Override
+  public VoltageOut getPassthroughVoltageRequest() {
+    return passthroughVoltageReq;
+  }
 }

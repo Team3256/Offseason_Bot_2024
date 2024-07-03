@@ -100,11 +100,11 @@ public class PivotShooterIOTalonFX implements PivotShooterIO {
   }
 
   @Override
-    public MonitoredTalonFX getMotor() {
-        return pivotShooterMotor;
-    }
+  public MonitoredTalonFX getMotor() {
+    return pivotShooterMotor;
+  }
 
-    @Override
+  @Override
   public VoltageOut getVoltageRequest() {
     return voltageReq;
   }
