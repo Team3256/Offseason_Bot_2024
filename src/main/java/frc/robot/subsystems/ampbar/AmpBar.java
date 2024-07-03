@@ -28,48 +28,19 @@ public class AmpBar extends SubsystemBase {
   }
 
   public Command setVoltage(double voltage) {
-    return new StartEndCommand(() -> ampBarIO.setVoltage(voltage), () -> ampBarIO.off(), this);
+    return this.run(() -> ampBarIO.setVoltage(voltage)).andThen(this.off());
   }
 
   public Command setAmpPosition() {
-    return new Command() {
-      @Override
-      public void initialize() {
-        ampBarIO.setVoltage(AmpBarConstants.kAmpBarAmpVoltage);
-      }
-
-      @Override
-      public void end(boolean interrupted) {
-        ampBarIO.off();
-      }
-
-      @Override
-      public boolean isFinished() {
-        return ampBarIO.isCurrentSpiking();
-      }
-    };
+    return this.run(()->ampBarIO.setVoltage(AmpBarConstants.kAmpBarAmpVoltage)).until(ampBarIO::isCurrentSpiking).andThen(this.off());
   }
 
   public Command setStowPosition() {
-    return new Command() {
-      @Override
-      public void initialize() {
-        ampBarIO.setVoltage(AmpBarConstants.kAmpBarStowVoltage);
-      }
-
-      @Override
-      public void end(boolean interrupted) {
-        ampBarIO.off();
-      }
-
-      @Override
-      public boolean isFinished() {
-        return ampBarIO.isCurrentSpiking();
-      }
-    };
+    return this.run(()->ampBarIO.setVoltage(AmpBarConstants.kAmpBarStowVoltage)).until(ampBarIO::isCurrentSpiking).andThen(this.off());
   }
 
   public Command off() {
-    return new StartEndCommand(() -> ampBarIO.off(), () -> {}, this);
+
+    return this.run(ampBarIO::off);
   }
 }
