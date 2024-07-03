@@ -24,7 +24,6 @@ import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-
 import java.util.function.Supplier;
 
 /**
@@ -44,7 +43,8 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
   private boolean hasAppliedOperatorPerspective = false;
 
   private final SwerveRequest.ApplyChassisSpeeds AutoRequest =
-          new SwerveRequest.ApplyChassisSpeeds().withDriveRequestType(SwerveModule.DriveRequestType.Velocity);
+      new SwerveRequest.ApplyChassisSpeeds()
+          .withDriveRequestType(SwerveModule.DriveRequestType.Velocity);
 
   private final SwerveRequest.SysIdSwerveTranslation TranslationCharacterization =
       new SwerveRequest.SysIdSwerveTranslation();

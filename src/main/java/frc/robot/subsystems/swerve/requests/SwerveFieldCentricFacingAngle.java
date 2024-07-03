@@ -7,16 +7,14 @@
 
 package frc.robot.subsystems.swerve.requests;
 
-import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 import com.ctre.phoenix6.mechanisms.swerve.utility.PhoenixPIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
 
-public class SwerveFieldCentricFacingAngle extends SwerveRequest.FieldCentricFacingAngle implements SwerveRequest {
-
+public class SwerveFieldCentricFacingAngle extends SwerveRequest.FieldCentricFacingAngle
+    implements SwerveRequest {
 
   /**
    * Sets the velocity in the X direction, in m/s. X is defined as forward according to WPILib

@@ -315,13 +315,13 @@ public class RobotContainer {
 
     // operator.povLeft().onTrue(cancelCommand);
     // Configure the auto
-        if (FeatureFlags.kSwerveEnabled) {
-          autoChooser = AutoBuilder.buildAutoChooser();
-        } else {
-          autoChooser = new SendableChooser<>();
-        }
-        // Autos
-        SmartDashboard.putData("Auto Chooser", autoChooser);
+    if (FeatureFlags.kSwerveEnabled) {
+      autoChooser = AutoBuilder.buildAutoChooser();
+    } else {
+      autoChooser = new SendableChooser<>();
+    }
+    // Autos
+    SmartDashboard.putData("Auto Chooser", autoChooser);
   }
 
   private void configurePivotShooter() {
@@ -638,9 +638,9 @@ public class RobotContainer {
     }
   }
 
-    public Command getAutonomousCommand() {
-      return autoChooser.getSelected();
-    }
+  public Command getAutonomousCommand() {
+    return autoChooser.getSelected();
+  }
 
   /* Test Routines */
 
