@@ -28,7 +28,7 @@ public class AmpBar extends SubsystemBase {
   }
 
   public Command setVoltage(double voltage) {
-    return this.run(() -> ampBarIO.setVoltage(voltage)).andThen(this.off());
+    return this.run(() -> ampBarIO.setVoltage(voltage)).finallyDo(ampBarIO::off);
   }
 
   public Command setAmpPosition() {

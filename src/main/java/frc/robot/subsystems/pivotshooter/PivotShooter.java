@@ -37,14 +37,11 @@ public class PivotShooter extends SubsystemBase {
   }
 
   public Command setPosition(double position) {
-    return new StartEndCommand(
-        () -> pivotShooterIO.setPosition(position * PivotShooterConstants.kPivotMotorGearing),
-        () -> {},
-        this);
+    return this.run(() -> pivotShooterIO.setPosition(position));
   }
 
   public Command setVoltage(double voltage) {
-    return this.run(() -> pivotShooterIO.setVoltage(voltage)).andThen(this.off());
+    return this.run(() -> pivotShooterIO.setVoltage(voltage)).finallyDo(pivotShooterIO::off);
   }
 
   public Command off() {

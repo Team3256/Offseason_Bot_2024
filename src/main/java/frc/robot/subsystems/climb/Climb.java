@@ -32,7 +32,7 @@ public class Climb extends SubsystemBase {
   }
 
   public Command setVoltage(double voltage) {
-    return this.run(() -> climbIO.setVoltage(voltage)).andThen(this.off());
+    return this.run(() -> climbIO.setVoltage(voltage)).finallyDo(climbIO::off);
   }
 
   public Command off() {

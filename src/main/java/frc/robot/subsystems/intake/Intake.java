@@ -34,7 +34,7 @@ public class Intake extends SubsystemBase {
     return this.run(()->{
       intakeIO.setIntakeVoltage(voltage);
         intakeIO.setPassthroughVoltage(passthroughVoltage);
-    }).andThen(this.off());
+    }).finallyDo(intakeIO::off);
   }
 
   public Command setVelocity(double velocity, double passthroughVelocity) {
@@ -42,23 +42,23 @@ public class Intake extends SubsystemBase {
         () -> {
           intakeIO.setIntakeVelocity(velocity);
           intakeIO.setPassthroughVelocity(passthroughVelocity);
-        }).andThen(this.off());
+        }).finallyDo(intakeIO::off);
   }
 
   public Command setIntakeVoltage(double voltage) {
-    return this.run(() -> intakeIO.setIntakeVoltage(voltage)).andThen(this.off());
+    return this.run(() -> intakeIO.setIntakeVoltage(voltage)).finallyDo(intakeIO::off);
   }
 
   public Command setIntakeVelocity(double velocity) {
-    return this.run(() -> intakeIO.setIntakeVelocity(velocity)).andThen(this.off());
+    return this.run(() -> intakeIO.setIntakeVelocity(velocity)).finallyDo(intakeIO::off);
   }
 
   public Command setPassthroughVoltage(double voltage) {
-    return this.run(() -> intakeIO.setPassthroughVoltage(voltage)).andThen(this.off());
+    return this.run(() -> intakeIO.setPassthroughVoltage(voltage)).finallyDo(intakeIO::off);
   }
 
   public Command setPassthroughVelocity(double velocity) {
-    return this.run(() -> intakeIO.setPassthroughVelocity(velocity)).andThen(this.off());
+    return this.run(() -> intakeIO.setPassthroughVelocity(velocity)).finallyDo(intakeIO::off);
   }
 
   public Command off() {

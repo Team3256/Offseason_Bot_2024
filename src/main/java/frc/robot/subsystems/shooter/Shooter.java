@@ -28,13 +28,10 @@ public class Shooter extends SubsystemBase {
   }
 
   public Command setVoltage(double voltage, double followerVoltage) {
-    return new StartEndCommand(
-        () -> {
+      return this.run(()->{
           shooterIO.setShooterVoltage(voltage);
-          shooterIO.setShooterFollowerVoltage(followerVoltage);
-        },
-        () -> shooterIO.off(),
-        this);
+            shooterIO.setShooterFollowerVoltage(followerVoltage);
+      }).finallyDo(shooterIO::off);
   }
 
   public Command setVelocity(double velocity, double followerVelocity) {

@@ -31,7 +31,7 @@ public class PivotIntake extends SubsystemBase {
   }
 
   public Command setVoltage(double voltage) {
-    return this.run(() -> pivotIntakeIO.setVoltage(voltage)).andThen(this.off());
+    return this.run(() -> pivotIntakeIO.setVoltage(voltage)).finallyDo(pivotIntakeIO::off);
   }
 
   public Command off() {
