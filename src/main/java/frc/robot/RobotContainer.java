@@ -398,19 +398,16 @@ public class RobotContainer {
 
   public void configureSwerve() {
     drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
-        drivetrain.applyRequest(
-            () ->
-                azi.withVelocityX(-driver.getLeftY() * MaxSpeed) // Drive forward with
-                    // negative Y (forward)
-                    .withVelocityY(
-                        -driver.getLeftX() * MaxSpeed) // Drive left with negative X (left)
-                    .withTargetDirection(
-                        Rotation2d.fromDegrees(
-                            Util.snapToZone(
-                                SwerveConstants.azimuthAngles,
-                                new Rotation2d(-driver.getRightY(), -driver.getRightX())
-                                    .getDegrees(),
-                                SwerveConstants.azimuthEpsilon)))));
+            drivetrain.applyRequest(
+                    () ->
+                            drive
+                                    .withVelocityX(-driver.getLeftY() * MaxSpeed) // Drive forward with
+                                    // negative Y (forward)
+                                    .withVelocityY(
+                                            -driver.getLeftX() * MaxSpeed) // Drive left with negative X (left)
+                                    .withRotationalRate(
+                                            -driver.getRightX()
+                                                    * MaxAngularRate)));
     driver
         .rightTrigger()
         .whileTrue(
