@@ -85,8 +85,9 @@ public class RobotContainer {
 
   private final SwerveRequest.FieldCentric drive =
       new SwerveRequest.FieldCentric()
-          .withDeadband(MaxSpeed * 0.1)
-          .withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
+          .withDeadband(MaxSpeed * Constants.stickDeadband)
+          .withRotationalDeadband(
+              MaxAngularRate * Constants.rotationalDeadband) // Add a 10% deadband
           .withDriveRequestType(
               SwerveModule.DriveRequestType.OpenLoopVoltage); // I want field-centric
   private SwerveFieldCentricFacingAngle azi =
@@ -99,7 +100,7 @@ public class RobotContainer {
   // driving in open loop
   private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
   private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
-  private final Telemetry logger = new Telemetry(MaxSpeed);
+  private final SwerveTelemetry swerveTelemetry = new SwerveTelemetry(MaxSpeed);
   public Shooter shooter;
   public Intake intake;
   public AmpBar ampbar;
@@ -447,7 +448,7 @@ public class RobotContainer {
     if (Utils.isSimulation()) {
       drivetrain.seedFieldRelative(new Pose2d(new Translation2d(), Rotation2d.fromDegrees(90)));
     }
-    drivetrain.registerTelemetry(logger::telemeterize);
+    drivetrain.registerTelemetry(swerveTelemetry::telemeterize);
   }
 
   private void configureShooter() {

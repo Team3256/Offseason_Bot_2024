@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.utils.NT4PublisherNoFMS;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -74,7 +75,7 @@ public class Robot extends LoggedRobot {
       // Logger.addDataReceiver(new WPILOGWriter("/U/logs"));
       Logger.addDataReceiver(
           new WPILOGWriter("/home/lvuser/logs")); // Log to a USB stick ("/U/logs")
-      Logger.addDataReceiver(new NT4Publisher()); // Publish data to NetworkTables
+      Logger.addDataReceiver(new NT4PublisherNoFMS()); // Publish data to NetworkTables
       new PowerDistribution(
           1, PowerDistribution.ModuleType.kRev); // Enables power distribution logging
     } else if (isSimulation()) {
