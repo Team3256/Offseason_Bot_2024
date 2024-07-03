@@ -32,9 +32,8 @@ import org.littletonrobotics.junction.wpilog.WPILOGWriter;
  */
 public class Robot extends LoggedRobot {
 
-  private Command m_autonomousCommand;
-
   private RobotContainer m_robotContainer;
+  private Command m_autonomousCommand;
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -191,7 +190,6 @@ public class Robot extends LoggedRobot {
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
-    ;
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
     // m_robotContainer.shootSpeaker();
 
@@ -212,9 +210,9 @@ public class Robot extends LoggedRobot {
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove
     // this line or comment it out.
-    if (m_autonomousCommand != null) {
-      m_autonomousCommand.cancel();
-    }
+    //    if (m_autonomousCommand != null) {
+    //      m_autonomousCommand.cancel();
+    //    }
     CommandScheduler.getInstance().cancelAll();
 
     boolean isRedAlliance = true;

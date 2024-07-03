@@ -12,6 +12,7 @@ import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.NeutralOut;
 import com.ctre.phoenix6.controls.PositionVoltage;
+import com.ctre.phoenix6.controls.VoltageOut;
 import frc.robot.drivers.MonitoredTalonFX;
 import frc.robot.utils.PhoenixUtil;
 import frc.robot.utils.TalonUtil;
@@ -22,6 +23,7 @@ public class PivotShooterIOTalonFX implements PivotShooterIO {
       new MonitoredTalonFX(PivotShooterConstants.kPivotMotorID);
   final PositionVoltage positionRequest = new PositionVoltage(0).withSlot(0);
   final MotionMagicVoltage motionMagicRequest = new MotionMagicVoltage(0).withSlot(0);
+  private final VoltageOut voltageReq = new VoltageOut(0);
 
   private final StatusSignal<Double> pivotShooterMotorVoltage = pivotShooterMotor.getMotorVoltage();
   private final StatusSignal<Double> pivotShooterMotorVelocity = pivotShooterMotor.getVelocity();
@@ -95,5 +97,15 @@ public class PivotShooterIOTalonFX implements PivotShooterIO {
   @Override
   public void zero() {
     pivotShooterMotor.setPosition(0);
+  }
+
+  @Override
+  public MonitoredTalonFX getMotor() {
+    return pivotShooterMotor;
+  }
+
+  @Override
+  public VoltageOut getVoltageRequest() {
+    return voltageReq;
   }
 }
