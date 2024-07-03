@@ -42,7 +42,7 @@ public class Intake extends SubsystemBase {
         () -> {
           intakeIO.setIntakeVelocity(velocity);
           intakeIO.setPassthroughVelocity(passthroughVelocity);
-        }).andThen(this.off();
+        }).andThen(this.off());
   }
 
   public Command setIntakeVoltage(double voltage) {
