@@ -400,16 +400,38 @@ public class RobotContainer {
     drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
         drivetrain.applyRequest(
             () ->
-                drive
+                azi
                     .withVelocityX(-driver.getLeftY() * MaxSpeed) // Drive forward with
                     // negative Y (forward)
                     .withVelocityY(
                         -driver.getLeftX() * MaxSpeed) // Drive left with negative X (left)
-                    .withRotationalRate(
-                        -driver.getRightX()
-                            * MaxAngularRate) // Drive counterclockwise with negative X (left)
+                    .withTargetDirection(
+                            new Rotation2d(-driver.getRightY(), -driver.getRightX()))
             ));
-
+    driver.rightTrigger().whileTrue(
+            drivetrain.applyRequest(
+                    () ->
+                            drive
+                                    .withVelocityX(-driver.getLeftY() * MaxSpeed) // Drive forward with
+                                    // negative Y (forward)
+                                    .withVelocityY(
+                                            -driver.getLeftX() * MaxSpeed) // Drive left with negative X (left)
+                                    .withRotationalRate(
+                                            driver.getRightTriggerAxis()
+                                                    * MaxAngularRate) // Drive counterclockwise with negative X (left)
+            ));
+    driver.leftTrigger().whileTrue(
+            drivetrain.applyRequest(
+                    () ->
+                            drive
+                                    .withVelocityX(-driver.getLeftY() * MaxSpeed) // Drive forward with
+                                    // negative Y (forward)
+                                    .withVelocityY(
+                                            -driver.getLeftX() * MaxSpeed) // Drive left with negative X (left)
+                                    .withRotationalRate(
+                                            -driver.getLeftTriggerAxis()
+                                                    * MaxAngularRate) // Drive counterclockwise with negative X (left)
+            ));
     driver.a().whileTrue(drivetrain.applyRequest(() -> brake));
     driver
         .b()
