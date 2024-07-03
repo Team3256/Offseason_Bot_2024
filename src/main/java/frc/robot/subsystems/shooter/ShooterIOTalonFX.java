@@ -12,6 +12,7 @@ import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.controls.MotionMagicVelocityVoltage;
 import com.ctre.phoenix6.controls.NeutralOut;
 import com.ctre.phoenix6.controls.VelocityVoltage;
+import com.ctre.phoenix6.controls.VoltageOut;
 import frc.robot.drivers.MonitoredTalonFX;
 import frc.robot.utils.PhoenixUtil;
 import frc.robot.utils.TalonUtil;
@@ -22,6 +23,7 @@ public class ShooterIOTalonFX implements ShooterIO {
   final VelocityVoltage velocityRequest = new VelocityVoltage(0).withSlot(0);
   final MotionMagicVelocityVoltage motionMagicRequest =
       new MotionMagicVelocityVoltage(0).withSlot(0);
+  private final VoltageOut voltageReq = new VoltageOut(0);
 
   private final StatusSignal<Double> shooterMotorVoltage = shooterMotor.getMotorVoltage();
   private final StatusSignal<Double> shooterMotorVelocity = shooterMotor.getVelocity();
@@ -141,5 +143,14 @@ public class ShooterIOTalonFX implements ShooterIO {
   public void off() {
     shooterMotor.setControl(new NeutralOut());
     shooterMotorFollower.setControl(new NeutralOut());
+  }
+  @Override
+  public MonitoredTalonFX getMotor() {
+    return shooterMotor;
+  }
+
+  @Override
+  public VoltageOut getVoltageRequest() {
+    return voltageReq;
   }
 }

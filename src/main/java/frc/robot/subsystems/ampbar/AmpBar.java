@@ -7,18 +7,39 @@
 
 package frc.robot.subsystems.ampbar;
 
+import com.ctre.phoenix6.SignalLogger;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import org.littletonrobotics.junction.Logger;
+
+import static edu.wpi.first.units.Units.Seconds;
+import static edu.wpi.first.units.Units.Volts;
 
 public class AmpBar extends SubsystemBase {
 
   private final AmpBarIO ampBarIO;
   private final AmpBarIOInputsAutoLogged ampBarIOAutoLogged = new AmpBarIOInputsAutoLogged();
 
+  private final SysIdRoutine m_sysIdRoutine;
+
   public AmpBar(AmpBarIO ampBarIO) {
     this.ampBarIO = ampBarIO;
+    m_sysIdRoutine = new SysIdRoutine(
+            new SysIdRoutine.Config(
+                    Volts.of(0.2).per(Seconds.of(1)),        // Use default ramp rate (1 V/s)
+                    Volts.of(6), // Reduce dynamic step voltage to 4 to prevent brownout
+                    null,        // Use default timeout (10 s)
+                    // Log state with Phoenix SignalLogger class
+                    (state) -> SignalLogger.writeString("state", state.toString())
+            ),
+            new SysIdRoutine.Mechanism(
+                    (volts) -> ampBarIO.getMotor().setControl(ampBarIO.getVoltageRequest().withOutput(volts.in(Volts))),
+                    null,
+                    this
+            )
+    );
   }
 
   @Override
