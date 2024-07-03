@@ -7,6 +7,8 @@
 
 package frc.robot.subsystems.pivotshooter;
 
+import com.ctre.phoenix6.controls.VoltageOut;
+import frc.robot.drivers.MonitoredTalonFX;
 import org.littletonrobotics.junction.AutoLog;
 
 public interface PivotShooterIO {
@@ -27,6 +29,14 @@ public interface PivotShooterIO {
   public default void setPosition(double position) {}
 
   public default void setVoltage(double voltage) {}
+
+  public default MonitoredTalonFX getMotor() {
+    return new MonitoredTalonFX(0);
+  }
+
+  public default VoltageOut getVoltageRequest() {
+    return new VoltageOut(0);
+  }
 
   public default void off() {}
 

@@ -10,6 +10,7 @@ package frc.robot.subsystems.ampbar;
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.controls.NeutralOut;
+import com.ctre.phoenix6.controls.VoltageOut;
 import frc.robot.drivers.MonitoredTalonFX;
 import frc.robot.utils.PhoenixUtil;
 import frc.robot.utils.TalonUtil;
@@ -24,6 +25,8 @@ public class AmpBarIOTalonFX implements AmpBarIO {
   private final StatusSignal<Double> ampBarMotorStatorCurrent = ampBarMotor.getStatorCurrent();
   private final StatusSignal<Double> ampBarMotorSupplyCurrent = ampBarMotor.getSupplyCurrent();
   private final StatusSignal<Double> ampBarMotorTemperature = ampBarMotor.getDeviceTemp();
+
+  private final VoltageOut voltageReq = new VoltageOut(0);
 
   public AmpBarIOTalonFX() {
     var motorConfig = AmpBarConstants.motorConfig;
@@ -72,5 +75,15 @@ public class AmpBarIOTalonFX implements AmpBarIO {
   public boolean isCurrentSpiking() {
     return ampBarMotor.getStatorCurrent().getValueAsDouble()
         > AmpBarConstants.kAmpBarCurrentThreshold;
+  }
+
+  @Override
+  public MonitoredTalonFX getMotor() {
+    return ampBarMotor;
+  }
+
+  @Override
+  public VoltageOut getVoltageRequest() {
+    return voltageReq;
   }
 }

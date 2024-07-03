@@ -10,6 +10,7 @@ package frc.robot;
 import static frc.robot.subsystems.pivotintake.PivotIntakeConstants.kPivotGroundPos;
 import static frc.robot.subsystems.pivotshooter.PivotShooterConstants.*;
 
+import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
@@ -26,6 +27,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.*;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants.FeatureFlags;
 import frc.robot.autos.commands.IntakeSequence;
 import frc.robot.helpers.XboxStalker;
@@ -48,12 +50,14 @@ import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.subsystems.shooter.ShooterConstants;
 import frc.robot.subsystems.shooter.ShooterIOTalonFX;
 import frc.robot.subsystems.swerve.CommandSwerveDrivetrain;
-import frc.robot.subsystems.swerve.Telemetry;
+import frc.robot.subsystems.swerve.SwerveConstants;
+import frc.robot.subsystems.swerve.SwerveTelemetry;
 import frc.robot.subsystems.swerve.TunerConstants;
+import frc.robot.subsystems.swerve.requests.SwerveFieldCentricFacingAngle;
 import frc.robot.subsystems.vision.Vision;
 import frc.robot.subsystems.vision.VisionIOLimelight;
 import frc.robot.utils.CommandQueue;
-import io.github.oblarg.oblog.annotations.Config;
+import frc.robot.utils.Util;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -62,9 +66,11 @@ import io.github.oblarg.oblog.annotations.Config;
  * subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
+  private SendableChooser<Command> autoChooser;
   /* Controllers */
   private final CommandXboxController driver = new CommandXboxController(0);
   private final CommandXboxController operator = new CommandXboxController(1);
+  private final CommandXboxController test = new CommandXboxController(2);
 
   /* Drive Controls */
   private final int translationAxis = XboxController.Axis.kLeftY.value;
@@ -82,14 +88,21 @@ public class RobotContainer {
 
   private final SwerveRequest.FieldCentric drive =
       new SwerveRequest.FieldCentric()
-          .withDeadband(MaxSpeed * 0.1)
-          .withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
+          .withDeadband(MaxSpeed * Constants.stickDeadband)
+          .withRotationalDeadband(
+              MaxAngularRate * Constants.rotationalDeadband) // Add a 10% deadband
           .withDriveRequestType(
               SwerveModule.DriveRequestType.OpenLoopVoltage); // I want field-centric
+  private SwerveFieldCentricFacingAngle azi =
+      new SwerveFieldCentricFacingAngle()
+          .withDeadband(MaxSpeed * .1)
+          .withRotationalDeadband(MaxAngularRate * .1)
+          .withHeadingController(SwerveConstants.azimuthController)
+          .withDriveRequestType(SwerveModule.DriveRequestType.OpenLoopVoltage);
   // driving in open loop
   private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
   private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
-  private final Telemetry logger = new Telemetry(MaxSpeed);
+  private final SwerveTelemetry swerveTelemetry = new SwerveTelemetry(MaxSpeed);
   public Shooter shooter;
   public Intake intake;
   public AmpBar ampbar;
@@ -102,11 +115,8 @@ public class RobotContainer {
   public PivotShooter pivotShooter;
   public LED led;
 
-  @Config.Command(name = "Climb Zero")
-  private Command zeroClimb;
-
   /* Auto */
-  private SendableChooser<Command> autoChooser;
+  // private SendableChooser<Command> autoChooser;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -126,6 +136,12 @@ public class RobotContainer {
 
     if (FeatureFlags.kPivotIntakeEnabled) {
       configurePivotIntake();
+      test.leftBumper().onTrue(Commands.runOnce(SignalLogger::start));
+      test.rightBumper().onTrue(Commands.runOnce(SignalLogger::stop));
+      test.y().whileTrue(pivotIntake.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
+      test.a().whileTrue(pivotIntake.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
+      test.b().whileTrue(pivotIntake.sysIdDynamic(SysIdRoutine.Direction.kForward));
+      test.x().whileTrue(pivotIntake.sysIdDynamic(SysIdRoutine.Direction.kReverse));
     }
     if (FeatureFlags.kIntakeEnabled) {
       configureIntake();
@@ -384,16 +400,47 @@ public class RobotContainer {
     drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
         drivetrain.applyRequest(
             () ->
-                drive
-                    .withVelocityX(-driver.getLeftY() * MaxSpeed) // Drive forward with
+                azi.withVelocityX(-driver.getLeftY() * MaxSpeed) // Drive forward with
                     // negative Y (forward)
                     .withVelocityY(
                         -driver.getLeftX() * MaxSpeed) // Drive left with negative X (left)
-                    .withRotationalRate(
-                        -driver.getRightX()
-                            * MaxAngularRate) // Drive counterclockwise with negative X (left)
-            ));
-
+                    .withTargetDirection(
+                        Rotation2d.fromDegrees(
+                            Util.snapToZone(
+                                SwerveConstants.azimuthAngles,
+                                new Rotation2d(-driver.getRightY(), -driver.getRightX())
+                                    .getDegrees(),
+                                SwerveConstants.azimuthEpsilon)))));
+    driver
+        .rightTrigger()
+        .whileTrue(
+            drivetrain.applyRequest(
+                () ->
+                    drive
+                        .withVelocityX(-driver.getLeftY() * MaxSpeed) // Drive forward with
+                        // negative Y (forward)
+                        .withVelocityY(
+                            -driver.getLeftX() * MaxSpeed) // Drive left with negative X (left)
+                        .withRotationalRate(
+                            driver.getRightTriggerAxis()
+                                * MaxAngularRate) // Drive counterclockwise with negative X
+                // (left)
+                ));
+    driver
+        .leftTrigger()
+        .whileTrue(
+            drivetrain.applyRequest(
+                () ->
+                    drive
+                        .withVelocityX(-driver.getLeftY() * MaxSpeed) // Drive forward with
+                        // negative Y (forward)
+                        .withVelocityY(
+                            -driver.getLeftX() * MaxSpeed) // Drive left with negative X (left)
+                        .withRotationalRate(
+                            -driver.getLeftTriggerAxis()
+                                * MaxAngularRate) // Drive counterclockwise with negative X
+                // (left)
+                ));
     driver.a().whileTrue(drivetrain.applyRequest(() -> brake));
     driver
         .b()
@@ -409,7 +456,7 @@ public class RobotContainer {
     if (Utils.isSimulation()) {
       drivetrain.seedFieldRelative(new Pose2d(new Translation2d(), Rotation2d.fromDegrees(90)));
     }
-    drivetrain.registerTelemetry(logger::telemeterize);
+    drivetrain.registerTelemetry(swerveTelemetry::telemeterize);
   }
 
   private void configureShooter() {
