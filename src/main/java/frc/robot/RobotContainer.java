@@ -56,12 +56,9 @@ import frc.robot.utils.CommandQueue;
 import io.github.oblarg.oblog.annotations.Config;
 
 /**
- * This class is where the bulk of the robot should be declared. Since
- * Command-based is a
- * "declarative" paradigm, very little robot logic should actually be handled in
- * the {@link Robot}
- * periodic methods (other than the scheduler calls). Instead, the structure of
- * the robot (including
+ * This class is where the bulk of the robot should be declared. Since Command-based is a
+ * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
+ * periodic methods (other than the scheduler calls). Instead, the structure of the robot (including
  * subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
@@ -79,14 +76,17 @@ public class RobotContainer {
   private boolean isRed;
 
   private final CommandSwerveDrivetrain drivetrain = TunerConstants.DriveTrain;
-  private double MaxSpeed = TunerConstants.kSpeedAt12VoltsMps; // kSpeedAt12VoltsMps desired top speed
+  private double MaxSpeed =
+      TunerConstants.kSpeedAt12VoltsMps; // kSpeedAt12VoltsMps desired top speed
   private double MaxAngularRate = 1.5 * Math.PI; // My drivetrain
 
-  private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
-      .withDeadband(MaxSpeed * Constants.stickDeadband)
-      .withRotationalDeadband(MaxAngularRate * Constants.rotationalDeadband) // Add a 10% deadband
-      .withDriveRequestType(
-          SwerveModule.DriveRequestType.OpenLoopVoltage); // I want field-centric
+  private final SwerveRequest.FieldCentric drive =
+      new SwerveRequest.FieldCentric()
+          .withDeadband(MaxSpeed * Constants.stickDeadband)
+          .withRotationalDeadband(
+              MaxAngularRate * Constants.rotationalDeadband) // Add a 10% deadband
+          .withDriveRequestType(
+              SwerveModule.DriveRequestType.OpenLoopVoltage); // I want field-centric
   // driving in open loop
   private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
   private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
@@ -109,9 +109,7 @@ public class RobotContainer {
   /* Auto */
   private SendableChooser<Command> autoChooser;
 
-  /**
-   * The container for the robot. Contains subsystems, OI devices, and commands.
-   */
+  /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Cancel any previous commands running
     CommandScheduler.getInstance().cancelAll();
@@ -200,8 +198,8 @@ public class RobotContainer {
                   shooter.setVelocity(
                       ShooterConstants.kShooterSubwooferRPS,
                       ShooterConstants.kShooterFollowerSubwooferRPS))
-          // new PivotShooterSlamAndVoltage(pivotShooter)));
-          ));
+              // new PivotShooterSlamAndVoltage(pivotShooter)));
+              ));
       NamedCommands.registerCommand( // intake ground note, stow to feeder chamber
           "intake sequence",
           new ParallelCommandGroup(
@@ -365,7 +363,7 @@ public class RobotContainer {
           .onTrue(
               Commands.sequence(
                   new ParallelCommandGroup(
-                      ampbar.setAmpPosition(), pivotShooter.setPosition(12 / 138.33))
+                          ampbar.setAmpPosition(), pivotShooter.setPosition(12 / 138.33))
                       .withTimeout(1),
                   climb.extendClimber()));
     } else {
@@ -386,23 +384,25 @@ public class RobotContainer {
   public void configureSwerve() {
     drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
         drivetrain.applyRequest(
-            () -> drive
-                .withVelocityX(-driver.getLeftY() * MaxSpeed) // Drive forward with
-                // negative Y (forward)
-                .withVelocityY(
-                    -driver.getLeftX() * MaxSpeed) // Drive left with negative X (left)
-                .withRotationalRate(
-                    -driver.getRightX()
-                        * MaxAngularRate) // Drive counterclockwise with negative X (left)
-        ));
+            () ->
+                drive
+                    .withVelocityX(-driver.getLeftY() * MaxSpeed) // Drive forward with
+                    // negative Y (forward)
+                    .withVelocityY(
+                        -driver.getLeftX() * MaxSpeed) // Drive left with negative X (left)
+                    .withRotationalRate(
+                        -driver.getRightX()
+                            * MaxAngularRate) // Drive counterclockwise with negative X (left)
+            ));
 
     driver.a().whileTrue(drivetrain.applyRequest(() -> brake));
     driver
         .b()
         .whileTrue(
             drivetrain.applyRequest(
-                () -> point.withModuleDirection(
-                    new Rotation2d(-driver.getLeftY(), -driver.getLeftX()))));
+                () ->
+                    point.withModuleDirection(
+                        new Rotation2d(-driver.getLeftY(), -driver.getLeftX()))));
 
     // reset the field-centric heading on left bumper press
     driver.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
@@ -487,7 +487,7 @@ public class RobotContainer {
   }
 
   public void configureLED() {
-    int[][] ledList = new int[][] { new int[] { 2, 3 }, new int[] { 1, 1 } };
+    int[][] ledList = new int[][] {new int[] {2, 3}, new int[] {1, 1}};
 
     led = new LED();
     led.setDefaultCommand(new CoordinatesButItsMultiple(led, ledList, 100, 0, 0, 10));
