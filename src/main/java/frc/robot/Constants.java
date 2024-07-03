@@ -21,8 +21,9 @@ public final class Constants {
   public static final boolean kOverrideBrownOutVoltage = true;
   public static final double kOverridenBrownOutVoltage = 5.6;
 
-  /* General robot configruation */
+  /* Drive configuration */
   public static final double stickDeadband = 0.1;
+  public static final double rotationalDeadband = 0.1;
   public static final double azimuthStickDeadband = 0.3;
   // Logging
   public static final int kLogLinesBeforeFlush = 100;
@@ -51,29 +52,14 @@ public final class Constants {
     public static final boolean kRobotVizEnabled = true && !Robot.isReal();
 
     // features
-
     public static final boolean kAutoAlignEnabled = false;
-
-    public static final boolean kLocalizationEnabled = false;
-
-    // public static final boolean kSwerveAccelerationLimitingEnabled = true;
-    public static final boolean kSwerveUseVisionForPoseEst =
-        false; // ummm probably not disabling this
-    public static final boolean kLocalizationDataCollectionMode = false;
-    public static final boolean kLocalizationStdDistanceBased = false;
-
-    // Make sure the pose is CORRECT WITHOUT VISION BEFORE ENAVLINGTHIS!!!!
-    public static final boolean kSwerveVelocityLimitingEnabled = false;
     public static final boolean kIntakeAutoScoreDistanceSensorOffset = false;
     public static final boolean kShuffleboardLayoutEnabled = true;
-    public static final boolean kGamePieceDetection = false;
     public static final boolean kUsePrefs = true;
 
     public static final boolean kPitRoutineEnabled = false;
 
     public static final boolean kCanTestEnabled = false;
-    public static final boolean kResetHeadingOnZeroGyro = true;
-    public static final boolean kQuadraticDrive = false;
     public static boolean kPivotShooterEnabled = true;
   }
 
