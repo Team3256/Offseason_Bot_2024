@@ -14,7 +14,7 @@ public final class Constants {
 
   /* FeatureFlags that are used in Robot.java */
   public static final boolean kEnableAdvKit = true;
-  public static final boolean kEnableOBlog = false;
+  public static final boolean kEnableMonologue = false;
   public static final boolean kDisableSubsystemsOnDisableInit = true;
 
   // CAREFUL!
@@ -27,6 +27,8 @@ public final class Constants {
   public static final double azimuthStickDeadband = 0.3;
   // Logging
   public static final int kLogLinesBeforeFlush = 100;
+  public static final boolean kMonologueFileOnly = false;
+  public static final boolean kMonologueLazyLogging = false;
 
   public static final class FeatureFlags {
     // subsystems
@@ -47,6 +49,7 @@ public final class Constants {
     public static final boolean kAmpBarEnabled = true;
 
     // logging
+    public static final boolean kTuningMode = false;
     public static final boolean kDebugEnabled = false;
     public static final boolean DebugCommandEnabled = false;
     public static final boolean kRobotVizEnabled = true && !Robot.isReal();
