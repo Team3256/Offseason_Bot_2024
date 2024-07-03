@@ -34,6 +34,8 @@ public interface PivotIntakeIO {
   public default VoltageOut getVoltageRequest() {return new VoltageOut(0);}
 
 
+
+
   public default void setVoltage(double voltage) {}
 
   public default void off() {}
