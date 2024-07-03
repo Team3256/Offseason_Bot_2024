@@ -10,20 +10,25 @@ package frc.robot.subsystems.swerve;
 import static edu.wpi.first.units.Units.Volts;
 
 import com.ctre.phoenix6.SignalLogger;
+import com.choreo.lib.*;
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.mechanisms.swerve.*;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.ReplanningConfig;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+
+import java.util.Optional;
 import java.util.function.Supplier;
 
 /**
@@ -179,6 +184,22 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
               updateSimState(deltaTime, RobotController.getBatteryVoltage());
             });
     m_simNotifier.startPeriodic(kSimLoopPeriod);
+  }
+
+  public Command runChoreoTraj(ChoreoTrajectory trajectory) {
+    return Choreo.choreoSwerveCommand(
+            trajectory,
+            ()->(this.getState().Pose),
+            SwerveConstants.choreoTranslationController,
+            SwerveConstants.choreoTranslationController,
+            SwerveConstants.choreoRotationController,
+            ((ChassisSpeeds speeds) -> this.setControl(new SwerveRequest.ApplyChassisSpeeds().withSpeeds(speeds))),
+            ()->{
+              Optional<DriverStation.Alliance> alliance = DriverStation.getAlliance();
+              return alliance.isPresent() && alliance.get() == DriverStation.Alliance.Red;
+            },
+            this
+    );
   }
 
   @Override
