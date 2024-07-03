@@ -11,6 +11,8 @@ import frc.robot.subsystems.pivotshooter.PivotShooterConstants;
 import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.subsystems.shooter.ShooterConstants;
 import frc.robot.subsystems.swerve.CommandSwerveDrivetrain;
+import com.choreo.lib.*;
+
 
 public class AutoRoutines {
     public static Command ampWing1Note (CommandSwerveDrivetrain swerve, Intake intake, Shooter shooter, PivotShooter pivotShooter, PivotIntake pivotIntake) { // This is an example on how to make a choreo auto, I have no clue if its gonna work
