@@ -41,6 +41,6 @@ public class AmpBar extends SubsystemBase {
 
   public Command off() {
 
-    return this.run(ampBarIO::off);
+    return this.runOnce(ampBarIO::off);
   }
 }
