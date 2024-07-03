@@ -14,7 +14,7 @@ import org.littletonrobotics.junction.Logger;
 /// It's an enum as it's the easiest way to
 /// make a singleton in Java.
 /// Please also note that this class does not contain
-/// Oblog initialization code or initialization code
+/// Monologue initialization code or initialization code
 /// for any other logging outlets
 
 public enum WBLogger {
@@ -69,12 +69,12 @@ public enum WBLogger {
   }
 
   private void println(String message) {
-    //    io.println(message);
-    //    linesPrinted += 1;
-    //    if (linesPrinted >= Constants.kLogLinesBeforeFlush) {
-    //      io.flush();
-    //      linesPrinted = 0;
-    //    }
+    // io.println(message);
+    // linesPrinted += 1;
+    // if (linesPrinted >= Constants.kLogLinesBeforeFlush) {
+    // io.flush();
+    // linesPrinted = 0;
+    // }
   }
 
   public void info(String message) {

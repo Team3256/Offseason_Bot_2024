@@ -56,9 +56,6 @@ import frc.robot.subsystems.swerve.TunerConstants;
 import frc.robot.subsystems.swerve.requests.SwerveFieldCentricFacingAngle;
 import frc.robot.subsystems.vision.Vision;
 import frc.robot.subsystems.vision.VisionIOLimelight;
-import frc.robot.utils.CommandQueue;
-import frc.robot.utils.Util;
-import io.github.oblarg.oblog.annotations.Config;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -115,9 +112,6 @@ public class RobotContainer {
 
   public PivotShooter pivotShooter;
   public LED led;
-
-  @Config.Command(name = "Climb Zero")
-  private Command zeroClimb;
 
   /* Auto */
   //  private SendableChooser<Command> autoChooser;
