@@ -57,7 +57,6 @@ import frc.robot.subsystems.swerve.requests.SwerveFieldCentricFacingAngle;
 import frc.robot.subsystems.vision.Vision;
 import frc.robot.subsystems.vision.VisionIOLimelight;
 import frc.robot.utils.CommandQueue;
-import frc.robot.utils.Util;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -398,16 +397,14 @@ public class RobotContainer {
 
   public void configureSwerve() {
     drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
-            drivetrain.applyRequest(
-                    () ->
-                            drive
-                                    .withVelocityX(-driver.getLeftY() * MaxSpeed) // Drive forward with
-                                    // negative Y (forward)
-                                    .withVelocityY(
-                                            -driver.getLeftX() * MaxSpeed) // Drive left with negative X (left)
-                                    .withRotationalRate(
-                                            -driver.getRightX()
-                                                    * MaxAngularRate)));
+        drivetrain.applyRequest(
+            () ->
+                drive
+                    .withVelocityX(-driver.getLeftY() * MaxSpeed) // Drive forward with
+                    // negative Y (forward)
+                    .withVelocityY(
+                        -driver.getLeftX() * MaxSpeed) // Drive left with negative X (left)
+                    .withRotationalRate(-driver.getRightX() * MaxAngularRate)));
     driver
         .rightTrigger()
         .whileTrue(
