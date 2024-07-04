@@ -9,6 +9,7 @@ package frc.robot.subsystems.swerve;
 
 import com.ctre.phoenix6.mechanisms.swerve.utility.PhoenixPIDController;
 import com.pathplanner.lib.util.PIDConstants;
+import edu.wpi.first.math.controller.PIDController;
 import java.util.List;
 
 public final class SwerveConstants {
@@ -24,4 +25,9 @@ public final class SwerveConstants {
 
   public static final List<Double> azimuthAngles = List.of(0.0, 90.0, 180.0, 270.0);
   public static final double azimuthEpsilon = 10.0; // TODO: tune
+
+  public static final PIDController choreoTranslationController = new PIDController(1, 0, 0);
+  public static final PIDController choreoRotationController =
+      new PIDController(
+          azimuthController.getP(), azimuthController.getI(), azimuthController.getD());
 }
