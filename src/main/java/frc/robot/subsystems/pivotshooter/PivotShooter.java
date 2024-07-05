@@ -12,10 +12,8 @@ import static edu.wpi.first.units.Units.Volts;
 
 import com.ctre.phoenix6.SignalLogger;
 import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
+import edu.wpi.first.wpilibj2.command.*;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.RunCommand;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.subsystems.vision.Vision;
@@ -64,61 +62,45 @@ public class PivotShooter extends SubsystemBase {
   }
 
   public Command setPosition(double position) {
-    return new StartEndCommand(
-        () -> pivotShooterIO.setPosition(position * PivotShooterConstants.kPivotMotorGearing),
-        () -> {},
-        this);
+    return this.run(() -> pivotShooterIO.setPosition(position));
   }
 
   public Command setVoltage(double voltage) {
-    return new StartEndCommand(
-        () -> pivotShooterIO.setVoltage(voltage), () -> pivotShooterIO.setVoltage(0), this);
+    return this.run(() -> pivotShooterIO.setVoltage(voltage)).finallyDo(pivotShooterIO::off);
   }
 
   public Command off() {
-    return new StartEndCommand(() -> pivotShooterIO.off(), () -> {}, this);
+
+    return this.runOnce(pivotShooterIO::off);
   }
 
   public Command slamZero() {
-    return new Command() {
-      @Override
-      public void initialize() {
-        pivotShooterIO.setVoltage(PivotShooterConstants.kPivotSlamShooterVoltage);
-      }
-
-      @Override
-      public void end(boolean interrupted) {
-        pivotShooterIO.off();
-        if (!interrupted) {
-          pivotShooterIO.zero();
-        }
-      }
-
-      @Override
-      public boolean isFinished() {
-        return pivotShooterIOAutoLogged.pivotShooterMotorStatorCurrent
-            > PivotShooterConstants.kPivotSlamStallCurrent;
-      }
-    };
+    return this.run(() -> pivotShooterIO.setVoltage(PivotShooterConstants.kPivotSlamShooterVoltage))
+        .until(
+            () ->
+                pivotShooterIOAutoLogged.pivotShooterMotorStatorCurrent
+                    > PivotShooterConstants.kPivotSlamStallCurrent)
+        .andThen(this.zero());
   }
 
   public Command slamAndPID() {
-    return new SequentialCommandGroup(this.setPosition(0), this.slamZero());
+
+    return Commands.sequence(this.setPosition(0), this.slamZero());
   }
 
   public Command zero() {
-    return new StartEndCommand(() -> pivotShooterIO.zero(), () -> {}, this);
+    return this.runOnce(pivotShooterIO::zero);
   }
 
   public Command bruh(Vision vision) {
-    return new RunCommand(
-        () ->
-            pivotShooterIO.setPosition(
-                aprilTagMap.get(
-                        (vision.getLastCenterLimelightY() - vision.getLastLastCenterLimelightY())
-                            + vision.getCenterLimelightY())
-                    * PivotShooterConstants.kPivotMotorGearing),
-        this);
+    return this.run(
+        () -> {
+          pivotShooterIO.setPosition(
+              aprilTagMap.get(
+                      (vision.getLastCenterLimelightY() - vision.getLastLastCenterLimelightY())
+                          + vision.getCenterLimelightY())
+                  * PivotShooterConstants.kPivotMotorGearing);
+        });
   }
 
   public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {

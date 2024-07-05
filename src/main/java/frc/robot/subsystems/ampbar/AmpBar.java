@@ -12,7 +12,6 @@ import static edu.wpi.first.units.Units.Volts;
 
 import com.ctre.phoenix6.SignalLogger;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import org.littletonrobotics.junction.Logger;
@@ -50,48 +49,23 @@ public class AmpBar extends SubsystemBase {
   }
 
   public Command setVoltage(double voltage) {
-    return new StartEndCommand(() -> ampBarIO.setVoltage(voltage), () -> ampBarIO.off(), this);
+    return this.run(() -> ampBarIO.setVoltage(voltage)).finallyDo(ampBarIO::off);
   }
 
   public Command setAmpPosition() {
-    return new Command() {
-      @Override
-      public void initialize() {
-        ampBarIO.setVoltage(AmpBarConstants.kAmpBarAmpVoltage);
-      }
-
-      @Override
-      public void end(boolean interrupted) {
-        ampBarIO.off();
-      }
-
-      @Override
-      public boolean isFinished() {
-        return ampBarIO.isCurrentSpiking();
-      }
-    };
+    return this.run(() -> ampBarIO.setVoltage(AmpBarConstants.kAmpBarAmpVoltage))
+        .until(ampBarIO::isCurrentSpiking)
+        .andThen(this.off());
   }
 
   public Command setStowPosition() {
-    return new Command() {
-      @Override
-      public void initialize() {
-        ampBarIO.setVoltage(AmpBarConstants.kAmpBarStowVoltage);
-      }
-
-      @Override
-      public void end(boolean interrupted) {
-        ampBarIO.off();
-      }
-
-      @Override
-      public boolean isFinished() {
-        return ampBarIO.isCurrentSpiking();
-      }
-    };
+    return this.run(() -> ampBarIO.setVoltage(AmpBarConstants.kAmpBarStowVoltage))
+        .until(ampBarIO::isCurrentSpiking)
+        .andThen(this.off());
   }
 
   public Command off() {
-    return new StartEndCommand(() -> ampBarIO.off(), () -> {}, this);
+
+    return this.runOnce(ampBarIO::off);
   }
 }

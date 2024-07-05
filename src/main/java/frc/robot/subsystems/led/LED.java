@@ -12,9 +12,8 @@ import com.ctre.phoenix.led.CANdleConfiguration;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import io.github.oblarg.oblog.Loggable;
 
-public class LED extends SubsystemBase implements Loggable {
+public class LED extends SubsystemBase {
   public IndicatorAnimation currentAnimation = IndicatorAnimation.Default;
   private CANdle candle;
 

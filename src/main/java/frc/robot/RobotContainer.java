@@ -58,8 +58,6 @@ import frc.robot.subsystems.swerve.requests.SwerveFieldCentricFacingAngle;
 import frc.robot.subsystems.vision.Vision;
 import frc.robot.subsystems.vision.VisionIOLimelight;
 import frc.robot.utils.CommandQueue;
-import frc.robot.utils.Util;
-import io.github.oblarg.oblog.annotations.Config;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -117,11 +115,8 @@ public class RobotContainer {
   public PivotShooter pivotShooter;
   public LED led;
 
-  @Config.Command(name = "Climb Zero")
-  private Command zeroClimb;
-
   /* Auto */
-  //  private SendableChooser<Command> autoChooser;
+  // private SendableChooser<Command> autoChooser;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -408,17 +403,12 @@ public class RobotContainer {
     drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
         drivetrain.applyRequest(
             () ->
-                azi.withVelocityX(-driver.getLeftY() * MaxSpeed) // Drive forward with
+                drive
+                    .withVelocityX(-driver.getLeftY() * MaxSpeed) // Drive forward with
                     // negative Y (forward)
                     .withVelocityY(
                         -driver.getLeftX() * MaxSpeed) // Drive left with negative X (left)
-                    .withTargetDirection(
-                        Rotation2d.fromDegrees(
-                            Util.snapToZone(
-                                SwerveConstants.azimuthAngles,
-                                new Rotation2d(-driver.getRightY(), -driver.getRightX())
-                                    .getDegrees(),
-                                SwerveConstants.azimuthEpsilon)))));
+                    .withRotationalRate(-driver.getRightX() * MaxAngularRate)));
     driver
         .rightTrigger()
         .whileTrue(
@@ -431,7 +421,8 @@ public class RobotContainer {
                             -driver.getLeftX() * MaxSpeed) // Drive left with negative X (left)
                         .withRotationalRate(
                             driver.getRightTriggerAxis()
-                                * MaxAngularRate) // Drive counterclockwise with negative X (left)
+                                * MaxAngularRate) // Drive counterclockwise with negative X
+                // (left)
                 ));
     driver
         .leftTrigger()
@@ -445,7 +436,8 @@ public class RobotContainer {
                             -driver.getLeftX() * MaxSpeed) // Drive left with negative X (left)
                         .withRotationalRate(
                             -driver.getLeftTriggerAxis()
-                                * MaxAngularRate) // Drive counterclockwise with negative X (left)
+                                * MaxAngularRate) // Drive counterclockwise with negative X
+                // (left)
                 ));
     driver.a().whileTrue(drivetrain.applyRequest(() -> brake));
     driver

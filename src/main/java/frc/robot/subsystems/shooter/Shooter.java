@@ -12,7 +12,6 @@ import static edu.wpi.first.units.Units.Volts;
 
 import com.ctre.phoenix6.SignalLogger;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import org.littletonrobotics.junction.Logger;
@@ -50,23 +49,21 @@ public class Shooter extends SubsystemBase {
   }
 
   public Command setVoltage(double voltage, double followerVoltage) {
-    return new StartEndCommand(
-        () -> {
-          shooterIO.setShooterVoltage(voltage);
-          shooterIO.setShooterFollowerVoltage(followerVoltage);
-        },
-        () -> shooterIO.off(),
-        this);
+    return this.run(
+            () -> {
+              shooterIO.setShooterVoltage(voltage);
+              shooterIO.setShooterFollowerVoltage(followerVoltage);
+            })
+        .finallyDo(shooterIO::off);
   }
 
   public Command setVelocity(double velocity, double followerVelocity) {
-    return new StartEndCommand(
-        () -> {
-          shooterIO.setShooterVelocity(velocity);
-          shooterIO.setShooterFollowerVelocity(followerVelocity);
-        },
-        () -> shooterIO.off(),
-        this);
+    return this.run(
+            () -> {
+              shooterIO.setShooterVelocity(velocity);
+              shooterIO.setShooterFollowerVelocity(followerVelocity);
+            })
+        .finallyDo(shooterIO::off);
   }
 
   public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {
@@ -78,6 +75,6 @@ public class Shooter extends SubsystemBase {
   }
 
   public Command off() {
-    return new StartEndCommand(() -> shooterIO.off(), () -> {}, this);
+    return this.runOnce(shooterIO::off);
   }
 }

@@ -12,10 +12,9 @@ import static edu.wpi.first.units.Units.Volts;
 
 import com.ctre.phoenix6.SignalLogger;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-import frc.robot.helpers.TimedBoolean;
 import org.littletonrobotics.junction.Logger;
 
 public class Intake extends SubsystemBase {
@@ -23,6 +22,9 @@ public class Intake extends SubsystemBase {
   private final IntakeIOInputsAutoLogged intakeIOAutoLogged = new IntakeIOInputsAutoLogged();
   private final SysIdRoutine intake_sysIdRoutine;
   private final SysIdRoutine passthrough_sysIdRoutine;
+
+  private final Trigger debouncedBeamBreak = new Trigger(this::isBeamBroken).debounce(0.1);
+  ;
 
   public Intake(IntakeIO intakeIO) {
 
@@ -67,70 +69,51 @@ public class Intake extends SubsystemBase {
   }
 
   public Command setVoltage(double voltage, double passthroughVoltage) {
-    return new StartEndCommand(
-        () -> {
-          intakeIO.setIntakeVoltage(voltage);
-          intakeIO.setPassthroughVoltage(passthroughVoltage);
-        },
-        () -> intakeIO.off(),
-        this);
+    return this.run(
+            () -> {
+              intakeIO.setIntakeVoltage(voltage);
+              intakeIO.setPassthroughVoltage(passthroughVoltage);
+            })
+        .finallyDo(intakeIO::off);
   }
 
   public Command setVelocity(double velocity, double passthroughVelocity) {
-    return new StartEndCommand(
-        () -> {
-          intakeIO.setIntakeVelocity(velocity);
-          intakeIO.setPassthroughVelocity(passthroughVelocity);
-        },
-        () -> intakeIO.off(),
-        this);
+    return this.run(
+            () -> {
+              intakeIO.setIntakeVelocity(velocity);
+              intakeIO.setPassthroughVelocity(passthroughVelocity);
+            })
+        .finallyDo(intakeIO::off);
   }
 
   public Command setIntakeVoltage(double voltage) {
-    return new StartEndCommand(
-        () -> intakeIO.setIntakeVoltage(voltage), () -> intakeIO.off(), this);
+    return this.run(() -> intakeIO.setIntakeVoltage(voltage)).finallyDo(intakeIO::off);
   }
 
   public Command setIntakeVelocity(double velocity) {
-    return new StartEndCommand(
-        () -> intakeIO.setIntakeVelocity(velocity), () -> intakeIO.off(), this);
+    return this.run(() -> intakeIO.setIntakeVelocity(velocity)).finallyDo(intakeIO::off);
   }
 
   public Command setPassthroughVoltage(double voltage) {
-    return new StartEndCommand(
-        () -> intakeIO.setPassthroughVoltage(voltage), () -> intakeIO.off(), this);
+    return this.run(() -> intakeIO.setPassthroughVoltage(voltage)).finallyDo(intakeIO::off);
   }
 
   public Command setPassthroughVelocity(double velocity) {
-    return new StartEndCommand(
-        () -> intakeIO.setPassthroughVelocity(velocity), () -> intakeIO.off(), this);
+    return this.run(() -> intakeIO.setPassthroughVelocity(velocity)).finallyDo(intakeIO::off);
   }
 
   public Command off() {
-    return new StartEndCommand(() -> intakeIO.off(), () -> {}, this);
+    return this.runOnce(intakeIO::off);
   }
 
   public Command intakeIn() {
-    return new Command() {
-      TimedBoolean beamBreak =
-          new TimedBoolean(intakeIO::isBeamBroken, IntakeConstants.kBeamBreakDelayTime);
-
-      @Override
-      public void initialize() {
-        intakeIO.setIntakeVoltage(IntakeConstants.kIntakeIntakeVoltage);
-        intakeIO.setPassthroughVoltage(IntakeConstants.kPassthroughIntakeVoltage);
-      }
-
-      @Override
-      public void execute() {
-        beamBreak.update();
-      }
-
-      @Override
-      public boolean isFinished() {
-        return beamBreak.hasBeenTrueForThreshold();
-      }
-    };
+    return this.run(
+            () -> {
+              intakeIO.setIntakeVoltage(IntakeConstants.kIntakeIntakeVoltage);
+              intakeIO.setPassthroughVoltage(IntakeConstants.kPassthroughIntakeVoltage);
+            })
+        .until(debouncedBeamBreak)
+        .andThen(this.off());
   }
 
   public Command intakeSysIdQuasistatic(SysIdRoutine.Direction direction) {
