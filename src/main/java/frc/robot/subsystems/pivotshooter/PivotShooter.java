@@ -110,7 +110,8 @@ public class PivotShooter extends SubsystemBase {
   public Command sysIdDynamic(SysIdRoutine.Direction direction) {
     return m_sysIdRoutine.dynamic(direction);
   }
-  public double getPosition(){
+
+  public double getPosition() {
     return pivotShooterIOAutoLogged.pivotShooterMotorPosition;
   }
 }

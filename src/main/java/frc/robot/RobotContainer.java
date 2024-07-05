@@ -14,7 +14,6 @@ import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
-import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -311,14 +310,16 @@ public class RobotContainer {
 
     // operator.povLeft().onTrue(cancelCommand);
     // Configure the auto
-//    if (FeatureFlags.kSwerveEnabled) {
-//      autoChooser = AutoBuilder.buildAutoChooser();
-//    } else {
-//      autoChooser = new SendableChooser<>();
-//    }
+    //    if (FeatureFlags.kSwerveEnabled) {
+    //      autoChooser = AutoBuilder.buildAutoChooser();
+    //    } else {
+    //      autoChooser = new SendableChooser<>();
+    //    }
     autoChooser = new SendableChooser<>();
     autoChooser.setDefaultOption("Do Nothing", new InstantCommand());
-    autoChooser.addOption("5 Note test", AutoRoutines.center5Note(drivetrain, intake, shooter, pivotShooter, pivotIntake));
+    autoChooser.addOption(
+        "5 Note test",
+        AutoRoutines.center5Note(drivetrain, intake, shooter, pivotShooter, pivotIntake));
     // Autos
     SmartDashboard.putData("Auto Chooser", autoChooser);
   }
