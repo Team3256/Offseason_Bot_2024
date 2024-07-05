@@ -30,6 +30,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants.FeatureFlags;
 import frc.robot.autos.commands.IntakeSequence;
+import frc.robot.autos.routines.AutoRoutines;
 import frc.robot.helpers.XboxStalker;
 import frc.robot.subsystems.ampbar.AmpBar;
 import frc.robot.subsystems.ampbar.AmpBarIOTalonFX;
@@ -315,11 +316,14 @@ public class RobotContainer {
 
     // operator.povLeft().onTrue(cancelCommand);
     // Configure the auto
-    if (FeatureFlags.kSwerveEnabled) {
-      autoChooser = AutoBuilder.buildAutoChooser();
-    } else {
-      autoChooser = new SendableChooser<>();
-    }
+//    if (FeatureFlags.kSwerveEnabled) {
+//      autoChooser = AutoBuilder.buildAutoChooser();
+//    } else {
+//      autoChooser = new SendableChooser<>();
+//    }
+    autoChooser = new SendableChooser<>();
+    autoChooser.setDefaultOption("Do Nothing", new InstantCommand());
+    autoChooser.addOption("5 Note test", AutoRoutines.center5Note(drivetrain, intake, shooter, pivotShooter, pivotIntake));
     // Autos
     SmartDashboard.putData("Auto Chooser", autoChooser);
   }
