@@ -18,7 +18,10 @@ import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.ReplanningConfig;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.RobotController;
@@ -197,6 +200,69 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
           return alliance.isPresent() && alliance.get() == DriverStation.Alliance.Red;
         },
         this);
+  }
+
+  /*
+   * This method comes from 1690's <a
+   * href="https://www.youtube.com/watch?v=N6ogT5DjGOk&t=1674s">Second Software
+   * Presentation</a>
+   * we get the skidding ratio from the current SwerveModuleStates
+   * The skidding ratio is defined as the ratio between the maximum and the
+   * minimum magnitudes of the "translational" part of the velocity vector of the
+   * robot.
+   *
+   * @return the skidding ratio of the robot, maximum/minimum, ranges from
+   * [1,INFINITY)
+   */
+  public double getSkiddingRatio() {
+    // josh: accessing swerveStates / kinematics like this is INTENTIONAL.
+
+    // grab the current SwerveModuleStates & SwerveDriveKinematics.
+    final SwerveModuleState[] swerveStates = super.getState().ModuleStates;
+    final SwerveDriveKinematics kinematics = super.m_kinematics;
+
+    // get the angular velocity of the robot
+    final double angularVelocityOmegaMeasured =
+        kinematics.toChassisSpeeds(swerveStates)
+            .omegaRadiansPerSecond; // use IK to get a chassis speed, then pull out the
+    // angular velocity
+
+    // get the rotational SwerveModuleStates (i.e SwerveModuleState with only angle)
+    final SwerveModuleState[] swerveStatesRotational =
+        kinematics.toSwerveModuleStates(new ChassisSpeeds(0, 0, angularVelocityOmegaMeasured));
+
+    final double[] swerveStatesTranslationalMagnitudes =
+        new double[super.getState().ModuleStates.length];
+    // josh: intentionally doing this instead of directly pulling
+    // speedMetersPerSecond from the SwerveModuleState
+    for (int i = 0; i < swerveStates.length; i++) {
+      final Translation2d
+          swerveStateTranslation2d = convertSwerveModuleStateToTranslation2d(swerveStates[i]),
+          swerveStateRotational =
+              convertSwerveModuleStateToTranslation2d(swerveStatesRotational[i]),
+          swerveStateTranslational = swerveStateTranslation2d.minus(swerveStateRotational);
+      swerveStatesTranslationalMagnitudes[i] = swerveStateTranslational.getNorm();
+    }
+
+    // find the maximum and minimum magnitudes of the translational parts of the
+    // SwerveModuleStates
+    double max = Double.MIN_VALUE, min = Double.MAX_VALUE;
+    for (double translationalSpeed : swerveStatesTranslationalMagnitudes) {
+      max = Math.max(max, translationalSpeed);
+      min = Math.min(min, translationalSpeed);
+    }
+
+    // return the skidding ratio
+    return max / min;
+  }
+
+  /*
+   * Translation2d is the wpilib class that represents a 2d vector. this method
+   * could really be called
+   * "convertSwerveModuleStateToVector"
+   */
+  private Translation2d convertSwerveModuleStateToTranslation2d(SwerveModuleState state) {
+    return new Translation2d(state.speedMetersPerSecond, state.angle);
   }
 
   @Override
