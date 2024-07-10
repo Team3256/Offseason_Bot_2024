@@ -24,7 +24,8 @@ import frc.robot.utils.TalonUtil;
 public class IntakeIOTalonFX implements IntakeIO {
   private final MonitoredTalonFX intakeMotor = new MonitoredTalonFX(IntakeConstants.kIntakeMotorID);
   final VelocityVoltage intakeRequest = new VelocityVoltage(0).withSlot(0);
-  final MotionMagicVelocityVoltage motionMagicIntakeRequest = new MotionMagicVelocityVoltage(0).withSlot(0);
+  final MotionMagicVelocityVoltage motionMagicIntakeRequest =
+      new MotionMagicVelocityVoltage(0).withSlot(0);
   private final VoltageOut intakeVoltageReq = new VoltageOut(0);
 
   private final StatusSignal<Double> intakeMotorVoltage = intakeMotor.getMotorVoltage();
@@ -32,19 +33,25 @@ public class IntakeIOTalonFX implements IntakeIO {
   private final StatusSignal<Double> intakeMotorStatorCurrent = intakeMotor.getStatorCurrent();
   private final StatusSignal<Double> intakeMotorSupplyCurrent = intakeMotor.getSupplyCurrent();
   private final StatusSignal<Double> intakeMotorTemperature = intakeMotor.getDeviceTemp();
-  private final StatusSignal<Double> intakeMotorReferenceSlope = intakeMotor.getClosedLoopReferenceSlope();
+  private final StatusSignal<Double> intakeMotorReferenceSlope =
+      intakeMotor.getClosedLoopReferenceSlope();
 
-  private final MonitoredTalonFX passthroughMotor = new MonitoredTalonFX(IntakeConstants.kPassthroughMotorID);
+  private final MonitoredTalonFX passthroughMotor =
+      new MonitoredTalonFX(IntakeConstants.kPassthroughMotorID);
   final VelocityVoltage passthroughRequest = new VelocityVoltage(0).withSlot(0);
-  final MotionMagicVelocityVoltage motionMagicPassthroughRequest = new MotionMagicVelocityVoltage(0).withSlot(0);
+  final MotionMagicVelocityVoltage motionMagicPassthroughRequest =
+      new MotionMagicVelocityVoltage(0).withSlot(0);
   private final VoltageOut passthroughVoltageReq = new VoltageOut(0);
 
   private final StatusSignal<Double> passthroughMotorVoltage = passthroughMotor.getMotorVoltage();
   private final StatusSignal<Double> passthroughMotorVelocity = passthroughMotor.getVelocity();
-  private final StatusSignal<Double> passthroughMotorStatorCurrent = passthroughMotor.getStatorCurrent();
-  private final StatusSignal<Double> passthroughMotorSupplyCurrent = passthroughMotor.getSupplyCurrent();
+  private final StatusSignal<Double> passthroughMotorStatorCurrent =
+      passthroughMotor.getStatorCurrent();
+  private final StatusSignal<Double> passthroughMotorSupplyCurrent =
+      passthroughMotor.getSupplyCurrent();
   private final StatusSignal<Double> passthroughMotorTemperature = passthroughMotor.getDeviceTemp();
-  private final StatusSignal<Double> passthroughMotorReferenceSlope = passthroughMotor.getClosedLoopReferenceSlope();
+  private final StatusSignal<Double> passthroughMotorReferenceSlope =
+      passthroughMotor.getClosedLoopReferenceSlope();
 
   private DMA beambreakDMA = new DMA();
   private DMASample beambreakDmaSample = new DMASample();
@@ -151,7 +158,8 @@ public class IntakeIOTalonFX implements IntakeIO {
   @Override
   public boolean isBeamBroken() {
     // return !beamBreakInput.get();
-    DMASample.DMAReadStatus readStatus = beambreakDmaSample.update(beambreakDMA, Units.millisecondsToSeconds(1));
+    DMASample.DMAReadStatus readStatus =
+        beambreakDmaSample.update(beambreakDMA, Units.millisecondsToSeconds(1));
     if (readStatus == DMASample.DMAReadStatus.kOk) {
       return !beambreakDmaSample.getDigitalSource(beamBreakInput);
     }
