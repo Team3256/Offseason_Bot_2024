@@ -77,7 +77,7 @@ public class IntakeIOTalonFX implements IntakeIO {
     intakeMotor.optimizeBusUtilization();
     passthroughMotor.optimizeBusUtilization();
 
-    beambreakDMA.setTimedTrigger(0.01);
+    beambreakDMA.setTimedTrigger(Units.millisecondsToSeconds(1));
     beambreakDMA.addDigitalSource(beamBreakInput);
     beambreakDMA.start(1024);
   }
