@@ -30,7 +30,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.limelight.LimelightHelpers;
-
 import java.util.Optional;
 import java.util.function.Supplier;
 
@@ -113,55 +112,52 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
       startSimThread();
     }
   }
+
   public void updateVision() {
-    boolean useMegaTag2 = true; //set to false to use MegaTag1
+    boolean useMegaTag2 = true; // set to false to use MegaTag1
     boolean doRejectUpdate = false;
-    if(useMegaTag2 == false)
-    {
+    if (useMegaTag2 == false) {
       LimelightHelpers.PoseEstimate mt1 = LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight");
 
-      if(mt1.tagCount == 1 && mt1.rawFiducials.length == 1)
-      {
-        if(mt1.rawFiducials[0].ambiguity > .7)
-        {
+      if (mt1.tagCount == 1 && mt1.rawFiducials.length == 1) {
+        if (mt1.rawFiducials[0].ambiguity > .7) {
           doRejectUpdate = true;
         }
-        if(mt1.rawFiducials[0].distToCamera > 3)
-        {
+        if (mt1.rawFiducials[0].distToCamera > 3) {
           doRejectUpdate = true;
         }
       }
-      if(mt1.tagCount == 0)
-      {
+      if (mt1.tagCount == 0) {
         doRejectUpdate = true;
       }
 
-      if(!doRejectUpdate)
-      {
-        this.setVisionMeasurementStdDevs(VecBuilder.fill(.5,.5,9999999));
-        this.addVisionMeasurement(
-                mt1.pose,
-                mt1.timestampSeconds);
+      if (!doRejectUpdate) {
+        this.setVisionMeasurementStdDevs(VecBuilder.fill(.5, .5, 9999999));
+        this.addVisionMeasurement(mt1.pose, mt1.timestampSeconds);
       }
-    }
-    else if (useMegaTag2 == true)
-    {
-      LimelightHelpers.SetRobotOrientation("limelight", this.m_odometry.getEstimatedPosition().getRotation().getDegrees(), 0, 0, 0, 0, 0);
-      LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight");
-      if(Math.abs(this.getPigeon2().getRate()) > 720) // if our angular velocity is greater than 720 degrees per second, ignore vision updates
+    } else if (useMegaTag2 == true) {
+      LimelightHelpers.SetRobotOrientation(
+          "limelight",
+          this.m_odometry.getEstimatedPosition().getRotation().getDegrees(),
+          0,
+          0,
+          0,
+          0,
+          0);
+      LimelightHelpers.PoseEstimate mt2 =
+          LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight");
+      if (Math.abs(this.getPigeon2().getRate())
+          > 720) // if our angular velocity is greater than 720 degrees per second, ignore vision
+      // updates
       {
         doRejectUpdate = true;
       }
-      if(mt2.tagCount == 0)
-      {
+      if (mt2.tagCount == 0) {
         doRejectUpdate = true;
       }
-      if(!doRejectUpdate)
-      {
-        this.setVisionMeasurementStdDevs(VecBuilder.fill(.7,.7,9999999));
-        this.addVisionMeasurement(
-                mt2.pose,
-                mt2.timestampSeconds);
+      if (!doRejectUpdate) {
+        this.setVisionMeasurementStdDevs(VecBuilder.fill(.7, .7, 9999999));
+        this.addVisionMeasurement(mt2.pose, mt2.timestampSeconds);
       }
     }
   }
