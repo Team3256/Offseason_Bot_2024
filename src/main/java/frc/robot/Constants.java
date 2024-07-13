@@ -13,6 +13,7 @@ public final class Constants {
   // have things break.
 
   /* FeatureFlags that are used in Robot.java */
+  public static final String kRobotName = "OffseasonBot";
   public static final boolean kEnableAdvKit = true;
   public static final boolean kEnableMonologue = false;
   public static final boolean kDisableSubsystemsOnDisableInit = true;

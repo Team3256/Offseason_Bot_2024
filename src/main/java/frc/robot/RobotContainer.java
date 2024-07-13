@@ -310,11 +310,11 @@ public class RobotContainer {
 
     // operator.povLeft().onTrue(cancelCommand);
     // Configure the auto
-    //    if (FeatureFlags.kSwerveEnabled) {
-    //      autoChooser = AutoBuilder.buildAutoChooser();
-    //    } else {
-    //      autoChooser = new SendableChooser<>();
-    //    }
+    // if (FeatureFlags.kSwerveEnabled) {
+    // autoChooser = AutoBuilder.buildAutoChooser();
+    // } else {
+    // autoChooser = new SendableChooser<>();
+    // }
     autoChooser = new SendableChooser<>();
     autoChooser.setDefaultOption("Do Nothing", new InstantCommand());
     autoChooser.addOption(

@@ -75,6 +75,7 @@ public class Robot extends LoggedRobot implements Logged {
     Logger.recordMetadata("GitSHA", BuildConstants.GIT_SHA);
     Logger.recordMetadata("GitDate", BuildConstants.GIT_DATE);
     Logger.recordMetadata("GitBranch", BuildConstants.GIT_BRANCH);
+    Logger.recordMetadata("RobotName", Constants.kRobotName);
 
     if (isReal()) {
       System.out.println("Robot is real, forcing Robot mode to REAL");
