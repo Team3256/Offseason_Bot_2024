@@ -8,6 +8,7 @@
 package frc.robot.subsystems.pivotintake;
 
 import com.ctre.phoenix6.configs.*;
+import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
@@ -21,17 +22,10 @@ public final class PivotIntakeConstants {
       new TrapezoidProfile.Constraints(16, 16);
 
   /* Tolerance/threshold */
-  public static final double kCurrentThreshold = 10;
-  public static final double kPivotPositionToleranceDeg = 1; // 5deg for the pivot.
-  public static final double kStallVelocityThreshold = 0.1;
 
   /* Physics/geometry */
   public static final double kPivotMotorGearing = 36; // 22 by 1
-  public static final double kPivotGroundPos = -5.6 / 16;
-  public static final double kPivotLength = 0.2;
-  public static final double kPivotMinAngleDeg = -90;
-  public static final double kPivotMaxAngleDeg = 50;
-  public static final double jKgMetersSquared = 0.1; // for sim
+  public static final double kPivotGroundPos = -5.6 / 16;// for sim
 
   /* Preset */
   public static final double kPivotSlamIntakeVoltage = -5;
@@ -47,16 +41,15 @@ public final class PivotIntakeConstants {
 
   public static final TalonFXConfiguration motorConfig =
       new TalonFXConfiguration()
-          .withSlot0(new Slot0Configs().withKS(0).withKV(0.05).withKP(1).withKI(0).withKD(0))
+          .withSlot0(new Slot0Configs().withKS(0).withKV(0.2).withKP(0.7).withKI(0).withKD(0).withKG(1).withGravityType(GravityTypeValue.Arm_Cosine))
           .withMotorOutput(
               new MotorOutputConfigs()
                   .withNeutralMode(NeutralModeValue.Brake)
                   .withInverted(InvertedValue.Clockwise_Positive))
           .withMotionMagic(
               new MotionMagicConfigs()
-                  .withMotionMagicAcceleration(20)
-                  .withMotionMagicCruiseVelocity(10)
-                  .withMotionMagicJerk(100))
+                  .withMotionMagicAcceleration(400)
+                  .withMotionMagicCruiseVelocity(50))
           .withCurrentLimits(
               new CurrentLimitsConfigs()
                   .withStatorCurrentLimitEnable(true)
