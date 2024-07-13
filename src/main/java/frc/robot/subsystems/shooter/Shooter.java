@@ -11,7 +11,6 @@ import static edu.wpi.first.units.Units.Seconds;
 import static edu.wpi.first.units.Units.Volts;
 
 import com.ctre.phoenix6.SignalLogger;
-
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -27,19 +26,21 @@ public class Shooter extends SubsystemBase {
 
   public Shooter(ShooterIO shooterIO) {
     this.shooterIO = shooterIO;
-    m_sysIdRoutine = new SysIdRoutine(
-        new SysIdRoutine.Config(
-            Volts.of(0.2).per(Seconds.of(1)), // Use default ramp rate (1 V/s)
-            Volts.of(6), // Reduce dynamic step voltage to 4 to prevent brownout
-            null, // Use default timeout (10 s)
-            // Log state with Phoenix SignalLogger class
-            (state) -> SignalLogger.writeString("state", state.toString())),
-        new SysIdRoutine.Mechanism(
-            (volts) -> shooterIO
-                .getMotor()
-                .setControl(shooterIO.getVoltageRequest().withOutput(volts.in(Volts))),
-            null,
-            this));
+    m_sysIdRoutine =
+        new SysIdRoutine(
+            new SysIdRoutine.Config(
+                Volts.of(0.2).per(Seconds.of(1)), // Use default ramp rate (1 V/s)
+                Volts.of(6), // Reduce dynamic step voltage to 4 to prevent brownout
+                null, // Use default timeout (10 s)
+                // Log state with Phoenix SignalLogger class
+                (state) -> SignalLogger.writeString("state", state.toString())),
+            new SysIdRoutine.Mechanism(
+                (volts) ->
+                    shooterIO
+                        .getMotor()
+                        .setControl(shooterIO.getVoltageRequest().withOutput(volts.in(Volts))),
+                null,
+                this));
   }
 
   @Override
@@ -49,33 +50,34 @@ public class Shooter extends SubsystemBase {
   }
 
   public Command regenerativeBrake() {
-    return this.run(() -> {
-      if (ShooterConstants.kUseRegen) {
-        shooterIO.regenerativeBrake();
-        if (RobotController.getBatteryVoltage() >= ShooterConstants.kRegenDisableVoltage) {
-          shooterIO.off();
-        }
-      } else {
-        shooterIO.off();
-      }
-    });
+    return this.run(
+        () -> {
+          if (ShooterConstants.kUseRegen) {
+            shooterIO.regenerativeBrake();
+            if (RobotController.getBatteryVoltage() >= ShooterConstants.kRegenDisableVoltage) {
+              shooterIO.off();
+            }
+          } else {
+            shooterIO.off();
+          }
+        });
   }
 
   public Command setVoltage(double voltage, double followerVoltage) {
     return this.run(
-        () -> {
-          shooterIO.setShooterVoltage(voltage);
-          shooterIO.setShooterFollowerVoltage(followerVoltage);
-        })
+            () -> {
+              shooterIO.setShooterVoltage(voltage);
+              shooterIO.setShooterFollowerVoltage(followerVoltage);
+            })
         .andThen(this::regenerativeBrake);
   }
 
   public Command setVelocity(double velocity, double followerVelocity) {
     return this.run(
-        () -> {
-          shooterIO.setShooterVelocity(velocity);
-          shooterIO.setShooterFollowerVelocity(followerVelocity);
-        })
+            () -> {
+              shooterIO.setShooterVelocity(velocity);
+              shooterIO.setShooterFollowerVelocity(followerVelocity);
+            })
         .andThen(this::regenerativeBrake);
   }
 
