@@ -15,6 +15,7 @@ import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.mechanisms.swerve.*;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
+import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.ReplanningConfig;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -22,12 +23,16 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.units.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import frc.robot.subsystems.vision.Vision;
+import frc.robot.utils.Util;
+
 import java.util.Optional;
 import java.util.function.Supplier;
 
@@ -143,6 +148,11 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
         // normally
         // the case
         this); // Subsystem for requirements
+  }
+
+  public Command pathfindToNote(Vision vision) {
+    PathConstraints constraints = new PathConstraints(TunerConstants.kSpeedAt12VoltsMps-1, 4, edu.wpi.first.math.util.Units.degreesToRadians(450), edu.wpi.first.math.util.Units.degreesToRadians(540));
+    return AutoBuilder.pathfindToPose(vision.getNotePose(this.getState().Pose) ,constraints, 1, 0.0);
   }
 
   public Command applyRequest(Supplier<SwerveRequest> requestSupplier) {
@@ -264,6 +274,8 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
   private Translation2d convertSwerveModuleStateToTranslation2d(SwerveModuleState state) {
     return new Translation2d(state.speedMetersPerSecond, state.angle);
   }
+
+
 
   @Override
   public void periodic() {

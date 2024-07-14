@@ -8,12 +8,15 @@
 package frc.robot;
 
 import com.pathplanner.lib.commands.FollowPathCommand;
+import com.pathplanner.lib.commands.PathfindingCommand;
+import com.pathplanner.lib.pathfinding.Pathfinding;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.autos.LocalADStarAK;
 import frc.robot.utils.NT4PublisherNoFMS;
 import java.util.HashMap;
 import java.util.Map;
@@ -130,6 +133,8 @@ public class Robot extends LoggedRobot implements Logged {
       Logger.start();
     }
     FollowPathCommand.warmupCommand().schedule();
+    Pathfinding.setPathfinder(new LocalADStarAK());
+    PathfindingCommand.warmupCommand().schedule();
 
     // FollowPathCommand warmupCommand = new FollowPathCommand();
     // warmupCommand.schedule();
