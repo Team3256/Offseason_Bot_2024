@@ -126,7 +126,7 @@ public class ShooterIOTalonFX implements ShooterIO {
   }
 
   @Override
-  public default void setTargetVelocity(double velocity) {
+  public void setTargetVelocity(double velocity) {
     if (shooterMotor.getClosedLoopReference().getValue() != velocity) {
       this.setShooterFollowerVelocity(velocity);
     }
