@@ -50,7 +50,7 @@ public class Shooter extends SubsystemBase {
   public void periodic() {
     shooterIO.updateInputs(shooterIOAutoLogged);
     if (Constants.FeatureFlags.kTuningMode) {
-      shooterIO.setTargetVelocity(shooterMotorVelocityInput.get());
+      shooterIO.setShooterVelocity(shooterMotorVelocityInput.get());
     }
     Logger.processInputs(this.getClass().getName(), shooterIOAutoLogged);
   }

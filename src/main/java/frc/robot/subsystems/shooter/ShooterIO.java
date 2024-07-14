@@ -33,8 +33,6 @@ public interface ShooterIO {
 
   public default void setShooterVoltage(double voltage) {}
 
-  public default void setTargetVelocity(double velocity) {}
-
   public default void setShooterVelocity(double velocity) {}
 
   public default void setShooterFollowerVoltage(double voltage) {}
