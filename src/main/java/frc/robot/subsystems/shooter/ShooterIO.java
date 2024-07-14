@@ -29,15 +29,23 @@ public interface ShooterIO {
     public double shooterMotorFollowerReferenceSlope = 0.0;
   }
 
-  public default void updateInputs(ShooterIOInputs inputs) {}
+  public default void updateInputs(ShooterIOInputs inputs) {
+  }
 
-  public default void setShooterVoltage(double voltage) {}
+  public default void setShooterVoltage(double voltage) {
+  }
 
-  public default void setShooterVelocity(double velocity) {}
+  public default void setTargetVelocity(double velocity) {
+  }
 
-  public default void setShooterFollowerVoltage(double voltage) {}
+  public default void setShooterVelocity(double velocity) {
+  }
 
-  public default void setShooterFollowerVelocity(double velocity) {}
+  public default void setShooterFollowerVoltage(double voltage) {
+  }
+
+  public default void setShooterFollowerVelocity(double velocity) {
+  }
 
   public default MonitoredTalonFX getMotor() {
     return new MonitoredTalonFX(0);
@@ -47,5 +55,6 @@ public interface ShooterIO {
     return new VoltageOut(0);
   }
 
-  public default void off() {}
+  public default void off() {
+  }
 }

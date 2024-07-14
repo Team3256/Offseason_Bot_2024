@@ -18,11 +18,9 @@ import frc.robot.utils.PhoenixUtil;
 import frc.robot.utils.TalonUtil;
 
 public class ShooterIOTalonFX implements ShooterIO {
-  private final MonitoredTalonFX shooterMotor =
-      new MonitoredTalonFX(ShooterConstants.kShooterMotorID);
+  private final MonitoredTalonFX shooterMotor = new MonitoredTalonFX(ShooterConstants.kShooterMotorID);
   final VelocityVoltage velocityRequest = new VelocityVoltage(0).withSlot(0);
-  final MotionMagicVelocityVoltage motionMagicRequest =
-      new MotionMagicVelocityVoltage(0).withSlot(0);
+  final MotionMagicVelocityVoltage motionMagicRequest = new MotionMagicVelocityVoltage(0).withSlot(0);
   private final VoltageOut voltageReq = new VoltageOut(0);
 
   private final StatusSignal<Double> shooterMotorVoltage = shooterMotor.getMotorVoltage();
@@ -30,27 +28,19 @@ public class ShooterIOTalonFX implements ShooterIO {
   private final StatusSignal<Double> shooterMotorStatorCurrent = shooterMotor.getStatorCurrent();
   private final StatusSignal<Double> shooterMotorSupplyCurrent = shooterMotor.getSupplyCurrent();
   private final StatusSignal<Double> shooterMotorTemperature = shooterMotor.getDeviceTemp();
-  private final StatusSignal<Double> shooterMotorReferenceSlope =
-      shooterMotor.getClosedLoopReferenceSlope();
+  private final StatusSignal<Double> shooterMotorReferenceSlope = shooterMotor.getClosedLoopReferenceSlope();
 
-  private final MonitoredTalonFX shooterMotorFollower =
-      new MonitoredTalonFX(ShooterConstants.kShooterMotorFollowerID);
+  private final MonitoredTalonFX shooterMotorFollower = new MonitoredTalonFX(ShooterConstants.kShooterMotorFollowerID);
   final VelocityVoltage velocityRequestFollower = new VelocityVoltage(0).withSlot(0);
-  final MotionMagicVelocityVoltage motionMagicRequestFollower =
-      new MotionMagicVelocityVoltage(0).withSlot(0);
+  final MotionMagicVelocityVoltage motionMagicRequestFollower = new MotionMagicVelocityVoltage(0).withSlot(0);
 
-  private final StatusSignal<Double> shooterMotorFollowerVoltage =
-      shooterMotorFollower.getMotorVoltage();
-  private final StatusSignal<Double> shooterMotorFollowerVelocity =
-      shooterMotorFollower.getVelocity();
-  private final StatusSignal<Double> shooterMotorFollowerStatorCurrent =
-      shooterMotorFollower.getStatorCurrent();
-  private final StatusSignal<Double> shooterMotorFollowerSupplyCurrent =
-      shooterMotorFollower.getSupplyCurrent();
-  private final StatusSignal<Double> shooterMotorFollowerTemperature =
-      shooterMotorFollower.getDeviceTemp();
-  private final StatusSignal<Double> shooterMotorFollowerReferenceSlope =
-      shooterMotorFollower.getClosedLoopReferenceSlope();
+  private final StatusSignal<Double> shooterMotorFollowerVoltage = shooterMotorFollower.getMotorVoltage();
+  private final StatusSignal<Double> shooterMotorFollowerVelocity = shooterMotorFollower.getVelocity();
+  private final StatusSignal<Double> shooterMotorFollowerStatorCurrent = shooterMotorFollower.getStatorCurrent();
+  private final StatusSignal<Double> shooterMotorFollowerSupplyCurrent = shooterMotorFollower.getSupplyCurrent();
+  private final StatusSignal<Double> shooterMotorFollowerTemperature = shooterMotorFollower.getDeviceTemp();
+  private final StatusSignal<Double> shooterMotorFollowerReferenceSlope = shooterMotorFollower
+      .getClosedLoopReferenceSlope();
 
   public ShooterIOTalonFX() {
     var motorConfig = ShooterConstants.motorConfigs;
@@ -107,8 +97,7 @@ public class ShooterIOTalonFX implements ShooterIO {
     inputs.shooterMotorFollowerStatorCurrent = shooterMotorFollowerStatorCurrent.getValueAsDouble();
     inputs.shooterMotorFollowerSupplyCurrent = shooterMotorFollowerSupplyCurrent.getValueAsDouble();
     inputs.shooterMotorFollowerTemperature = shooterMotorFollowerTemperature.getValueAsDouble();
-    inputs.shooterMotorFollowerReferenceSlope =
-        shooterMotorFollowerReferenceSlope.getValueAsDouble();
+    inputs.shooterMotorFollowerReferenceSlope = shooterMotorFollowerReferenceSlope.getValueAsDouble();
   }
 
   @Override
@@ -122,6 +111,13 @@ public class ShooterIOTalonFX implements ShooterIO {
       shooterMotor.setControl(motionMagicRequest.withVelocity(velocity));
     } else {
       shooterMotor.setControl(velocityRequest.withVelocity(velocity));
+    }
+  }
+
+  @Override
+  public default void setTargetVelocity(double velocity) {
+    if (shooterMotor.getClosedLoopReference().getValue() != velocity) {
+      this.setShooterFollowerVelocity(velocity);
     }
   }
 
