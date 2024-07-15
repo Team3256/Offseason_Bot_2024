@@ -8,6 +8,7 @@
 package frc.robot.subsystems.pivotshooter;
 
 import com.ctre.phoenix6.configs.*;
+import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
@@ -68,10 +69,12 @@ public final class PivotShooterConstants {
           .withSlot0(
               new Slot0Configs()
                   .withKS(0)
-                  .withKV(0.05)
-                  .withKP(25)
+                  .withKV(0)
+                  .withKP(10)
                   .withKI(0)
-                  .withKD(0) // Original 0.145
+                  .withKD(0)
+                  .withKG(1)
+                  .withGravityType(GravityTypeValue.Arm_Cosine) // Original 0.145
               )
           .withMotorOutput(
               new MotorOutputConfigs()
@@ -79,9 +82,8 @@ public final class PivotShooterConstants {
                   .withInverted(InvertedValue.Clockwise_Positive))
           .withMotionMagic(
               new MotionMagicConfigs()
-                  .withMotionMagicAcceleration(100)
-                  .withMotionMagicCruiseVelocity(100)
-                  .withMotionMagicJerk(420))
+                  .withMotionMagicAcceleration(400)
+                  .withMotionMagicCruiseVelocity(50))
           .withCurrentLimits(
               new CurrentLimitsConfigs()
                   .withStatorCurrentLimitEnable(true)
