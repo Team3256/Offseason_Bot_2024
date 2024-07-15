@@ -71,7 +71,13 @@ public class AutoRoutines {
     Trigger noteOuttaken = new Trigger(() -> !intake.isBeamBroken()).debounce(1);
 
     return Commands.sequence(
-            Commands.runOnce(()->swerve.seedFieldRelative(DriverStation.getAlliance().orElse(DriverStation.Alliance.Blue) ==DriverStation.Alliance.Blue ? center_w1.getInitialPose(): center_w1.getFlippedInitialPose())),
+        Commands.runOnce(
+            () ->
+                swerve.seedFieldRelative(
+                    DriverStation.getAlliance().orElse(DriverStation.Alliance.Blue)
+                            == DriverStation.Alliance.Blue
+                        ? center_w1.getInitialPose()
+                        : center_w1.getFlippedInitialPose())),
         swerve
             .runChoreoTraj(center_w1)
             .deadlineWith(
