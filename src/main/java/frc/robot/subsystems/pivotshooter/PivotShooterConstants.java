@@ -73,7 +73,8 @@ public final class PivotShooterConstants {
                   .withKP(10)
                   .withKI(0)
                   .withKD(0)
-                      .withKG(1).withGravityType(GravityTypeValue.Arm_Cosine)// Original 0.145
+                  .withKG(1)
+                  .withGravityType(GravityTypeValue.Arm_Cosine) // Original 0.145
               )
           .withMotorOutput(
               new MotorOutputConfigs()

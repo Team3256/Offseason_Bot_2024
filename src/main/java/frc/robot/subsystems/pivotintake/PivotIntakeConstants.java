@@ -25,7 +25,7 @@ public final class PivotIntakeConstants {
 
   /* Physics/geometry */
   public static final double kPivotMotorGearing = 36; // 22 by 1
-  public static final double kPivotGroundPos = -5.6 / 16;// for sim
+  public static final double kPivotGroundPos = -5.6 / 16; // for sim
 
   /* Preset */
   public static final double kPivotSlamIntakeVoltage = -5;
@@ -41,7 +41,15 @@ public final class PivotIntakeConstants {
 
   public static final TalonFXConfiguration motorConfig =
       new TalonFXConfiguration()
-          .withSlot0(new Slot0Configs().withKS(0).withKV(0.2).withKP(0.7).withKI(0).withKD(0).withKG(1).withGravityType(GravityTypeValue.Arm_Cosine))
+          .withSlot0(
+              new Slot0Configs()
+                  .withKS(0)
+                  .withKV(0.2)
+                  .withKP(0.7)
+                  .withKI(0)
+                  .withKD(0)
+                  .withKG(1)
+                  .withGravityType(GravityTypeValue.Arm_Cosine))
           .withMotorOutput(
               new MotorOutputConfigs()
                   .withNeutralMode(NeutralModeValue.Brake)
