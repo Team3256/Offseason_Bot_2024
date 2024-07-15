@@ -8,6 +8,7 @@
 package frc.robot.autos.routines;
 
 import com.choreo.lib.*;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -70,6 +71,7 @@ public class AutoRoutines {
     Trigger noteOuttaken = new Trigger(() -> !intake.isBeamBroken()).debounce(1);
 
     return Commands.sequence(
+            Commands.runOnce(()->swerve.seedFieldRelative(DriverStation.getAlliance().orElse(DriverStation.Alliance.Blue) ==DriverStation.Alliance.Blue ? center_w1.getInitialPose(): center_w1.getFlippedInitialPose())),
         swerve
             .runChoreoTraj(center_w1)
             .deadlineWith(
