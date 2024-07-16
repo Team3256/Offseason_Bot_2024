@@ -35,7 +35,7 @@ public class LoggedTunableNumber implements DoubleSupplier {
    */
   public LoggedTunableNumber(String dashboardKey) {
     this.key = tableKey + "/" + dashboardKey;
-    this.dashboardNumber = new LoggedDashboardNumber(key, -1);
+    this.dashboardNumber = new LoggedDashboardNumber(key);
   }
 
   /**

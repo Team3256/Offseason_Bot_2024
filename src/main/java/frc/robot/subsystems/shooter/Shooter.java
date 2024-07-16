@@ -52,7 +52,7 @@ public class Shooter extends SubsystemBase {
   public void periodic() {
     shooterIO.updateInputs(shooterIOAutoLogged);
     if (Constants.FeatureFlags.kTuningMode) {
-      double velocity = shooterMotorVelocityInput.get();
+      double velocity = shooterMotorVelocityInput.getOrUse(0);
       shooterIO.setShooterVelocity(velocity);
       shooterIO.setShooterFollowerVelocity(shooterFollowerVelocityInput.getOrUse(velocity));
     }
