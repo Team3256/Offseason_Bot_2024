@@ -73,10 +73,9 @@ public final class ShooterConstants {
   public static NeutralModeValue neutralMode = NeutralModeValue.Brake;
   public static InvertedValue shooterInverted = InvertedValue.Clockwise_Positive;
   public static InvertedValue shooterFollowerInverted = InvertedValue.CounterClockwise_Positive;
-
   // Characteristics
-  public static double kGearingRatio = 0.0; // TODO
-  public static double kShooterInertia = 0.0; // TODO: in joules kilogram meters squared
-  public static double kFollowerGearingRatio = 0.0; // TODO
-  public static double kFollowerShooterInertia = 0.0; // TODO: in joules kilogram meters squared
+  public static double kGearingRatio = 1.0; // TODO
+  public static double kShooterInertia = 0.001; // TODO: in joules kilogram meters squared
+  public static double kFollowerGearingRatio = 1.0; // TODO
+  public static double kFollowerShooterInertia = 0.001; // TODO: in joules kilogram meters squared
 }
