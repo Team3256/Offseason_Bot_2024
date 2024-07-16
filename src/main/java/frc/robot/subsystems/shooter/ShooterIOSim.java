@@ -88,6 +88,11 @@ public class ShooterIOSim implements ShooterIO {
     inputs.shooterMotorFollowerSupplyCurrent = followerMotorSimState.getSupplyCurrent();
     inputs.shooterMotorFollowerTemperature = 69;
     inputs.shooterMotorFollowerReferenceSlope = 0; // ???
+
+    // RoboRioSim.setVInVoltage(
+    // BatterySim.calculateDefaultBatteryLoadedVoltage(
+    // shooterMotorModel.getCurrentDrawAmps() +
+    // followerMotorModel.getCurrentDrawAmps()));
   }
 
   @Override
