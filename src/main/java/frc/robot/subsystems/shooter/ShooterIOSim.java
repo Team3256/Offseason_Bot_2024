@@ -12,14 +12,22 @@ import com.ctre.phoenix6.controls.NeutralOut;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.sim.TalonFXSimState;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
+import frc.robot.utils.PhoenixUtil;
+import frc.robot.utils.TalonUtil;
 
 public class ShooterIOSim implements ShooterIO {
   private final TalonFX shooterMotor = new TalonFX(ShooterConstants.kShooterMotorID);
   private final TalonFX shooterMotorFollower =
       new TalonFX(ShooterConstants.kShooterMotorFollowerID);
+
+  private final TalonFXSimState shooterMotorSimState = shooterMotor.getSimState();
+  private final TalonFXSimState followerMotorSimState = shooterMotorFollower.getSimState();
+
   private final DCMotorSim shooterMotorModel =
       new DCMotorSim(
           DCMotor.getKrakenX60Foc(1),
@@ -42,48 +50,52 @@ public class ShooterIOSim implements ShooterIO {
 
   public ShooterIOSim() {
     var motorConfig = ShooterConstants.motorConfigs;
+    PhoenixUtil.checkErrorAndRetry(() -> shooterMotor.getConfigurator().refresh(motorConfig));
+    TalonUtil.applyAndCheckConfiguration(shooterMotor, motorConfig);
+
     var motorConfigFollower = ShooterConstants.followerMotorConfigs;
-    // XXX: Unsure if this is necessary
-    shooterMotor.getConfigurator().refresh(motorConfig);
-    shooterMotorFollower.getConfigurator().refresh(motorConfigFollower);
+    PhoenixUtil.checkErrorAndRetry(
+        () -> shooterMotorFollower.getConfigurator().refresh(motorConfigFollower));
+    TalonUtil.applyAndCheckConfiguration(shooterMotorFollower, motorConfigFollower);
   }
 
   @Override
   public void updateInputs(ShooterIOInputs inputs) {
-    var simState = shooterMotor.getSimState();
-    var motorVoltage = simState.getMotorVoltage();
-    var followerSimState = shooterMotorFollower.getSimState();
-    var followerMotorVoltage = followerSimState.getMotorVoltage();
+    shooterMotorSimState.setSupplyVoltage(RobotController.getBatteryVoltage());
+    followerMotorSimState.setSupplyVoltage(RobotController.getBatteryVoltage());
+
+    var motorVoltage = shooterMotorSimState.getMotorVoltage();
+    var followerMotorVoltage = followerMotorSimState.getMotorVoltage();
 
     shooterMotorModel.setInputVoltage(motorVoltage);
     shooterMotorModel.update(0.02); // assume 20ms loop
     followerMotorModel.setInputVoltage(followerMotorVoltage);
     followerMotorModel.update(0.02); // assume 20ms loop
 
-    simState.setRawRotorPosition(shooterMotorModel.getAngularPositionRad());
-    simState.setRotorVelocity(
+    shooterMotorSimState.setRawRotorPosition(shooterMotorModel.getAngularPositionRad());
+    shooterMotorSimState.setRotorVelocity(
         Units.radiansToRotations(shooterMotorModel.getAngularVelocityRadPerSec()));
     inputs.shooterMotorVoltage = motorVoltage;
     inputs.shooterMotorVelocity = shooterMotorModel.getAngularVelocityRadPerSec();
     inputs.shooterMotorStatorCurrent = shooterMotorModel.getCurrentDrawAmps();
-    inputs.shooterMotorSupplyCurrent = simState.getSupplyCurrent();
+    inputs.shooterMotorSupplyCurrent = shooterMotorSimState.getSupplyCurrent();
     inputs.shooterMotorTemperature = 69;
     inputs.shooterMotorReferenceSlope = 0; // ???
 
-    followerSimState.setRawRotorPosition(followerMotorModel.getAngularPositionRad());
-    followerSimState.setRotorVelocity(
+    followerMotorSimState.setRawRotorPosition(followerMotorModel.getAngularPositionRad());
+    followerMotorSimState.setRotorVelocity(
         Units.radiansToRotations(followerMotorModel.getAngularVelocityRadPerSec()));
     inputs.shooterMotorFollowerVoltage = followerMotorVoltage;
     inputs.shooterMotorFollowerVelocity = followerMotorModel.getAngularVelocityRadPerSec();
     inputs.shooterMotorFollowerStatorCurrent = followerMotorModel.getCurrentDrawAmps();
-    inputs.shooterMotorFollowerSupplyCurrent = followerSimState.getSupplyCurrent();
+    inputs.shooterMotorFollowerSupplyCurrent = followerMotorSimState.getSupplyCurrent();
     inputs.shooterMotorFollowerTemperature = 69;
     inputs.shooterMotorFollowerReferenceSlope = 0; // ???
   }
 
   @Override
   public void setShooterVoltage(double voltage) {
-    shooterMotor.getSimState().setSupplyVoltage(voltage);
+    shooterMotor.setVoltage(voltage);
   }
 
   @Override
