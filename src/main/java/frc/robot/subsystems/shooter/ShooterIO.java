@@ -8,6 +8,8 @@
 package frc.robot.subsystems.shooter;
 
 import com.ctre.phoenix6.controls.VoltageOut;
+import com.ctre.phoenix6.hardware.TalonFX;
+
 import frc.robot.drivers.MonitoredTalonFX;
 import org.littletonrobotics.junction.AutoLog;
 
@@ -29,17 +31,22 @@ public interface ShooterIO {
     public double shooterMotorFollowerReferenceSlope = 0.0;
   }
 
-  public default void updateInputs(ShooterIOInputs inputs) {}
+  public default void updateInputs(ShooterIOInputs inputs) {
+  }
 
-  public default void setShooterVoltage(double voltage) {}
+  public default void setShooterVoltage(double voltage) {
+  }
 
-  public default void setShooterVelocity(double velocity) {}
+  public default void setShooterVelocity(double velocity) {
+  }
 
-  public default void setShooterFollowerVoltage(double voltage) {}
+  public default void setShooterFollowerVoltage(double voltage) {
+  }
 
-  public default void setShooterFollowerVelocity(double velocity) {}
+  public default void setShooterFollowerVelocity(double velocity) {
+  }
 
-  public default MonitoredTalonFX getMotor() {
+  public default TalonFX getMotor() {
     return new MonitoredTalonFX(0);
   }
 
@@ -47,5 +54,6 @@ public interface ShooterIO {
     return new VoltageOut(0);
   }
 
-  public default void off() {}
+  public default void off() {
+  }
 }
