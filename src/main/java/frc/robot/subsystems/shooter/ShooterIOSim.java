@@ -15,10 +15,7 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.sim.TalonFXSimState;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
-import frc.robot.utils.PhoenixUtil;
-import frc.robot.utils.TalonUtil;
 
 public class ShooterIOSim implements ShooterIO {
   private final TalonFX shooterMotor = new TalonFX(ShooterConstants.kShooterMotorID);
