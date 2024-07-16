@@ -7,35 +7,38 @@
 
 package frc.robot.subsystems.shooter;
 
-import com.ctre.phoenix6.BaseStatusSignal;
-import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.controls.MotionMagicVelocityVoltage;
 import com.ctre.phoenix6.controls.NeutralOut;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
-
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
-import frc.robot.utils.PhoenixUtil;
-import frc.robot.utils.TalonUtil;
 
 public class ShooterIOSim implements ShooterIO {
   private final TalonFX shooterMotor = new TalonFX(ShooterConstants.kShooterMotorID);
-  private final TalonFX shooterMotorFollower = new TalonFX(ShooterConstants.kShooterMotorFollowerID);
-  private final DCMotorSim shooterMotorModel = new DCMotorSim(DCMotor.getKrakenX60Foc(1),
-      ShooterConstants.kGearingRatio, ShooterConstants.kShooterInertia);
-  private final DCMotorSim followerMotorModel = new DCMotorSim(DCMotor.getKrakenX60Foc(1),
-      ShooterConstants.kFollowerGearingRatio, ShooterConstants.kFollowerShooterInertia);
+  private final TalonFX shooterMotorFollower =
+      new TalonFX(ShooterConstants.kShooterMotorFollowerID);
+  private final DCMotorSim shooterMotorModel =
+      new DCMotorSim(
+          DCMotor.getKrakenX60Foc(1),
+          ShooterConstants.kGearingRatio,
+          ShooterConstants.kShooterInertia);
+  private final DCMotorSim followerMotorModel =
+      new DCMotorSim(
+          DCMotor.getKrakenX60Foc(1),
+          ShooterConstants.kFollowerGearingRatio,
+          ShooterConstants.kFollowerShooterInertia);
 
   final VelocityVoltage velocityRequest = new VelocityVoltage(0).withSlot(0);
-  final MotionMagicVelocityVoltage motionMagicRequest = new MotionMagicVelocityVoltage(0).withSlot(0);
+  final MotionMagicVelocityVoltage motionMagicRequest =
+      new MotionMagicVelocityVoltage(0).withSlot(0);
   private final VoltageOut voltageReq = new VoltageOut(0);
 
   final VelocityVoltage velocityRequestFollower = new VelocityVoltage(0).withSlot(0);
-  final MotionMagicVelocityVoltage motionMagicRequestFollower = new MotionMagicVelocityVoltage(0).withSlot(0);
+  final MotionMagicVelocityVoltage motionMagicRequestFollower =
+      new MotionMagicVelocityVoltage(0).withSlot(0);
 
   public ShooterIOSim() {
     var motorConfig = ShooterConstants.motorConfigs;
@@ -58,7 +61,8 @@ public class ShooterIOSim implements ShooterIO {
     followerMotorModel.update(0.02); // assume 20ms loop
 
     simState.setRawRotorPosition(shooterMotorModel.getAngularPositionRad());
-    simState.setRotorVelocity(Units.radiansToRotations(shooterMotorModel.getAngularVelocityRadPerSec()));
+    simState.setRotorVelocity(
+        Units.radiansToRotations(shooterMotorModel.getAngularVelocityRadPerSec()));
     inputs.shooterMotorVoltage = motorVoltage;
     inputs.shooterMotorVelocity = shooterMotorModel.getAngularVelocityRadPerSec();
     inputs.shooterMotorStatorCurrent = shooterMotorModel.getCurrentDrawAmps();
@@ -67,7 +71,8 @@ public class ShooterIOSim implements ShooterIO {
     inputs.shooterMotorReferenceSlope = 0; // ???
 
     followerSimState.setRawRotorPosition(followerMotorModel.getAngularPositionRad());
-    followerSimState.setRotorVelocity(Units.radiansToRotations(followerMotorModel.getAngularVelocityRadPerSec()));
+    followerSimState.setRotorVelocity(
+        Units.radiansToRotations(followerMotorModel.getAngularVelocityRadPerSec()));
     inputs.shooterMotorFollowerVoltage = followerMotorVoltage;
     inputs.shooterMotorFollowerVelocity = followerMotorModel.getAngularVelocityRadPerSec();
     inputs.shooterMotorFollowerStatorCurrent = followerMotorModel.getCurrentDrawAmps();
