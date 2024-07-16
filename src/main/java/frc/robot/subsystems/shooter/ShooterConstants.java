@@ -33,7 +33,7 @@ public final class ShooterConstants {
           .withSlot0(
               new Slot0Configs()
                   .withKS(0)
-                  .withKV(0.39) // Original 0.145
+                  .withKV(0.145) // Original 0.145
                   // .withKA(1.48)// Original 0 only for feedforward, might not use
                   .withKP(0.4)
                   .withKI(0)
@@ -41,9 +41,8 @@ public final class ShooterConstants {
           .withMotorOutput(motorOutputConfigs)
           .withMotionMagic(
               new MotionMagicConfigs()
-                  .withMotionMagicAcceleration(100)
-                  .withMotionMagicCruiseVelocity(300)
-                  .withMotionMagicJerk(1600))
+                  .withMotionMagicAcceleration(1600)
+                  .withMotionMagicCruiseVelocity(0))
           .withCurrentLimits(
               new CurrentLimitsConfigs()
                   .withStatorCurrentLimitEnable(true)
