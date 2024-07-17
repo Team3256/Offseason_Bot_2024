@@ -152,6 +152,7 @@ spotless {
             include '**/*.java'
             exclude '**/build/**', '**/build-*/**'
             exclude '**/BuildConstants.java'
+            exclude 'src/test/**/*.java'
         }
         toggleOffOn()
         googleJavaFormat()
