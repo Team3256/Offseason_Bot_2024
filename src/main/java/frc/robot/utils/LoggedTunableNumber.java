@@ -35,6 +35,7 @@ public class LoggedTunableNumber implements DoubleSupplier {
    */
   public LoggedTunableNumber(String dashboardKey) {
     this.key = tableKey + "/" + dashboardKey;
+    this.dashboardNumber = new LoggedDashboardNumber(key);
   }
 
   /**
@@ -74,6 +75,18 @@ public class LoggedTunableNumber implements DoubleSupplier {
     } else {
       return Constants.FeatureFlags.kTuningMode ? dashboardNumber.get() : defaultValue;
     }
+  }
+
+  /**
+   * Get the current value, from dashboard if available and in tuning mode.
+   *
+   * @param fallbackValue The default value to return if the number is not in the dashboard.
+   *     Different from using `.initDefault` and then `.get` because `.initDefault` is idempotent
+   * @return The current value
+   */
+  public double getOrUse(double fallbackValue) {
+    dashboardNumber.setDefault(fallbackValue);
+    return Constants.FeatureFlags.kTuningMode ? dashboardNumber.get() : defaultValue;
   }
 
   /**

@@ -14,12 +14,18 @@ import com.ctre.phoenix6.SignalLogger;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import frc.robot.Constants;
+import frc.robot.utils.LoggedTunableNumber;
 import org.littletonrobotics.junction.Logger;
 
 public class Shooter extends SubsystemBase {
 
   private final ShooterIO shooterIO;
   private final ShooterIOInputsAutoLogged shooterIOAutoLogged = new ShooterIOInputsAutoLogged();
+  private final LoggedTunableNumber shooterMotorVelocityInput =
+      new LoggedTunableNumber("Shooter/MotorVelocity");
+  private final LoggedTunableNumber shooterFollowerVelocityInput =
+      new LoggedTunableNumber("Shooter/FollowerVelocity");
 
   private final SysIdRoutine m_sysIdRoutine;
 
@@ -45,6 +51,11 @@ public class Shooter extends SubsystemBase {
   @Override
   public void periodic() {
     shooterIO.updateInputs(shooterIOAutoLogged);
+    if (Constants.FeatureFlags.kTuningMode) {
+      double velocity = shooterMotorVelocityInput.getOrUse(0);
+      shooterIO.setShooterVelocity(velocity);
+      shooterIO.setShooterFollowerVelocity(shooterFollowerVelocityInput.getOrUse(velocity));
+    }
     Logger.processInputs(this.getClass().getName(), shooterIOAutoLogged);
   }
 
