@@ -7,6 +7,11 @@
 
 package frc.robot.subsystems.vision;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.littletonrobotics.junction.AutoLogOutput;
 
@@ -60,6 +65,30 @@ public class Vision extends SubsystemBase {
 
   public double getLastLastCenterLimelightY() {
     return lastLastCenterLimelightY;
+  }
+
+  @AutoLogOutput
+  public double getDistanceToNote() {
+    return (VisionConstants.noteLimelightHeightInches - VisionConstants.noteHeight)
+        / Math.tan(
+            Units.degreesToRadians(
+                visionIOAutoLogged.noteLimelightY + VisionConstants.noteLimelightAngleDegrees));
+  }
+
+  @AutoLogOutput
+  public Pose2d getNotePose(Pose2d robotPose) {
+    return robotPose
+        .transformBy(VisionConstants.robotToCam)
+        .transformBy(
+            new Transform2d(
+                new Translation2d(
+                    getDistanceToNote(),
+                    robotPose
+                        .getRotation()
+                        .plus(Rotation2d.fromDegrees(visionIOAutoLogged.noteLimelightX))),
+                robotPose
+                    .getRotation()
+                    .plus(Rotation2d.fromDegrees(visionIOAutoLogged.noteLimelightX))));
   }
 
   @AutoLogOutput

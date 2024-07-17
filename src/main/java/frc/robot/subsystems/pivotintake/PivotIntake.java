@@ -29,8 +29,8 @@ public class PivotIntake extends SubsystemBase {
     m_sysIdRoutine =
         new SysIdRoutine(
             new SysIdRoutine.Config(
-                Volts.of(0.2).per(Seconds.of(1)), // Use default ramp rate (1 V/s)
-                Volts.of(6), // Reduce dynamic step voltage to 4 to prevent brownout
+                Volts.of(0.5).per(Seconds.of(0.5)), // Use default ramp rate (1 V/s)
+                Volts.of(2), // Reduce dynamic step voltage to 4 to prevent brownout
                 null, // Use default timeout (10 s)
                 // Log state with Phoenix SignalLogger class
                 (state) -> SignalLogger.writeString("state", state.toString())),

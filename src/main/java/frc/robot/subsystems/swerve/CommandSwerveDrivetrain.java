@@ -15,8 +15,10 @@ import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.mechanisms.swerve.*;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
+import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.ReplanningConfig;
+import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -28,6 +30,8 @@ import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import frc.robot.limelight.LimelightHelpers;
+import frc.robot.subsystems.vision.Vision;
 import java.util.Optional;
 import java.util.function.Supplier;
 
@@ -111,6 +115,56 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
     }
   }
 
+  public void updateVision() {
+    boolean useMegaTag2 = true; // set to false to use MegaTag1
+    boolean doRejectUpdate = false;
+    if (useMegaTag2 == false) {
+      LimelightHelpers.PoseEstimate mt1 = LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight");
+
+      if (mt1.tagCount == 1 && mt1.rawFiducials.length == 1) {
+        if (mt1.rawFiducials[0].ambiguity > .7) {
+          doRejectUpdate = true;
+        }
+        if (mt1.rawFiducials[0].distToCamera > 3) {
+          doRejectUpdate = true;
+        }
+      }
+      if (mt1.tagCount == 0) {
+        doRejectUpdate = true;
+      }
+
+      if (!doRejectUpdate) {
+        this.setVisionMeasurementStdDevs(VecBuilder.fill(.5, .5, 9999999));
+        this.addVisionMeasurement(mt1.pose, mt1.timestampSeconds);
+      }
+    } else if (useMegaTag2 == true) {
+      LimelightHelpers.SetRobotOrientation(
+          "limelight",
+          this.m_odometry.getEstimatedPosition().getRotation().getDegrees(),
+          0,
+          0,
+          0,
+          0,
+          0);
+      LimelightHelpers.PoseEstimate mt2 =
+          LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight");
+      if (Math.abs(this.getPigeon2().getRate())
+          > 720) // if our angular velocity is greater than 720 degrees per
+      // second, ignore vision
+      // updates
+      {
+        doRejectUpdate = true;
+      }
+      if (mt2.tagCount == 0) {
+        doRejectUpdate = true;
+      }
+      if (!doRejectUpdate) {
+        this.setVisionMeasurementStdDevs(VecBuilder.fill(.7, .7, 9999999));
+        this.addVisionMeasurement(mt2.pose, mt2.timestampSeconds);
+      }
+    }
+  }
+
   private void configurePathPlanner() {
     double driveBaseRadius = 0;
     for (var moduleLocation : m_moduleLocations) {
@@ -143,6 +197,20 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
         // normally
         // the case
         this); // Subsystem for requirements
+  }
+
+  public Command pathfindToNote(Vision vision) {
+    PathConstraints constraints =
+        new PathConstraints(
+            TunerConstants.kSpeedAt12VoltsMps - 1, // max speed (4.96)
+            4, // max acceleration (4 m/s^2)
+            edu.wpi.first.math.util.Units.degreesToRadians(450), // max angular velocity (450 deg/s)
+            edu.wpi.first.math.util.Units.degreesToRadians(
+                540)); // max angular acceleration (540 deg/s^2)
+    return AutoBuilder.pathfindToPose(
+        // current pose, path constraints (see above), "goal end velocity", rotation
+        // delay distance (how long to travel before rotating)
+        vision.getNotePose(this.getState().Pose), constraints, 1, 0.0);
   }
 
   public Command applyRequest(Supplier<SwerveRequest> requestSupplier) {
@@ -223,8 +291,15 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
 
     // get the angular velocity of the robot
     final double angularVelocityOmegaMeasured =
-        kinematics.toChassisSpeeds(swerveStates)
-            .omegaRadiansPerSecond; // use IK to get a chassis speed, then pull out the
+        kinematics.toChassisSpeeds(swerveStates).omegaRadiansPerSecond; // use
+    // IK to
+    // get a
+    // chassis
+    // speed,
+    // then
+    // pull
+    // out
+    // the
     // angular velocity
 
     // get the rotational SwerveModuleStates (i.e SwerveModuleState with only angle)
@@ -294,6 +369,7 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
                         : BlueAlliancePerspectiveRotation);
                 hasAppliedOperatorPerspective = true;
               });
+      updateVision();
     }
   }
 }
