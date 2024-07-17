@@ -15,6 +15,7 @@ import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.mechanisms.swerve.*;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
+import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.ReplanningConfig;
 import edu.wpi.first.math.VecBuilder;
@@ -30,6 +31,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.limelight.LimelightHelpers;
+import frc.robot.subsystems.vision.Vision;
 import java.util.Optional;
 import java.util.function.Supplier;
 
@@ -147,7 +149,8 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
       LimelightHelpers.PoseEstimate mt2 =
           LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight");
       if (Math.abs(this.getPigeon2().getRate())
-          > 720) // if our angular velocity is greater than 720 degrees per second, ignore vision
+          > 720) // if our angular velocity is greater than 720 degrees per
+      // second, ignore vision
       // updates
       {
         doRejectUpdate = true;
@@ -194,6 +197,20 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
         // normally
         // the case
         this); // Subsystem for requirements
+  }
+
+  public Command pathfindToNote(Vision vision) {
+    PathConstraints constraints =
+        new PathConstraints(
+            TunerConstants.kSpeedAt12VoltsMps - 1, // max speed (4.96)
+            4, // max acceleration (4 m/s^2)
+            edu.wpi.first.math.util.Units.degreesToRadians(450), // max angular velocity (450 deg/s)
+            edu.wpi.first.math.util.Units.degreesToRadians(
+                540)); // max angular acceleration (540 deg/s^2)
+    return AutoBuilder.pathfindToPose(
+        // current pose, path constraints (see above), "goal end velocity", rotation
+        // delay distance (how long to travel before rotating)
+        vision.getNotePose(this.getState().Pose), constraints, 1, 0.0);
   }
 
   public Command applyRequest(Supplier<SwerveRequest> requestSupplier) {
@@ -274,8 +291,15 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
 
     // get the angular velocity of the robot
     final double angularVelocityOmegaMeasured =
-        kinematics.toChassisSpeeds(swerveStates)
-            .omegaRadiansPerSecond; // use IK to get a chassis speed, then pull out the
+        kinematics.toChassisSpeeds(swerveStates).omegaRadiansPerSecond; // use
+    // IK to
+    // get a
+    // chassis
+    // speed,
+    // then
+    // pull
+    // out
+    // the
     // angular velocity
 
     // get the rotational SwerveModuleStates (i.e SwerveModuleState with only angle)
