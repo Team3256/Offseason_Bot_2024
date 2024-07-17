@@ -68,7 +68,7 @@ public class AutoRoutines {
     ChoreoTrajectory w1_center = Choreo.getTrajectory("W1-Center");
     ChoreoTrajectory w2_center = Choreo.getTrajectory("W2-Center");
     ChoreoTrajectory w3_center = Choreo.getTrajectory("W3-Center");
-    Trigger noteOuttaken = new Trigger(() -> !intake.isBeamBroken()).debounce(1);
+    Trigger noteOuttaken = new Trigger(() -> !intake.isBeamBroken()).debounce(RoutineConstants.beamBreakDelay);
 
     return Commands.sequence(
         Commands.runOnce(
