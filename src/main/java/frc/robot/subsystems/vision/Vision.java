@@ -69,7 +69,7 @@ public class Vision extends SubsystemBase {
 
   @AutoLogOutput
   public double getDistanceToNote() {
-    return (VisionConstants.noteLimelightHeightInches - VisionConstants.noteHeight)
+    return (VisionConstants.noteLimelightHeightInches - VisionConstants.noteHeightInches)
         / Math.tan(
             Units.degreesToRadians(
                 visionIOAutoLogged.noteLimelightY + VisionConstants.noteLimelightAngleDegrees));
