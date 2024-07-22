@@ -14,19 +14,16 @@ import java.util.List;
 
 public final class SwerveConstants {
   public static final PhoenixPIDController azimuthController =
-      new PhoenixPIDController(1, 0, 0); // you shouldn't have a I or D value TODO: tune
+      new PhoenixPIDController(6, 0, 0); // you shouldn't have a I or D value TODO: tune
   public static final PIDConstants autoRotationalController =
-      new PIDConstants(
-          azimuthController.getP(),
-          azimuthController.getI(),
-          azimuthController.getD()); // should be the same
+      new PIDConstants(6, azimuthController.getI(), azimuthController.getD()); // should be the same
   public static final PIDConstants autoTranslationalController =
-      new PIDConstants(1, 0, 0); // you shouldn't have a I or D value TODO: tune
+      new PIDConstants(8, 0, 0); // you shouldn't have a I or D value TODO: tune
 
   public static final List<Double> azimuthAngles = List.of(0.0, 90.0, 180.0, 270.0);
   public static final double azimuthEpsilon = 10.0; // TODO: tune
 
-  public static final PIDController choreoTranslationController = new PIDController(1, 0, 0);
+  public static final PIDController choreoTranslationController = new PIDController(8, 0, 0);
   public static final PIDController choreoRotationController =
       new PIDController(
           azimuthController.getP(), azimuthController.getI(), azimuthController.getD());
