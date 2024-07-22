@@ -143,7 +143,9 @@ public class RobotContainer {
       configureSwerve();
       test.leftBumper().onTrue(Commands.runOnce(SignalLogger::start));
       test.rightBumper().onTrue(Commands.runOnce(SignalLogger::stop));
-      test.leftTrigger().onTrue(drivetrain.applyRequest(()->azi.withTargetDirection(Rotation2d.fromDegrees(180))));
+      test.leftTrigger()
+          .onTrue(
+              drivetrain.applyRequest(() -> azi.withTargetDirection(Rotation2d.fromDegrees(180))));
       test.y().whileTrue(drivetrain.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
       test.a().whileTrue(drivetrain.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
       test.b().whileTrue(drivetrain.sysIdDynamic(SysIdRoutine.Direction.kForward));
@@ -359,14 +361,16 @@ public class RobotContainer {
         .whileTrue(
             intake.setVoltage(
                 -IntakeConstants.kIntakeIntakeVoltage, -IntakeConstants.kPassthroughIntakeVoltage));
-//    driver.rightTrigger().whileTrue(intake.intakeIn());
+    //    driver.rightTrigger().whileTrue(intake.intakeIn());
 
     // operator.povDown().onTrue(new IntakeOff(intake));
   }
 
   private void configurePivotIntake() {
     pivotIntake = new PivotIntake(new PivotIntakeIOTalonFX());
-    operator.povRight().onTrue(pivotIntake.setPosition(kPivotGroundPos * PivotIntakeConstants.kPivotMotorGearing));
+    operator
+        .povRight()
+        .onTrue(pivotIntake.setPosition(kPivotGroundPos * PivotIntakeConstants.kPivotMotorGearing));
     operator.povLeft().onTrue(pivotIntake.slamAndPID());
   }
 

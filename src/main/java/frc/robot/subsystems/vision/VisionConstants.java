@@ -17,7 +17,7 @@ public final class VisionConstants {
 
   public static final double noteLimelightAngleDegrees = 149; // TODO: idk tune
   public static final double noteLimelightHeightInches = 20.7; // TODO: idk tune
-  public static final double noteHeightInches =2; // TODO: idk tune
+  public static final double noteHeightInches = 2; // TODO: idk tune
 
   public static final Transform2d robotToCam =
       new Transform2d(

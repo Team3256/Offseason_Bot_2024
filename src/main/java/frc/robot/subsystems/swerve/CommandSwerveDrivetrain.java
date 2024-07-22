@@ -213,18 +213,25 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
         // delay distance (how long to travel before rotating)
         vision.getNotePose(this.getState().Pose), constraints, 1, 0.0);
   }
+
   public Command rotationTest() {
     PathConstraints constraints =
-            new PathConstraints(
-                    TunerConstants.kSpeedAt12VoltsMps - 1, // max speed (4.96)
-                    4, // max acceleration (4 m/s^2)
-                    edu.wpi.first.math.util.Units.degreesToRadians(450), // max angular velocity (450 deg/s)
-                    edu.wpi.first.math.util.Units.degreesToRadians(
-                            540)); // max angular acceleration (540 deg/s^2)
+        new PathConstraints(
+            TunerConstants.kSpeedAt12VoltsMps - 1, // max speed (4.96)
+            4, // max acceleration (4 m/s^2)
+            edu.wpi.first.math.util.Units.degreesToRadians(450), // max angular velocity (450 deg/s)
+            edu.wpi.first.math.util.Units.degreesToRadians(
+                540)); // max angular acceleration (540 deg/s^2)
     return AutoBuilder.pathfindToPose(
-            // current pose, path constraints (see above), "goal end velocity", rotation
-            // delay distance (how long to travel before rotating)
-            this.getState().Pose.rotateBy(Rotation2d.fromDegrees(90)).plus(new Transform2d(new Translation2d(2,1),Rotation2d.fromDegrees(0))), constraints, 0, 0.0);
+        // current pose, path constraints (see above), "goal end velocity", rotation
+        // delay distance (how long to travel before rotating)
+        this.getState()
+            .Pose
+            .rotateBy(Rotation2d.fromDegrees(90))
+            .plus(new Transform2d(new Translation2d(2, 1), Rotation2d.fromDegrees(0))),
+        constraints,
+        0,
+        0.0);
   }
 
   public Command applyRequest(Supplier<SwerveRequest> requestSupplier) {
