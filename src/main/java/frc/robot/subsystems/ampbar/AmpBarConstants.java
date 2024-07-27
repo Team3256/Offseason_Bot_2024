@@ -18,7 +18,7 @@ public final class AmpBarConstants {
   public static final double kAmpBarAmpVoltage = 16; // 8
   public static final double kAmpBarStowVoltage = -16; // -4
 
-  public static final double ampPosition = 2.834 / 10;
+  public static final double ampPosition = 2.7 / 10;
   public static final double stowPosition = 0;
   public static final int motorID = 10;
   public static double motorGearing = 10;
