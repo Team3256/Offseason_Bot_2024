@@ -16,9 +16,9 @@ import org.littletonrobotics.junction.Logger;
 public abstract class DisableSubsystem extends SubsystemBase {
   public final boolean disabled;
 
-  public DisableSubsystem(boolean disabled) {
+  public DisableSubsystem(boolean enable) {
     super();
-    this.disabled = disabled;
+    this.disabled = !enable;
   }
 
   @Override
