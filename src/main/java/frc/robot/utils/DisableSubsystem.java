@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import java.util.function.Supplier;
+import org.littletonrobotics.junction.Logger;
 
 public abstract class DisableSubsystem extends SubsystemBase {
   public final boolean disabled;
@@ -48,5 +49,12 @@ public abstract class DisableSubsystem extends SubsystemBase {
   @Override
   public void setDefaultCommand(Command defaultCommand) {
     super.setDefaultCommand(disabled ? Commands.none() : defaultCommand);
+  }
+
+  @Override
+  public void periodic() {
+    Logger.recordOutput(
+        this.getClass().getSimpleName() + "/CurrentCommand",
+        this.getCurrentCommand() != null ? this.getCurrentCommand().getName() : "none");
   }
 }

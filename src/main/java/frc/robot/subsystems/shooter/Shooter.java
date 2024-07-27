@@ -51,13 +51,14 @@ public class Shooter extends DisableSubsystem {
 
   @Override
   public void periodic() {
+    super.periodic();
     shooterIO.updateInputs(shooterIOAutoLogged);
     if (Constants.FeatureFlags.kTuningMode) {
       double velocity = shooterMotorVelocityInput.getOrUse(0);
       shooterIO.setShooterVelocity(velocity);
       shooterIO.setShooterFollowerVelocity(shooterFollowerVelocityInput.getOrUse(velocity));
     }
-    Logger.processInputs(this.getClass().getName(), shooterIOAutoLogged);
+    Logger.processInputs(this.getClass().getSimpleName(), shooterIOAutoLogged);
   }
 
   public Command setVoltage(double voltage, double followerVoltage) {

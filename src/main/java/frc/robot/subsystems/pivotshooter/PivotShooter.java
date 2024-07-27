@@ -58,8 +58,9 @@ public class PivotShooter extends DisableSubsystem {
 
   @Override
   public void periodic() {
+    super.periodic();
     pivotShooterIO.updateInputs(pivotShooterIOAutoLogged);
-    Logger.processInputs(this.getClass().getName(), pivotShooterIOAutoLogged);
+    Logger.processInputs(this.getClass().getSimpleName(), pivotShooterIOAutoLogged);
   }
 
   public Command setPosition(double position) {
