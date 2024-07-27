@@ -40,15 +40,9 @@ public final class ShooterConstants {
                   .withKI(0)
                   .withKD(0))
           // For regenerative braking
-          .withSlot1(
-              // TODO: Tune
-              new Slot1Configs()
-                  .withKS(0)
-                  .withKV(0.145) // Original 0.145
-                  // .withKA(1.48)// Original 0 only for feedforward, might not use
-                  .withKP(0.4)
-                  .withKI(0)
-                  .withKD(0))
+          // we need to make sure that the backcurrent is below the breaker limit
+          // P = 2 gives us like 102 amps so that's good enough
+          .withSlot1(new Slot1Configs().withKS(0).withKV(0).withKP(2).withKI(0).withKD(0))
           .withMotorOutput(motorOutputConfigs)
           .withMotionMagic(
               new MotionMagicConfigs()
