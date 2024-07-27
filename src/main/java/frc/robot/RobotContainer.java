@@ -126,34 +126,22 @@ public class RobotContainer {
     vision = new Vision(new VisionIOLimelight());
 
     // Setup subsystems & button-bindings
-    if (FeatureFlags.kPivotShooterEnabled) {
-      configurePivotShooter();
-    }
-    if (FeatureFlags.kShooterEnabled) {
-      configureShooter();
-    }
+    configurePivotShooter();
+    configureShooter();
 
-    if (FeatureFlags.kPivotIntakeEnabled) {
-      configurePivotIntake();
-    }
-    if (FeatureFlags.kIntakeEnabled) {
-      configureIntake();
-    }
-    if (FeatureFlags.kSwerveEnabled) {
-      configureSwerve();
-      test.leftBumper().onTrue(Commands.runOnce(SignalLogger::start));
-      test.rightBumper().onTrue(Commands.runOnce(SignalLogger::stop));
-      test.leftTrigger()
-          .onTrue(
-              drivetrain.applyRequest(() -> azi.withTargetDirection(Rotation2d.fromDegrees(180))));
-      test.y().whileTrue(drivetrain.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
-      test.a().whileTrue(drivetrain.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
-      test.b().whileTrue(drivetrain.sysIdDynamic(SysIdRoutine.Direction.kForward));
-      test.x().whileTrue(drivetrain.sysIdDynamic(SysIdRoutine.Direction.kReverse));
-    }
-    if (FeatureFlags.kClimbEnabled) {
-      configureClimb();
-    }
+    configurePivotIntake();
+    configureIntake();
+    configureSwerve();
+    test.leftBumper().onTrue(Commands.runOnce(SignalLogger::start));
+    test.rightBumper().onTrue(Commands.runOnce(SignalLogger::stop));
+    test.leftTrigger()
+        .onTrue(
+            drivetrain.applyRequest(() -> azi.withTargetDirection(Rotation2d.fromDegrees(180))));
+    test.y().whileTrue(drivetrain.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
+    test.a().whileTrue(drivetrain.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
+    test.b().whileTrue(drivetrain.sysIdDynamic(SysIdRoutine.Direction.kForward));
+    test.x().whileTrue(drivetrain.sysIdDynamic(SysIdRoutine.Direction.kReverse));
+    configureClimb();
     // If all the subsystems are enabled, configure "operator" autos
     if (FeatureFlags.kIntakeEnabled
         && FeatureFlags.kShooterEnabled
@@ -328,7 +316,7 @@ public class RobotContainer {
   }
 
   private void configurePivotShooter() {
-    pivotShooter = new PivotShooter(new PivotShooterIOTalonFX());
+    pivotShooter = new PivotShooter(FeatureFlags.kPivotShooterEnabled, new PivotShooterIOTalonFX());
     // operator.b().onTrue(new bruh(pivotShooter));
     // operator.x().onTrue(new SequentialCommandGroup(new
     // PivotShootSubwoofer(pivotShooter)));
@@ -345,7 +333,7 @@ public class RobotContainer {
   }
 
   private void configureIntake() {
-    intake = new Intake(new IntakeIOTalonFX());
+    intake = new Intake(FeatureFlags.kIntakeEnabled, new IntakeIOTalonFX());
     // intake.setDefaultCommand(new IntakeSetVoltage(intake, 0));
     // operator.rightBumper().whileTrue(new IntakeInOverride(intake));
     // We assume intake is already enabled, so if pivot is enabled as
@@ -367,7 +355,7 @@ public class RobotContainer {
   }
 
   private void configurePivotIntake() {
-    pivotIntake = new PivotIntake(new PivotIntakeIOTalonFX());
+    pivotIntake = new PivotIntake(FeatureFlags.kPivotIntakeEnabled, new PivotIntakeIOTalonFX());
     operator
         .povRight()
         .onTrue(pivotIntake.setPosition(kPivotGroundPos * PivotIntakeConstants.kPivotMotorGearing));
@@ -375,7 +363,7 @@ public class RobotContainer {
   }
 
   private void configureClimb() {
-    climb = new Climb(new ClimbIOTalonFX());
+    climb = new Climb(FeatureFlags.kClimbEnabled, new ClimbIOTalonFX());
     // zeroClimb = new ZeroClimb(climb); // NEED FOR SHUFFLEBOARD
 
     operator.povDown().onTrue(climb.zero());
@@ -464,7 +452,7 @@ public class RobotContainer {
   }
 
   private void configureShooter() {
-    shooter = new Shooter(new ShooterIOTalonFX());
+    shooter = new Shooter(FeatureFlags.kShooterEnabled, new ShooterIOTalonFX());
     // new Trigger(() -> Math.abs(shooter.getShooterRps() - 100) <= 5)
     // .onTrue(
     // new InstantCommand(
@@ -477,7 +465,7 @@ public class RobotContainer {
     // operator.getHID().setRumble(GenericHID.RumbleType.kBothRumble, 0);
     // }));
     if (FeatureFlags.kAmpBarEnabled) {
-      ampbar = new AmpBar(new AmpBarIOTalonFX());
+      ampbar = new AmpBar(FeatureFlags.kAmpBarEnabled, new AmpBarIOTalonFX());
       operator
           .rightTrigger()
           .onTrue(
@@ -654,38 +642,5 @@ public class RobotContainer {
 
   public void periodic(double dt) {
     XboxStalker.stalk(driver, operator);
-    // System.out.println(Limelight.getBotpose("limelight").length);
-    // //
-    // double ty = Limelight.getTY("limelight");
-    // //
-    // // // how many degrees back is your limelight rotated from perfectly
-    // vertical?
-    // //
-    // double limelightMountAngleDegrees = 21.936;
-
-    // // distance from the center of the Limelight lens to the floor
-    // double limelightLensHeightInches = 15.601;
-
-    // // distance from the target to the floor
-    // double goalHeightInches = 56.375;
-
-    // double angleToGoalDegrees = limelightMountAngleDegrees + ty;
-    // double angleToGoalRadians = angleToGoalDegrees * (3.14159 / 180.0);
-
-    // // calculate distance
-    // double distanceFromLimelightToGoalInches =
-    // (goalHeightInches - limelightLensHeightInches) /
-    // Math.tan(angleToGoalRadians);
-    // LimelightHelpers.setPriorityTagID("limelight", 7);
-    // System.out.println("Distance: " + ty);
-    // System.out.println("Distance: " + distanceFromLimelightToGoalInches);
-    // Optional<DriverStation.Alliance> ally = DriverStation.getAlliance();
-    // if (ally.isPresent() && ally.get() == DriverStation.Alliance.Red) {
-    // System.out.println("red");
-    // } else if (ally.isPresent()) {
-    // System.out.println("blue");
-    // } else {
-    // System.out.println("red");
-    // }
   }
 }

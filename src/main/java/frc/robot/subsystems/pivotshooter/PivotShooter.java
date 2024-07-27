@@ -14,12 +14,12 @@ import com.ctre.phoenix6.SignalLogger;
 import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
 import edu.wpi.first.wpilibj2.command.*;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.subsystems.vision.Vision;
+import frc.robot.utils.DisableSubsystem;
 import org.littletonrobotics.junction.Logger;
 
-public class PivotShooter extends SubsystemBase {
+public class PivotShooter extends DisableSubsystem {
 
   private final PivotShooterIO pivotShooterIO;
   private final PivotShooterIOInputsAutoLogged pivotShooterIOAutoLogged =
@@ -35,7 +35,8 @@ public class PivotShooter extends SubsystemBase {
         }
       };
 
-  public PivotShooter(PivotShooterIO pivotShooterIO) {
+  public PivotShooter(boolean disabled, PivotShooterIO pivotShooterIO) {
+    super(disabled);
 
     this.pivotShooterIO = pivotShooterIO;
     m_sysIdRoutine =
