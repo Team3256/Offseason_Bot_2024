@@ -162,5 +162,11 @@ public class TunerConstants {
           kInvertRightSide);
 
   public static final CommandSwerveDrivetrain DriveTrain =
-      new CommandSwerveDrivetrain(Constants.FeatureFlags.kSwerveEnabled,DrivetrainConstants, FrontLeft, FrontRight, BackLeft, BackRight);
+      new CommandSwerveDrivetrain(
+          Constants.FeatureFlags.kSwerveEnabled,
+          DrivetrainConstants,
+          FrontLeft,
+          FrontRight,
+          BackLeft,
+          BackRight);
 }
