@@ -32,6 +32,8 @@ public interface AmpBarIO {
 
   public default void off() {}
 
+  public default void setPosition(double position) {}
+
   public default MonitoredTalonFX getMotor() {
     return new MonitoredTalonFX(0);
   }

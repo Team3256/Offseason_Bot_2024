@@ -21,8 +21,8 @@ public class ClimbIOTalonFX implements ClimbIO {
 
   private final MonitoredTalonFX climbMotor =
       new MonitoredTalonFX(ClimbConstants.kLeftClimbMotorID);
-  final PositionVoltage positionRequest = new PositionVoltage(0).withSlot(0);
-  final MotionMagicVoltage motionMagicRequest = new MotionMagicVoltage(0).withSlot(0);
+  private final PositionVoltage positionRequest = new PositionVoltage(0).withSlot(0);
+  private final MotionMagicVoltage motionMagicRequest = new MotionMagicVoltage(0).withSlot(0);
   private final VoltageOut voltageReq = new VoltageOut(0);
 
   private final StatusSignal<Double> climbMotorVoltage = climbMotor.getMotorVoltage();

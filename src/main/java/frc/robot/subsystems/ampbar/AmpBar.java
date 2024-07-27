@@ -53,15 +53,15 @@ public class AmpBar extends SubsystemBase {
   }
 
   public Command setAmpPosition() {
-    return this.run(() -> ampBarIO.setVoltage(AmpBarConstants.kAmpBarAmpVoltage))
-        .until(ampBarIO::isCurrentSpiking)
-        .andThen(this.off());
+    return setPosition(AmpBarConstants.ampPosition * AmpBarConstants.motorGearing);
   }
 
   public Command setStowPosition() {
-    return this.run(() -> ampBarIO.setVoltage(AmpBarConstants.kAmpBarStowVoltage))
-        .until(ampBarIO::isCurrentSpiking)
-        .andThen(this.off());
+    return setPosition(AmpBarConstants.stowPosition * AmpBarConstants.motorGearing);
+  }
+
+  public Command setPosition(double position) {
+    return this.run(() -> ampBarIO.setPosition(position)).finallyDo(ampBarIO::off);
   }
 
   public Command off() {

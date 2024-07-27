@@ -9,7 +9,9 @@ package frc.robot.subsystems.ampbar;
 
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
+import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.NeutralOut;
+import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import frc.robot.drivers.MonitoredTalonFX;
 import frc.robot.utils.PhoenixUtil;
@@ -17,7 +19,10 @@ import frc.robot.utils.TalonUtil;
 
 public class AmpBarIOTalonFX implements AmpBarIO {
 
-  private final MonitoredTalonFX ampBarMotor = new MonitoredTalonFX(AmpBarConstants.kAmpBarMotorID);
+  private final MonitoredTalonFX ampBarMotor = new MonitoredTalonFX(AmpBarConstants.motorID);
+
+  private final PositionVoltage positionRequest = new PositionVoltage(0).withSlot(0);
+  private final MotionMagicVoltage motionMagicRequest = new MotionMagicVoltage(0).withSlot(0);
 
   private final StatusSignal<Double> ampBarMotorVoltage = ampBarMotor.getMotorVoltage();
   private final StatusSignal<Double> ampBarMotorVelocity = ampBarMotor.getVelocity();
@@ -85,5 +90,14 @@ public class AmpBarIOTalonFX implements AmpBarIO {
   @Override
   public VoltageOut getVoltageRequest() {
     return voltageReq;
+  }
+
+  @Override
+  public void setPosition(double position) {
+    if (AmpBarConstants.kUseMotionMagic) {
+      ampBarMotor.setControl(motionMagicRequest.withPosition(position));
+    } else {
+      ampBarMotor.setControl(positionRequest.withPosition(position));
+    }
   }
 }
