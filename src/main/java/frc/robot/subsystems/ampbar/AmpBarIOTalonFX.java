@@ -78,7 +78,8 @@ public class AmpBarIOTalonFX implements AmpBarIO {
 
   @Override
   public boolean isCurrentSpiking() {
-    return ampBarMotor.getStatorCurrent().getValueAsDouble() > AmpBarConstants.kAmpBarCurrentThreshold;
+    return ampBarMotor.getStatorCurrent().getValueAsDouble()
+        > AmpBarConstants.kAmpBarCurrentThreshold;
   }
 
   @Override

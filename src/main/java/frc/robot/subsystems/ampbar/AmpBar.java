@@ -25,19 +25,21 @@ public class AmpBar extends SubsystemBase {
 
   public AmpBar(AmpBarIO ampBarIO) {
     this.ampBarIO = ampBarIO;
-    m_sysIdRoutine = new SysIdRoutine(
-        new SysIdRoutine.Config(
-            Volts.of(0.2).per(Seconds.of(1)), // Use default ramp rate (1 V/s)
-            Volts.of(6), // Reduce dynamic step voltage to 4 to prevent brownout
-            null, // Use default timeout (10 s)
-            // Log state with Phoenix SignalLogger class
-            (state) -> SignalLogger.writeString("state", state.toString())),
-        new SysIdRoutine.Mechanism(
-            (volts) -> ampBarIO
-                .getMotor()
-                .setControl(ampBarIO.getVoltageRequest().withOutput(volts.in(Volts))),
-            null,
-            this));
+    m_sysIdRoutine =
+        new SysIdRoutine(
+            new SysIdRoutine.Config(
+                Volts.of(0.2).per(Seconds.of(1)), // Use default ramp rate (1 V/s)
+                Volts.of(6), // Reduce dynamic step voltage to 4 to prevent brownout
+                null, // Use default timeout (10 s)
+                // Log state with Phoenix SignalLogger class
+                (state) -> SignalLogger.writeString("state", state.toString())),
+            new SysIdRoutine.Mechanism(
+                (volts) ->
+                    ampBarIO
+                        .getMotor()
+                        .setControl(ampBarIO.getVoltageRequest().withOutput(volts.in(Volts))),
+                null,
+                this));
   }
 
   @Override
