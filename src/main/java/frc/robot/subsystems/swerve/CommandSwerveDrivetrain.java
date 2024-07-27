@@ -41,6 +41,7 @@ import java.util.function.Supplier;
  * in command-based projects easily.
  */
 public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsystem {
+  private final boolean disabled;
   private static final double kSimLoopPeriod = 0.005; // 5 ms
   private Notifier m_simNotifier = null;
   private double m_lastSimTime;
@@ -97,10 +98,12 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
   private final SysIdRoutine RoutineToApply = SysIdRoutineTranslation;
 
   public CommandSwerveDrivetrain(
+      boolean disabled,
       SwerveDrivetrainConstants driveTrainConstants,
       double OdometryUpdateFrequency,
       SwerveModuleConstants... modules) {
     super(driveTrainConstants, OdometryUpdateFrequency, modules);
+    this.disabled = disabled;
     configurePathPlanner();
     if (Utils.isSimulation()) {
       startSimThread();
@@ -108,11 +111,21 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
   }
 
   public CommandSwerveDrivetrain(
-      SwerveDrivetrainConstants driveTrainConstants, SwerveModuleConstants... modules) {
+      boolean disabled,
+      SwerveDrivetrainConstants driveTrainConstants,
+      SwerveModuleConstants... modules) {
     super(driveTrainConstants, modules);
+    this.disabled = disabled;
     configurePathPlanner();
     if (Utils.isSimulation()) {
       startSimThread();
+    }
+  }
+
+  @Override
+  public void setControl(SwerveRequest request) {
+    if (!disabled) {
+      super.setControl(request);
     }
   }
 
