@@ -12,18 +12,19 @@ import static edu.wpi.first.units.Units.Volts;
 
 import com.ctre.phoenix6.SignalLogger;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import frc.robot.utils.DisableSubsystem;
 import org.littletonrobotics.junction.Logger;
 
-public class AmpBar extends SubsystemBase {
+public class AmpBar extends DisableSubsystem {
 
   private final AmpBarIO ampBarIO;
   private final AmpBarIOInputsAutoLogged ampBarIOAutoLogged = new AmpBarIOInputsAutoLogged();
 
   private final SysIdRoutine m_sysIdRoutine;
 
-  public AmpBar(AmpBarIO ampBarIO) {
+  public AmpBar(boolean disabled, AmpBarIO ampBarIO) {
+    super(disabled);
     this.ampBarIO = ampBarIO;
     m_sysIdRoutine =
         new SysIdRoutine(
