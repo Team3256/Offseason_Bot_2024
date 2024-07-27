@@ -39,6 +39,6 @@ public final class AmpBarConstants {
               new MotionMagicConfigs()
                   .withMotionMagicAcceleration(400)
                   .withMotionMagicCruiseVelocity(50))
-          .withSlot0(new Slot0Configs().withKS(0).withKV(0).withKP(3).withKI(0).withKD(0.2));
+          .withSlot0(new Slot0Configs().withKS(0).withKV(0).withKP(3).withKI(0).withKD(0.2).withKG(1));
   public static boolean kUseMotionMagic = true;
 }
