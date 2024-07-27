@@ -38,6 +38,7 @@ public final class Constants {
     public static final boolean kIntakeEnabled = true;
 
     public static final boolean kShooterEnabled = true;
+    public static final boolean kShooterRegenerativeBrakingEnabled = true;
 
     public static final boolean kSwerveEnabled = true;
 

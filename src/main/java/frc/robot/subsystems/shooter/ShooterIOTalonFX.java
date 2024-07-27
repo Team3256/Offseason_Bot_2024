@@ -11,8 +11,10 @@ import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.controls.MotionMagicVelocityVoltage;
 import com.ctre.phoenix6.controls.NeutralOut;
+import com.ctre.phoenix6.controls.VelocityTorqueCurrentFOC;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
+import frc.robot.Constants;
 import frc.robot.drivers.MonitoredTalonFX;
 import frc.robot.utils.PhoenixUtil;
 import frc.robot.utils.TalonUtil;
@@ -23,6 +25,7 @@ public class ShooterIOTalonFX implements ShooterIO {
   final VelocityVoltage velocityRequest = new VelocityVoltage(0).withSlot(0);
   final MotionMagicVelocityVoltage motionMagicRequest =
       new MotionMagicVelocityVoltage(0).withSlot(0);
+  final VelocityTorqueCurrentFOC regenRequest = new VelocityTorqueCurrentFOC(0).withSlot(1);
   private final VoltageOut voltageReq = new VoltageOut(0);
 
   private final StatusSignal<Double> shooterMotorVoltage = shooterMotor.getMotorVoltage();
@@ -128,6 +131,13 @@ public class ShooterIOTalonFX implements ShooterIO {
   @Override
   public void setShooterFollowerVoltage(double voltage) {
     shooterMotorFollower.setVoltage(voltage);
+  }
+
+  @Override
+  public void activateRegen() {
+    if (!Constants.FeatureFlags.kShooterRegenerativeBrakingEnabled) return;
+    shooterMotor.setControl(regenRequest);
+    shooterMotorFollower.setControl(regenRequest);
   }
 
   @Override
