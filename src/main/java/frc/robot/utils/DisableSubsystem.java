@@ -19,7 +19,6 @@ public abstract class DisableSubsystem extends SubsystemBase {
   public DisableSubsystem(boolean disabled) {
     super();
     this.disabled = disabled;
-    Logger.recordOutput(this.getClass().getSimpleName() + "/Disabled", disabled);
   }
 
   @Override
