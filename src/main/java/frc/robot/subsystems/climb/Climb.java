@@ -44,8 +44,9 @@ public class Climb extends DisableSubsystem {
 
   @Override
   public void periodic() {
+    super.periodic();
     climbIO.updateInputs(climbIOAutoLogged);
-    Logger.processInputs(this.getClass().getName(), climbIOAutoLogged);
+    Logger.processInputs(this.getClass().getSimpleName(), climbIOAutoLogged);
   }
 
   public Command setPosition(double position) {

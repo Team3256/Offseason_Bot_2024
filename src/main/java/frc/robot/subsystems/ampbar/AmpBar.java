@@ -45,8 +45,9 @@ public class AmpBar extends DisableSubsystem {
 
   @Override
   public void periodic() {
+    super.periodic();
     ampBarIO.updateInputs(ampBarIOAutoLogged);
-    Logger.processInputs(this.getClass().getName(), ampBarIOAutoLogged);
+    Logger.processInputs(this.getClass().getSimpleName(), ampBarIOAutoLogged);
   }
 
   public Command setVoltage(double voltage) {

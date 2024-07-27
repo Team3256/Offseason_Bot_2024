@@ -46,8 +46,9 @@ public class PivotIntake extends DisableSubsystem {
 
   @Override
   public void periodic() {
+    super.periodic();
     pivotIntakeIO.updateInputs(pivotIntakeIOAutoLogged);
-    Logger.processInputs(this.getClass().getName(), pivotIntakeIOAutoLogged);
+    Logger.processInputs(this.getClass().getSimpleName(), pivotIntakeIOAutoLogged);
   }
 
   public Command setPosition(double position) {

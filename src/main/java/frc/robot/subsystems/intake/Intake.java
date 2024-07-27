@@ -65,6 +65,7 @@ public class Intake extends DisableSubsystem {
 
   @Override
   public void periodic() {
+    super.periodic();
     intakeIO.updateInputs(intakeIOAutoLogged);
     Logger.processInputs(this.getClass().getSimpleName(), intakeIOAutoLogged);
   }
