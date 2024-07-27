@@ -19,7 +19,7 @@ import frc.robot.utils.TalonUtil;
 
 public class AmpBarIOTalonFX implements AmpBarIO {
 
-  private final MonitoredTalonFX ampBarMotor = new MonitoredTalonFX(AmpBarConstants.motorID);
+  private final MonitoredTalonFX ampBarMotor = new MonitoredTalonFX(AmpBarConstants.kAmpBarMotorID);
 
   private final PositionVoltage positionRequest = new PositionVoltage(0).withSlot(0);
   private final MotionMagicVoltage motionMagicRequest = new MotionMagicVoltage(0).withSlot(0);
@@ -78,8 +78,7 @@ public class AmpBarIOTalonFX implements AmpBarIO {
 
   @Override
   public boolean isCurrentSpiking() {
-    return ampBarMotor.getStatorCurrent().getValueAsDouble()
-        > AmpBarConstants.kAmpBarCurrentThreshold;
+    return ampBarMotor.getStatorCurrent().getValueAsDouble() > AmpBarConstants.kAmpBarCurrentThreshold;
   }
 
   @Override
