@@ -11,7 +11,9 @@ import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
+import com.ctre.phoenix6.configs.Slot1Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.configs.TorqueCurrentConfigs;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
@@ -38,6 +40,10 @@ public final class ShooterConstants {
                   .withKP(0.4)
                   .withKI(0)
                   .withKD(0))
+          // For regenerative braking
+          // we need to make sure that the backcurrent is below the breaker limit
+          // P = 2 gives us like 102 amps so that's good enough
+          .withSlot1(new Slot1Configs().withKS(0).withKV(0).withKP(2).withKI(0).withKD(0))
           .withMotorOutput(motorOutputConfigs)
           .withMotionMagic(
               new MotionMagicConfigs()
@@ -46,7 +52,11 @@ public final class ShooterConstants {
           .withCurrentLimits(
               new CurrentLimitsConfigs()
                   .withStatorCurrentLimitEnable(true)
-                  .withStatorCurrentLimit(60));
+                  .withStatorCurrentLimit(60))
+          .withTorqueCurrent(
+              new TorqueCurrentConfigs()
+                  .withPeakForwardTorqueCurrent(80)
+                  .withPeakReverseTorqueCurrent(80));
   public static TalonFXConfiguration followerMotorConfigs =
       motorConfigs.withMotorOutput(
           motorOutputConfigs.withInverted(InvertedValue.CounterClockwise_Positive));
