@@ -13,6 +13,9 @@ import com.ctre.phoenix6.controls.MotionMagicVelocityVoltage;
 import com.ctre.phoenix6.controls.NeutralOut;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
+import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DMA;
+import edu.wpi.first.wpilibj.DMASample;
 import edu.wpi.first.wpilibj.DigitalInput;
 import frc.robot.drivers.MonitoredTalonFX;
 import frc.robot.utils.PhoenixUtil;
@@ -50,6 +53,8 @@ public class IntakeIOTalonFX implements IntakeIO {
   private final StatusSignal<Double> passthroughMotorReferenceSlope =
       passthroughMotor.getClosedLoopReferenceSlope();
 
+  private DMA beambreakDMA = new DMA();
+  private DMASample beambreakDmaSample = new DMASample();
   private DigitalInput beamBreakInput = new DigitalInput(IntakeConstants.kIntakeBeamBreakDIO);
 
   public IntakeIOTalonFX() {
@@ -78,6 +83,10 @@ public class IntakeIOTalonFX implements IntakeIO {
         passthroughMotorReferenceSlope);
     intakeMotor.optimizeBusUtilization();
     passthroughMotor.optimizeBusUtilization();
+
+    beambreakDMA.setTimedTrigger(Units.millisecondsToSeconds(1));
+    beambreakDMA.addDigitalSource(beamBreakInput);
+    beambreakDMA.start(1024);
   }
 
   @Override
@@ -148,7 +157,13 @@ public class IntakeIOTalonFX implements IntakeIO {
 
   @Override
   public boolean isBeamBroken() {
-    return !beamBreakInput.get();
+    // return !beamBreakInput.get();
+    DMASample.DMAReadStatus readStatus =
+        beambreakDmaSample.update(beambreakDMA, Units.millisecondsToSeconds(1));
+    if (readStatus == DMASample.DMAReadStatus.kOk) {
+      return !beambreakDmaSample.getDigitalSource(beamBreakInput);
+    }
+    return false;
   }
 
   @Override
