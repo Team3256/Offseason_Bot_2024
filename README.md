@@ -1,3 +1,5 @@
+# Turret Bot 2024 ("Kirby")
+
 ### Convention
 * Spotless: ./gradlew spotlessApply
 
@@ -26,7 +28,3 @@ Category
 Individual
 * PathPlanner autos in deploy/pathplanner
 * Glass config in simgui.json, simgui-window.json, and simgui-ds.json
-
-## software plan:
-
-find 254 2022 code  and copy and paste
