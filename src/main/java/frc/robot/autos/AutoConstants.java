@@ -10,17 +10,10 @@ package frc.robot.autos;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
-import frc.robot.subsystems.swerve.SwerveConstants;
 
 public final class AutoConstants {
 
   // specific robot
-  public static final double kMaxSpeedMetersPerSecond = 4.275;
-  public static final double kDriveBaseRadiusMeters = SwerveConstants.driveBaseRadius;
-  public static final double kPathGenerationEndGoalVelocity = 0.0;
-  public static final double kPathGenerationRotationalDelay =
-      0.01; // how long it should travel before rotating
-  public static final double kMaxAccelerationMetersPerSecondSquared = 5;
   public static final double kMaxAngularSpeedRadiansPerSecond = Math.PI;
   public static final double kMaxAngularSpeedRadiansPerSecondSquared = Math.PI;
 

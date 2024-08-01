@@ -12,16 +12,18 @@ import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.NeutralOut;
 import com.ctre.phoenix6.controls.PositionVoltage;
+import com.ctre.phoenix6.controls.VoltageOut;
 import frc.robot.drivers.MonitoredTalonFX;
 import frc.robot.utils.PhoenixUtil;
 import frc.robot.utils.TalonUtil;
 
 public class PivotIntakeIOTalonFX implements PivotIntakeIO {
-
   private final MonitoredTalonFX pivotIntakeMotor =
       new MonitoredTalonFX(PivotIntakeConstants.kPivotMotorID);
-  final PositionVoltage positionRequest = new PositionVoltage(0).withSlot(0);
-  final MotionMagicVoltage motionMagicRequest = new MotionMagicVoltage(0).withSlot(0);
+  private final PositionVoltage positionRequest = new PositionVoltage(0).withSlot(0);
+  private final MotionMagicVoltage motionMagicRequest = new MotionMagicVoltage(0).withSlot(0);
+
+  private final VoltageOut voltageReq = new VoltageOut(0);
 
   private final StatusSignal<Double> pivotIntakeMotorVoltage = pivotIntakeMotor.getMotorVoltage();
   private final StatusSignal<Double> pivotIntakeMotorVelocity = pivotIntakeMotor.getVelocity();
@@ -94,5 +96,15 @@ public class PivotIntakeIOTalonFX implements PivotIntakeIO {
   @Override
   public void zero() {
     pivotIntakeMotor.setPosition(0);
+  }
+
+  @Override
+  public MonitoredTalonFX getMotor() {
+    return pivotIntakeMotor;
+  }
+
+  @Override
+  public VoltageOut getVoltageRequest() {
+    return voltageReq;
   }
 }

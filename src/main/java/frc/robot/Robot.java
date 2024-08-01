@@ -8,16 +8,22 @@
 package frc.robot;
 
 import com.pathplanner.lib.commands.FollowPathCommand;
+import com.pathplanner.lib.commands.PathfindingCommand;
+import com.pathplanner.lib.pathfinding.Pathfinding;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.autos.LocalADStarAK;
+import frc.robot.utils.NT4PublisherNoFMS;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.BiConsumer;
+import monologue.Logged;
+import monologue.Monologue;
 import org.littletonrobotics.junction.LoggedRobot;
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.NT4Publisher;
@@ -29,12 +35,10 @@ import org.littletonrobotics.junction.wpilog.WPILOGWriter;
  * the package after creating this project, you must also update the build.gradle file in the
  * project.
  */
-public class Robot extends LoggedRobot {
-  public static final CTREConfigs ctreConfigs = new CTREConfigs();
-
-  private Command m_autonomousCommand;
+public class Robot extends LoggedRobot implements Logged {
 
   private RobotContainer m_robotContainer;
+  private Command m_autonomousCommand;
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -58,10 +62,12 @@ public class Robot extends LoggedRobot {
     // }
 
     m_robotContainer = new RobotContainer();
-    if (Constants.kEnableOBlog) {
-      io.github.oblarg.oblog.Logger.configureLoggingAndConfig(m_robotContainer, false);
+    if (Constants.kEnableMonologue) {
+      // init monologue
+      Monologue.setupMonologue(
+          this, "MonologueRobot", Constants.kMonologueFileOnly, Constants.kMonologueLazyLogging);
     } else {
-      System.out.println("OBlog is disabled -- not configuring logging and config.");
+      System.out.println("monologue is disabled -- not configuring logging and config.");
     }
     // We enable the Logger here to start it directly after RobotContainer. Also
     // fixes
@@ -78,7 +84,7 @@ public class Robot extends LoggedRobot {
       // Logger.addDataReceiver(new WPILOGWriter("/U/logs"));
       Logger.addDataReceiver(
           new WPILOGWriter("/home/lvuser/logs")); // Log to a USB stick ("/U/logs")
-      Logger.addDataReceiver(new NT4Publisher()); // Publish data to NetworkTables
+      Logger.addDataReceiver(new NT4PublisherNoFMS()); // Publish data to NetworkTables
       new PowerDistribution(
           1, PowerDistribution.ModuleType.kRev); // Enables power distribution logging
     } else if (isSimulation()) {
@@ -127,6 +133,8 @@ public class Robot extends LoggedRobot {
       Logger.start();
     }
     FollowPathCommand.warmupCommand().schedule();
+    Pathfinding.setPathfinder(new LocalADStarAK());
+    PathfindingCommand.warmupCommand().schedule();
 
     // FollowPathCommand warmupCommand = new FollowPathCommand();
     // warmupCommand.schedule();
@@ -153,8 +161,9 @@ public class Robot extends LoggedRobot {
     // robot's periodic
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
-    if (Constants.kEnableOBlog) {
-      io.github.oblarg.oblog.Logger.updateEntries();
+    if (Constants.kEnableMonologue) {
+      Monologue.setFileOnly(DriverStation.isFMSAttached());
+      Monologue.updateAll();
     }
     m_robotContainer.periodic(Robot.defaultPeriodSecs);
   }
@@ -163,9 +172,6 @@ public class Robot extends LoggedRobot {
   @Override
   public void disabledInit() {
     if (Constants.kDisableSubsystemsOnDisableInit) {
-      if (m_robotContainer.swerveDrive != null) {
-        m_robotContainer.swerveDrive.off();
-      }
       if (m_robotContainer.climb != null) {
         m_robotContainer.climb.off();
       }
@@ -194,7 +200,6 @@ public class Robot extends LoggedRobot {
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
-    m_robotContainer.swerveDrive.resetModulesToAbsolute();
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
     // m_robotContainer.shootSpeaker();
 
@@ -215,10 +220,9 @@ public class Robot extends LoggedRobot {
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove
     // this line or comment it out.
-    if (m_autonomousCommand != null) {
-      m_autonomousCommand.cancel();
-    }
-    m_robotContainer.swerveDrive.resetModulesToAbsolute();
+    //    if (m_autonomousCommand != null) {
+    //      m_autonomousCommand.cancel();
+    //    }
     CommandScheduler.getInstance().cancelAll();
 
     boolean isRedAlliance = true;

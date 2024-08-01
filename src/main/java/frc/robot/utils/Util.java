@@ -74,6 +74,37 @@ public class Util {
     return result;
   }
 
+  public static double snapToClosest(final List<Double> list, double value) {
+    double closest = Double.MAX_VALUE;
+    double minDiff = Double.MAX_VALUE;
+
+    for (Double value_in : list) {
+      double diff = Math.abs(value_in - value);
+      if (diff < minDiff) {
+        minDiff = diff;
+        closest = value_in;
+      }
+    }
+    return closest;
+  }
+
+  public static double snapToZone(final List<Double> list, double value, double epsilon) {
+    double closest = Double.MAX_VALUE;
+    double minDiff = Double.MAX_VALUE;
+
+    for (Double value_in : list) {
+      double diff = Math.abs(value_in - value);
+      if (diff < minDiff) {
+        minDiff = diff;
+        closest = value_in;
+      }
+    }
+    if (minDiff < epsilon) {
+      return closest;
+    }
+    return value;
+  }
+
   public static double handleDeadband(double value, double deadband) {
     deadband = Math.abs(deadband);
     if (deadband == 1) {

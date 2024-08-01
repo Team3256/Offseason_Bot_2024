@@ -29,6 +29,7 @@
   "NTProvider": {
     "types": {
       "/FMSInfo": "FMSInfo",
+      "/Pose": "Field2d",
       "/Shuffleboard/Intake/Intake Motor": "Motor Controller",
       "/Shuffleboard/Intake: Log/Intake Motor": "Motor Controller",
       "/Shuffleboard/RobotContainer/Auto Score Amp": "Command",
@@ -46,6 +47,10 @@
       "/SmartDashboard/Auto Chooser": "String Chooser",
       "/SmartDashboard/Field": "Field2d",
       "/SmartDashboard/Limelight Localization Field": "Field2d",
+      "/SmartDashboard/Module 0": "Mechanism2d",
+      "/SmartDashboard/Module 1": "Mechanism2d",
+      "/SmartDashboard/Module 2": "Mechanism2d",
+      "/SmartDashboard/Module 3": "Mechanism2d",
       "/SmartDashboard/Pivot Calibrate": "Command",
       "/SmartDashboard/Robot Simviz": "Mechanism2d",
       "/SmartDashboard/Shooter Sim": "Mechanism2d",

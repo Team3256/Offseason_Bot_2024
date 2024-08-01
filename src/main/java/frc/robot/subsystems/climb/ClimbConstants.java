@@ -38,9 +38,8 @@ public final class ClimbConstants {
                   .withInverted(InvertedValue.Clockwise_Positive))
           .withMotionMagic(
               new MotionMagicConfigs()
-                  .withMotionMagicAcceleration(100)
-                  .withMotionMagicCruiseVelocity(100)
-                  .withMotionMagicJerk(300))
+                  .withMotionMagicAcceleration(400)
+                  .withMotionMagicCruiseVelocity(100))
           .withCurrentLimits(
               new CurrentLimitsConfigs()
                   .withStatorCurrentLimitEnable(true)

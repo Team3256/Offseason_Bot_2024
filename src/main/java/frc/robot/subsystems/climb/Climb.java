@@ -7,42 +7,64 @@
 
 package frc.robot.subsystems.climb;
 
+import static edu.wpi.first.units.Units.Seconds;
+import static edu.wpi.first.units.Units.Volts;
+
+import com.ctre.phoenix6.SignalLogger;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.StartEndCommand;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import frc.robot.utils.DisableSubsystem;
 import org.littletonrobotics.junction.Logger;
 
-public class Climb extends SubsystemBase {
+public class Climb extends DisableSubsystem {
 
   private final ClimbIO climbIO;
   private final ClimbIOInputsAutoLogged climbIOAutoLogged = new ClimbIOInputsAutoLogged();
+  private final SysIdRoutine m_sysIdRoutine;
 
-  public Climb(ClimbIO climbIO) {
+  public Climb(boolean disabled, ClimbIO climbIO) {
+    super(disabled);
     this.climbIO = climbIO;
+    m_sysIdRoutine =
+        new SysIdRoutine(
+            new SysIdRoutine.Config(
+                Volts.of(0.2).per(Seconds.of(1)), // Use default ramp rate (1 V/s)
+                Volts.of(6), // Reduce dynamic step voltage to 4 to prevent brownout
+                null, // Use default timeout (10 s)
+                // Log state with Phoenix SignalLogger class
+                (state) -> SignalLogger.writeString("state", state.toString())),
+            new SysIdRoutine.Mechanism(
+                (volts) ->
+                    climbIO
+                        .getMotor()
+                        .setControl(climbIO.getVoltageRequest().withOutput(volts.in(Volts))),
+                null,
+                this));
   }
 
   @Override
   public void periodic() {
+    super.periodic();
     climbIO.updateInputs(climbIOAutoLogged);
     Logger.processInputs(this.getClass().getSimpleName(), climbIOAutoLogged);
   }
 
   public Command setPosition(double position) {
-    return new StartEndCommand(
-        () -> climbIO.setPosition(position * ClimbConstants.gearRatio), () -> {}, this);
+    return this.run(() -> climbIO.setPosition(position * ClimbConstants.gearRatio));
   }
 
   public Command setVoltage(double voltage) {
-    return new StartEndCommand(
-        () -> climbIO.setVoltage(voltage), () -> climbIO.setVoltage(0), this);
+    return this.run(() -> climbIO.setVoltage(voltage)).finallyDo(climbIO::off);
   }
 
   public Command off() {
-    return new StartEndCommand(() -> climbIO.off(), () -> {}, this);
+
+    return this.runOnce(climbIO::off);
   }
 
   public Command zero() {
-    return new StartEndCommand(() -> climbIO.zero(), () -> {}, this);
+
+    return this.runOnce(climbIO::zero);
   }
 
   public Command extendClimber() {
@@ -51,5 +73,13 @@ public class Climb extends SubsystemBase {
 
   public Command retractClimber() {
     return setPosition(ClimbConstants.kClimbDownPosition);
+  }
+
+  public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {
+    return m_sysIdRoutine.quasistatic(direction);
+  }
+
+  public Command sysIdDynamic(SysIdRoutine.Direction direction) {
+    return m_sysIdRoutine.dynamic(direction);
   }
 }
