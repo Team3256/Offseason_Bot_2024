@@ -13,10 +13,10 @@ import edu.wpi.first.math.geometry.Translation2d;
 
 public final class VisionConstants {
   public static final String noteDetectionLimelight = "limelight-note";
-  public static final String centerLimelight = "limelight";
+  public static final String centerLimelight = "limelight-speaker";
 
-  public static final double noteLimelightAngleDegrees = 149; // TODO: idk tune
-  public static final double noteLimelightHeightInches = 20.7; // TODO: idk tune
+  public static final double noteLimelightAngleDegrees = -30.827; // TODO: idk tune
+  public static final double noteLimelightHeightInches = 21; // TODO: idk tune
   public static final double noteHeightInches = 2; // TODO: idk tune
 
   public static final Transform2d robotToCam =
