@@ -8,13 +8,14 @@
 package frc.robot.utils;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.drivers.MonitoredTalonFX;
 
 public class TalonUtil {
 
   public static boolean applyAndCheckConfiguration(
-      MonitoredTalonFX talon, TalonFXConfiguration config, int numTries) {
+      TalonFX talon, TalonFXConfiguration config, int numTries) {
     for (int i = 0; i < numTries; i++) {
       if (PhoenixUtil.checkErrorAndRetry(() -> talon.getConfigurator().apply(config))) {
         // API says we applied config, lets make sure it's right
@@ -48,8 +49,7 @@ public class TalonUtil {
     return false;
   }
 
-  public static boolean readAndVerifyConfiguration(
-      MonitoredTalonFX talon, TalonFXConfiguration config) {
+  public static boolean readAndVerifyConfiguration(TalonFX talon, TalonFXConfiguration config) {
     TalonFXConfiguration readConfig = new TalonFXConfiguration();
     if (!PhoenixUtil.checkErrorAndRetry(() -> talon.getConfigurator().refresh(readConfig))) {
       // could not get config!
@@ -67,8 +67,7 @@ public class TalonUtil {
     }
   }
 
-  public static boolean applyAndCheckConfiguration(
-      MonitoredTalonFX talon, TalonFXConfiguration config) {
+  public static boolean applyAndCheckConfiguration(TalonFX talon, TalonFXConfiguration config) {
     boolean result = applyAndCheckConfiguration(talon, config, 5);
 
     if (!result) {
