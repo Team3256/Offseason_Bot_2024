@@ -48,7 +48,6 @@ public class RightStickAbsolute extends DebugCommandBase{
   }
 
   public DoubleSupplier getRightStickAngle(double x, double y){
-    //degrees
     DoubleSupplier angle = () -> (Math.atan2(y, x) * (180 / Math.PI));
     return angle;
   }
