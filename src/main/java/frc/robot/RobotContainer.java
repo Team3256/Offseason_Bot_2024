@@ -9,6 +9,7 @@ package frc.robot;
 
 import static frc.robot.subsystems.pivotintake.PivotIntakeConstants.kPivotGroundPos;
 import static frc.robot.subsystems.pivotshooter.PivotShooterConstants.*;
+import static frc.robot.subsystems.swerve.AzimuthConstants.*;
 
 import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.Utils;
@@ -82,27 +83,31 @@ public class RobotContainer {
   private boolean isRed;
 
   private final CommandSwerveDrivetrain drivetrain = TunerConstants.DriveTrain;
-  private double MaxSpeed =
-      TunerConstants.kSpeedAt12VoltsMps; // kSpeedAt12VoltsMps desired top speed
-  private double MaxAngularRate = 1.5 * Math.PI; // My drivetrain
 
-  private final SwerveRequest.FieldCentric drive =
+  public double MaxSpeed =
+      TunerConstants.kSpeedAt12VoltsMps; // kSpeedAt12VoltsMps desired top speed
+  public double MaxAngularRate = 1.5 * Math.PI; // My drivetrain
+
+  public final SwerveRequest.FieldCentric drive =
       new SwerveRequest.FieldCentric()
           .withDeadband(MaxSpeed * Constants.stickDeadband)
           .withRotationalDeadband(
               MaxAngularRate * Constants.rotationalDeadband) // Add a 10% deadband
           .withDriveRequestType(
               SwerveModule.DriveRequestType.OpenLoopVoltage); // I want field-centric
-  private SwerveFieldCentricFacingAngle azi =
+
+  public SwerveFieldCentricFacingAngle azi =
       new SwerveFieldCentricFacingAngle()
           .withDeadband(MaxSpeed * .1)
           .withRotationalDeadband(MaxAngularRate * .1)
           .withHeadingController(SwerveConstants.azimuthController)
           .withDriveRequestType(SwerveModule.DriveRequestType.OpenLoopVoltage);
+
   // driving in open loop
   private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
   private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
   private final SwerveTelemetry swerveTelemetry = new SwerveTelemetry(MaxSpeed);
+
   public Shooter shooter;
   public Intake intake;
   public AmpBar ampbar;
@@ -135,9 +140,11 @@ public class RobotContainer {
     configureSwerve();
     test.leftBumper().onTrue(Commands.runOnce(SignalLogger::start));
     test.rightBumper().onTrue(Commands.runOnce(SignalLogger::stop));
+
     test.leftTrigger()
         .onTrue(
             drivetrain.applyRequest(() -> azi.withTargetDirection(Rotation2d.fromDegrees(180))));
+    
     test.y().whileTrue(drivetrain.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
     test.a().whileTrue(drivetrain.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
     test.b().whileTrue(drivetrain.sysIdDynamic(SysIdRoutine.Direction.kForward));
@@ -395,6 +402,8 @@ public class RobotContainer {
   }
 
   public void configureSwerve() {
+
+    // default command
     drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
         drivetrain.applyRequest(
             () ->
@@ -404,44 +413,52 @@ public class RobotContainer {
                     .withVelocityY(
                         -driver.getLeftX() * MaxSpeed) // Drive left with negative X (left)
                     .withRotationalRate(-driver.getRightX() * MaxAngularRate)));
+
+    // right stick absolute
     driver
         .rightTrigger()
         .whileTrue(
             drivetrain.applyRequest(
-                () ->
-                    drive
-                        .withVelocityX(-driver.getLeftY() * MaxSpeed) // Drive forward with
-                        // negative Y (forward)
-                        .withVelocityY(
-                            -driver.getLeftX() * MaxSpeed) // Drive left with negative X (left)
-                        .withRotationalRate(
-                            driver.getRightTriggerAxis()
-                                * MaxAngularRate) // Drive counterclockwise with negative X
-                // (left)
-                ));
+                () -> azi.withTargetDirection(
+                    Rotation2d.fromDegrees(
+                        Math.atan2(driver.getRightY(), driver.getRightX() * (180 / Math.PI))
+                        ))));
+
+    // slow mode
     driver
         .leftTrigger()
         .whileTrue(
             drivetrain.applyRequest(
                 () ->
                     drive
-                        .withVelocityX(-driver.getLeftY() * MaxSpeed) // Drive forward with
-                        // negative Y (forward)
+                        .withVelocityX(
+                            -driver.getLeftY() * (MaxSpeed * 0.3))
                         .withVelocityY(
-                            -driver.getLeftX() * MaxSpeed) // Drive left with negative X (left)
+                            -driver.getLeftX() * (MaxSpeed * 0.3))
                         .withRotationalRate(
-                            -driver.getLeftTriggerAxis()
-                                * MaxAngularRate) // Drive counterclockwise with negative X
-                // (left)
-                ));
-    driver.a().whileTrue(drivetrain.applyRequest(() -> brake));
-    driver
-        .b()
-        .whileTrue(
-            drivetrain.applyRequest(
-                () ->
-                    point.withModuleDirection(
-                        new Rotation2d(-driver.getLeftY(), -driver.getLeftX()))));
+                            -driver.getLeftTriggerAxis() * (MaxAngularRate * 0.3))));
+
+    //driver.y().onTrue();
+    
+    driver.rightBumper().whileTrue(
+        drivetrain.applyRequest(
+            () -> azi.withTargetDirection(aziSourceRed)));
+    
+    driver.leftBumper().whileTrue(
+        drivetrain.applyRequest(
+            () -> azi.withTargetDirection(aziSubwooferFront)));
+
+    driver.x().whileTrue(
+        drivetrain.applyRequest(
+            () -> azi.withTargetDirection(aziSubwooferLeft)));
+    
+    driver.b().whileTrue(
+        drivetrain.applyRequest(
+            () -> azi.withTargetDirection(aziSubwooferRight)));
+    
+    driver.a().whileTrue(
+        drivetrain.applyRequest(
+            () -> azi.withTargetDirection(aziAmpRed)));
 
     // reset the field-centric heading on left bumper press
     driver.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
