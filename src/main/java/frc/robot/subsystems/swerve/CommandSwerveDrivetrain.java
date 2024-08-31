@@ -172,7 +172,7 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
       if (mt2.tagCount == 0) {
         doRejectUpdate = true;
       }
-      if (!doRejectUpdate) {  
+      if (!doRejectUpdate) {
         this.setVisionMeasurementStdDevs(VecBuilder.fill(.7, .7, 9999999));
         this.addVisionMeasurement(mt2.pose, mt2.timestampSeconds);
       }

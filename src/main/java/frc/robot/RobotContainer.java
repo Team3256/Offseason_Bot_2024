@@ -104,8 +104,8 @@ public class RobotContainer {
           .withDriveRequestType(SwerveModule.DriveRequestType.OpenLoopVoltage);
 
   // driving in open loop
-  //private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
-  //private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
+  // private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
+  // private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
   private final SwerveTelemetry swerveTelemetry = new SwerveTelemetry(MaxSpeed);
 
   public Shooter shooter;
@@ -144,7 +144,7 @@ public class RobotContainer {
     test.leftTrigger()
         .onTrue(
             drivetrain.applyRequest(() -> azi.withTargetDirection(Rotation2d.fromDegrees(180))));
-    
+
     test.y().whileTrue(drivetrain.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
     test.a().whileTrue(drivetrain.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
     test.b().whileTrue(drivetrain.sysIdDynamic(SysIdRoutine.Direction.kForward));
@@ -164,7 +164,7 @@ public class RobotContainer {
     // Named commands
     {
       // Auto named commands
-      NamedCommands.registerCommand("test intake", intake.setIntakeVoltage(12).withTimeout(1));
+      NamedCommands.registerCommand("test intake", intake.setIntakeVoltage(12).withTimeout(1)); 
       // NamedCommands.registerCommand( // intake ground note, stow to feeder chamber
       // "intake sequence new",
       // new SequentialCommandGroup(
@@ -414,16 +414,17 @@ public class RobotContainer {
                         -driver.getLeftX() * MaxSpeed) // Drive left with negative X (left)
                     .withRotationalRate(-driver.getRightX() * MaxAngularRate)));
 
-    /* Right stick absolute angle mode on trigger hold, 
+    /* Right stick absolute angle mode on trigger hold,
     robot adjusts heading to the angle right joystick creates */
     driver
         .rightTrigger()
         .whileTrue(
             drivetrain.applyRequest(
-                () -> azi.withTargetDirection(
-                    Rotation2d.fromDegrees(
-                        Math.atan2(driver.getRightY(), driver.getRightX() * (180 / Math.PI))
-                        ))));
+                () ->
+                    azi.withTargetDirection(
+                        Rotation2d.fromDegrees(
+                            Math.atan2(
+                                driver.getRightY(), driver.getRightX() * (180 / Math.PI))))));
 
     // Slows translational and rotational speed to 30%
     driver
@@ -432,61 +433,56 @@ public class RobotContainer {
             drivetrain.applyRequest(
                 () ->
                     drive
-                        .withVelocityX(
-                            -driver.getLeftY() * (MaxSpeed * 0.3))
-                        .withVelocityY(
-                            -driver.getLeftX() * (MaxSpeed * 0.3))
+                        .withVelocityX(-driver.getLeftY() * (MaxSpeed * 0.3))
+                        .withVelocityY(-driver.getLeftX() * (MaxSpeed * 0.3))
                         .withRotationalRate(
                             -driver.getLeftTriggerAxis() * (MaxAngularRate * 0.3))));
 
     // Reset robot heading on button press
     driver.y().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
 
-    // Intake / outtake overrides1
-    driver.x().whileTrue(
-        intake.setVoltage(
-            IntakeConstants.kIntakeIntakeVoltage, IntakeConstants.kPassthroughIntakeVoltage));
-    driver.b().whileTrue(
-        intake.setVoltage(
-            IntakeConstants.kIntakeIntakeVoltage, -IntakeConstants.kPassthroughIntakeVoltage));
+    // Intake / outtake overrides
+    driver
+        .x()
+        .whileTrue(
+            intake.setVoltage(
+                IntakeConstants.kIntakeIntakeVoltage, IntakeConstants.kPassthroughIntakeVoltage));
+    driver
+        .b()
+        .whileTrue(
+            intake.setVoltage(
+                IntakeConstants.kIntakeIntakeVoltage, -IntakeConstants.kPassthroughIntakeVoltage));
 
     // Azimuth angle bindings. isRed == true for red alliance presets. isRed != true for blue.
     if (isRed == true) {
-        driver.rightBumper().whileTrue(
-            drivetrain.applyRequest(
-                () -> azi.withTargetDirection(aziSourceRed)));
-        driver.a().whileTrue(
-            drivetrain.applyRequest(
-                () -> azi.withTargetDirection(aziAmpRed)));
-        driver.povRight().whileTrue(
-            drivetrain.applyRequest(
-                () -> azi.withTargetDirection(aziFeederRed)));
-    }
-    else {
-        driver.rightBumper().whileTrue(
-            drivetrain.applyRequest(
-                () -> azi.withTargetDirection(aziSourceBlue)));
-        driver.a().whileTrue(
-            drivetrain.applyRequest(
-                () -> azi.withTargetDirection(aziAmpBlue)));
-        driver.povRight().whileTrue(
-            drivetrain.applyRequest(
-                () -> azi.withTargetDirection(aziFeederBlue)));
+      driver
+          .rightBumper()
+          .whileTrue(drivetrain.applyRequest(() -> azi.withTargetDirection(aziSourceRed)));
+      driver.a().whileTrue(drivetrain.applyRequest(() -> azi.withTargetDirection(aziAmpRed)));
+      driver
+          .povRight()
+          .whileTrue(drivetrain.applyRequest(() -> azi.withTargetDirection(aziFeederRed)));
+    } else {
+      driver
+          .rightBumper()
+          .whileTrue(drivetrain.applyRequest(() -> azi.withTargetDirection(aziSourceBlue)));
+      driver.a().whileTrue(drivetrain.applyRequest(() -> azi.withTargetDirection(aziAmpBlue)));
+      driver
+          .povRight()
+          .whileTrue(drivetrain.applyRequest(() -> azi.withTargetDirection(aziFeederBlue)));
     }
 
     // Universal azimuth bindings
-    driver.leftBumper().whileTrue(
-        drivetrain.applyRequest(
-            () -> azi.withTargetDirection(aziSubwooferFront)));
-    driver.povDownLeft().whileTrue(
-        drivetrain.applyRequest(
-            () -> azi.withTargetDirection(aziSubwooferLeft)));
-    driver.povDownRight().whileTrue(
-        drivetrain.applyRequest(
-            () -> azi.withTargetDirection(aziSubwooferRight)));
-    driver.povDown().whileTrue(
-        drivetrain.applyRequest(
-            () -> azi.withTargetDirection(aziCleanUp)));
+    driver
+        .leftBumper()
+        .whileTrue(drivetrain.applyRequest(() -> azi.withTargetDirection(aziSubwooferFront)));
+    driver
+        .povDownLeft()
+        .whileTrue(drivetrain.applyRequest(() -> azi.withTargetDirection(aziSubwooferLeft)));
+    driver
+        .povDownRight()
+        .whileTrue(drivetrain.applyRequest(() -> azi.withTargetDirection(aziSubwooferRight)));
+    driver.povDown().whileTrue(drivetrain.applyRequest(() -> azi.withTargetDirection(aziCleanUp)));
 
     if (Utils.isSimulation()) {
       drivetrain.seedFieldRelative(new Pose2d(new Translation2d(), Rotation2d.fromDegrees(90)));
