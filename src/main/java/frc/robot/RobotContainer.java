@@ -478,12 +478,12 @@ public class RobotContainer {
     driver.leftBumper().whileTrue(
         drivetrain.applyRequest(
             () -> azi.withTargetDirection(aziSubwooferFront)));
-    // driver.x().whileTrue(
-    //     drivetrain.applyRequest(
-    //         () -> azi.withTargetDirection(aziSubwooferLeft)));
-    // driver.b().whileTrue(
-    //     drivetrain.applyRequest(
-    //         () -> azi.withTargetDirection(aziSubwooferRight)));
+    driver.povDownLeft().whileTrue(
+        drivetrain.applyRequest(
+            () -> azi.withTargetDirection(aziSubwooferLeft)));
+    driver.povDownRight().whileTrue(
+        drivetrain.applyRequest(
+            () -> azi.withTargetDirection(aziSubwooferRight)));
     driver.povDown().whileTrue(
         drivetrain.applyRequest(
             () -> azi.withTargetDirection(aziCleanUp)));
