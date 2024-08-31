@@ -19,7 +19,7 @@ public final class AmpBarConstants {
   public static final double kAmpBarStowVoltage = -16; // -4
 
   public static double kAmpBarGearing = 10;
-  public static final double kAmpBarAmpPosition = 2.7 / 10;
+  public static final double kAmpBarAmpPosition = 30 / 10;
   public static final double kAmpBarStowPosition = 0;
   public static final int kAmpBarMotorID = 10;
 
@@ -38,7 +38,7 @@ public final class AmpBarConstants {
           .withMotionMagic(
               new MotionMagicConfigs()
                   .withMotionMagicAcceleration(400)
-                  .withMotionMagicCruiseVelocity(50))
+                  .withMotionMagicCruiseVelocity(100))
           .withSlot0(
               new Slot0Configs().withKS(0).withKV(0).withKP(3).withKI(0).withKD(0.2).withKG(1));
   public static boolean kUseMotionMagic = true;
