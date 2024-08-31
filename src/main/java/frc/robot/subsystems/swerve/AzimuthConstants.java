@@ -24,11 +24,11 @@ public final class AzimuthConstants {
 
     public static final Rotation2d aziSourceBlue = Rotation2d.fromDegrees(-aziSourceRed.getDegrees());
 
-    public static final Rotation2d feederRed = Rotation2d.fromDegrees(45);
+    public static final Rotation2d aziFeederRed = Rotation2d.fromDegrees(45);
 
-    public static final Rotation2d feederBlue = Rotation2d.fromDegrees(-feederRed.getDegrees());
+    public static final Rotation2d aziFeederBlue = Rotation2d.fromDegrees(-aziFeederRed.getDegrees());
 
-    public static final Rotation2d cleanUp = Rotation2d.fromDegrees(180);
+    public static final Rotation2d aziCleanUp = Rotation2d.fromDegrees(180);
 
     /* Timeout */
     public static final double aziCommandTimeOut = 1.5;

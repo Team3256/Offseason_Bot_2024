@@ -98,14 +98,14 @@ public class RobotContainer {
 
   public SwerveFieldCentricFacingAngle azi =
       new SwerveFieldCentricFacingAngle()
-          .withDeadband(MaxSpeed * .1)
-          .withRotationalDeadband(MaxAngularRate * .1)
+          .withDeadband(MaxSpeed * .1) // TODO: update deadband
+          .withRotationalDeadband(MaxAngularRate * .1) // TODO: update deadband
           .withHeadingController(SwerveConstants.azimuthController)
           .withDriveRequestType(SwerveModule.DriveRequestType.OpenLoopVoltage);
 
   // driving in open loop
-  private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
-  private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
+  //private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
+  //private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
   private final SwerveTelemetry swerveTelemetry = new SwerveTelemetry(MaxSpeed);
 
   public Shooter shooter;
@@ -414,7 +414,8 @@ public class RobotContainer {
                         -driver.getLeftX() * MaxSpeed) // Drive left with negative X (left)
                     .withRotationalRate(-driver.getRightX() * MaxAngularRate)));
 
-    // right stick absolute
+    /* Right stick absolute angle mode on trigger hold, 
+    robot adjusts heading to the angle right joystick creates */
     driver
         .rightTrigger()
         .whileTrue(
@@ -424,7 +425,7 @@ public class RobotContainer {
                         Math.atan2(driver.getRightY(), driver.getRightX() * (180 / Math.PI))
                         ))));
 
-    // slow mode
+    // Slows translational and rotational speed to 30%
     driver
         .leftTrigger()
         .whileTrue(
@@ -438,30 +439,54 @@ public class RobotContainer {
                         .withRotationalRate(
                             -driver.getLeftTriggerAxis() * (MaxAngularRate * 0.3))));
 
-    //driver.y().onTrue();
-    
-    driver.rightBumper().whileTrue(
-        drivetrain.applyRequest(
-            () -> azi.withTargetDirection(aziSourceRed)));
-    
+    // Reset robot heading on button press
+    driver.y().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
+
+    // Intake / outtake overrides1
+    driver.x().whileTrue(
+        intake.setVoltage(
+            IntakeConstants.kIntakeIntakeVoltage, IntakeConstants.kPassthroughIntakeVoltage));
+    driver.b().whileTrue(
+        intake.setVoltage(
+            IntakeConstants.kIntakeIntakeVoltage, -IntakeConstants.kPassthroughIntakeVoltage));
+
+    // Azimuth angle bindings. isRed == true for red alliance presets. isRed != true for blue.
+    if (isRed == true) {
+        driver.rightBumper().whileTrue(
+            drivetrain.applyRequest(
+                () -> azi.withTargetDirection(aziSourceRed)));
+        driver.a().whileTrue(
+            drivetrain.applyRequest(
+                () -> azi.withTargetDirection(aziAmpRed)));
+        driver.povRight().whileTrue(
+            drivetrain.applyRequest(
+                () -> azi.withTargetDirection(aziFeederRed)));
+    }
+    else {
+        driver.rightBumper().whileTrue(
+            drivetrain.applyRequest(
+                () -> azi.withTargetDirection(aziSourceBlue)));
+        driver.a().whileTrue(
+            drivetrain.applyRequest(
+                () -> azi.withTargetDirection(aziAmpBlue)));
+        driver.povRight().whileTrue(
+            drivetrain.applyRequest(
+                () -> azi.withTargetDirection(aziFeederBlue)));
+    }
+
+    // Universal azimuth bindings
     driver.leftBumper().whileTrue(
         drivetrain.applyRequest(
             () -> azi.withTargetDirection(aziSubwooferFront)));
-
-    driver.x().whileTrue(
+    // driver.x().whileTrue(
+    //     drivetrain.applyRequest(
+    //         () -> azi.withTargetDirection(aziSubwooferLeft)));
+    // driver.b().whileTrue(
+    //     drivetrain.applyRequest(
+    //         () -> azi.withTargetDirection(aziSubwooferRight)));
+    driver.povDown().whileTrue(
         drivetrain.applyRequest(
-            () -> azi.withTargetDirection(aziSubwooferLeft)));
-    
-    driver.b().whileTrue(
-        drivetrain.applyRequest(
-            () -> azi.withTargetDirection(aziSubwooferRight)));
-    
-    driver.a().whileTrue(
-        drivetrain.applyRequest(
-            () -> azi.withTargetDirection(aziAmpRed)));
-
-    // reset the field-centric heading on left bumper press
-    driver.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
+            () -> azi.withTargetDirection(aziCleanUp)));
 
     if (Utils.isSimulation()) {
       drivetrain.seedFieldRelative(new Pose2d(new Translation2d(), Rotation2d.fromDegrees(90)));
