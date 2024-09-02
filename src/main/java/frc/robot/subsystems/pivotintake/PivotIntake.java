@@ -10,15 +10,21 @@ package frc.robot.subsystems.pivotintake;
 import static edu.wpi.first.units.Units.*;
 
 import com.ctre.phoenix6.SignalLogger;
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.*;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.utils.DisableSubsystem;
+import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
 public class PivotIntake extends DisableSubsystem {
 
   private final PivotIntakeIO pivotIntakeIO;
+
+  private Rotation2d goal = new Rotation2d();
+
   private final PivotIntakeIOInputsAutoLogged pivotIntakeIOAutoLogged =
       new PivotIntakeIOInputsAutoLogged();
   private final SysIdRoutine m_sysIdRoutine;
@@ -52,15 +58,38 @@ public class PivotIntake extends DisableSubsystem {
   }
 
   public Command setPosition(double position) {
-    return this.run(() -> pivotIntakeIO.setPosition(position));
+    return this.run(
+        () -> {
+          pivotIntakeIO.setPosition(position);
+          this.goal = Rotation2d.fromRotations(position);
+        });
   }
 
   public Command setVoltage(double voltage) {
     return this.run(() -> pivotIntakeIO.setVoltage(voltage)).finallyDo(pivotIntakeIO::off);
   }
 
+  public Command homePosition() {
+    return setPosition(0);
+  }
+
+  public Command intakePosition() {
+    return setPosition(PivotIntakeConstants.kPivotGroundPos);
+  }
+
   public Command off() {
     return this.runOnce(pivotIntakeIO::off);
+  }
+
+  @AutoLogOutput
+  public boolean isAtGoal() {
+    return MathUtil.isNear(
+            goal.getRotations(), pivotIntakeIOAutoLogged.pivotIntakeMotorPosition, 0.5)
+        && MathUtil.isNear(0, pivotIntakeIOAutoLogged.pivotIntakeMotorVelocity, 0.1);
+  }
+
+  public double getPosition() {
+    return pivotIntakeIOAutoLogged.pivotIntakeMotorPosition;
   }
 
   public Command slamZero() {
@@ -78,6 +107,10 @@ public class PivotIntake extends DisableSubsystem {
 
   public Command sysIdDynamic(SysIdRoutine.Direction direction) {
     return m_sysIdRoutine.dynamic(direction);
+  }
+
+  public Command manualZero() {
+    return setVoltage(PivotIntakeConstants.kPivotSlamIntakeVoltage).finallyDo(pivotIntakeIO::zero);
   }
 
   public Command slamAndPID() {

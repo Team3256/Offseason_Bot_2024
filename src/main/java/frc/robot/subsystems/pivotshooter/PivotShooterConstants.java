@@ -29,6 +29,8 @@ public final class PivotShooterConstants {
   public static final double kPodiumLeftPreset = 6.5 / 138.33;
   public static final double kPodiumRPreset = 6 / 138.33;
 
+  public static final double kClimbPreset = 12 / 138.33;
+
   public static final int kPivotMotorID = 12;
 
   /* PID */

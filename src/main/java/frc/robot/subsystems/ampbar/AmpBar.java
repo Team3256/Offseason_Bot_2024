@@ -11,16 +11,19 @@ import static edu.wpi.first.units.Units.Seconds;
 import static edu.wpi.first.units.Units.Volts;
 
 import com.ctre.phoenix6.SignalLogger;
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.utils.DisableSubsystem;
+import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
 public class AmpBar extends DisableSubsystem {
 
   private final AmpBarIO ampBarIO;
   private final AmpBarIOInputsAutoLogged ampBarIOAutoLogged = new AmpBarIOInputsAutoLogged();
-
+  private Rotation2d goal = new Rotation2d();
   private final SysIdRoutine m_sysIdRoutine;
 
   public AmpBar(boolean disabled, AmpBarIO ampBarIO) {
@@ -54,6 +57,12 @@ public class AmpBar extends DisableSubsystem {
     return this.run(() -> ampBarIO.setVoltage(voltage)).finallyDo(ampBarIO::off);
   }
 
+  @AutoLogOutput
+  public boolean isAtGoal() {
+    return MathUtil.isNear(goal.getRotations(), ampBarIOAutoLogged.ampBarMotorPosition, 0.5)
+        && MathUtil.isNear(0, ampBarIOAutoLogged.ampBarMotorVelocity, 0.1);
+  }
+
   public Command setAmpPosition() {
     return setPosition(AmpBarConstants.kAmpBarAmpPosition * AmpBarConstants.kAmpBarGearing);
   }
@@ -63,7 +72,16 @@ public class AmpBar extends DisableSubsystem {
   }
 
   public Command setPosition(double position) {
-    return this.run(() -> ampBarIO.setPosition(position)).finallyDo(ampBarIO::off);
+    return this.run(
+            () -> {
+              ampBarIO.setPosition(position);
+              this.goal = Rotation2d.fromRotations(position);
+            })
+        .finallyDo(ampBarIO::off);
+  }
+
+  public double getPosition() {
+    return ampBarIOAutoLogged.ampBarMotorPosition;
   }
 
   public Command off() {
