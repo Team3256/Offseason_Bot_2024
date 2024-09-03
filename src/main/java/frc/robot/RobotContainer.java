@@ -164,7 +164,7 @@ public class RobotContainer {
     // Named commands
     {
       // Auto named commands
-      NamedCommands.registerCommand("test intake", intake.setIntakeVoltage(12).withTimeout(1)); 
+      NamedCommands.registerCommand("test intake", intake.setIntakeVoltage(12).withTimeout(1));
       // NamedCommands.registerCommand( // intake ground note, stow to feeder chamber
       // "intake sequence new",
       // new SequentialCommandGroup(
