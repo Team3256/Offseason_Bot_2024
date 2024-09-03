@@ -520,7 +520,7 @@ public class RobotContainer {
                   shooter.setVelocity(
                       ShooterConstants.kShooterAmpRPS, ShooterConstants.kShooterFollowerAmpRPS),
                   ampbar.setAmpPosition(),
-                  pivotShooter.setPosition(kAmpPreset)));
+                  pivotShooter.setPosition(kAmpPreset * kPivotMotorGearing)));
       operator
           .y()
           .onTrue(
