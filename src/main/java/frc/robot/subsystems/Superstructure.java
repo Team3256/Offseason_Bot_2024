@@ -18,6 +18,7 @@ import frc.robot.subsystems.climb.Climb;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.IntakeConstants;
 import frc.robot.subsystems.pivotintake.PivotIntake;
+import frc.robot.subsystems.pivotintake.PivotIntakeConstants;
 import frc.robot.subsystems.pivotshooter.PivotShooter;
 import frc.robot.subsystems.pivotshooter.PivotShooterConstants;
 import frc.robot.subsystems.shooter.Shooter;
@@ -36,10 +37,11 @@ public class Superstructure {
     PRECLIMB,
     CLIMB,
     PRESUB,
+    PREPODIUM,
+    PREFEED,
     SHOOT,
     PREAMP,
-    MANUAL_PIVOT_INTAKE_ZERO,
-    MANUAL_PIVOT_SHOOTER_ZERO,
+    OUTTAKE,
   }
 
   private final AmpBar ampBar;
@@ -85,13 +87,12 @@ public class Superstructure {
   public void configStateTransitions() {
     stateTriggers
         .get(StructureState.IDLE)
-        .whileTrue(ampBar.getDefaultCommand())
-        .whileTrue(climb.getDefaultCommand())
-        .whileTrue(intake.getDefaultCommand())
-        .whileTrue(pivotIntake.getDefaultCommand())
-        .whileTrue(pivotShooter.getDefaultCommand())
-        .whileTrue(shooter.getDefaultCommand())
-        .whileTrue(vision.getDefaultCommand());
+        .onTrue(ampBar.off())
+        .onTrue(climb.off())
+        .onTrue(intake.off())
+        .onTrue(pivotIntake.off())
+        .onTrue(pivotShooter.off())
+        .onTrue(shooter.off());
     stateTriggers
         .get(StructureState.HOMED)
         .onTrue(ampBar.setStowPosition())
@@ -123,6 +124,31 @@ public class Superstructure {
             shooter.setVelocity(
                 ShooterConstants.kShooterSubwooferRPS,
                 ShooterConstants.kShooterFollowerSubwooferRPS));
+
+    stateTriggers
+        .get(StructureState.PREPODIUM)
+        .onTrue(pivotIntake.homePosition())
+        .onTrue(
+            pivotShooter.setPosition(
+                PivotShooterConstants.kPodiumRPreset * PivotShooterConstants.kPivotMotorGearing))
+        .onTrue(ampBar.setStowPosition())
+        .onTrue(intake.off())
+        .onTrue(
+            shooter.setVelocity(
+                ShooterConstants.kShooterSpeakerRPS, ShooterConstants.kShooterFollowerSpeakerRPS));
+
+    stateTriggers
+        .get(StructureState.PREFEED)
+        .onTrue(pivotIntake.homePosition())
+        .onTrue(
+            pivotShooter.setPosition(
+                PivotShooterConstants.kFeederPreset * PivotShooterConstants.kPivotMotorGearing))
+        .onTrue(ampBar.setStowPosition())
+        .onTrue(intake.off())
+        .onTrue(
+            shooter.setVelocity(
+                ShooterConstants.kShooterFeederRPS, ShooterConstants.kShooterFollowerFeederRPS));
+
     stateTriggers
         .get(StructureState.SHOOT)
         .and(pivotShooter::isAtGoal)
@@ -170,10 +196,14 @@ public class Superstructure {
             shooter.setVelocity(
                 ShooterConstants.kShooterAmpRPS, ShooterConstants.kShooterFollowerAmpRPS));
 
-    stateTriggers.get(StructureState.MANUAL_PIVOT_INTAKE_ZERO).whileTrue(pivotIntake.manualZero());
     stateTriggers
-        .get(StructureState.MANUAL_PIVOT_SHOOTER_ZERO)
-        .whileTrue(pivotShooter.manualZero());
+        .get(StructureState.OUTTAKE)
+        .onTrue(
+            pivotIntake.setPosition(
+                PivotIntakeConstants.kPivotGroundPos * PivotIntakeConstants.kPivotMotorGearing))
+        .whileTrue(
+            intake.setVoltage(
+                -IntakeConstants.kIntakeIntakeVoltage, -IntakeConstants.kPassthroughIntakeVoltage));
   }
   // call manually
   public void periodic() {
@@ -182,7 +212,7 @@ public class Superstructure {
     Logger.recordOutput(this.getClass().getSimpleName() + "/StateTime", this.stateTimer.get());
   }
 
-  private Command setState(StructureState state) {
+  public Command setState(StructureState state) {
     return Commands.runOnce(
         () -> {
           this.prevState = this.state;

@@ -21,8 +21,10 @@ public class PivotShooterIOTalonFX implements PivotShooterIO {
 
   private final MonitoredTalonFX pivotShooterMotor =
       new MonitoredTalonFX(PivotShooterConstants.kPivotMotorID);
-  final PositionVoltage positionRequest = new PositionVoltage(0).withSlot(0);
-  final MotionMagicVoltage motionMagicRequest = new MotionMagicVoltage(0).withSlot(0);
+  final PositionVoltage positionRequest =
+      new PositionVoltage(0).withSlot(0).withEnableFOC(PivotShooterConstants.kUseFOC);
+  final MotionMagicVoltage motionMagicRequest =
+      new MotionMagicVoltage(0).withSlot(0).withEnableFOC(PivotShooterConstants.kUseFOC);
   private final VoltageOut voltageReq = new VoltageOut(0);
 
   private final StatusSignal<Double> pivotShooterMotorVoltage = pivotShooterMotor.getMotorVoltage();

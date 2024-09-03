@@ -38,23 +38,13 @@ public final class PivotShooterConstants {
       new TrapezoidProfile.Constraints(16, 16);
 
   /* Tolerance/threshold */
-  public static final double kPivotPositionToleranceDeg = 0.1; // 5deg for the pivot.
-  public static final double kStallVelocityThreshold = 0.1;
-
   /* Physics/geometry */
   public static final double kPivotMotorGearing = 138.333; // 22 by 1
-  public static final double kPivotLength = 0.2;
-  public static final double kPivotMinAngleDeg = -90;
-  public static final double kPivotMaxAngleDeg = 50;
-  public static final double kPivotStartingAngleDeg = 0;
-  public static final double jKgMetersSquared = 0.1; // for sim
 
   /* Preset */
   public static final double kPivotSlamIntakeVoltage = -5;
   public static final double kPivotSlamShooterVoltage = -2;
 
-  /* Misc */
-  public static final int kNumPivotMotors = 1;
   public static final boolean kUseFOC = false;
   public static boolean kUseMotionMagic = true; // idk
   public static double updateFrequency = 50.0;

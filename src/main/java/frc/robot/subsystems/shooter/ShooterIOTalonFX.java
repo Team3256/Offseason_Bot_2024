@@ -22,9 +22,10 @@ import frc.robot.utils.TalonUtil;
 public class ShooterIOTalonFX implements ShooterIO {
   private final MonitoredTalonFX shooterMotor =
       new MonitoredTalonFX(ShooterConstants.kShooterMotorID);
-  final VelocityVoltage velocityRequest = new VelocityVoltage(0).withSlot(0);
+  final VelocityVoltage velocityRequest =
+      new VelocityVoltage(0).withSlot(0).withEnableFOC(ShooterConstants.kUseFOC);
   final MotionMagicVelocityVoltage motionMagicRequest =
-      new MotionMagicVelocityVoltage(0).withSlot(0);
+      new MotionMagicVelocityVoltage(0).withSlot(0).withEnableFOC(ShooterConstants.kUseFOC);
   final VelocityTorqueCurrentFOC regenRequest = new VelocityTorqueCurrentFOC(0).withSlot(1);
   private final VoltageOut voltageReq = new VoltageOut(0);
 
