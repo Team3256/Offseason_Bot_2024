@@ -32,11 +32,10 @@ import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj.Threads;
 import edu.wpi.first.wpilibj.Timer;
-import org.littletonrobotics.junction.Logger;
-
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.function.Consumer;
+import org.littletonrobotics.junction.Logger;
 
 public class KitSwerveDrivetrain {
   protected final boolean IsOnCANFD;
@@ -45,12 +44,13 @@ public class KitSwerveDrivetrain {
   protected final ModuleIO[] Modules;
 
   private final ModuleIOInputsAutoLogged[] moduleInputs = {
-          new ModuleIOInputsAutoLogged(),
-          new ModuleIOInputsAutoLogged(),
-          new ModuleIOInputsAutoLogged(),
-          new ModuleIOInputsAutoLogged()
+    new ModuleIOInputsAutoLogged(),
+    new ModuleIOInputsAutoLogged(),
+    new ModuleIOInputsAutoLogged(),
+    new ModuleIOInputsAutoLogged()
   };
-  protected final Pigeon2 m_pigeon2;
+  protected final GyroIO m_gyroIO;
+  private final GyroIOInputsAutoLogged m_gyroIOAutoLogged = new GyroIOInputsAutoLogged();
   protected final StatusSignal<Double> m_yawGetter;
   protected final StatusSignal<Double> m_angularVelocity;
   protected SwerveDriveKinematics m_kinematics;
@@ -108,9 +108,10 @@ public class KitSwerveDrivetrain {
     }
 
     this.ModuleCount = modules.length;
-    this.m_pigeon2 = new Pigeon2(driveTrainConstants.Pigeon2Id, driveTrainConstants.CANbusName);
-    this.m_yawGetter = this.m_pigeon2.getYaw().clone();
-    this.m_angularVelocity = this.m_pigeon2.getAngularVelocityZWorld().clone();
+    this.m_gyroIO =
+        new GyroIOPigeon2(driveTrainConstants.Pigeon2Id, driveTrainConstants.CANbusName);
+    this.m_yawGetter = this.m_gyroIO.getYaw();
+    this.m_angularVelocity = this.m_gyroIO.getAngularVelocity();
     this.Modules = new ModuleIO[this.ModuleCount];
     this.m_modulePositions = new SwerveModulePosition[this.ModuleCount];
     this.m_moduleStates = new SwerveModuleState[this.ModuleCount];
@@ -141,17 +142,18 @@ public class KitSwerveDrivetrain {
     this.m_operatorForwardDirection = new Rotation2d();
     this.m_simDrive =
         new KitSimSwerveDrivetrain(
-            this.m_moduleLocations, this.m_pigeon2, driveTrainConstants, modules);
+            this.m_moduleLocations, this.m_gyroIO.getPigeon2(), driveTrainConstants, modules);
     this.m_odometryThread = new OdometryThread();
     this.m_odometryThread.start();
   }
 
   public void periodic() {
-    for(int i=0; i<this.Modules.length; i++) {
+    for (int i = 0; i < this.Modules.length; i++) {
       this.Modules[i].updateInputs(moduleInputs[i]);
-      Logger.processInputs(this.getClass().getSimpleName()+"/Module"+i, this.moduleInputs[i]);
+      Logger.processInputs(this.getClass().getSimpleName() + "/Module" + i, this.moduleInputs[i]);
     }
-
+    m_gyroIO.updateInputs(m_gyroIOAutoLogged);
+    Logger.processInputs(this.getClass().getSimpleName() + "/Gyro", m_gyroIOAutoLogged);
   }
 
   public OdometryThread getDaqThread() {
@@ -256,7 +258,7 @@ public class KitSwerveDrivetrain {
   }
 
   public Rotation3d getRotation3d() {
-    return this.m_pigeon2.getRotation3d();
+    return this.m_gyroIOAutoLogged.position;
   }
 
   public void addVisionMeasurement(
@@ -304,7 +306,7 @@ public class KitSwerveDrivetrain {
   }
 
   public Pigeon2 getPigeon2() {
-    return this.m_pigeon2;
+    return this.m_gyroIO.getPigeon2();
   }
 
   public class OdometryThread {
