@@ -357,6 +357,18 @@ public class RobotContainer {
         .whileTrue(
             intake.setVoltage(
                 -IntakeConstants.kIntakeIntakeVoltage, -IntakeConstants.kPassthroughIntakeVoltage));
+
+    // Intake / outtake overrides
+    driver
+        .x()
+        .whileTrue(
+            intake.setVoltage(
+                IntakeConstants.kIntakeIntakeVoltage, IntakeConstants.kPassthroughIntakeVoltage));
+    driver
+        .b()
+        .whileTrue(
+            intake.setVoltage(
+                IntakeConstants.kIntakeIntakeVoltage, -IntakeConstants.kPassthroughIntakeVoltage));
     //    driver.rightTrigger().whileTrue(intake.intakeIn());
 
     // operator.povDown().onTrue(new IntakeOff(intake));
@@ -440,18 +452,6 @@ public class RobotContainer {
 
     // Reset robot heading on button press
     driver.y().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
-
-    // Intake / outtake overrides
-    driver
-        .x()
-        .whileTrue(
-            intake.setVoltage(
-                IntakeConstants.kIntakeIntakeVoltage, IntakeConstants.kPassthroughIntakeVoltage));
-    driver
-        .b()
-        .whileTrue(
-            intake.setVoltage(
-                IntakeConstants.kIntakeIntakeVoltage, -IntakeConstants.kPassthroughIntakeVoltage));
 
     // Azimuth angle bindings. isRed == true for red alliance presets. isRed != true for blue.
     if (isRed == true) {
