@@ -7,8 +7,6 @@
 
 package frc.robot.subsystems.swerve;
 
-import static frc.robot.subsystems.swerve.AzimuthConstants.aziSourceRed;
-
 import edu.wpi.first.math.geometry.Rotation2d;
 
 public final class AzimuthConstants {
