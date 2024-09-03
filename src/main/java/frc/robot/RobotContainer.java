@@ -84,11 +84,11 @@ public class RobotContainer {
 
   private final CommandSwerveDrivetrain drivetrain = TunerConstants.DriveTrain;
 
-  public double MaxSpeed =
+  private double MaxSpeed =
       TunerConstants.kSpeedAt12VoltsMps; // kSpeedAt12VoltsMps desired top speed
-  public double MaxAngularRate = 1.5 * Math.PI; // My drivetrain
+  private double MaxAngularRate = 1.5 * Math.PI; // My drivetrain
 
-  public final SwerveRequest.FieldCentric drive =
+  private final SwerveRequest.FieldCentric drive =
       new SwerveRequest.FieldCentric()
           .withDeadband(MaxSpeed * Constants.stickDeadband)
           .withRotationalDeadband(
@@ -96,7 +96,7 @@ public class RobotContainer {
           .withDriveRequestType(
               SwerveModule.DriveRequestType.OpenLoopVoltage); // I want field-centric
 
-  public SwerveFieldCentricFacingAngle azi =
+  private SwerveFieldCentricFacingAngle azi =
       new SwerveFieldCentricFacingAngle()
           .withDeadband(MaxSpeed * .1) // TODO: update deadband
           .withRotationalDeadband(MaxAngularRate * .1) // TODO: update deadband
@@ -433,10 +433,15 @@ public class RobotContainer {
         .whileTrue(
             drivetrain.applyRequest(
                 () ->
+                    drive
+                    .withVelocityX(-driver.getLeftY() * MaxSpeed) // Drive forward with
+                    // negative Y (forward)
+                    .withVelocityY(
+                        -driver.getLeftX() * MaxSpeed) // Drive left with negative X (left)
+                    .withRotationalRate(-driver.getRightX() * MaxAngularRate)));
+
                     azi.withTargetDirection(
-                        Rotation2d.fromDegrees(
-                            Math.atan2(
-                                driver.getRightY(), driver.getRightX() * (180 / Math.PI))))));
+                        new Rotation2d(driver.getRightX(), driver.getRightY()));
 
     // Slows translational and rotational speed to 30%
     driver
