@@ -378,6 +378,7 @@ public class CommandSwerveDrivetrain extends KitSwerveDrivetrain implements Subs
 
   @Override
   public void periodic() {
+    super.periodic();
     /* Periodically try to apply the operator perspective */
     /*
      * If we haven't applied the operator perspective before, then we should apply

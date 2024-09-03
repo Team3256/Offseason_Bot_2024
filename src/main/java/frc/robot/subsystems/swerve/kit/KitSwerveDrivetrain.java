@@ -32,6 +32,8 @@ import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj.Threads;
 import edu.wpi.first.wpilibj.Timer;
+import org.littletonrobotics.junction.Logger;
+
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.function.Consumer;
@@ -41,6 +43,13 @@ public class KitSwerveDrivetrain {
   protected final double UpdateFrequency;
   protected final int ModuleCount;
   protected final ModuleIO[] Modules;
+
+  private final ModuleIOInputsAutoLogged[] moduleInputs = {
+          new ModuleIOInputsAutoLogged(),
+          new ModuleIOInputsAutoLogged(),
+          new ModuleIOInputsAutoLogged(),
+          new ModuleIOInputsAutoLogged()
+  };
   protected final Pigeon2 m_pigeon2;
   protected final StatusSignal<Double> m_yawGetter;
   protected final StatusSignal<Double> m_angularVelocity;
@@ -135,6 +144,14 @@ public class KitSwerveDrivetrain {
             this.m_moduleLocations, this.m_pigeon2, driveTrainConstants, modules);
     this.m_odometryThread = new OdometryThread();
     this.m_odometryThread.start();
+  }
+
+  public void periodic() {
+    for(int i=0; i<this.Modules.length; i++) {
+      this.Modules[i].updateInputs(moduleInputs[i]);
+      Logger.processInputs(this.getClass().getSimpleName()+"/Module"+i, this.moduleInputs[i]);
+    }
+
   }
 
   public OdometryThread getDaqThread() {

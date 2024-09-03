@@ -108,6 +108,7 @@ public class KitSimSwerveDrivetrain {
     }
   }
 
+
   protected double addFriction(double motorVoltage, double frictionVoltage) {
     if (Math.abs(motorVoltage) < frictionVoltage) {
       motorVoltage = 0.0;
