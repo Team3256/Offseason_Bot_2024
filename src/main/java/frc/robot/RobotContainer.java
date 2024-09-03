@@ -434,14 +434,13 @@ public class RobotContainer {
             drivetrain.applyRequest(
                 () ->
                     drive
-                    .withVelocityX(-driver.getLeftY() * MaxSpeed) // Drive forward with
-                    // negative Y (forward)
-                    .withVelocityY(
-                        -driver.getLeftX() * MaxSpeed) // Drive left with negative X (left)
-                    .withRotationalRate(-driver.getRightX() * MaxAngularRate)));
+                        .withVelocityX(-driver.getLeftY() * MaxSpeed) // Drive forward with
+                        // negative Y (forward)
+                        .withVelocityY(
+                            -driver.getLeftX() * MaxSpeed) // Drive left with negative X (left)
+                        .withRotationalRate(-driver.getRightX() * MaxAngularRate)));
 
-                    azi.withTargetDirection(
-                        new Rotation2d(driver.getRightX(), driver.getRightY()));
+    azi.withTargetDirection(new Rotation2d(driver.getRightX(), driver.getRightY()));
 
     // Slows translational and rotational speed to 30%
     driver
