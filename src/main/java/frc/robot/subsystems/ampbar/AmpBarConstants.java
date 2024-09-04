@@ -7,9 +7,7 @@
 
 package frc.robot.subsystems.ampbar;
 
-import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
-import com.ctre.phoenix6.configs.MotorOutputConfigs;
-import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.configs.*;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
@@ -20,14 +18,10 @@ public final class AmpBarConstants {
   public static final double kAmpBarAmpVoltage = 16; // 8
   public static final double kAmpBarStowVoltage = -16; // -4
 
+  public static double kAmpBarGearing = 10;
+  public static final double kAmpBarAmpPosition = 30 / 10;
+  public static final double kAmpBarStowPosition = 0;
   public static final int kAmpBarMotorID = 10;
-  public static int kNumAmpBarMotors = 1;
-  public static double kAmpBarMotorGearing = 7; // i dont think we need this
-  public static double jKgMetersSquared = 0.1;
-  public static double kAmpBarLength = 5;
-  public static double kAmpBarMinAngleDeg = 0;
-  public static double kAmpBarMaxAngleDeg = 90;
-  public static Double kStallVelocityThreshold = 0.1;
 
   public static double updateFrequency = 50;
 
@@ -40,5 +34,12 @@ public final class AmpBarConstants {
           .withCurrentLimits(
               new CurrentLimitsConfigs()
                   .withStatorCurrentLimitEnable(true)
-                  .withStatorCurrentLimit(20));
+                  .withStatorCurrentLimit(20))
+          .withMotionMagic(
+              new MotionMagicConfigs()
+                  .withMotionMagicAcceleration(400)
+                  .withMotionMagicCruiseVelocity(100))
+          .withSlot0(
+              new Slot0Configs().withKS(0).withKV(0).withKP(3).withKI(0).withKD(0.2).withKG(1));
+  public static boolean kUseMotionMagic = true;
 }

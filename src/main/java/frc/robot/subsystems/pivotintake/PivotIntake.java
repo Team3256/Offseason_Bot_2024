@@ -12,18 +12,19 @@ import static edu.wpi.first.units.Units.*;
 import com.ctre.phoenix6.SignalLogger;
 import edu.wpi.first.wpilibj2.command.*;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import frc.robot.utils.DisableSubsystem;
 import org.littletonrobotics.junction.Logger;
 
-public class PivotIntake extends SubsystemBase {
+public class PivotIntake extends DisableSubsystem {
 
   private final PivotIntakeIO pivotIntakeIO;
   private final PivotIntakeIOInputsAutoLogged pivotIntakeIOAutoLogged =
       new PivotIntakeIOInputsAutoLogged();
   private final SysIdRoutine m_sysIdRoutine;
 
-  public PivotIntake(PivotIntakeIO pivotIntakeIO) {
+  public PivotIntake(boolean disabled, PivotIntakeIO pivotIntakeIO) {
+    super(disabled);
 
     this.pivotIntakeIO = pivotIntakeIO;
     m_sysIdRoutine =
@@ -45,8 +46,9 @@ public class PivotIntake extends SubsystemBase {
 
   @Override
   public void periodic() {
+    super.periodic();
     pivotIntakeIO.updateInputs(pivotIntakeIOAutoLogged);
-    Logger.processInputs(this.getClass().getName(), pivotIntakeIOAutoLogged);
+    Logger.processInputs(this.getClass().getSimpleName(), pivotIntakeIOAutoLogged);
   }
 
   public Command setPosition(double position) {

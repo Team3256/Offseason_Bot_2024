@@ -9,11 +9,11 @@ package frc.robot;
 
 import static frc.robot.subsystems.pivotintake.PivotIntakeConstants.kPivotGroundPos;
 import static frc.robot.subsystems.pivotshooter.PivotShooterConstants.*;
+import static frc.robot.subsystems.swerve.AzimuthConstants.*;
 
 import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule;
-import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -53,10 +53,12 @@ import frc.robot.subsystems.swerve.CommandSwerveDrivetrain;
 import frc.robot.subsystems.swerve.SwerveConstants;
 import frc.robot.subsystems.swerve.SwerveTelemetry;
 import frc.robot.subsystems.swerve.TunerConstants;
+import frc.robot.subsystems.swerve.kit.KitSwerveRequest;
 import frc.robot.subsystems.swerve.requests.SwerveFieldCentricFacingAngle;
 import frc.robot.subsystems.vision.Vision;
 import frc.robot.subsystems.vision.VisionIOLimelight;
 import frc.robot.utils.CommandQueue;
+import org.littletonrobotics.junction.Logger;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -81,27 +83,29 @@ public class RobotContainer {
   private boolean isRed;
 
   private final CommandSwerveDrivetrain drivetrain = TunerConstants.DriveTrain;
+
   private double MaxSpeed =
       TunerConstants.kSpeedAt12VoltsMps; // kSpeedAt12VoltsMps desired top speed
   private double MaxAngularRate = 1.5 * Math.PI; // My drivetrain
 
-  private final SwerveRequest.FieldCentric drive =
-      new SwerveRequest.FieldCentric()
+  private final KitSwerveRequest.FieldCentric drive =
+      new KitSwerveRequest.FieldCentric()
           .withDeadband(MaxSpeed * Constants.stickDeadband)
           .withRotationalDeadband(
               MaxAngularRate * Constants.rotationalDeadband) // Add a 10% deadband
           .withDriveRequestType(
               SwerveModule.DriveRequestType.OpenLoopVoltage); // I want field-centric
+
   private SwerveFieldCentricFacingAngle azi =
       new SwerveFieldCentricFacingAngle()
-          .withDeadband(MaxSpeed * .1)
-          .withRotationalDeadband(MaxAngularRate * .1)
+          .withDeadband(MaxSpeed * .1) // TODO: update deadband
+          .withRotationalDeadband(MaxAngularRate * .1) // TODO: update deadband
           .withHeadingController(SwerveConstants.azimuthController)
           .withDriveRequestType(SwerveModule.DriveRequestType.OpenLoopVoltage);
+
   // driving in open loop
-  private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
-  private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
   private final SwerveTelemetry swerveTelemetry = new SwerveTelemetry(MaxSpeed);
+
   public Shooter shooter;
   public Intake intake;
   public AmpBar ampbar;
@@ -126,31 +130,24 @@ public class RobotContainer {
     vision = new Vision(new VisionIOLimelight());
 
     // Setup subsystems & button-bindings
-    if (FeatureFlags.kPivotShooterEnabled) {
-      configurePivotShooter();
-    }
-    if (FeatureFlags.kShooterEnabled) {
-      configureShooter();
-    }
+    configurePivotShooter();
+    configureShooter();
 
-    if (FeatureFlags.kPivotIntakeEnabled) {
-      configurePivotIntake();
-      test.leftBumper().onTrue(Commands.runOnce(SignalLogger::start));
-      test.rightBumper().onTrue(Commands.runOnce(SignalLogger::stop));
-      test.y().whileTrue(pivotIntake.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
-      test.a().whileTrue(pivotIntake.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
-      test.b().whileTrue(pivotIntake.sysIdDynamic(SysIdRoutine.Direction.kForward));
-      test.x().whileTrue(pivotIntake.sysIdDynamic(SysIdRoutine.Direction.kReverse));
-    }
-    if (FeatureFlags.kIntakeEnabled) {
-      configureIntake();
-    }
-    if (FeatureFlags.kSwerveEnabled) {
-      configureSwerve();
-    }
-    if (FeatureFlags.kClimbEnabled) {
-      configureClimb();
-    }
+    configurePivotIntake();
+    configureIntake();
+    configureSwerve();
+    test.leftBumper().onTrue(Commands.runOnce(SignalLogger::start));
+    test.rightBumper().onTrue(Commands.runOnce(SignalLogger::stop));
+
+    test.leftTrigger()
+        .onTrue(
+            drivetrain.applyRequest(() -> azi.withTargetDirection(Rotation2d.fromDegrees(180))));
+
+    test.y().whileTrue(drivetrain.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
+    test.a().whileTrue(drivetrain.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
+    test.b().whileTrue(drivetrain.sysIdDynamic(SysIdRoutine.Direction.kForward));
+    test.x().whileTrue(drivetrain.sysIdDynamic(SysIdRoutine.Direction.kReverse));
+    configureClimb();
     // If all the subsystems are enabled, configure "operator" autos
     if (FeatureFlags.kIntakeEnabled
         && FeatureFlags.kShooterEnabled
@@ -325,7 +322,7 @@ public class RobotContainer {
   }
 
   private void configurePivotShooter() {
-    pivotShooter = new PivotShooter(new PivotShooterIOTalonFX());
+    pivotShooter = new PivotShooter(FeatureFlags.kPivotShooterEnabled, new PivotShooterIOTalonFX());
     // operator.b().onTrue(new bruh(pivotShooter));
     // operator.x().onTrue(new SequentialCommandGroup(new
     // PivotShootSubwoofer(pivotShooter)));
@@ -342,7 +339,7 @@ public class RobotContainer {
   }
 
   private void configureIntake() {
-    intake = new Intake(new IntakeIOTalonFX());
+    intake = new Intake(FeatureFlags.kIntakeEnabled, new IntakeIOTalonFX());
     // intake.setDefaultCommand(new IntakeSetVoltage(intake, 0));
     // operator.rightBumper().whileTrue(new IntakeInOverride(intake));
     // We assume intake is already enabled, so if pivot is enabled as
@@ -358,19 +355,33 @@ public class RobotContainer {
         .whileTrue(
             intake.setVoltage(
                 -IntakeConstants.kIntakeIntakeVoltage, -IntakeConstants.kPassthroughIntakeVoltage));
-    driver.rightTrigger().whileTrue(intake.intakeIn());
+
+    // Intake / outtake overrides
+    driver
+        .x()
+        .whileTrue(
+            intake.setVoltage(
+                IntakeConstants.kIntakeIntakeVoltage, IntakeConstants.kPassthroughIntakeVoltage));
+    driver
+        .b()
+        .whileTrue(
+            intake.setVoltage(
+                IntakeConstants.kIntakeIntakeVoltage, -IntakeConstants.kPassthroughIntakeVoltage));
+    //    driver.rightTrigger().whileTrue(intake.intakeIn());
 
     // operator.povDown().onTrue(new IntakeOff(intake));
   }
 
   private void configurePivotIntake() {
-    pivotIntake = new PivotIntake(new PivotIntakeIOTalonFX());
-    operator.povRight().onTrue(pivotIntake.setPosition(kPivotGroundPos));
+    pivotIntake = new PivotIntake(FeatureFlags.kPivotIntakeEnabled, new PivotIntakeIOTalonFX());
+    operator
+        .povRight()
+        .onTrue(pivotIntake.setPosition(kPivotGroundPos * PivotIntakeConstants.kPivotMotorGearing));
     operator.povLeft().onTrue(pivotIntake.slamAndPID());
   }
 
   private void configureClimb() {
-    climb = new Climb(new ClimbIOTalonFX());
+    climb = new Climb(FeatureFlags.kClimbEnabled, new ClimbIOTalonFX());
     // zeroClimb = new ZeroClimb(climb); // NEED FOR SHUFFLEBOARD
 
     operator.povDown().onTrue(climb.zero());
@@ -401,6 +412,8 @@ public class RobotContainer {
   }
 
   public void configureSwerve() {
+
+    // default command
     drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
         drivetrain.applyRequest(
             () ->
@@ -410,6 +423,9 @@ public class RobotContainer {
                     .withVelocityY(
                         -driver.getLeftX() * MaxSpeed) // Drive left with negative X (left)
                     .withRotationalRate(-driver.getRightX() * MaxAngularRate)));
+
+    /* Right stick absolute angle mode on trigger hold,
+    robot adjusts heading to the angle right joystick creates */
     driver
         .rightTrigger()
         .whileTrue(
@@ -420,37 +436,55 @@ public class RobotContainer {
                         // negative Y (forward)
                         .withVelocityY(
                             -driver.getLeftX() * MaxSpeed) // Drive left with negative X (left)
-                        .withRotationalRate(
-                            driver.getRightTriggerAxis()
-                                * MaxAngularRate) // Drive counterclockwise with negative X
-                // (left)
-                ));
+                        .withRotationalRate(-driver.getRightX() * MaxAngularRate)));
+
+    azi.withTargetDirection(new Rotation2d(driver.getRightX(), driver.getRightY()));
+
+    // Slows translational and rotational speed to 30%
     driver
         .leftTrigger()
         .whileTrue(
             drivetrain.applyRequest(
                 () ->
                     drive
-                        .withVelocityX(-driver.getLeftY() * MaxSpeed) // Drive forward with
-                        // negative Y (forward)
-                        .withVelocityY(
-                            -driver.getLeftX() * MaxSpeed) // Drive left with negative X (left)
+                        .withVelocityX(-driver.getLeftY() * (MaxSpeed * 0.3))
+                        .withVelocityY(-driver.getLeftX() * (MaxSpeed * 0.3))
                         .withRotationalRate(
-                            -driver.getLeftTriggerAxis()
-                                * MaxAngularRate) // Drive counterclockwise with negative X
-                // (left)
-                ));
-    driver.a().whileTrue(drivetrain.applyRequest(() -> brake));
-    driver
-        .b()
-        .whileTrue(
-            drivetrain.applyRequest(
-                () ->
-                    point.withModuleDirection(
-                        new Rotation2d(-driver.getLeftY(), -driver.getLeftX()))));
+                            -driver.getLeftTriggerAxis() * (MaxAngularRate * 0.3))));
 
-    // reset the field-centric heading on left bumper press
-    driver.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
+    // Reset robot heading on button press
+    driver.y().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
+
+    // Azimuth angle bindings. isRed == true for red alliance presets. isRed != true for blue.
+    if (isRed == true) {
+      driver
+          .rightBumper()
+          .whileTrue(drivetrain.applyRequest(() -> azi.withTargetDirection(aziSourceRed)));
+      driver.a().whileTrue(drivetrain.applyRequest(() -> azi.withTargetDirection(aziAmpRed)));
+      driver
+          .povRight()
+          .whileTrue(drivetrain.applyRequest(() -> azi.withTargetDirection(aziFeederRed)));
+    } else {
+      driver
+          .rightBumper()
+          .whileTrue(drivetrain.applyRequest(() -> azi.withTargetDirection(aziSourceBlue)));
+      driver.a().whileTrue(drivetrain.applyRequest(() -> azi.withTargetDirection(aziAmpBlue)));
+      driver
+          .povRight()
+          .whileTrue(drivetrain.applyRequest(() -> azi.withTargetDirection(aziFeederBlue)));
+    }
+
+    // Universal azimuth bindings
+    driver
+        .leftBumper()
+        .whileTrue(drivetrain.applyRequest(() -> azi.withTargetDirection(aziSubwooferFront)));
+    driver
+        .povDownLeft()
+        .whileTrue(drivetrain.applyRequest(() -> azi.withTargetDirection(aziSubwooferLeft)));
+    driver
+        .povDownRight()
+        .whileTrue(drivetrain.applyRequest(() -> azi.withTargetDirection(aziSubwooferRight)));
+    driver.povDown().whileTrue(drivetrain.applyRequest(() -> azi.withTargetDirection(aziCleanUp)));
 
     if (Utils.isSimulation()) {
       drivetrain.seedFieldRelative(new Pose2d(new Translation2d(), Rotation2d.fromDegrees(90)));
@@ -459,7 +493,7 @@ public class RobotContainer {
   }
 
   private void configureShooter() {
-    shooter = new Shooter(new ShooterIOTalonFX());
+    shooter = new Shooter(FeatureFlags.kShooterEnabled, new ShooterIOTalonFX());
     // new Trigger(() -> Math.abs(shooter.getShooterRps() - 100) <= 5)
     // .onTrue(
     // new InstantCommand(
@@ -472,7 +506,7 @@ public class RobotContainer {
     // operator.getHID().setRumble(GenericHID.RumbleType.kBothRumble, 0);
     // }));
     if (FeatureFlags.kAmpBarEnabled) {
-      ampbar = new AmpBar(new AmpBarIOTalonFX());
+      ampbar = new AmpBar(FeatureFlags.kAmpBarEnabled, new AmpBarIOTalonFX());
       operator
           .rightTrigger()
           .onTrue(
@@ -488,7 +522,7 @@ public class RobotContainer {
                   shooter.setVelocity(
                       ShooterConstants.kShooterAmpRPS, ShooterConstants.kShooterFollowerAmpRPS),
                   ampbar.setAmpPosition(),
-                  pivotShooter.setPosition(kAmpPreset)));
+                  pivotShooter.setPosition(kAmpPreset * kPivotMotorGearing)));
       operator
           .y()
           .onTrue(
@@ -649,38 +683,6 @@ public class RobotContainer {
 
   public void periodic(double dt) {
     XboxStalker.stalk(driver, operator);
-    // System.out.println(Limelight.getBotpose("limelight").length);
-    // //
-    // double ty = Limelight.getTY("limelight");
-    // //
-    // // // how many degrees back is your limelight rotated from perfectly
-    // vertical?
-    // //
-    // double limelightMountAngleDegrees = 21.936;
-
-    // // distance from the center of the Limelight lens to the floor
-    // double limelightLensHeightInches = 15.601;
-
-    // // distance from the target to the floor
-    // double goalHeightInches = 56.375;
-
-    // double angleToGoalDegrees = limelightMountAngleDegrees + ty;
-    // double angleToGoalRadians = angleToGoalDegrees * (3.14159 / 180.0);
-
-    // // calculate distance
-    // double distanceFromLimelightToGoalInches =
-    // (goalHeightInches - limelightLensHeightInches) /
-    // Math.tan(angleToGoalRadians);
-    // LimelightHelpers.setPriorityTagID("limelight", 7);
-    // System.out.println("Distance: " + ty);
-    // System.out.println("Distance: " + distanceFromLimelightToGoalInches);
-    // Optional<DriverStation.Alliance> ally = DriverStation.getAlliance();
-    // if (ally.isPresent() && ally.get() == DriverStation.Alliance.Red) {
-    // System.out.println("red");
-    // } else if (ally.isPresent()) {
-    // System.out.println("blue");
-    // } else {
-    // System.out.println("red");
-    // }
+    Logger.recordOutput("Note pose", vision.getNotePose(drivetrain.getState().Pose));
   }
 }

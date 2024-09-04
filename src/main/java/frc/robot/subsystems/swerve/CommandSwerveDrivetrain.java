@@ -20,6 +20,7 @@ import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.ReplanningConfig;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
@@ -31,6 +32,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.limelight.LimelightHelpers;
+import frc.robot.subsystems.swerve.kit.KitSwerveDrivetrain;
+import frc.robot.subsystems.swerve.kit.KitSwerveRequest;
 import frc.robot.subsystems.vision.Vision;
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -39,7 +42,8 @@ import java.util.function.Supplier;
  * Class that extends the Phoenix SwerveDrivetrain class and implements subsystem so it can be used
  * in command-based projects easily.
  */
-public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsystem {
+public class CommandSwerveDrivetrain extends KitSwerveDrivetrain implements Subsystem {
+  private final boolean enabled;
   private static final double kSimLoopPeriod = 0.005; // 5 ms
   private Notifier m_simNotifier = null;
   private double m_lastSimTime;
@@ -51,16 +55,16 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
   /* Keep track if we've ever applied the operator perspective before or not */
   private boolean hasAppliedOperatorPerspective = false;
 
-  private final SwerveRequest.ApplyChassisSpeeds AutoRequest =
-      new SwerveRequest.ApplyChassisSpeeds()
+  private final KitSwerveRequest.ApplyChassisSpeeds AutoRequest =
+      new KitSwerveRequest.ApplyChassisSpeeds()
           .withDriveRequestType(SwerveModule.DriveRequestType.Velocity);
 
-  private final SwerveRequest.SysIdSwerveTranslation TranslationCharacterization =
-      new SwerveRequest.SysIdSwerveTranslation();
-  private final SwerveRequest.SysIdSwerveRotation RotationCharacterization =
-      new SwerveRequest.SysIdSwerveRotation();
-  private final SwerveRequest.SysIdSwerveSteerGains SteerCharacterization =
-      new SwerveRequest.SysIdSwerveSteerGains();
+  private final KitSwerveRequest.SysIdSwerveTranslation TranslationCharacterization =
+      new KitSwerveRequest.SysIdSwerveTranslation();
+  private final KitSwerveRequest.SysIdSwerveRotation RotationCharacterization =
+      new KitSwerveRequest.SysIdSwerveRotation();
+  private final KitSwerveRequest.SysIdSwerveSteerGains SteerCharacterization =
+      new KitSwerveRequest.SysIdSwerveSteerGains();
 
   /* Use one of these sysidroutines for your particular test */
   private SysIdRoutine SysIdRoutineTranslation =
@@ -96,10 +100,12 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
   private final SysIdRoutine RoutineToApply = SysIdRoutineTranslation;
 
   public CommandSwerveDrivetrain(
+      boolean enabled,
       SwerveDrivetrainConstants driveTrainConstants,
       double OdometryUpdateFrequency,
       SwerveModuleConstants... modules) {
     super(driveTrainConstants, OdometryUpdateFrequency, modules);
+    this.enabled = enabled;
     configurePathPlanner();
     if (Utils.isSimulation()) {
       startSimThread();
@@ -107,11 +113,21 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
   }
 
   public CommandSwerveDrivetrain(
-      SwerveDrivetrainConstants driveTrainConstants, SwerveModuleConstants... modules) {
+      boolean enabled,
+      SwerveDrivetrainConstants driveTrainConstants,
+      SwerveModuleConstants... modules) {
     super(driveTrainConstants, modules);
+    this.enabled = enabled;
     configurePathPlanner();
     if (Utils.isSimulation()) {
       startSimThread();
+    }
+  }
+
+  @Override
+  public void setControl(KitSwerveRequest request) {
+    if (enabled) {
+      super.setControl(request);
     }
   }
 
@@ -213,7 +229,27 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
         vision.getNotePose(this.getState().Pose), constraints, 1, 0.0);
   }
 
-  public Command applyRequest(Supplier<SwerveRequest> requestSupplier) {
+  public Command rotationTest() {
+    PathConstraints constraints =
+        new PathConstraints(
+            TunerConstants.kSpeedAt12VoltsMps - 1, // max speed (4.96)
+            4, // max acceleration (4 m/s^2)
+            edu.wpi.first.math.util.Units.degreesToRadians(450), // max angular velocity (450 deg/s)
+            edu.wpi.first.math.util.Units.degreesToRadians(
+                540)); // max angular acceleration (540 deg/s^2)
+    return AutoBuilder.pathfindToPose(
+        // current pose, path constraints (see above), "goal end velocity", rotation
+        // delay distance (how long to travel before rotating)
+        this.getState()
+            .Pose
+            .rotateBy(Rotation2d.fromDegrees(90))
+            .plus(new Transform2d(new Translation2d(2, 1), Rotation2d.fromDegrees(0))),
+        constraints,
+        0,
+        0.0);
+  }
+
+  public Command applyRequest(Supplier<KitSwerveRequest> requestSupplier) {
     return run(() -> this.setControl(requestSupplier.get()));
   }
 
@@ -262,7 +298,7 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
         SwerveConstants.choreoTranslationController,
         SwerveConstants.choreoRotationController,
         ((ChassisSpeeds speeds) ->
-            this.setControl(new SwerveRequest.ApplyChassisSpeeds().withSpeeds(speeds))),
+            this.setControl(new KitSwerveRequest.ApplyChassisSpeeds().withSpeeds(speeds))),
         () -> {
           Optional<DriverStation.Alliance> alliance = DriverStation.getAlliance();
           return alliance.isPresent() && alliance.get() == DriverStation.Alliance.Red;
@@ -342,6 +378,7 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
 
   @Override
   public void periodic() {
+    super.periodic();
     /* Periodically try to apply the operator perspective */
     /*
      * If we haven't applied the operator perspective before, then we should apply

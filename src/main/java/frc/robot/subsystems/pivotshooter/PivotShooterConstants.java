@@ -18,7 +18,7 @@ public final class PivotShooterConstants {
   // this works
   public static final double kSubWooferPreset = 3.4 / 138.33; // 3.2
   public static final double kFeederPreset = 5.9 / 138.33;
-  public static final double kAmpPreset = (4) / 138.33;
+  public static final double kAmpPreset = (3.76) / 138.33; // 4
   public static final double kWingNoteCenterPreset = 5.8 / 138.33;
   public static final double kWingNoteSidePreset =
       5.5 / 138.33; // old value: 5.7 distance: -1.5 //old ish?: 5.4

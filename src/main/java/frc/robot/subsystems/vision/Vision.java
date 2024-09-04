@@ -69,20 +69,19 @@ public class Vision extends SubsystemBase {
 
   @AutoLogOutput
   public double getDistanceToNote() {
-    return (VisionConstants.noteLimelightHeightInches - VisionConstants.noteHeight)
+    return -(VisionConstants.noteLimelightHeightInches - VisionConstants.noteHeightInches)
         / Math.tan(
             Units.degreesToRadians(
                 visionIOAutoLogged.noteLimelightY + VisionConstants.noteLimelightAngleDegrees));
   }
 
-  @AutoLogOutput
   public Pose2d getNotePose(Pose2d robotPose) {
     return robotPose
         .transformBy(VisionConstants.robotToCam)
         .transformBy(
             new Transform2d(
                 new Translation2d(
-                    getDistanceToNote(),
+                    Units.inchesToMeters(getDistanceToNote()),
                     robotPose
                         .getRotation()
                         .plus(Rotation2d.fromDegrees(visionIOAutoLogged.noteLimelightX))),

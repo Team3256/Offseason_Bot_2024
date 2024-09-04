@@ -12,12 +12,12 @@ import static edu.wpi.first.units.Units.Volts;
 
 import com.ctre.phoenix6.SignalLogger;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import frc.robot.utils.DisableSubsystem;
 import org.littletonrobotics.junction.Logger;
 
-public class Intake extends SubsystemBase {
+public class Intake extends DisableSubsystem {
   private final IntakeIO intakeIO;
   private final IntakeIOInputsAutoLogged intakeIOAutoLogged = new IntakeIOInputsAutoLogged();
   private final SysIdRoutine intake_sysIdRoutine;
@@ -26,7 +26,8 @@ public class Intake extends SubsystemBase {
   private final Trigger debouncedBeamBreak = new Trigger(this::isBeamBroken).debounce(0.1);
   ;
 
-  public Intake(IntakeIO intakeIO) {
+  public Intake(boolean disabled, IntakeIO intakeIO) {
+    super(disabled);
 
     this.intakeIO = intakeIO;
     intake_sysIdRoutine =
@@ -64,8 +65,9 @@ public class Intake extends SubsystemBase {
 
   @Override
   public void periodic() {
+    super.periodic();
     intakeIO.updateInputs(intakeIOAutoLogged);
-    Logger.processInputs(this.getClass().getName(), intakeIOAutoLogged);
+    Logger.processInputs(this.getClass().getSimpleName(), intakeIOAutoLogged);
   }
 
   public Command setVoltage(double voltage, double passthroughVoltage) {

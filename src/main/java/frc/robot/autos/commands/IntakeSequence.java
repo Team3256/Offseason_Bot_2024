@@ -33,7 +33,10 @@ public class IntakeSequence extends SequentialCommandGroup {
     addRequirements(pivotIntake, pivotShooter, ampBar);
     addCommands(
         new ParallelCommandGroup(
-            pivotIntake.setPosition(PivotIntakeConstants.kPivotGroundPos).withTimeout(0.75),
+            pivotIntake
+                .setPosition(
+                    PivotIntakeConstants.kPivotGroundPos * PivotIntakeConstants.kPivotMotorGearing)
+                .withTimeout(0.75),
             intake.intakeIn(),
             pivotShooter.slamAndPID()),
         pivotIntake.slamAndPID(),

@@ -12,17 +12,18 @@ import static edu.wpi.first.units.Units.Volts;
 
 import com.ctre.phoenix6.SignalLogger;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import frc.robot.utils.DisableSubsystem;
 import org.littletonrobotics.junction.Logger;
 
-public class Climb extends SubsystemBase {
+public class Climb extends DisableSubsystem {
 
   private final ClimbIO climbIO;
   private final ClimbIOInputsAutoLogged climbIOAutoLogged = new ClimbIOInputsAutoLogged();
   private final SysIdRoutine m_sysIdRoutine;
 
-  public Climb(ClimbIO climbIO) {
+  public Climb(boolean disabled, ClimbIO climbIO) {
+    super(disabled);
     this.climbIO = climbIO;
     m_sysIdRoutine =
         new SysIdRoutine(
@@ -43,8 +44,9 @@ public class Climb extends SubsystemBase {
 
   @Override
   public void periodic() {
+    super.periodic();
     climbIO.updateInputs(climbIOAutoLogged);
-    Logger.processInputs(this.getClass().getName(), climbIOAutoLogged);
+    Logger.processInputs(this.getClass().getSimpleName(), climbIOAutoLogged);
   }
 
   public Command setPosition(double position) {
