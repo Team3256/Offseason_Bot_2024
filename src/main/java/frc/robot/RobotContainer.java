@@ -200,7 +200,6 @@ public class RobotContainer {
     //    driver.rightTrigger().whileTrue(intake.intakeIn());
 
     // operator.povDown().onTrue(new IntakeOff(intake));
-  }
 
     operator
         .axisLessThan(translationAxis, -0.5)
