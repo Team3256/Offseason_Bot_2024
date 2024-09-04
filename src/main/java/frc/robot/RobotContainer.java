@@ -14,6 +14,7 @@ import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
+import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -51,6 +52,7 @@ import frc.robot.subsystems.swerve.CommandSwerveDrivetrain;
 import frc.robot.subsystems.swerve.SwerveConstants;
 import frc.robot.subsystems.swerve.SwerveTelemetry;
 import frc.robot.subsystems.swerve.TunerConstants;
+import frc.robot.subsystems.swerve.kit.KitSwerveRequest;
 import frc.robot.subsystems.swerve.requests.SwerveFieldCentricFacingAngle;
 import frc.robot.subsystems.vision.Vision;
 import frc.robot.subsystems.vision.VisionIOLimelight;
@@ -82,8 +84,8 @@ public class RobotContainer {
       TunerConstants.kSpeedAt12VoltsMps; // kSpeedAt12VoltsMps desired top speed
   private double MaxAngularRate = 1.5 * Math.PI; // My drivetrain
 
-  private final SwerveRequest.FieldCentric drive =
-      new SwerveRequest.FieldCentric()
+  private final KitSwerveRequest.FieldCentric drive =
+      new KitSwerveRequest.FieldCentric()
           .withDeadband(MaxSpeed * Constants.stickDeadband)
           .withRotationalDeadband(
               MaxAngularRate * Constants.rotationalDeadband) // Add a 10% deadband
@@ -98,8 +100,6 @@ public class RobotContainer {
           .withDriveRequestType(SwerveModule.DriveRequestType.OpenLoopVoltage);
 
   // driving in open loop
-  // private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
-  // private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
   private final SwerveTelemetry swerveTelemetry = new SwerveTelemetry(MaxSpeed);
   public Shooter shooter = new Shooter(FeatureFlags.kShooterEnabled, new ShooterIOTalonFX());
   public Intake intake = new Intake(FeatureFlags.kIntakeEnabled, new IntakeIOTalonFX());
