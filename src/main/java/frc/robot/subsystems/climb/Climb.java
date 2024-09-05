@@ -10,9 +10,18 @@ package frc.robot.subsystems.climb;
 import static edu.wpi.first.units.Units.Seconds;
 import static edu.wpi.first.units.Units.Volts;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.ctre.phoenix6.SignalLogger;
+import com.pathplanner.lib.auto.AutoBuilder;
+
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import frc.robot.limelight.Limelight;
 import frc.robot.utils.DisableSubsystem;
 import org.littletonrobotics.junction.Logger;
 
@@ -25,21 +34,19 @@ public class Climb extends DisableSubsystem {
   public Climb(boolean disabled, ClimbIO climbIO) {
     super(disabled);
     this.climbIO = climbIO;
-    m_sysIdRoutine =
-        new SysIdRoutine(
-            new SysIdRoutine.Config(
-                Volts.of(0.2).per(Seconds.of(1)), // Use default ramp rate (1 V/s)
-                Volts.of(6), // Reduce dynamic step voltage to 4 to prevent brownout
-                null, // Use default timeout (10 s)
-                // Log state with Phoenix SignalLogger class
-                (state) -> SignalLogger.writeString("state", state.toString())),
-            new SysIdRoutine.Mechanism(
-                (volts) ->
-                    climbIO
-                        .getMotor()
-                        .setControl(climbIO.getVoltageRequest().withOutput(volts.in(Volts))),
-                null,
-                this));
+    m_sysIdRoutine = new SysIdRoutine(
+        new SysIdRoutine.Config(
+            Volts.of(0.2).per(Seconds.of(1)), // Use default ramp rate (1 V/s)
+            Volts.of(6), // Reduce dynamic step voltage to 4 to prevent brownout
+            null, // Use default timeout (10 s)
+            // Log state with Phoenix SignalLogger class
+            (state) -> SignalLogger.writeString("state", state.toString())),
+        new SysIdRoutine.Mechanism(
+            (volts) -> climbIO
+                .getMotor()
+                .setControl(climbIO.getVoltageRequest().withOutput(volts.in(Volts))),
+            null,
+            this));
   }
 
   @Override
@@ -69,6 +76,16 @@ public class Climb extends DisableSubsystem {
 
   public Command extendClimber() {
     return setPosition(ClimbConstants.kClimbUpPosition);
+  }
+
+  public Command daToNearestStageAprilTag() {
+    double[] botPose = Limelight.getBotpose(ClimbConstants.kBotPoseLimelightId);
+    Pose2d botPose2d = new Pose2d(botPose[0], botPose[1], new Rotation2d(botPose[2]));
+    return AutoBuilder.pathfindToPose(botPose2d.nearest(ClimbConstants.kStagePoses), null,
+        0.0, // Goal end velocity in meters/sec
+        0.0 // Rotation delay distance in meters. This is how far the robot should travel
+            // before attempting to rotate.
+    );
   }
 
   public Command retractClimber() {
