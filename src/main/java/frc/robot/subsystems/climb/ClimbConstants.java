@@ -49,7 +49,12 @@ public final class ClimbConstants {
                                                         .withStatorCurrentLimit(60));
 
         public static final String kBotPoseLimelightId = "todo";
-        public static final ArrayList<Pose2d> kStagePoses = new ArrayList<>() {
+        public static final ArrayList<Pose2d> kStagePosesBlue = new ArrayList<>() {
+                {
+                        add(new Pose2d());
+                }
+        };
+        public static final ArrayList<Pose2d> kStagePosesRed = new ArrayList<>() {
                 {
                         add(new Pose2d());
                 }

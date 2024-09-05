@@ -19,6 +19,8 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.limelight.Limelight;
@@ -80,12 +82,17 @@ public class Climb extends DisableSubsystem {
   }
 
   public Command daToNearestStageAprilTag() {
-    Pose2d botPose2d = LimelightHelpers.getBotPose2d(ClimbConstants.kBotPoseLimelightId);
-    return AutoBuilder.pathfindToPose(botPose2d.nearest(ClimbConstants.kStagePoses), null,
-        0.0, // Goal end velocity in meters/sec
-        0.0 // Rotation delay distance in meters. This is how far the robot should travel
-            // before attempting to rotate.
-    );
+    return this.defer(() -> {
+      Pose2d botPose2d = LimelightHelpers.getBotPose2d(ClimbConstants.kBotPoseLimelightId);
+      return AutoBuilder.pathfindToPose(
+          botPose2d.nearest(DriverStation.getAlliance().equals(Alliance.Red) ? ClimbConstants.kStagePosesRed
+              : ClimbConstants.kStagePosesBlue),
+          null,
+          0.0, // Goal end velocity in meters/sec
+          0.0 // Rotation delay distance in meters. This is how far the robot should travel
+              // before attempting to rotate.
+      );
+    });
   }
 
   public Command retractClimber() {
