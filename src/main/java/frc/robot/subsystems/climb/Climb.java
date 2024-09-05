@@ -22,6 +22,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.limelight.Limelight;
+import frc.robot.limelight.LimelightHelpers;
 import frc.robot.utils.DisableSubsystem;
 import org.littletonrobotics.junction.Logger;
 
@@ -79,8 +80,7 @@ public class Climb extends DisableSubsystem {
   }
 
   public Command daToNearestStageAprilTag() {
-    double[] botPose = Limelight.getBotpose(ClimbConstants.kBotPoseLimelightId);
-    Pose2d botPose2d = new Pose2d(botPose[0], botPose[1], new Rotation2d(botPose[2]));
+    Pose2d botPose2d = LimelightHelpers.getBotPose2d(ClimbConstants.kBotPoseLimelightId);
     return AutoBuilder.pathfindToPose(botPose2d.nearest(ClimbConstants.kStagePoses), null,
         0.0, // Goal end velocity in meters/sec
         0.0 // Rotation delay distance in meters. This is how far the robot should travel
