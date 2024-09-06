@@ -14,6 +14,7 @@ import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 
 public final class ClimbConstants {
 
@@ -51,12 +52,22 @@ public final class ClimbConstants {
         public static final String kBotPoseLimelightId = "todo";
         public static final ArrayList<Pose2d> kStagePosesBlue = new ArrayList<>() {
                 {
-                        add(new Pose2d());
+                        // Podium
+                        add(new Pose2d(2.657515287399292, 4.105274677276611, new Rotation2d(0)));
+                        // Amp side
+                        add(new Pose2d(5.990447521209717, 6.171302795410156, new Rotation2d(-2.015216124571914)));
+                        // Etc
+                        add(new Pose2d(6.10739278793335, 2.1172094345092773, new Rotation2d(2.118189174278151)));
                 }
         };
         public static final ArrayList<Pose2d> kStagePosesRed = new ArrayList<>() {
                 {
-                        add(new Pose2d());
+                        // Podium
+                        add(new Pose2d(13.981689453125, 4.105274677276611, new Rotation2d(3.1415926536)));
+                        // Amp side
+                        add(new Pose2d(10.512321472167969, 6.11283016204834, new Rotation2d(-1.0445000982232164)));
+                        // Etc
+                        add(new Pose2d(10.492830276489258, 2.0977187156677246, new Rotation2d(1.0214219124306612)));
                 }
         };
 }
