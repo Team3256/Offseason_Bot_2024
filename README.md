@@ -29,5 +29,5 @@ Category
 
 Individual
 
-- PathPlanner autos in deploy/pathplanner
+- Choreo autos in deploy/pathplanner
 - Glass config in simgui.json, simgui-window.json, and simgui-ds.json
