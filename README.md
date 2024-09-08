@@ -31,3 +31,7 @@ Individual
 
 - Choreo autos in deploy/pathplanner
 - Glass config in simgui.json, simgui-window.json, and simgui-ds.json
+- Scripts
+  - './gradlew spotlessApply' for Spotless
+  - './gradlew deploy' for deploying to the robot
+  - './clear_deploy.sh' for clearing the deploy folder
