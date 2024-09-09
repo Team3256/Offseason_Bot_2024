@@ -78,8 +78,4 @@ public final class ShooterConstants {
   // before: 1800/6
   public static double updateFrequency = 50.0;
   public static boolean kUseMotionMagic = false;
-
-  public static NeutralModeValue neutralMode = NeutralModeValue.Brake;
-  public static InvertedValue shooterInverted = InvertedValue.Clockwise_Positive;
-  public static InvertedValue shooterFollowerInverted = InvertedValue.CounterClockwise_Positive;
 }

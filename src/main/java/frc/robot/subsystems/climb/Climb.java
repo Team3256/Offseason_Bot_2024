@@ -11,9 +11,12 @@ import static edu.wpi.first.units.Units.Seconds;
 import static edu.wpi.first.units.Units.Volts;
 
 import com.ctre.phoenix6.SignalLogger;
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.utils.DisableSubsystem;
+import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
 public class Climb extends DisableSubsystem {
@@ -21,6 +24,8 @@ public class Climb extends DisableSubsystem {
   private final ClimbIO climbIO;
   private final ClimbIOInputsAutoLogged climbIOAutoLogged = new ClimbIOInputsAutoLogged();
   private final SysIdRoutine m_sysIdRoutine;
+
+  private Rotation2d goal = new Rotation2d();
 
   public Climb(boolean disabled, ClimbIO climbIO) {
     super(disabled);
@@ -50,11 +55,21 @@ public class Climb extends DisableSubsystem {
   }
 
   public Command setPosition(double position) {
-    return this.run(() -> climbIO.setPosition(position * ClimbConstants.gearRatio));
+    return this.run(
+        () -> {
+          climbIO.setPosition(position * ClimbConstants.gearRatio);
+          this.goal = Rotation2d.fromRotations(position * ClimbConstants.gearRatio);
+        });
   }
 
   public Command setVoltage(double voltage) {
     return this.run(() -> climbIO.setVoltage(voltage)).finallyDo(climbIO::off);
+  }
+
+  @AutoLogOutput
+  public boolean isAtGoal() {
+    return MathUtil.isNear(goal.getRotations(), climbIOAutoLogged.climbMotorPosition, 0.5)
+        && MathUtil.isNear(0, climbIOAutoLogged.climbMotorVelocity, 0.1);
   }
 
   public Command off() {
@@ -73,6 +88,18 @@ public class Climb extends DisableSubsystem {
 
   public Command retractClimber() {
     return setPosition(ClimbConstants.kClimbDownPosition);
+  }
+
+  public boolean isExtended() {
+    return MathUtil.isNear(
+            ClimbConstants.kClimbUpPosition, climbIOAutoLogged.climbMotorPosition, 0.5)
+        && MathUtil.isNear(0, climbIOAutoLogged.climbMotorVelocity, 0.1);
+  }
+
+  public boolean isRetracted() {
+    return MathUtil.isNear(
+            ClimbConstants.kClimbDownPosition, climbIOAutoLogged.climbMotorPosition, 0.5)
+        && MathUtil.isNear(0, climbIOAutoLogged.climbMotorVelocity, 0.1);
   }
 
   public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {

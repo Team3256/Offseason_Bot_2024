@@ -11,16 +11,20 @@ import static edu.wpi.first.units.Units.Seconds;
 import static edu.wpi.first.units.Units.Volts;
 
 import com.ctre.phoenix6.SignalLogger;
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants;
 import frc.robot.utils.DisableSubsystem;
 import frc.robot.utils.LoggedTunableNumber;
+import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
 public class Shooter extends DisableSubsystem {
 
   private final ShooterIO shooterIO;
+
+  private final double goalRPS = 0;
   private final ShooterIOInputsAutoLogged shooterIOAutoLogged = new ShooterIOInputsAutoLogged();
   private final LoggedTunableNumber shooterMotorVelocityInput =
       new LoggedTunableNumber("Shooter/MotorVelocity");
@@ -77,6 +81,12 @@ public class Shooter extends DisableSubsystem {
               shooterIO.setShooterFollowerVelocity(followerVelocity);
             })
         .finallyDo(shooterIO::off);
+  }
+
+  @AutoLogOutput
+  public boolean isAtGoal() {
+    return MathUtil.isNear(goalRPS, shooterIOAutoLogged.shooterMotorVelocity, 2)
+        && MathUtil.isNear(goalRPS, shooterIOAutoLogged.shooterMotorFollowerVelocity, 2);
   }
 
   public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {

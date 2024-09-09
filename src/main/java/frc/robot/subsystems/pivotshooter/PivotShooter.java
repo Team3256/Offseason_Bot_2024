@@ -11,12 +11,15 @@ import static edu.wpi.first.units.Units.Seconds;
 import static edu.wpi.first.units.Units.Volts;
 
 import com.ctre.phoenix6.SignalLogger;
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
 import edu.wpi.first.wpilibj2.command.*;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.subsystems.vision.Vision;
 import frc.robot.utils.DisableSubsystem;
+import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
 public class PivotShooter extends DisableSubsystem {
@@ -26,6 +29,8 @@ public class PivotShooter extends DisableSubsystem {
       new PivotShooterIOInputsAutoLogged();
 
   private final SysIdRoutine m_sysIdRoutine;
+
+  private Rotation2d goal = new Rotation2d();
 
   private final InterpolatingDoubleTreeMap aprilTagMap =
       new InterpolatingDoubleTreeMap() {
@@ -64,7 +69,11 @@ public class PivotShooter extends DisableSubsystem {
   }
 
   public Command setPosition(double position) {
-    return this.run(() -> pivotShooterIO.setPosition(position));
+    return this.run(
+        () -> {
+          pivotShooterIO.setPosition(position);
+          this.goal = Rotation2d.fromRotations(position);
+        });
   }
 
   public Command setVoltage(double voltage) {
@@ -88,6 +97,22 @@ public class PivotShooter extends DisableSubsystem {
   public Command slamAndPID() {
 
     return Commands.sequence(this.setPosition(0), this.slamZero());
+  }
+
+  public Command homePosition() {
+    return setPosition(0);
+  }
+
+  public Command manualZero() {
+    return setVoltage(PivotShooterConstants.kPivotSlamShooterVoltage)
+        .finallyDo(pivotShooterIO::zero);
+  }
+
+  @AutoLogOutput
+  public boolean isAtGoal() {
+    return MathUtil.isNear(
+            goal.getRotations(), pivotShooterIOAutoLogged.pivotShooterMotorPosition, 0.5)
+        && MathUtil.isNear(0, pivotShooterIOAutoLogged.pivotShooterMotorVelocity, 0.1);
   }
 
   public Command zero() {

@@ -20,8 +20,10 @@ import frc.robot.utils.TalonUtil;
 public class PivotIntakeIOTalonFX implements PivotIntakeIO {
   private final MonitoredTalonFX pivotIntakeMotor =
       new MonitoredTalonFX(PivotIntakeConstants.kPivotMotorID);
-  private final PositionVoltage positionRequest = new PositionVoltage(0).withSlot(0);
-  private final MotionMagicVoltage motionMagicRequest = new MotionMagicVoltage(0).withSlot(0);
+  private final PositionVoltage positionRequest =
+      new PositionVoltage(0).withSlot(0).withEnableFOC(PivotIntakeConstants.kUseFOC);
+  private final MotionMagicVoltage motionMagicRequest =
+      new MotionMagicVoltage(0).withSlot(0).withEnableFOC(PivotIntakeConstants.kUseFOC);
 
   private final VoltageOut voltageReq = new VoltageOut(0);
 

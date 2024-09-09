@@ -11,15 +11,12 @@ import com.ctre.phoenix6.configs.*;
 import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
-import edu.wpi.first.math.trajectory.TrapezoidProfile;
 
 public final class PivotIntakeConstants {
   /* CAN */
   public static final int kPivotMotorID = 34;
 
   /* PID */
-  public static final TrapezoidProfile.Constraints kPivotProfileContraints =
-      new TrapezoidProfile.Constraints(16, 16);
 
   /* Tolerance/threshold */
 

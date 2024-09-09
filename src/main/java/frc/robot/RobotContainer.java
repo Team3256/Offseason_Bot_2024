@@ -7,13 +7,13 @@
 
 package frc.robot;
 
-import static frc.robot.subsystems.pivotintake.PivotIntakeConstants.kPivotGroundPos;
 import static frc.robot.subsystems.pivotshooter.PivotShooterConstants.*;
 import static frc.robot.subsystems.swerve.AzimuthConstants.*;
 
 import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule;
+import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -28,9 +28,9 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants.FeatureFlags;
-import frc.robot.autos.commands.IntakeSequence;
 import frc.robot.autos.routines.AutoRoutines;
 import frc.robot.helpers.XboxStalker;
+import frc.robot.subsystems.Superstructure;
 import frc.robot.subsystems.ampbar.AmpBar;
 import frc.robot.subsystems.ampbar.AmpBarIOTalonFX;
 import frc.robot.subsystems.climb.Climb;
@@ -44,7 +44,6 @@ import frc.robot.subsystems.pivotintake.PivotIntake;
 import frc.robot.subsystems.pivotintake.PivotIntakeConstants;
 import frc.robot.subsystems.pivotintake.PivotIntakeIOTalonFX;
 import frc.robot.subsystems.pivotshooter.PivotShooter;
-import frc.robot.subsystems.pivotshooter.PivotShooterConstants;
 import frc.robot.subsystems.pivotshooter.PivotShooterIOTalonFX;
 import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.subsystems.shooter.ShooterConstants;
@@ -57,7 +56,6 @@ import frc.robot.subsystems.swerve.kit.KitSwerveRequest;
 import frc.robot.subsystems.swerve.requests.SwerveFieldCentricFacingAngle;
 import frc.robot.subsystems.vision.Vision;
 import frc.robot.subsystems.vision.VisionIOLimelight;
-import frc.robot.utils.CommandQueue;
 import org.littletonrobotics.junction.Logger;
 
 /**
@@ -75,8 +73,6 @@ public class RobotContainer {
 
   /* Drive Controls */
   private final int translationAxis = XboxController.Axis.kLeftY.value;
-  private final int strafeAxis = XboxController.Axis.kLeftX.value;
-  private final int rotationAxis = XboxController.Axis.kRightX.value;
   private final int secondaryAxis = XboxController.Axis.kRightY.value;
 
   /* Subsystems */
@@ -105,37 +101,23 @@ public class RobotContainer {
 
   // driving in open loop
   private final SwerveTelemetry swerveTelemetry = new SwerveTelemetry(MaxSpeed);
+  public Shooter shooter = new Shooter(FeatureFlags.kShooterEnabled, new ShooterIOTalonFX());
+  public Intake intake = new Intake(FeatureFlags.kIntakeEnabled, new IntakeIOTalonFX());
+  public AmpBar ampbar = new AmpBar(FeatureFlags.kAmpBarEnabled, new AmpBarIOTalonFX());
+  public PivotIntake pivotIntake =
+      new PivotIntake(FeatureFlags.kPivotIntakeEnabled, new PivotIntakeIOTalonFX());
+  public Climb climb = new Climb(FeatureFlags.kClimbEnabled, new ClimbIOTalonFX());
+  public Vision vision = new Vision(new VisionIOLimelight());
+  public PivotShooter pivotShooter =
+      new PivotShooter(FeatureFlags.kPivotShooterEnabled, new PivotShooterIOTalonFX());
+  public LED led = new LED();
 
-  public Shooter shooter;
-  public Intake intake;
-  public AmpBar ampbar;
-  public PivotIntake pivotIntake;
-  public Climb climb;
-  public CommandQueue commandQueue;
-
-  public Vision vision;
-
-  public PivotShooter pivotShooter;
-  public LED led;
-
-  /* Auto */
-  // private SendableChooser<Command> autoChooser;
-
+  public Superstructure superstructure =
+      new Superstructure(ampbar, climb, intake, pivotIntake, pivotShooter, shooter, vision);
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Cancel any previous commands running
     CommandScheduler.getInstance().cancelAll();
-
-    commandQueue = new CommandQueue();
-    vision = new Vision(new VisionIOLimelight());
-
-    // Setup subsystems & button-bindings
-    configurePivotShooter();
-    configureShooter();
-
-    configurePivotIntake();
-    configureIntake();
-    configureSwerve();
     test.leftBumper().onTrue(Commands.runOnce(SignalLogger::start));
     test.rightBumper().onTrue(Commands.runOnce(SignalLogger::stop));
 
@@ -147,171 +129,15 @@ public class RobotContainer {
     test.a().whileTrue(drivetrain.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
     test.b().whileTrue(drivetrain.sysIdDynamic(SysIdRoutine.Direction.kForward));
     test.x().whileTrue(drivetrain.sysIdDynamic(SysIdRoutine.Direction.kReverse));
-    configureClimb();
-    // If all the subsystems are enabled, configure "operator" autos
-    if (FeatureFlags.kIntakeEnabled
-        && FeatureFlags.kShooterEnabled
-        && FeatureFlags.kPivotIntakeEnabled) {
-      configureOperatorAutos();
-    }
-
-    if (FeatureFlags.kLEDEnabled) {
-      configureLED();
-    }
-
-    // Named commands
-    {
-      // Auto named commands
-      NamedCommands.registerCommand("test intake", intake.setIntakeVoltage(12).withTimeout(1));
-      // NamedCommands.registerCommand( // intake ground note, stow to feeder chamber
-      // "intake sequence new",
-      // new SequentialCommandGroup(
-      // new ParallelCommandGroup(
-      // new PivotSetAngle(pivotIntake, PivotConstants.kPivotGroundAngleDeg)
-      // .withTimeout(0.75),
-      // new IntakeIn(intake)),
-      // new ParallelCommandGroup(
-      // new PivotSlamAndVoltage(pivotIntake).withTimeout(0.75),
-      // new ScheduleCommand(new ShootSpeaker(shooter)))));
-
-      NamedCommands.registerCommand( // shoot preloaded note to speaker, use at match start
-          "preload speaker",
-          new SequentialCommandGroup(
-              // new PrintCommand("preload im outta blush"),
-              pivotShooter.zero(),
-              new ParallelDeadlineGroup(
-                  new SequentialCommandGroup(
-                      new WaitCommand(0.5),
-                      intake
-                          .setVoltage(
-                              IntakeConstants.kIntakeIntakeVoltage,
-                              IntakeConstants.kPassthroughIntakeVoltage)
-                          .withTimeout(0.7)),
-                  pivotShooter.setPosition(PivotShooterConstants.kSubWooferPreset),
-                  shooter.setVelocity(
-                      ShooterConstants.kShooterSubwooferRPS,
-                      ShooterConstants.kShooterFollowerSubwooferRPS))));
-
-      NamedCommands.registerCommand( // shoot preloaded note to speaker, use at match start
-          "preload speaker amp side",
-          new SequentialCommandGroup(
-              // new PrintCommand("preload im outta blush"),
-              pivotShooter.zero(),
-              new ParallelDeadlineGroup(
-                  new SequentialCommandGroup(
-                      new WaitCommand(0.8),
-                      intake
-                          .setVoltage(
-                              IntakeConstants.kIntakeIntakeVoltage,
-                              IntakeConstants.kPassthroughIntakeVoltage)
-                          .withTimeout(0.7)),
-                  pivotShooter.setPosition(PivotShooterConstants.kSubWooferPreset),
-                  shooter.setVelocity(
-                      ShooterConstants.kShooterSubwooferRPS,
-                      ShooterConstants.kShooterFollowerSubwooferRPS))
-              // new PivotShooterSlamAndVoltage(pivotShooter)));
-              ));
-      NamedCommands.registerCommand( // intake ground note, stow to feeder chamber
-          "intake sequence",
-          new ParallelCommandGroup(
-              pivotIntake.setPosition(PivotIntakeConstants.kPivotGroundPos),
-              intake.intakeIn(),
-              // new PivotShooterSlamAndVoltage(pivotShooter),
-              // new PivotShootSubwoofer(pivotShooter),
-              shooter.setVelocity(
-                  ShooterConstants.kShooterSubwooferRPS,
-                  ShooterConstants.kShooterFollowerSubwooferRPS)));
-      NamedCommands.registerCommand( // outtake note to feeder
-          "outtake speaker",
-          new SequentialCommandGroup(
-              // new ScheduleCommand(new PivotShootSubwoofer(pivotShooter)).asProxy(),
-              new ParallelCommandGroup(
-                  intake
-                      .setVoltage(
-                          IntakeConstants.kIntakeIntakeVoltage,
-                          IntakeConstants.kPassthroughIntakeVoltage)
-                      .withTimeout(2),
-                  shooter.setVelocity(
-                      ShooterConstants.kShooterSubwooferRPS,
-                      ShooterConstants.kShooterFollowerSubwooferRPS))));
-      NamedCommands.registerCommand(
-          "aim subwoofer", pivotShooter.setPosition(PivotShooterConstants.kSubWooferPreset));
-      NamedCommands.registerCommand("shooter off", shooter.off());
-
-      NamedCommands.registerCommand( // outtake note to feeder
-          "safety",
-          new ParallelCommandGroup(
-              intake.intakeIn().withTimeout(1),
-              shooter.setVelocity(
-                  ShooterConstants.kShooterAmpRPS, ShooterConstants.kShooterFollowerAmpRPS)));
-      NamedCommands.registerCommand(
-          "aim wing center",
-          pivotShooter.setPosition(
-              PivotShooterConstants.kWingNoteCenterPreset)); // wing note center
-      NamedCommands.registerCommand(
-          "aim wing side",
-          pivotShooter.setPosition(PivotShooterConstants.kWingNoteSidePreset)); // wing note side
-      NamedCommands.registerCommand(
-          "aim wing far side",
-          pivotShooter.setPosition(
-              PivotShooterConstants.kWingNoteFarSidePreset)); // wing note far side
-      NamedCommands.registerCommand(
-          "aim truss",
-          pivotShooter.setPosition(
-              PivotShooterConstants.kTrussSourceSidePreset)); // truss source sid
-      NamedCommands.registerCommand(
-          "aim half truss wing",
-          pivotShooter.setPosition(
-              PivotShooterConstants.kHalfWingPodiumPreset)); // half wing podium
-      NamedCommands.registerCommand("zero pivot shooter", pivotShooter.slamAndPID());
-
-      NamedCommands.registerCommand( // rev shooter to speaker presets
-          "rev speaker",
-          shooter.setVelocity(
-              ShooterConstants.kShooterSubwooferRPS,
-              ShooterConstants.kShooterFollowerSubwooferRPS));
-      NamedCommands.registerCommand( // rev shooter to amp presets
-          "rev amp",
-          shooter.setVelocity(
-              ShooterConstants.kShooterAmpRPS, ShooterConstants.kShooterFollowerAmpRPS));
-      NamedCommands.registerCommand( // modular pivot down, use for sabotage
-          "pivot down", pivotIntake.setPosition(kPivotGroundPos).withTimeout(0.75));
-      NamedCommands.registerCommand("stow", pivotIntake.slamAndPID().withTimeout(0.75));
-      NamedCommands.registerCommand( // intake with no stow, use for sabotage
-          "intake", intake.intakeIn());
-      NamedCommands.registerCommand( // shoot preloaded note to amp, use at match start
-          "preload amp",
-          new SequentialCommandGroup(
-              pivotIntake.zero(),
-              new ParallelDeadlineGroup(
-                  new SequentialCommandGroup(
-                      new WaitCommand(0.8), intake.intakeIn().withTimeout(1.5)),
-                  shooter.setVelocity(
-                      ShooterConstants.kShooterAmpRPS, ShooterConstants.kShooterFollowerAmpRPS))));
-      NamedCommands.registerCommand(
-          "scheduled shoot speaker",
-          new ScheduleCommand(
-              shooter.setVelocity(
-                  ShooterConstants.kShooterSubwooferRPS,
-                  ShooterConstants.kShooterFollowerSubwooferRPS)));
-      NamedCommands.registerCommand(
-          "lmao",
-          new RepeatCommand(
-              new SequentialCommandGroup(
-                  pivotIntake.setPosition(kPivotGroundPos).withTimeout(0.75),
-                  pivotIntake.slamAndPID())));
-    }
 
     /* Run checks */
     configureCheeks();
 
-    // operator.povLeft().onTrue(cancelCommand);
-    // Configure the auto
-    //    if (FeatureFlags.kSwerveEnabled) {
-    //      autoChooser = AutoBuilder.buildAutoChooser();
-    //    } else {
-    //      autoChooser = new SendableChooser<>();
-    //    }
+    configureAutos();
+    configureBindings();
+  }
+
+  private void configureAutos() {
     autoChooser = new SendableChooser<>();
     autoChooser.setDefaultOption("Do Nothing", new InstantCommand());
     autoChooser.addOption(
@@ -321,40 +147,44 @@ public class RobotContainer {
     SmartDashboard.putData("Auto Chooser", autoChooser);
   }
 
-  private void configurePivotShooter() {
-    pivotShooter = new PivotShooter(FeatureFlags.kPivotShooterEnabled, new PivotShooterIOTalonFX());
-    // operator.b().onTrue(new bruh(pivotShooter));
-    // operator.x().onTrue(new SequentialCommandGroup(new
-    // PivotShootSubwoofer(pivotShooter)));
+  private void configureBindings() {
+    // Operator
+    operator.a().onTrue(superstructure.setState(Superstructure.StructureState.PREINTAKE));
+    operator.x().onTrue(superstructure.setState(Superstructure.StructureState.PRESUB));
+    operator.b().onTrue(superstructure.setState(Superstructure.StructureState.PREPODIUM));
+    operator.y().onTrue(superstructure.setState(Superstructure.StructureState.HOMED));
+    operator.povLeft().onTrue(pivotIntake.homePosition());
     operator
-        .x()
+        .povRight()
         .onTrue(
-            new SequentialCommandGroup(
-                pivotShooter.setPosition(PivotShooterConstants.kSubWooferPreset)));
+            pivotIntake.setPosition(
+                PivotIntakeConstants.kPivotGroundPos * PivotIntakeConstants.kPivotMotorGearing));
+    operator.povDown().onTrue(pivotShooter.homePosition());
+    operator.povUp().onTrue(superstructure.setState(Superstructure.StructureState.PREFEED));
+    operator.rightTrigger().and(operator.leftTrigger()).whileTrue(pivotIntake.manualZero());
+    operator.rightBumper().and(operator.leftBumper()).whileTrue(pivotShooter.manualZero());
+    operator.leftTrigger().onTrue(superstructure.setState(Superstructure.StructureState.PREAMP));
     operator
-        .b()
+        .rightTrigger()
         .onTrue(
-            new SequentialCommandGroup(
-                pivotShooter.setPosition(PivotShooterConstants.kWingNoteSidePreset)));
-  }
-
-  private void configureIntake() {
-    intake = new Intake(FeatureFlags.kIntakeEnabled, new IntakeIOTalonFX());
-    // intake.setDefaultCommand(new IntakeSetVoltage(intake, 0));
-    // operator.rightBumper().whileTrue(new IntakeInOverride(intake));
-    // We assume intake is already enabled, so if pivot is enabled as
-    // use IntakeOutWithArm
-    operator
-        .rightBumper()
-        .whileTrue(
-            intake.setVoltage(
-                IntakeConstants.kIntakeIntakeVoltage, IntakeConstants.kPassthroughIntakeVoltage));
-
+            shooter.setVelocity(
+                ShooterConstants.kShooterSubwooferRPS,
+                ShooterConstants.kShooterFollowerSubwooferRPS));
     operator
         .leftBumper()
-        .whileTrue(
+        .whileTrue(superstructure.setState(Superstructure.StructureState.OUTTAKE))
+        .toggleOnFalse(superstructure.setState(Superstructure.StructureState.IDLE));
+    operator.rightBumper().onTrue(superstructure.setState(Superstructure.StructureState.SHOOT));
+    operator
+        .rightTrigger()
+        .and(operator.leftBumper())
+        .or(operator.leftTrigger().and(operator.rightBumper()))
+        .onTrue(
             intake.setVoltage(
-                -IntakeConstants.kIntakeIntakeVoltage, -IntakeConstants.kPassthroughIntakeVoltage));
+                IntakeConstants.kIntakeIntakeVoltage, IntakeConstants.kPassthroughIntakeVoltage));
+    operator
+        .axisGreaterThan(translationAxis, 0.5)
+        .onTrue(superstructure.setState(Superstructure.StructureState.PRECLIMB));
 
     // Intake / outtake overrides
     driver
@@ -370,41 +200,17 @@ public class RobotContainer {
     //    driver.rightTrigger().whileTrue(intake.intakeIn());
 
     // operator.povDown().onTrue(new IntakeOff(intake));
-  }
 
-  private void configurePivotIntake() {
-    pivotIntake = new PivotIntake(FeatureFlags.kPivotIntakeEnabled, new PivotIntakeIOTalonFX());
     operator
-        .povRight()
-        .onTrue(pivotIntake.setPosition(kPivotGroundPos * PivotIntakeConstants.kPivotMotorGearing));
-    operator.povLeft().onTrue(pivotIntake.slamAndPID());
-  }
+        .axisLessThan(translationAxis, -0.5)
+        .onTrue(superstructure.setState(Superstructure.StructureState.CLIMB));
 
-  private void configureClimb() {
-    climb = new Climb(FeatureFlags.kClimbEnabled, new ClimbIOTalonFX());
-    // zeroClimb = new ZeroClimb(climb); // NEED FOR SHUFFLEBOARD
-
-    operator.povDown().onTrue(climb.zero());
-    // new Trigger(() -> operator.getRawAxis(translationAxis) < -0.5).onTrue(new
-    // UpClimb(climb));
-    new Trigger(() -> operator.getRawAxis(translationAxis) > 0.5).onTrue(climb.retractClimber());
-    if (this.ampbar != null && this.pivotShooter != null) {
-      new Trigger(() -> operator.getRawAxis(translationAxis) < -0.5)
-          .onTrue(
-              Commands.sequence(
-                  new ParallelCommandGroup(
-                          ampbar.setAmpPosition(), pivotShooter.setPosition(12 / 138.33))
-                      .withTimeout(1),
-                  climb.extendClimber()));
-    } else {
-      new Trigger(() -> Math.abs(operator.getRawAxis(secondaryAxis)) > 0.5)
-          .onTrue(new PrintCommand("u suck")); // old command waws dehook climb
-    }
-    // Josh: HangSequence is broken and Rhea does not want to use it; we should
-    // rmove this
-    // later.
-    // new ScheduleCommand(new HangSequence(climb, operator)).schedule();
-    // operator.povDownLeft().onTrue(new TestClimbFlip(climb));
+    Trigger noteInPassthrough = new Trigger(() -> intake.isBeamBroken());
+    noteInPassthrough
+        .onTrue(
+            Commands.run(() -> operator.getHID().setRumble(GenericHID.RumbleType.kBothRumble, 1)))
+        .toggleOnFalse(
+            Commands.run(() -> operator.getHID().setRumble(GenericHID.RumbleType.kBothRumble, 0)));
   }
 
   public void setAllianceCol(boolean col) {
@@ -492,70 +298,6 @@ public class RobotContainer {
     drivetrain.registerTelemetry(swerveTelemetry::telemeterize);
   }
 
-  private void configureShooter() {
-    shooter = new Shooter(FeatureFlags.kShooterEnabled, new ShooterIOTalonFX());
-    // new Trigger(() -> Math.abs(shooter.getShooterRps() - 100) <= 5)
-    // .onTrue(
-    // new InstantCommand(
-    // () -> {
-    // operator.getHID().setRumble(GenericHID.RumbleType.kBothRumble, 100);
-    // }))
-    // .onFalse(
-    // new InstantCommand(
-    // () -> {
-    // operator.getHID().setRumble(GenericHID.RumbleType.kBothRumble, 0);
-    // }));
-    if (FeatureFlags.kAmpBarEnabled) {
-      ampbar = new AmpBar(FeatureFlags.kAmpBarEnabled, new AmpBarIOTalonFX());
-      operator
-          .rightTrigger()
-          .onTrue(
-              Commands.parallel(
-                  shooter.setVelocity(
-                      ShooterConstants.kShooterSubwooferRPS,
-                      ShooterConstants.kShooterFollowerSubwooferRPS),
-                  ampbar.setStowPosition()));
-      operator
-          .leftTrigger()
-          .onTrue(
-              new ParallelCommandGroup(
-                  shooter.setVelocity(
-                      ShooterConstants.kShooterAmpRPS, ShooterConstants.kShooterFollowerAmpRPS),
-                  ampbar.setAmpPosition(),
-                  pivotShooter.setPosition(kAmpPreset * kPivotMotorGearing)));
-      operator
-          .y()
-          .onTrue(
-              new ParallelCommandGroup(
-                  shooter.off(), ampbar.setStowPosition(), pivotShooter.slamAndPID()));
-    } else {
-      operator
-          .rightTrigger()
-          .onTrue(
-              shooter.setVelocity(
-                  ShooterConstants.kShooterSubwooferRPS,
-                  ShooterConstants.kShooterFollowerSubwooferRPS));
-      operator
-          .leftTrigger()
-          .onTrue(
-              shooter.setVelocity(
-                  ShooterConstants.kShooterAmpRPS, ShooterConstants.kShooterFollowerAmpRPS));
-      operator.y().onTrue(new ParallelCommandGroup(shooter.off(), pivotShooter.slamAndPID()));
-    }
-  }
-
-  private void configureOperatorAutos() {
-    operator.a().onTrue(new IntakeSequence(intake, pivotIntake, pivotShooter, shooter, ampbar));
-    operator
-        .povUp()
-        .onTrue(
-            new ParallelCommandGroup(
-                pivotShooter.setPosition(PivotShooterConstants.kFeederPreset),
-                shooter.setVelocity(
-                    ShooterConstants.kShooterFeederRPS,
-                    ShooterConstants.kShooterFollowerFeederRPS)));
-  }
-
   // operator.x().onTrue(new AutoScoreAmp(swerveDrive, shooter, intake));
   // operator.b().onTrue(new AutoScoreSpeaker(swerveDrive, shooter, intake));
   // }
@@ -570,75 +312,6 @@ public class RobotContainer {
 
     led = new LED();
     led.setDefaultCommand(new CoordinatesButItsMultiple(led, ledList, 100, 0, 0, 10));
-    // led.setDefaultCommand(new SetLEDsFromBinaryString(led, LEDConstants.based,
-    // 100, 0, 0, 5));
-
-    /*
-     * Intake LED, flashes RED while intake is down and running,
-     * flashes GREEN on successful intake
-     */
-    if (FeatureFlags.kIntakeEnabled) {
-      // Trigger intakeDetectedNote = new Trigger(intake::isBeamBroken);
-      // // intakeDetectedNote.whileTrue(new SetSuccessfulIntake(led));
-
-      // intakeDetectedNote
-      // .onTrue(
-      // new InstantCommand(
-      // () -> {
-      // operator.getHID().setRumble(GenericHID.RumbleType.kBothRumble, 50);
-      // driver.getHID().setRumble(GenericHID.RumbleType.kBothRumble, 50);
-      // }))
-      // .onFalse(
-      // new InstantCommand(
-      // () -> {
-      // operator.getHID().setRumble(GenericHID.RumbleType.kBothRumble, 0);
-      // driver.getHID().setRumble(GenericHID.RumbleType.kBothRumble, 0);
-      // }));
-
-      // This boolean is true when velocity is LESS than 0.
-      // Trigger intakeRunning = new Trigger(intake::isMotorSpinning);
-      // intakeRunning.whileTrue(new SetGroundIntakeRunning(led));
-    }
-
-    /*
-     * Shooter LED, solid ORANGE while shooter is running, flashes ORANGE if note
-     * fed
-     */
-    // if (FeatureFlags.kShooterEnabled) {
-
-    // Trigger shooterRunning = new Trigger(
-    // () -> (shooter.getShooterFollowerRps() > 75 || shooter.getShooterRps() >
-    // 75));
-    // shooterRunning.whileTrue(new SetSpeakerScore(led));
-    // }
-    // if (FeatureFlags.kSwerveEnabled) {
-    // if (DriverStation.isAutonomousEnabled() ||
-
-    // FeatureFlags.kSwerveUseVisionForPoseEst) {
-    // Trigger swerveSpeakerAligned = new Trigger(swerveDrive::isAlignedToSpeaker);
-    // swerveSpeakerAligned.whileTrue(new SetRobotAligned(led));
-    // }
-    // if (DriverStation.isTeleopEnabled()) {
-    // // if (DriverStation.isTeleopEnabled()) {
-    // // Trigger azimuthRan =
-    // // new Trigger(
-    // // () ->
-    // // (driver.leftBumper().getAsBoolean() ||
-    // driver.rightBumper().getAsBoolean())
-    // // || driver.x().getAsBoolean()
-    // // || driver.b().getAsBoolean()
-    // // || driver.a().getAsBoolean()
-    // // || driver.povUp().getAsBoolean());
-    // // azimuthRan.whileTrue(new SetAzimuthRan(led));
-    // // }
-    // }
-
-    // if (FeatureFlags.kClimbEnabled) {
-    // Trigger climbRunning =
-    // new Trigger(
-    // () -> ((climb.getLeftCurrent() > 0) || (operator.povDown().getAsBoolean())));
-    // }
-    // }
   }
 
   private void configureCheeks() {
@@ -673,16 +346,9 @@ public class RobotContainer {
     return autoChooser.getSelected();
   }
 
-  /* Test Routines */
-
-  public void runPitTestRoutine() {
-    // Command pitRoutine = new PitRoutine(swerveDrive, climb, intake, pivotIntake,
-    // shooter);
-    // pitRoutine.schedule();
-  }
-
   public void periodic(double dt) {
     XboxStalker.stalk(driver, operator);
     Logger.recordOutput("Note pose", vision.getNotePose(drivetrain.getState().Pose));
+    superstructure.periodic();
   }
 }
