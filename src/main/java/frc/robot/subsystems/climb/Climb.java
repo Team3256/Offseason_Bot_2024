@@ -11,13 +11,8 @@ import static edu.wpi.first.units.Units.Seconds;
 import static edu.wpi.first.units.Units.Volts;
 
 import com.ctre.phoenix6.SignalLogger;
-import com.pathplanner.lib.auto.AutoBuilder;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-import frc.robot.limelight.LimelightHelpers;
 import frc.robot.utils.DisableSubsystem;
 import org.littletonrobotics.junction.Logger;
 
@@ -74,23 +69,6 @@ public class Climb extends DisableSubsystem {
 
   public Command extendClimber() {
     return setPosition(ClimbConstants.kClimbUpPosition);
-  }
-
-  public Command daToNearestStageAprilTag() {
-    return this.defer(
-        () -> {
-          Pose2d botPose2d = LimelightHelpers.getBotPose2d(ClimbConstants.kBotPoseLimelightId);
-          return AutoBuilder.pathfindToPose(
-              botPose2d.nearest(
-                  DriverStation.getAlliance().equals(Alliance.Red)
-                      ? ClimbConstants.kStagePosesRed
-                      : ClimbConstants.kStagePosesBlue),
-              null,
-              0.0, // Goal end velocity in meters/sec
-              0.0 // Rotation delay distance in meters. This is how far the robot should travel
-              // before attempting to rotate.
-              );
-        });
   }
 
   public Command retractClimber() {
