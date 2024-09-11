@@ -51,6 +51,10 @@ public class Vision extends SubsystemBase {
     return centerLimelightY;
   }
 
+
+  public boolean detectedNote() {
+    return visionIOAutoLogged.detectedNote;
+  }
   public double getLastCenterLimelightX() {
     return lastCenterLimelightX;
   }

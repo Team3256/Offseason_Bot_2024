@@ -15,6 +15,7 @@ public interface VisionIO {
   public static class VisionIOInputs {
     public double noteLimelightX = 0.0;
     public double noteLimelightY = 0.0;
+    public boolean detectedNote = false;
 
     public double centerLimelightX = 0.0;
     public double centerLimelightY = 0.0;

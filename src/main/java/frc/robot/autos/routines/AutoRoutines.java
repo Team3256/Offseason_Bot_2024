@@ -102,6 +102,7 @@ public class AutoRoutines {
                     intake::isBeamBroken)),
             intake::isBeamBroken));
   }
+  
 
   private static class AutoHelperCommands {
     public static Command preLoad(

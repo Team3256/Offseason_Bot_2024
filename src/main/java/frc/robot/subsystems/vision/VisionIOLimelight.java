@@ -8,6 +8,7 @@
 package frc.robot.subsystems.vision;
 
 import frc.robot.limelight.Limelight;
+import frc.robot.limelight.LimelightHelpers;
 
 public class VisionIOLimelight implements VisionIO {
 
@@ -17,6 +18,7 @@ public class VisionIOLimelight implements VisionIO {
   public void updateInputs(VisionIOInputs inputs) {
     inputs.noteLimelightX = Limelight.getTX(VisionConstants.noteDetectionLimelight);
     inputs.noteLimelightY = Limelight.getTY(VisionConstants.noteDetectionLimelight);
+    inputs.detectedNote = LimelightHelpers.getTV(VisionConstants.noteDetectionLimelight);
 
     inputs.centerLimelightX = Limelight.getTX(VisionConstants.centerLimelight);
     inputs.centerLimelightY = Limelight.getTY(VisionConstants.centerLimelight);
