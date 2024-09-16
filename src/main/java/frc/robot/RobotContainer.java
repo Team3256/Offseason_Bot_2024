@@ -147,6 +147,7 @@ public class RobotContainer {
     test.a().whileTrue(drivetrain.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
     test.b().whileTrue(drivetrain.sysIdDynamic(SysIdRoutine.Direction.kForward));
     test.x().whileTrue(drivetrain.sysIdDynamic(SysIdRoutine.Direction.kReverse));
+
     configureClimb();
     // If all the subsystems are enabled, configure "operator" autos
     if (FeatureFlags.kIntakeEnabled
@@ -453,7 +454,7 @@ public class RobotContainer {
                             -driver.getLeftTriggerAxis() * (MaxAngularRate * 0.3))));
 
     // Reset robot heading on button press
-    driver.y().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
+    driver.y().onTrue(drivetrain.runOnce(drivetrain::seedFieldRelative));
 
     // Azimuth angle bindings. isRed == true for red alliance presets. isRed != true for blue.
     if (isRed == true) {

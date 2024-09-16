@@ -4,6 +4,11 @@
       "visible": false
     }
   },
+  "Keyboard 0 Settings": {
+    "window": {
+      "visible": true
+    }
+  },
   "keyboardJoysticks": [
     {
       "axisConfig": [
@@ -24,18 +29,14 @@
           "decayRate": 1.0,
           "incKey": 69,
           "keyRate": 1.0
-        },
-        {
-          "decKey": 67,
-          "incKey": 90
         }
       ],
       "axisCount": 5,
       "buttonCount": 4,
       "buttonKeys": [
-        -1,
+        90,
         88,
-        -1,
+        67,
         86
       ],
       "povConfig": [
