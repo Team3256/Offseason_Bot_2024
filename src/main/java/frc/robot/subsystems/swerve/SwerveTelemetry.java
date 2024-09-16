@@ -94,6 +94,8 @@ public class SwerveTelemetry {
   /* Accept the swerve drive state and telemeterize it to smartdashboard */
   public void telemeterize(SwerveDriveState state) {
     /* Telemeterize the pose */
+
+    //    Logger.recordOutput("realBotPose", state.Pose);
     Pose2d pose = state.Pose;
     fieldTypePub.set("Field2d");
     fieldPub.set(new double[] {pose.getX(), pose.getY(), pose.getRotation().getDegrees()});

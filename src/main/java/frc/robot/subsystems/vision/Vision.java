@@ -67,6 +67,14 @@ public class Vision extends SubsystemBase {
     return lastLastCenterLimelightY;
   }
 
+  public double getNoteLimelightX() {
+    return visionIOAutoLogged.noteLimelightX;
+  }
+
+  public double getNoteLimelightY() {
+    return visionIOAutoLogged.noteLimelightY;
+  }
+
   @AutoLogOutput
   public double getDistanceToNote() {
     return -(VisionConstants.noteLimelightHeightInches - VisionConstants.noteHeightInches)
@@ -82,12 +90,8 @@ public class Vision extends SubsystemBase {
             new Transform2d(
                 new Translation2d(
                     Units.inchesToMeters(getDistanceToNote()),
-                    robotPose
-                        .getRotation()
-                        .plus(Rotation2d.fromDegrees(visionIOAutoLogged.noteLimelightX))),
-                robotPose
-                    .getRotation()
-                    .plus(Rotation2d.fromDegrees(visionIOAutoLogged.noteLimelightX))));
+                    Rotation2d.fromDegrees(visionIOAutoLogged.noteLimelightX)),
+                Rotation2d.fromDegrees(visionIOAutoLogged.noteLimelightX)));
   }
 
   @AutoLogOutput

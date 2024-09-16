@@ -46,6 +46,8 @@ public class Robot extends LoggedRobot implements Logged {
    */
   @Override
   public void robotInit() {
+    Pathfinding.setPathfinder(new LocalADStarAK());
+    PathfindingCommand.warmupCommand().schedule();
     RobotController.setBrownoutVoltage(5.6); // we ball
     // if (Constants.kOverrideBrownOutVoltage) {
     // RobotController.setBrownoutVoltage(Constants.kOverridenBrownOutVoltage);

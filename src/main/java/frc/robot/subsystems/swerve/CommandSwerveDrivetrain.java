@@ -19,6 +19,7 @@ import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.ReplanningConfig;
 import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
@@ -40,6 +41,7 @@ import frc.robot.subsystems.swerve.kit.KitSwerveRequest;
 import frc.robot.subsystems.vision.Vision;
 import java.util.Optional;
 import java.util.function.Supplier;
+import org.littletonrobotics.junction.Logger;
 
 /**
  * Class that extends the Phoenix SwerveDrivetrain class and implements subsystem so it can be used
@@ -58,9 +60,13 @@ public class CommandSwerveDrivetrain extends KitSwerveDrivetrain implements Subs
   /* Keep track if we've ever applied the operator perspective before or not */
   private boolean hasAppliedOperatorPerspective = false;
 
-  private final KitSwerveRequest.ApplyChassisSpeeds AutoRequest =
+  public final KitSwerveRequest.ApplyChassisSpeeds AutoRequest =
       new KitSwerveRequest.ApplyChassisSpeeds()
           .withDriveRequestType(SwerveModule.DriveRequestType.Velocity);
+
+  private final KitSwerveRequest.FieldCentric AutoRequest2 =
+      new KitSwerveRequest.FieldCentric()
+          .withDriveRequestType(SwerveModule.DriveRequestType.OpenLoopVoltage);
 
   private final KitSwerveRequest.SysIdSwerveTranslation TranslationCharacterization =
       new KitSwerveRequest.SysIdSwerveTranslation();
@@ -129,6 +135,7 @@ public class CommandSwerveDrivetrain extends KitSwerveDrivetrain implements Subs
 
   @Override
   public void setControl(KitSwerveRequest request) {
+    Logger.recordOutput("/SwerveRequest", request.getClass().getSimpleName());
     if (enabled) {
       super.setControl(request);
     }
@@ -206,30 +213,74 @@ public class CommandSwerveDrivetrain extends KitSwerveDrivetrain implements Subs
         () ->
             DriverStation.getAlliance().orElse(DriverStation.Alliance.Blue)
                 == DriverStation.Alliance.Red, // Assume
-        // the path
-        // needs to
-        // be
-        // flipped
-        // for Red
-        // vs Blue,
-        // this is
-        // normally
-        // the case
         this); // Subsystem for requirements
   }
 
+  public void driveRobotRelative(ChassisSpeeds speeds) {
+    System.out.println(speeds);
+    this.setControl(AutoRequest.withSpeeds(speeds));
+  }
+
+  public Command pidToNote(Vision vision) {
+    PIDController xController = new PIDController(0.1, 0, 0);
+    PIDController yController = new PIDController(0.1, 0, 0);
+    yController.setTolerance(1);
+
+    return this.run(
+        () -> {
+          var xSpeed = xController.calculate(-22, vision.getNoteLimelightY());
+          var ySpeed = yController.calculate(0, vision.getNoteLimelightX());
+          Logger.recordOutput(this.getClass().getSimpleName() + "ySpeed", ySpeed);
+          this.setControl(
+              AutoRequest2.withVelocityX(-xSpeed).withVelocityY(ySpeed).withRotationalRate(0));
+        });
+  }
+
   public Command pathfindToNote(Vision vision) {
+
+    double driveBaseRadius = 0;
+    for (var moduleLocation : m_moduleLocations) {
+      driveBaseRadius = Math.max(driveBaseRadius, moduleLocation.getNorm());
+    }
+
     PathConstraints constraints =
         new PathConstraints(
-            TunerConstants.kSpeedAt12VoltsMps - 1, // max speed (4.96)
-            4, // max acceleration (4 m/s^2)
+            TunerConstants.kSpeedAt12VoltsMps, // max speed (4.96)
+            99, // max acceleration (4 m/s^2)
             edu.wpi.first.math.util.Units.degreesToRadians(450), // max angular velocity (450 deg/s)
             edu.wpi.first.math.util.Units.degreesToRadians(
                 540)); // max angular acceleration (540 deg/s^2)
-    return AutoBuilder.pathfindToPose(
-        // current pose, path constraints (see above), "goal end velocity", rotation
-        // delay distance (how long to travel before rotating)
-        vision.getNotePose(this.getState().Pose), constraints, 1, 0.0);
+
+    //    return AutoBuilder.pathfindThenFollowPath(PathPlannerPath.fromPathFile("preload only"),
+    // constraints, 3.0);
+    //    return new PathfindHolonomic(
+    //            new Pose2d(2,2,
+    //                    Rotation2d.fromRadians(1)),
+    //            constraints,
+    //            ()->this.getState().Pose,
+    //            this::getCurrentRobotChassisSpeeds,
+    //            (speeds)->this.setControl(AutoRequest.withSpeeds(speeds)),
+    //            new HolonomicPathFollowerConfig(
+    //                    TunerConstants.kSpeedAt12VoltsMps,
+    //                    driveBaseRadius,
+    //                    new ReplanningConfig()));
+    // 0.0,
+    // this);
+
+    return this.defer(
+        () ->
+            AutoBuilder.pathfindToPose(
+                new Pose2d(new Translation2d(2, 2), Rotation2d.fromDegrees(0)),
+                constraints,
+                0.0,
+                0.0));
+    //    return this.defer(()->{System.out.println("hello");return AutoBuilder.pathfindToPose(new
+    // Pose2d(new Translation2d(2
+    //    .28,2.10),Rotation2d.fromDegrees(20)),constraints,1,0.0);});
+    //    return this.defer(()->{return AutoBuilder.pathfindToPose(
+    //        // current pose, path constraints (see above), "goal end velocity", rotation
+    //        // delay distance (how long to travel before rotating)
+    //        vision.getNotePose(this.getState().Pose), constraints, 1, 0.0);});
   }
 
   public Command autoAlignToNearestStage() {
@@ -400,6 +451,10 @@ public class CommandSwerveDrivetrain extends KitSwerveDrivetrain implements Subs
   @Override
   public void periodic() {
     super.periodic();
+    Logger.recordOutput("Pose", this.getState().Pose);
+    Logger.recordOutput(
+        this.getClass().getSimpleName() + "/CurrentCommand",
+        this.getCurrentCommand() != null ? this.getCurrentCommand().getName() : "none");
     /* Periodically try to apply the operator perspective */
     /*
      * If we haven't applied the operator perspective before, then we should apply

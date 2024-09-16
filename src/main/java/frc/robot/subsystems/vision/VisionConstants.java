@@ -15,8 +15,8 @@ public final class VisionConstants {
   public static final String noteDetectionLimelight = "limelight-note";
   public static final String centerLimelight = "limelight-speaker";
 
-  public static final double noteLimelightAngleDegrees = -29; // TODO: idk tune
-  public static final double noteLimelightHeightInches = 21; // TODO: idk tune
+  public static final double noteLimelightAngleDegrees = -13; // TODO: idk tune
+  public static final double noteLimelightHeightInches = 21.024268; // TODO: idk tune
   public static final double noteHeightInches = 2; // TODO: idk tune
 
   public static final Transform2d robotToCam =
