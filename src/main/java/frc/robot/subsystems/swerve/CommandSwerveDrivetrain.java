@@ -28,11 +28,13 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import frc.robot.Constants;
 import frc.robot.limelight.LimelightHelpers;
 import frc.robot.subsystems.swerve.kit.KitSwerveDrivetrain;
 import frc.robot.subsystems.swerve.kit.KitSwerveRequest;
@@ -279,6 +281,24 @@ public class CommandSwerveDrivetrain extends KitSwerveDrivetrain implements Subs
     //        // current pose, path constraints (see above), "goal end velocity", rotation
     //        // delay distance (how long to travel before rotating)
     //        vision.getNotePose(this.getState().Pose), constraints, 1, 0.0);});
+  }
+
+  public Command autoAlignToNearestStage() {
+    return this.defer(
+        () -> {
+          System.out.println("Running daToNearestStageAprilTag");
+          Pose2d botPose2d = this.getState().Pose;
+          return AutoBuilder.pathfindToPose(
+              botPose2d.nearest(
+                  DriverStation.getAlliance().equals(Alliance.Red)
+                      ? Constants.FieldConstants.kStagePosesRed
+                      : Constants.FieldConstants.kStagePosesBlue),
+              null,
+              0.0, // Goal end velocity in meters/sec
+              0.0 // Rotation delay distance in meters. This is how far the robot should travel
+              // before attempting to rotate.
+              );
+        });
   }
 
   public Command rotationTest() {

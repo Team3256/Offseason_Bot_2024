@@ -308,11 +308,11 @@ public class RobotContainer {
 
     // operator.povLeft().onTrue(cancelCommand);
     // Configure the auto
-    //    if (FeatureFlags.kSwerveEnabled) {
-    //      autoChooser = AutoBuilder.buildAutoChooser();
-    //    } else {
-    //      autoChooser = new SendableChooser<>();
-    //    }
+    // if (FeatureFlags.kSwerveEnabled) {
+    // autoChooser = AutoBuilder.buildAutoChooser();
+    // } else {
+    // autoChooser = new SendableChooser<>();
+    // }
     autoChooser = new SendableChooser<>();
     autoChooser.setDefaultOption("Do Nothing", new InstantCommand());
     autoChooser.addOption(
@@ -320,6 +320,14 @@ public class RobotContainer {
         AutoRoutines.center5Note(drivetrain, intake, shooter, pivotShooter, pivotIntake));
     // Autos
     SmartDashboard.putData("Auto Chooser", autoChooser);
+
+    configureAutoAlign();
+  }
+
+  private void configureAutoAlign() {
+    if (Constants.FeatureFlags.kSwerveEnabled && Constants.FeatureFlags.kAutoAlignEnabled) {
+      // operator.a().onTrue(drivetrain.autoAlignToNearestStage());
+    }
   }
 
   private void configurePivotShooter() {
@@ -369,7 +377,7 @@ public class RobotContainer {
         .whileTrue(
             intake.setVoltage(
                 IntakeConstants.kIntakeIntakeVoltage, -IntakeConstants.kPassthroughIntakeVoltage));
-    //    driver.rightTrigger().whileTrue(intake.intakeIn());
+    // driver.rightTrigger().whileTrue(intake.intakeIn());
 
     // operator.povDown().onTrue(new IntakeOff(intake));
   }
@@ -426,8 +434,10 @@ public class RobotContainer {
                         -driver.getLeftX() * MaxSpeed) // Drive left with negative X (left)
                     .withRotationalRate(-driver.getRightX() * MaxAngularRate)));
 
-    /* Right stick absolute angle mode on trigger hold,
-    robot adjusts heading to the angle right joystick creates */
+    /*
+     * Right stick absolute angle mode on trigger hold,
+     * robot adjusts heading to the angle right joystick creates
+     */
     driver
         .rightTrigger()
         .whileTrue(
@@ -457,7 +467,8 @@ public class RobotContainer {
     // Reset robot heading on button press
     driver.y().onTrue(drivetrain.runOnce(drivetrain::seedFieldRelative));
 
-    // Azimuth angle bindings. isRed == true for red alliance presets. isRed != true for blue.
+    // Azimuth angle bindings. isRed == true for red alliance presets. isRed != true
+    // for blue.
     if (isRed == true) {
       driver
           .rightBumper()
