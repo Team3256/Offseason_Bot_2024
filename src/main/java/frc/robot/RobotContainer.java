@@ -331,7 +331,8 @@ public class RobotContainer {
         .x()
         .onTrue(
             new SequentialCommandGroup(
-                pivotShooter.setPosition(PivotShooterConstants.kSubWooferPreset)));
+                pivotShooter.setPosition(
+                    PivotShooterConstants.kSubWooferPreset * kPivotMotorGearing)));
     operator
         .b()
         .onTrue(
