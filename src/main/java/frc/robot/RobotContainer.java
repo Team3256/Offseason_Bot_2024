@@ -413,17 +413,14 @@ public class RobotContainer {
 
     // default command
     drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
-        drivetrain
-            .applyRequest(
-                () ->
-                    drive
-                        .withVelocityX(-driver.getLeftY() * MaxSpeed) // Drive forward with
-                        // negative Y (forward)
-                        .withVelocityY(
-                            -driver.getLeftX() * MaxSpeed) // Drive left with negative X (left)
-                        .withRotationalRate(-driver.getRightX() * MaxAngularRate))
-            .withName("monkey")
-            .andThen(new PrintCommand("command ended")));
+        drivetrain.applyRequest(
+            () ->
+                drive
+                    .withVelocityX(-driver.getLeftY() * MaxSpeed) // Drive forward with
+                    // negative Y (forward)
+                    .withVelocityY(
+                        -driver.getLeftX() * MaxSpeed) // Drive left with negative X (left)
+                    .withRotationalRate(-driver.getRightX() * MaxAngularRate)));
 
     /* Right stick absolute angle mode on trigger hold,
     robot adjusts heading to the angle right joystick creates */
@@ -490,6 +487,7 @@ public class RobotContainer {
     if (Utils.isSimulation()) {
       drivetrain.seedFieldRelative(new Pose2d(new Translation2d(), Rotation2d.fromDegrees(90)));
     }
+    drivetrain.registerTelemetry(swerveTelemetry::telemeterize);
     // drivetrain.registerTelemetry(logger::telemeterize);
     // drivetrain.registerTelemetry(swerveTelemetry::telemeterize);
   }
