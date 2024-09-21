@@ -252,7 +252,6 @@ public class Robot extends LoggedRobot implements Logged {
     CommandScheduler.getInstance().cancelAll();
     // Run CAN Test
     // m_robotContainer.CANTest();
-    m_robotContainer.runPitTestRoutine();
   }
 
   /** This function is called periodically during test mode. */
