@@ -214,10 +214,6 @@ public class CommandSwerveDrivetrain extends KitSwerveDrivetrain implements Subs
         this); // Subsystem for requirements
   }
 
-  public void driveRobotRelative(ChassisSpeeds speeds) {
-    System.out.println(speeds);
-    this.setControl(AutoRequest.withSpeeds(speeds));
-  }
 
   public Command pidToNote(Vision vision) {
     PIDController xController = new PIDController(0.1, 0, 0);

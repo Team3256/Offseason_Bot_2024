@@ -7,6 +7,8 @@
 
 package frc.robot.subsystems.swerve.kit;
 
+import org.littletonrobotics.junction.Logger;
+
 //
 // Source code recreated from a .class file by IntelliJ IDEA
 // (powered by FernFlower decompiler)
@@ -422,7 +424,6 @@ public interface KitSwerveRequest {
               parameters.updatePeriod);
       SwerveModuleState[] states =
           parameters.kinematics.toSwerveModuleStates(speeds, this.CenterOfRotation);
-
       for (int i = 0; i < modulesToApply.length; ++i) {
         modulesToApply[i].apply(states[i], this.DriveRequestType, this.SteerRequestType);
       }

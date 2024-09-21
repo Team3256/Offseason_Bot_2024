@@ -75,8 +75,6 @@ public class RobotContainer {
 
   /* Drive Controls */
   private final int translationAxis = XboxController.Axis.kLeftY.value;
-  private final int strafeAxis = XboxController.Axis.kLeftX.value;
-  private final int rotationAxis = XboxController.Axis.kRightX.value;
   private final int secondaryAxis = XboxController.Axis.kRightY.value;
 
   /* Subsystems */
@@ -90,18 +88,18 @@ public class RobotContainer {
 
   private final KitSwerveRequest.FieldCentric drive =
       new KitSwerveRequest.FieldCentric()
-          .withDeadband(MaxSpeed * Constants.stickDeadband)
+          .withDeadband(Constants.stickDeadband)
           .withRotationalDeadband(
-              MaxAngularRate * Constants.rotationalDeadband) // Add a 10% deadband
+               Constants.rotationalDeadband) // Add a 10% deadband
           .withDriveRequestType(
-              SwerveModule.DriveRequestType.OpenLoopVoltage); // I want field-centric
+              SwerveModule.DriveRequestType.Velocity); // I want field-centric
 
   private SwerveFieldCentricFacingAngle azi =
       new SwerveFieldCentricFacingAngle()
           .withDeadband(MaxSpeed * .1) // TODO: update deadband
           .withRotationalDeadband(MaxAngularRate * .1) // TODO: update deadband
           .withHeadingController(SwerveConstants.azimuthController)
-          .withDriveRequestType(SwerveModule.DriveRequestType.OpenLoopVoltage);
+          .withDriveRequestType(SwerveModule.DriveRequestType.Velocity);
 
   // driving in open loop
   private final SwerveTelemetry swerveTelemetry = new SwerveTelemetry(MaxSpeed);
@@ -420,11 +418,11 @@ public class RobotContainer {
         drivetrain.applyRequest(
             () ->
                 drive
-                    .withVelocityX(-driver.getLeftY() * MaxSpeed) // Drive forward with
+                    .withVelocityX(1 * MaxSpeed) // Drive forward with
                     // negative Y (forward)
                     .withVelocityY(
-                        -driver.getLeftX() * MaxSpeed) // Drive left with negative X (left)
-                    .withRotationalRate(-driver.getRightX() * MaxAngularRate)));
+                        1 * MaxSpeed) // Drive left with negative X (left)
+                    .withRotationalRate(1 * MaxAngularRate)).withName("monkey").andThen(new PrintCommand("command ended")));
 
     /* Right stick absolute angle mode on trigger hold,
     robot adjusts heading to the angle right joystick creates */
