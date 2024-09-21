@@ -33,8 +33,6 @@ public final class Constants {
   public static final class FeatureFlags {
     // subsystems
 
-    public static final boolean kEasterEggEnabled = false;
-
     public static final boolean kIntakeEnabled = true;
 
     public static final boolean kShooterEnabled = true;
@@ -45,7 +43,6 @@ public final class Constants {
     public static final boolean kPivotIntakeEnabled = true;
 
     public static final boolean kClimbEnabled = true;
-    public static final boolean kLEDEnabled = true;
 
     public static final boolean kAmpBarEnabled = true;
 
@@ -55,24 +52,6 @@ public final class Constants {
     public static final boolean DebugCommandEnabled = false;
     public static final boolean kRobotVizEnabled = true && !Robot.isReal();
 
-    // features
-    public static final boolean kAutoAlignEnabled = false;
-    public static final boolean kIntakeAutoScoreDistanceSensorOffset = false;
-    public static final boolean kShuffleboardLayoutEnabled = true;
-    public static final boolean kUsePrefs = true;
-
-    public static final boolean kPitRoutineEnabled = false;
-
-    public static final boolean kCanTestEnabled = false;
     public static boolean kPivotShooterEnabled = true;
-  }
-
-  public static final class ShuffleboardConstants {
-    public static final String kDriverTabName = "Driver";
-    public static final String kOperatorTabName = "Operator";
-    public static final String kIntakeLayoutName = "Intake";
-    public static final String kSwerveLayoutName = "Swerve";
-    public static final String kArmLayoutName = "Arm";
-    public static final String kShooterLayoutName = "Shooter";
   }
 }

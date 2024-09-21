@@ -11,7 +11,6 @@ import static frc.robot.subsystems.pivotintake.PivotIntakeConstants.kPivotGround
 import static frc.robot.subsystems.pivotshooter.PivotShooterConstants.*;
 import static frc.robot.subsystems.swerve.AzimuthConstants.*;
 
-import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
@@ -29,6 +28,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.FeatureFlags;
 import frc.robot.autos.commands.IntakeSequence;
+import frc.robot.autos.routines.AutoRoutines;
 import frc.robot.helpers.XboxStalker;
 import frc.robot.subsystems.ampbar.AmpBar;
 import frc.robot.subsystems.ampbar.AmpBarIOTalonFX;
@@ -38,7 +38,6 @@ import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.IntakeConstants;
 import frc.robot.subsystems.intake.IntakeIOTalonFX;
 import frc.robot.subsystems.led.LED;
-import frc.robot.subsystems.led.commands.*;
 import frc.robot.subsystems.pivotintake.PivotIntake;
 import frc.robot.subsystems.pivotintake.PivotIntakeConstants;
 import frc.robot.subsystems.pivotintake.PivotIntakeIOTalonFX;
@@ -55,7 +54,6 @@ import frc.robot.subsystems.swerve.TunerConstants;
 import frc.robot.subsystems.swerve.requests.SwerveFieldCentricFacingAngle;
 import frc.robot.subsystems.vision.Vision;
 import frc.robot.subsystems.vision.VisionIOLimelight;
-import frc.robot.utils.CommandQueue;
 import org.littletonrobotics.junction.Logger;
 
 /**
@@ -69,7 +67,6 @@ public class RobotContainer {
   /* Controllers */
   private final CommandXboxController driver = new CommandXboxController(0);
   private final CommandXboxController operator = new CommandXboxController(1);
-  private final CommandXboxController test = new CommandXboxController(2);
 
   /* Drive Controls */
   private final int translationAxis = XboxController.Axis.kLeftY.value;
@@ -107,7 +104,6 @@ public class RobotContainer {
   public AmpBar ampbar;
   public PivotIntake pivotIntake;
   public Climb climb;
-  public CommandQueue commandQueue;
 
   public Vision vision;
 
@@ -122,7 +118,6 @@ public class RobotContainer {
     // Cancel any previous commands running
     CommandScheduler.getInstance().cancelAll();
 
-    commandQueue = new CommandQueue();
     vision = new Vision(new VisionIOLimelight());
 
     // Setup subsystems & button-bindings
@@ -132,17 +127,6 @@ public class RobotContainer {
     configurePivotIntake();
     configureIntake();
     configureSwerve();
-    test.leftBumper().onTrue(Commands.runOnce(SignalLogger::start));
-    test.rightBumper().onTrue(Commands.runOnce(SignalLogger::stop));
-
-    test.leftTrigger()
-        .onTrue(
-            drivetrain.applyRequest(() -> azi.withTargetDirection(Rotation2d.fromDegrees(180))));
-
-    // test.y().whileTrue(drivetrain.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
-    // test.a().whileTrue(drivetrain.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
-    // test.b().whileTrue(drivetrain.sysIdDynamic(SysIdRoutine.Direction.kForward));
-    // test.x().whileTrue(drivetrain.sysIdDynamic(SysIdRoutine.Direction.kReverse));
 
     configureClimb();
     // If all the subsystems are enabled, configure "operator" autos
@@ -150,10 +134,6 @@ public class RobotContainer {
         && FeatureFlags.kShooterEnabled
         && FeatureFlags.kPivotIntakeEnabled) {
       configureOperatorAutos();
-    }
-
-    if (FeatureFlags.kLEDEnabled) {
-      configureLED();
     }
 
     // Named commands
@@ -298,31 +278,19 @@ public class RobotContainer {
                   pivotIntake.setPosition(kPivotGroundPos).withTimeout(0.75),
                   pivotIntake.slamAndPID())));
     }
-
     /* Run checks */
     configureCheeks();
 
-    // operator.povLeft().onTrue(cancelCommand);
-    // Configure the auto
-    //    if (FeatureFlags.kSwerveEnabled) {
-    //      autoChooser = AutoBuilder.buildAutoChooser();
-    //    } else {
-    //      autoChooser = new SendableChooser<>();
-    //    }
     autoChooser = new SendableChooser<>();
     autoChooser.setDefaultOption("Do Nothing", new InstantCommand());
-    // autoChooser.addOption(
-    //     "5 Note test",
-    //     AutoRoutines.center5Note(drivetrain, intake, shooter, pivotShooter, pivotIntake));
-    // Autos
+    autoChooser.addOption(
+        "5 Note test",
+        AutoRoutines.center5Note(drivetrain, intake, shooter, pivotShooter, pivotIntake));
     SmartDashboard.putData("Auto Chooser", autoChooser);
   }
 
   private void configurePivotShooter() {
     pivotShooter = new PivotShooter(FeatureFlags.kPivotShooterEnabled, new PivotShooterIOTalonFX());
-    // operator.b().onTrue(new bruh(pivotShooter));
-    // operator.x().onTrue(new SequentialCommandGroup(new
-    // PivotShootSubwoofer(pivotShooter)));
     operator
         .x()
         .onTrue(
@@ -380,11 +348,8 @@ public class RobotContainer {
 
   private void configureClimb() {
     climb = new Climb(FeatureFlags.kClimbEnabled, new ClimbIOTalonFX());
-    // zeroClimb = new ZeroClimb(climb); // NEED FOR SHUFFLEBOARD
-
     operator.povDown().onTrue(climb.zero());
-    // new Trigger(() -> operator.getRawAxis(translationAxis) < -0.5).onTrue(new
-    // UpClimb(climb));
+
     new Trigger(() -> operator.getRawAxis(translationAxis) > 0.5).onTrue(climb.retractClimber());
     if (this.ampbar != null && this.pivotShooter != null) {
       new Trigger(() -> operator.getRawAxis(translationAxis) < -0.5)
@@ -398,11 +363,6 @@ public class RobotContainer {
       new Trigger(() -> Math.abs(operator.getRawAxis(secondaryAxis)) > 0.5)
           .onTrue(new PrintCommand("u suck")); // old command waws dehook climb
     }
-    // Josh: HangSequence is broken and Rhea does not want to use it; we should
-    // rmove this
-    // later.
-    // new ScheduleCommand(new HangSequence(climb, operator)).schedule();
-    // operator.povDownLeft().onTrue(new TestClimbFlip(climb));
   }
 
   public void setAllianceCol(boolean col) {
@@ -494,17 +454,6 @@ public class RobotContainer {
 
   private void configureShooter() {
     shooter = new Shooter(FeatureFlags.kShooterEnabled, new ShooterIOTalonFX());
-    // new Trigger(() -> Math.abs(shooter.getShooterRps() - 100) <= 5)
-    // .onTrue(
-    // new InstantCommand(
-    // () -> {
-    // operator.getHID().setRumble(GenericHID.RumbleType.kBothRumble, 100);
-    // }))
-    // .onFalse(
-    // new InstantCommand(
-    // () -> {
-    // operator.getHID().setRumble(GenericHID.RumbleType.kBothRumble, 0);
-    // }));
     if (FeatureFlags.kAmpBarEnabled) {
       ampbar = new AmpBar(FeatureFlags.kAmpBarEnabled, new AmpBarIOTalonFX());
       operator
@@ -565,82 +514,6 @@ public class RobotContainer {
     operator.getHID().setRumble(GenericHID.RumbleType.kBothRumble, 0);
   }
 
-  public void configureLED() {
-    int[][] ledList = new int[][] {new int[] {2, 3}, new int[] {1, 1}};
-
-    led = new LED();
-    led.setDefaultCommand(new CoordinatesButItsMultiple(led, ledList, 100, 0, 0, 10));
-    // led.setDefaultCommand(new SetLEDsFromBinaryString(led, LEDConstants.based,
-    // 100, 0, 0, 5));
-
-    /*
-     * Intake LED, flashes RED while intake is down and running,
-     * flashes GREEN on successful intake
-     */
-    if (FeatureFlags.kIntakeEnabled) {
-      // Trigger intakeDetectedNote = new Trigger(intake::isBeamBroken);
-      // // intakeDetectedNote.whileTrue(new SetSuccessfulIntake(led));
-
-      // intakeDetectedNote
-      // .onTrue(
-      // new InstantCommand(
-      // () -> {
-      // operator.getHID().setRumble(GenericHID.RumbleType.kBothRumble, 50);
-      // driver.getHID().setRumble(GenericHID.RumbleType.kBothRumble, 50);
-      // }))
-      // .onFalse(
-      // new InstantCommand(
-      // () -> {
-      // operator.getHID().setRumble(GenericHID.RumbleType.kBothRumble, 0);
-      // driver.getHID().setRumble(GenericHID.RumbleType.kBothRumble, 0);
-      // }));
-
-      // This boolean is true when velocity is LESS than 0.
-      // Trigger intakeRunning = new Trigger(intake::isMotorSpinning);
-      // intakeRunning.whileTrue(new SetGroundIntakeRunning(led));
-    }
-
-    /*
-     * Shooter LED, solid ORANGE while shooter is running, flashes ORANGE if note
-     * fed
-     */
-    // if (FeatureFlags.kShooterEnabled) {
-
-    // Trigger shooterRunning = new Trigger(
-    // () -> (shooter.getShooterFollowerRps() > 75 || shooter.getShooterRps() >
-    // 75));
-    // shooterRunning.whileTrue(new SetSpeakerScore(led));
-    // }
-    // if (FeatureFlags.kSwerveEnabled) {
-    // if (DriverStation.isAutonomousEnabled() ||
-
-    // FeatureFlags.kSwerveUseVisionForPoseEst) {
-    // Trigger swerveSpeakerAligned = new Trigger(swerveDrive::isAlignedToSpeaker);
-    // swerveSpeakerAligned.whileTrue(new SetRobotAligned(led));
-    // }
-    // if (DriverStation.isTeleopEnabled()) {
-    // // if (DriverStation.isTeleopEnabled()) {
-    // // Trigger azimuthRan =
-    // // new Trigger(
-    // // () ->
-    // // (driver.leftBumper().getAsBoolean() ||
-    // driver.rightBumper().getAsBoolean())
-    // // || driver.x().getAsBoolean()
-    // // || driver.b().getAsBoolean()
-    // // || driver.a().getAsBoolean()
-    // // || driver.povUp().getAsBoolean());
-    // // azimuthRan.whileTrue(new SetAzimuthRan(led));
-    // // }
-    // }
-
-    // if (FeatureFlags.kClimbEnabled) {
-    // Trigger climbRunning =
-    // new Trigger(
-    // () -> ((climb.getLeftCurrent() > 0) || (operator.povDown().getAsBoolean())));
-    // }
-    // }
-  }
-
   private void configureCheeks() {
     // Here, put checks for the configuration of the robot
     if (DriverStation.isFMSAttached()) {
@@ -671,14 +544,6 @@ public class RobotContainer {
 
   public Command getAutonomousCommand() {
     return autoChooser.getSelected();
-  }
-
-  /* Test Routines */
-
-  public void runPitTestRoutine() {
-    // Command pitRoutine = new PitRoutine(swerveDrive, climb, intake, pivotIntake,
-    // shooter);
-    // pitRoutine.schedule();
   }
 
   public void periodic(double dt) {
