@@ -28,7 +28,6 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.FeatureFlags;
 import frc.robot.autos.commands.IntakeSequence;
-import frc.robot.autos.routines.AutoRoutines;
 import frc.robot.helpers.XboxStalker;
 import frc.robot.subsystems.ampbar.AmpBar;
 import frc.robot.subsystems.ampbar.AmpBarIOTalonFX;
@@ -289,7 +288,6 @@ public class RobotContainer {
      autoChooser.addOption(
          "5 Note test",
          AutoRoutines.center5Note(drivetrain, intake, shooter, pivotShooter, pivotIntake));
-//     Autos
     SmartDashboard.putData("Auto Chooser", autoChooser);
   }
 
@@ -452,6 +450,8 @@ public class RobotContainer {
       drivetrain.seedFieldRelative(new Pose2d(new Translation2d(), Rotation2d.fromDegrees(90)));
     }
     drivetrain.registerTelemetry(swerveTelemetry::telemeterize);
+    // drivetrain.registerTelemetry(logger::telemeterize);
+    // drivetrain.registerTelemetry(swerveTelemetry::telemeterize);
   }
 
   private void configureShooter() {
