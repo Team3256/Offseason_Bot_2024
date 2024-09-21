@@ -7,8 +7,6 @@
 
 package frc.robot.autos;
 
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 
 public final class AutoConstants {
@@ -16,7 +14,6 @@ public final class AutoConstants {
   // specific robot
   public static final double kMaxAngularSpeedRadiansPerSecond = Math.PI;
   public static final double kMaxAngularSpeedRadiansPerSecondSquared = Math.PI;
-
 
   /* Constraint for the motion profilied robot angle controller */
   public static final TrapezoidProfile.Constraints kThetaControllerConstraints =

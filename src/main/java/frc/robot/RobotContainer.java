@@ -28,6 +28,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.FeatureFlags;
 import frc.robot.autos.commands.IntakeSequence;
+import frc.robot.autos.routines.AutoRoutines;
 import frc.robot.helpers.XboxStalker;
 import frc.robot.subsystems.ampbar.AmpBar;
 import frc.robot.subsystems.ampbar.AmpBarIOTalonFX;
@@ -127,8 +128,6 @@ public class RobotContainer {
     configureIntake();
     configureSwerve();
 
-
-
     configureClimb();
     // If all the subsystems are enabled, configure "operator" autos
     if (FeatureFlags.kIntakeEnabled
@@ -136,7 +135,6 @@ public class RobotContainer {
         && FeatureFlags.kPivotIntakeEnabled) {
       configureOperatorAutos();
     }
-
 
     // Named commands
     {
@@ -285,9 +283,9 @@ public class RobotContainer {
 
     autoChooser = new SendableChooser<>();
     autoChooser.setDefaultOption("Do Nothing", new InstantCommand());
-     autoChooser.addOption(
-         "5 Note test",
-         AutoRoutines.center5Note(drivetrain, intake, shooter, pivotShooter, pivotIntake));
+    autoChooser.addOption(
+        "5 Note test",
+        AutoRoutines.center5Note(drivetrain, intake, shooter, pivotShooter, pivotIntake));
     SmartDashboard.putData("Auto Chooser", autoChooser);
   }
 
@@ -547,7 +545,6 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     return autoChooser.getSelected();
   }
-
 
   public void periodic(double dt) {
     XboxStalker.stalk(driver, operator);
