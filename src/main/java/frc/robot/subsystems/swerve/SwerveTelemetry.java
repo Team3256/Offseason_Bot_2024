@@ -8,6 +8,7 @@
 package frc.robot.subsystems.swerve;
 
 import com.ctre.phoenix6.Utils;
+import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrain.SwerveDriveState;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.networktables.DoubleArrayPublisher;
@@ -20,8 +21,6 @@ import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.util.Color8Bit;
-import frc.robot.subsystems.swerve.kit.KitSwerveDrivetrain.SwerveDriveState;
-import org.littletonrobotics.junction.Logger;
 
 public class SwerveTelemetry {
   private final double MaxSpeed;
@@ -95,12 +94,10 @@ public class SwerveTelemetry {
   /* Accept the swerve drive state and telemeterize it to smartdashboard */
   public void telemeterize(SwerveDriveState state) {
     /* Telemeterize the pose */
-
-    //    Logger.recordOutput("realBotPose", state.Pose);
     Pose2d pose = state.Pose;
     fieldTypePub.set("Field2d");
     fieldPub.set(new double[] {pose.getX(), pose.getY(), pose.getRotation().getDegrees()});
-    Logger.recordOutput("SwervePoseCalculated", pose);
+
     /* Telemeterize the robot's general speeds */
     double currentTime = Utils.getCurrentTimeSeconds();
     double diffTime = currentTime - lastTime;

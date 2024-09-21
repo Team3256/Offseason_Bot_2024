@@ -40,7 +40,7 @@ public final class Constants {
     public static final boolean kShooterEnabled = true;
     public static final boolean kShooterRegenerativeBrakingEnabled = true;
 
-    public static final boolean kSwerveEnabled = true;
+    public static final boolean kSwerveEnabled = false;
 
     public static final boolean kPivotIntakeEnabled = true;
 

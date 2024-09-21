@@ -72,178 +72,106 @@ public class AutoRoutines {
         new Trigger(() -> !intake.isBeamBroken()).debounce(RoutineConstants.beamBreakDelay);
 
     return Commands.sequence(
-        Commands.runOnce(
-            () ->
-                swerve.seedFieldRelative(
-                    DriverStation.getAlliance().orElse(DriverStation.Alliance.Blue)
-                            == DriverStation.Alliance.Blue
-                        ? center_w1.getInitialPose()
-                        : center_w1.getFlippedInitialPose())),
-        intake
-            .intakeIn()
-            .deadlineWith(
-                swerve.runChoreoTraj(center_w1),
-                pivotIntake.setPosition(
-                    PivotIntakeConstants.kPivotGroundPos
-                        * PivotIntakeConstants.kPivotMotorGearing)),
-        Commands.parallel(
-                Commands.sequence(
-                    swerve.runChoreoTraj(w1_center),
-                    Commands.waitUntil(
-                        () ->
-                            Util.epsilonEquals(
-                                pivotShooter.getPosition(),
-                                PivotShooterConstants.kSubWooferPreset
-                                    * PivotShooterConstants.kPivotMotorGearing,
-                                5)),
-                    intake.setPassthroughVoltage(IntakeConstants.kPassthroughIntakeVoltage)),
-                shooter.setVelocity(
-                    ShooterConstants.kShooterSubwooferRPS,
-                    ShooterConstants.kShooterFollowerSubwooferRPS),
-                pivotShooter.setPosition(
-                    PivotShooterConstants.kSubWooferPreset
-                        * PivotShooterConstants.kPivotMotorGearing))
-            .until(noteOuttaken),
-        intake
-            .intakeIn()
-            .deadlineWith(
-                pivotShooter.setPosition(0),
-                swerve.runChoreoTraj(center_w2),
-                pivotIntake.setPosition(
-                    PivotIntakeConstants.kPivotGroundPos
-                        * PivotIntakeConstants.kPivotMotorGearing)),
-        Commands.parallel(
-                Commands.sequence(
-                    swerve.runChoreoTraj(w2_center),
-                    Commands.waitUntil(
-                        () ->
-                            Util.epsilonEquals(
-                                pivotShooter.getPosition(),
-                                PivotShooterConstants.kSubWooferPreset
-                                    * PivotShooterConstants.kPivotMotorGearing,
-                                5)),
-                    intake.setPassthroughVoltage(IntakeConstants.kPassthroughIntakeVoltage)),
-                shooter.setVelocity(
-                    ShooterConstants.kShooterSubwooferRPS,
-                    ShooterConstants.kShooterFollowerSubwooferRPS),
-                pivotShooter.setPosition(
-                    PivotShooterConstants.kSubWooferPreset
-                        * PivotShooterConstants.kPivotMotorGearing))
-            .until(noteOuttaken),
-        intake
-            .intakeIn()
-            .deadlineWith(
-                pivotShooter.setPosition(0),
-                swerve.runChoreoTraj(center_w3),
-                pivotIntake.setPosition(
-                    PivotIntakeConstants.kPivotGroundPos
-                        * PivotIntakeConstants.kPivotMotorGearing)),
-        Commands.parallel(
-                Commands.sequence(
-                    swerve.runChoreoTraj(w3_center),
-                    Commands.waitUntil(
-                        () ->
-                            Util.epsilonEquals(
-                                pivotShooter.getPosition(),
-                                PivotShooterConstants.kSubWooferPreset
-                                    * PivotShooterConstants.kPivotMotorGearing,
-                                5)),
-                    intake.setPassthroughVoltage(IntakeConstants.kPassthroughIntakeVoltage)),
-                shooter.setVelocity(
-                    ShooterConstants.kShooterSubwooferRPS,
-                    ShooterConstants.kShooterFollowerSubwooferRPS),
-                pivotShooter.setPosition(
-                    PivotShooterConstants.kSubWooferPreset
-                        * PivotShooterConstants.kPivotMotorGearing))
-            .until(noteOuttaken),
-        swerve
-            .runChoreoTraj(center_c1)
-            .andThen(Commands.waitSeconds(1))
-            .deadlineWith(
-                pivotShooter.setPosition(0),
-                intake.intakeIn(),
-                pivotIntake.setPosition(
-                    PivotIntakeConstants.kPivotGroundPos
-                        * PivotIntakeConstants.kPivotMotorGearing)),
+        AutoHelperCommands.resetPose(center_w1, swerve),
+        AutoHelperCommands.preLoad(pivotShooter, intake, shooter, noteOuttaken),
+        AutoHelperCommands.intakeIn(intake, swerve, pivotIntake, center_w1),
+        AutoHelperCommands.shootSubwoofer(
+            intake, shooter, swerve, pivotShooter, w1_center, noteOuttaken),
+        AutoHelperCommands.intakeIn(intake, swerve, pivotIntake, center_w2)
+            .deadlineWith(pivotShooter.setPosition(0)),
+        AutoHelperCommands.shootSubwoofer(
+            intake, shooter, swerve, pivotShooter, w2_center, noteOuttaken),
+        AutoHelperCommands.intakeIn(intake, swerve, pivotIntake, center_w3)
+            .deadlineWith(pivotShooter.setPosition(0)),
+        AutoHelperCommands.shootSubwoofer(
+            intake, shooter, swerve, pivotShooter, w3_center, noteOuttaken),
+        AutoHelperCommands.intakeIn(intake, swerve, pivotIntake, center_c1)
+            .deadlineWith(pivotShooter.setPosition(0)),
         Commands.either(
-            Commands.parallel(
-                    Commands.sequence(
-                        swerve.runChoreoTraj(c1_center),
-                        Commands.waitUntil(
-                            () ->
-                                Util.epsilonEquals(
-                                    pivotShooter.getPosition(),
-                                    PivotShooterConstants.kSubWooferPreset
-                                        * PivotShooterConstants.kPivotMotorGearing,
-                                    5)),
-                        intake.setPassthroughVoltage(IntakeConstants.kPassthroughIntakeVoltage)),
-                    shooter.setVelocity(
-                        ShooterConstants.kShooterSubwooferRPS,
-                        ShooterConstants.kShooterFollowerSubwooferRPS),
-                    pivotShooter.setPosition(
-                        PivotShooterConstants.kSubWooferPreset
-                            * PivotShooterConstants.kPivotMotorGearing))
-                .until(noteOuttaken),
+            AutoHelperCommands.shootSubwoofer(
+                intake, shooter, swerve, pivotShooter, c1_center, noteOuttaken),
             Commands.sequence(
-                swerve
-                    .runChoreoTraj(c1_c2)
-                    .deadlineWith(
-                        pivotShooter.setPosition(0),
-                        pivotIntake
-                            .setPosition(
-                                PivotIntakeConstants.kPivotGroundPos
-                                    * PivotIntakeConstants.kPivotMotorGearing)
-                            .alongWith(intake.intakeIn())),
+                AutoHelperCommands.intakeIn(intake, swerve, pivotIntake, c1_c2),
                 Commands.either(
-                    Commands.parallel(
-                            Commands.sequence(
-                                swerve.runChoreoTraj(c2_center),
-                                Commands.waitUntil(
-                                    () ->
-                                        Util.epsilonEquals(
-                                            pivotShooter.getPosition(),
-                                            PivotShooterConstants.kSubWooferPreset
-                                                * PivotShooterConstants.kPivotMotorGearing,
-                                            5)),
-                                intake.setPassthroughVoltage(
-                                    IntakeConstants.kPassthroughIntakeVoltage)),
-                            shooter.setVelocity(
-                                ShooterConstants.kShooterSubwooferRPS,
-                                ShooterConstants.kShooterFollowerSubwooferRPS),
-                            pivotShooter.setPosition(
-                                PivotShooterConstants.kSubWooferPreset
-                                    * PivotShooterConstants.kPivotMotorGearing))
-                        .until(noteOuttaken),
+                    AutoHelperCommands.shootSubwoofer(
+                        intake, shooter, swerve, pivotShooter, c2_center, noteOuttaken),
                     Commands.sequence(
-                        swerve
-                            .runChoreoTraj(c2_c3)
-                            .deadlineWith(
-                                pivotShooter.setPosition(0),
-                                pivotIntake
-                                    .setPosition(
-                                        PivotIntakeConstants.kPivotGroundPos
-                                            * PivotIntakeConstants.kPivotMotorGearing)
-                                    .alongWith(intake.intakeIn())),
-                        Commands.parallel(
-                                Commands.sequence(
-                                    swerve.runChoreoTraj(c3_center),
-                                    Commands.waitUntil(
-                                        () ->
-                                            Util.epsilonEquals(
-                                                pivotShooter.getPosition(),
-                                                PivotShooterConstants.kSubWooferPreset
-                                                    * PivotShooterConstants.kPivotMotorGearing,
-                                                5)),
-                                    intake.setPassthroughVoltage(
-                                        IntakeConstants.kPassthroughIntakeVoltage)),
-                                shooter.setVelocity(
-                                    ShooterConstants.kShooterSubwooferRPS,
-                                    ShooterConstants.kShooterFollowerSubwooferRPS),
-                                pivotShooter.setPosition(
-                                    PivotShooterConstants.kSubWooferPreset
-                                        * PivotShooterConstants.kPivotMotorGearing))
-                            .until(noteOuttaken)),
+                        AutoHelperCommands.intakeIn(intake, swerve, pivotIntake, c2_c3),
+                        AutoHelperCommands.shootSubwoofer(
+                            intake, shooter, swerve, pivotShooter, c3_center, noteOuttaken)),
                     intake::isBeamBroken)),
             intake::isBeamBroken));
+  }
+
+  private static class AutoHelperCommands {
+    public static Command preLoad(
+        PivotShooter pivotShooter, Intake intake, Shooter shooter, Trigger noteOuttaken) {
+      return Commands.parallel(
+              Commands.waitUntil(
+                      () ->
+                          Util.epsilonEquals(
+                              pivotShooter.getPosition(),
+                              PivotShooterConstants.kSubWooferPreset
+                                  * PivotShooterConstants.kPivotMotorGearing,
+                              5))
+                  .andThen(intake.setPassthroughVoltage(IntakeConstants.kPassthroughIntakeVoltage)),
+              shooter.setVelocity(
+                  ShooterConstants.kShooterSubwooferRPS,
+                  ShooterConstants.kShooterFollowerSubwooferRPS),
+              pivotShooter.setPosition(
+                  PivotShooterConstants.kSubWooferPreset
+                      * PivotShooterConstants.kPivotMotorGearing))
+          .until(noteOuttaken);
+    }
+
+    public static Command resetPose(ChoreoTrajectory trajectory, CommandSwerveDrivetrain swerve) {
+      return Commands.runOnce(
+          () ->
+              swerve.seedFieldRelative(
+                  DriverStation.getAlliance().orElse(DriverStation.Alliance.Blue)
+                          == DriverStation.Alliance.Blue
+                      ? trajectory.getInitialPose()
+                      : trajectory.getFlippedInitialPose()));
+    }
+
+    public static Command intakeIn(
+        Intake intake,
+        CommandSwerveDrivetrain swerve,
+        PivotIntake pivotIntake,
+        ChoreoTrajectory traj) {
+      return intake
+          .intakeIn()
+          .deadlineWith(
+              swerve.runChoreoTraj(traj),
+              pivotIntake.setPosition(
+                  PivotIntakeConstants.kPivotGroundPos * PivotIntakeConstants.kPivotMotorGearing));
+    }
+
+    public static Command shootSubwoofer(
+        Intake intake,
+        Shooter shooter,
+        CommandSwerveDrivetrain swerve,
+        PivotShooter pivotShooter,
+        ChoreoTrajectory traj,
+        Trigger noteOuttaken) {
+      return Commands.parallel(
+              Commands.sequence(
+                  swerve.runChoreoTraj(traj),
+                  Commands.waitUntil(
+                      () ->
+                          Util.epsilonEquals(
+                              pivotShooter.getPosition(),
+                              PivotShooterConstants.kSubWooferPreset
+                                  * PivotShooterConstants.kPivotMotorGearing,
+                              5)),
+                  intake.setPassthroughVoltage(IntakeConstants.kPassthroughIntakeVoltage)),
+              shooter.setVelocity(
+                  ShooterConstants.kShooterSubwooferRPS,
+                  ShooterConstants.kShooterFollowerSubwooferRPS),
+              pivotShooter.setPosition(
+                  PivotShooterConstants.kSubWooferPreset
+                      * PivotShooterConstants.kPivotMotorGearing))
+          .until(noteOuttaken);
+    }
   }
 }

@@ -14,6 +14,7 @@ import static frc.robot.subsystems.swerve.AzimuthConstants.*;
 import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule;
+import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -26,10 +27,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.*;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants.FeatureFlags;
 import frc.robot.autos.commands.IntakeSequence;
-import frc.robot.autos.routines.AutoRoutines;
 import frc.robot.helpers.XboxStalker;
 import frc.robot.subsystems.ampbar.AmpBar;
 import frc.robot.subsystems.ampbar.AmpBarIOTalonFX;
@@ -53,7 +52,6 @@ import frc.robot.subsystems.swerve.CommandSwerveDrivetrain;
 import frc.robot.subsystems.swerve.SwerveConstants;
 import frc.robot.subsystems.swerve.SwerveTelemetry;
 import frc.robot.subsystems.swerve.TunerConstants;
-import frc.robot.subsystems.swerve.kit.KitSwerveRequest;
 import frc.robot.subsystems.swerve.requests.SwerveFieldCentricFacingAngle;
 import frc.robot.subsystems.vision.Vision;
 import frc.robot.subsystems.vision.VisionIOLimelight;
@@ -75,8 +73,6 @@ public class RobotContainer {
 
   /* Drive Controls */
   private final int translationAxis = XboxController.Axis.kLeftY.value;
-  private final int strafeAxis = XboxController.Axis.kLeftX.value;
-  private final int rotationAxis = XboxController.Axis.kRightX.value;
   private final int secondaryAxis = XboxController.Axis.kRightY.value;
 
   /* Subsystems */
@@ -88,11 +84,11 @@ public class RobotContainer {
       TunerConstants.kSpeedAt12VoltsMps; // kSpeedAt12VoltsMps desired top speed
   private double MaxAngularRate = 1.5 * Math.PI; // My drivetrain
 
-  private final KitSwerveRequest.FieldCentric drive =
-      new KitSwerveRequest.FieldCentric()
-          .withDeadband(MaxSpeed * Constants.stickDeadband)
+  private final SwerveRequest.FieldCentric drive =
+      new SwerveRequest.FieldCentric()
+          .withDeadband(Constants.stickDeadband * MaxSpeed)
           .withRotationalDeadband(
-              MaxAngularRate * Constants.rotationalDeadband) // Add a 10% deadband
+              Constants.rotationalDeadband * MaxAngularRate) // Add a 10% deadband
           .withDriveRequestType(
               SwerveModule.DriveRequestType.OpenLoopVoltage); // I want field-centric
 
@@ -101,7 +97,7 @@ public class RobotContainer {
           .withDeadband(MaxSpeed * .1) // TODO: update deadband
           .withRotationalDeadband(MaxAngularRate * .1) // TODO: update deadband
           .withHeadingController(SwerveConstants.azimuthController)
-          .withDriveRequestType(SwerveModule.DriveRequestType.OpenLoopVoltage);
+          .withDriveRequestType(SwerveModule.DriveRequestType.Velocity);
 
   // driving in open loop
   private final SwerveTelemetry swerveTelemetry = new SwerveTelemetry(MaxSpeed);
@@ -143,10 +139,10 @@ public class RobotContainer {
         .onTrue(
             drivetrain.applyRequest(() -> azi.withTargetDirection(Rotation2d.fromDegrees(180))));
 
-    test.y().whileTrue(drivetrain.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
-    test.a().whileTrue(drivetrain.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
-    test.b().whileTrue(drivetrain.sysIdDynamic(SysIdRoutine.Direction.kForward));
-    test.x().whileTrue(drivetrain.sysIdDynamic(SysIdRoutine.Direction.kReverse));
+    // test.y().whileTrue(drivetrain.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
+    // test.a().whileTrue(drivetrain.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
+    // test.b().whileTrue(drivetrain.sysIdDynamic(SysIdRoutine.Direction.kForward));
+    // test.x().whileTrue(drivetrain.sysIdDynamic(SysIdRoutine.Direction.kReverse));
 
     configureClimb();
     // If all the subsystems are enabled, configure "operator" autos
@@ -315,9 +311,9 @@ public class RobotContainer {
     //    }
     autoChooser = new SendableChooser<>();
     autoChooser.setDefaultOption("Do Nothing", new InstantCommand());
-    autoChooser.addOption(
-        "5 Note test",
-        AutoRoutines.center5Note(drivetrain, intake, shooter, pivotShooter, pivotIntake));
+    // autoChooser.addOption(
+    //     "5 Note test",
+    //     AutoRoutines.center5Note(drivetrain, intake, shooter, pivotShooter, pivotIntake));
     // Autos
     SmartDashboard.putData("Auto Chooser", autoChooser);
   }
@@ -455,7 +451,7 @@ public class RobotContainer {
                             -driver.getLeftTriggerAxis() * (MaxAngularRate * 0.3))));
 
     // Reset robot heading on button press
-    driver.y().onTrue(drivetrain.runOnce(drivetrain::seedFieldRelative));
+    driver.y().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
 
     // Azimuth angle bindings. isRed == true for red alliance presets. isRed != true for blue.
     if (isRed == true) {
@@ -492,6 +488,8 @@ public class RobotContainer {
       drivetrain.seedFieldRelative(new Pose2d(new Translation2d(), Rotation2d.fromDegrees(90)));
     }
     drivetrain.registerTelemetry(swerveTelemetry::telemeterize);
+    // drivetrain.registerTelemetry(logger::telemeterize);
+    // drivetrain.registerTelemetry(swerveTelemetry::telemeterize);
   }
 
   private void configureShooter() {
