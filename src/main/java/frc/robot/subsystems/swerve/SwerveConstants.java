@@ -16,8 +16,7 @@ public final class SwerveConstants {
       new PhoenixPIDController(6, 0, 0); // you shouldn't have a I or D value TODO: tune
   public static final PIDConstants autoRotationalController =
       new PIDConstants(6, azimuthController.getI(), azimuthController.getD()); // 6
-  public static final PIDConstants autoTranslationalController =
-      new PIDConstants(8, 0, 0); // 8
+  public static final PIDConstants autoTranslationalController = new PIDConstants(8, 0, 0); // 8
 
   public static final double azimuthEpsilon = 10.0; // TODO: tune
 

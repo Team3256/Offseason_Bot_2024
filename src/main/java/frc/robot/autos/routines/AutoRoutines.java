@@ -27,7 +27,8 @@ public class AutoRoutines {
 
   public static Command boxAuto(CommandSwerveDrivetrain swerve) {
     ChoreoTrajectory boxPath = Choreo.getTrajectory("BoxPath");
-    return Commands.sequence(AutoHelperCommands.resetPose(boxPath, swerve), swerve.runChoreoTraj(boxPath));
+    return Commands.sequence(
+        AutoHelperCommands.resetPose(boxPath, swerve), swerve.runChoreoTraj(boxPath));
   }
 
   public static Command ampWing1Note(
@@ -80,26 +81,29 @@ public class AutoRoutines {
     return Commands.sequence(
         AutoHelperCommands.resetPose(center_w1, swerve),
         AutoHelperCommands.preLoad(pivotShooter, intake, shooter, noteOuttaken),
-        AutoHelperCommands.intakeIn(intake, swerve, pivotIntake,pivotShooter,  center_w1),
+        AutoHelperCommands.intakeIn(intake, swerve, pivotIntake, pivotShooter, center_w1),
         AutoHelperCommands.shootSubwoofer(
             intake, shooter, swerve, pivotShooter, w1_center, noteOuttaken),
-        AutoHelperCommands.intakeIn(intake, swerve, pivotIntake,pivotShooter ,center_w2),
+        AutoHelperCommands.intakeIn(intake, swerve, pivotIntake, pivotShooter, center_w2),
         AutoHelperCommands.shootSubwoofer(
             intake, shooter, swerve, pivotShooter, w2_center, noteOuttaken),
-        AutoHelperCommands.intakeIn(intake, swerve, pivotIntake, pivotShooter,center_w3),
+        AutoHelperCommands.intakeIn(intake, swerve, pivotIntake, pivotShooter, center_w3),
         AutoHelperCommands.shootSubwoofer(
             intake, shooter, swerve, pivotShooter, w3_center, noteOuttaken),
-        AutoHelperCommands.intakeInDeadlineTraj(intake, swerve, pivotIntake, pivotShooter,center_c1),
+        AutoHelperCommands.intakeInDeadlineTraj(
+            intake, swerve, pivotIntake, pivotShooter, center_c1),
         Commands.either(
             AutoHelperCommands.shootSubwoofer(
                 intake, shooter, swerve, pivotShooter, c1_center, noteOuttaken),
             Commands.sequence(
-                AutoHelperCommands.intakeInDeadlineTraj(intake, swerve, pivotIntake, pivotShooter,c1_c2),
+                AutoHelperCommands.intakeInDeadlineTraj(
+                    intake, swerve, pivotIntake, pivotShooter, c1_c2),
                 Commands.either(
                     AutoHelperCommands.shootSubwoofer(
                         intake, shooter, swerve, pivotShooter, c2_center, noteOuttaken),
                     Commands.sequence(
-                        AutoHelperCommands.intakeInDeadlineTraj(intake, swerve, pivotIntake,pivotShooter, c2_c3),
+                        AutoHelperCommands.intakeInDeadlineTraj(
+                            intake, swerve, pivotIntake, pivotShooter, c2_c3),
                         AutoHelperCommands.shootSubwoofer(
                             intake, shooter, swerve, pivotShooter, c3_center, noteOuttaken)),
                     intake::isBeamBroken)),
@@ -116,7 +120,9 @@ public class AutoRoutines {
                               pivotShooter.getPosition(),
                               PivotShooterConstants.kSubWooferPreset
                                   * PivotShooterConstants.kPivotMotorGearing,
-                              5)).andThen(Commands.waitUntil(()->Util.epsilonEquals(shooter.getVelocity(), 60,5)))
+                              5))
+                  .andThen(
+                      Commands.waitUntil(() -> Util.epsilonEquals(shooter.getVelocity(), 60, 5)))
                   .andThen(intake.setPassthroughVoltage(IntakeConstants.kPassthroughIntakeVoltage)),
               shooter.setVelocity(
                   ShooterConstants.kShooterSubwooferRPS,
@@ -124,7 +130,8 @@ public class AutoRoutines {
               pivotShooter.setPosition(
                   PivotShooterConstants.kSubWooferPreset
                       * PivotShooterConstants.kPivotMotorGearing))
-          .until(noteOuttaken).withTimeout(3);
+          .until(noteOuttaken)
+          .withTimeout(3);
     }
 
     public static Command resetPose(ChoreoTrajectory trajectory, CommandSwerveDrivetrain swerve) {
@@ -138,17 +145,20 @@ public class AutoRoutines {
     }
 
     public static Command intakeInDeadlineTraj(
-            Intake intake,
-            CommandSwerveDrivetrain swerve,
-            PivotIntake pivotIntake,
-            PivotShooter pivotShooter,
-            ChoreoTrajectory traj) {
-      return swerve.runChoreoTraj(traj).andThen(Commands.waitSeconds(1))
-              .deadlineWith(
-                      intake.intakeIn(),
-                      pivotShooter.setPosition(0),
-                      pivotIntake.setPosition(
-                              PivotIntakeConstants.kPivotGroundPos * PivotIntakeConstants.kPivotMotorGearing)).withTimeout(3);
+        Intake intake,
+        CommandSwerveDrivetrain swerve,
+        PivotIntake pivotIntake,
+        PivotShooter pivotShooter,
+        ChoreoTrajectory traj) {
+      return swerve
+          .runChoreoTraj(traj)
+          .andThen(Commands.waitSeconds(1))
+          .deadlineWith(
+              intake.intakeIn(),
+              pivotShooter.setPosition(0),
+              pivotIntake.setPosition(
+                  PivotIntakeConstants.kPivotGroundPos * PivotIntakeConstants.kPivotMotorGearing))
+          .withTimeout(3);
     }
 
     public static Command intakeIn(
@@ -163,7 +173,8 @@ public class AutoRoutines {
               swerve.runChoreoTraj(traj),
               pivotShooter.setPosition(0),
               pivotIntake.setPosition(
-                  PivotIntakeConstants.kPivotGroundPos * PivotIntakeConstants.kPivotMotorGearing)).withTimeout(3);
+                  PivotIntakeConstants.kPivotGroundPos * PivotIntakeConstants.kPivotMotorGearing))
+          .withTimeout(3);
     }
 
     public static Command shootSubwoofer(
@@ -190,7 +201,8 @@ public class AutoRoutines {
               pivotShooter.setPosition(
                   PivotShooterConstants.kSubWooferPreset
                       * PivotShooterConstants.kPivotMotorGearing))
-          .until(noteOuttaken.debounce(1)).withTimeout(4);
+          .until(noteOuttaken.debounce(1))
+          .withTimeout(4);
     }
   }
 }
