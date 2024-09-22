@@ -107,7 +107,8 @@ public class AutoRoutines {
                 .andThen(
                     AutoHelperCommands.intakeIn(
                         intake, swerve, pivotIntake, pivotShooter, center_c1)),
-            AutoHelperCommands.intakeInDeadlineTraj(intake, swerve, pivotIntake, pivotShooter, w3_c1),
+            AutoHelperCommands.intakeInDeadlineTraj(
+                intake, swerve, pivotIntake, pivotShooter, w3_c1),
             intake::isBeamBroken),
         Commands.either(
             AutoHelperCommands.shootSubwoofer(
