@@ -286,6 +286,7 @@ public class RobotContainer {
     autoChooser.addOption(
         "5 Note test",
         AutoRoutines.center5Note(drivetrain, intake, shooter, pivotShooter, pivotIntake));
+    autoChooser.addOption("Box path", AutoRoutines.boxAuto(drivetrain));
     SmartDashboard.putData("Auto Chooser", autoChooser);
   }
 
@@ -376,10 +377,10 @@ public class RobotContainer {
         drivetrain.applyRequest(
             () ->
                 drive
-                    .withVelocityX(-driver.getLeftY() * MaxSpeed) // Drive forward with
+                    .withVelocityX(driver.getLeftY() * MaxSpeed) // Drive forward with
                     // negative Y (forward)
                     .withVelocityY(
-                        -driver.getLeftX() * MaxSpeed) // Drive left with negative X (left)
+                        driver.getLeftX() * MaxSpeed) // Drive left with negative X (left)
                     .withRotationalRate(-driver.getRightX() * MaxAngularRate)));
 
     /* Right stick absolute angle mode on trigger hold,
@@ -499,7 +500,7 @@ public class RobotContainer {
         .povUp()
         .onTrue(
             new ParallelCommandGroup(
-                pivotShooter.setPosition(PivotShooterConstants.kFeederPreset),
+                pivotShooter.setPosition(PivotShooterConstants.kFeederPreset * kPivotMotorGearing),
                 shooter.setVelocity(
                     ShooterConstants.kShooterFeederRPS,
                     ShooterConstants.kShooterFollowerFeederRPS)));

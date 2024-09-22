@@ -21,7 +21,7 @@ public final class IntakeConstants {
   // Time of Flight constants
   public static final double kBeamBreakDelayTime = 0;
 
-  public static final int kIntakeBeamBreakDIO = 4;
+  public static final int kIntakeBeamBreakDIO = 1;
   public static int kPassthroughMotorID = 35;
 
   public static double updateFrequency = 50;

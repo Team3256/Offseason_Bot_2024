@@ -52,7 +52,7 @@ public final class PivotIntakeConstants {
                   .withGravityType(GravityTypeValue.Arm_Cosine))
           .withMotorOutput(
               new MotorOutputConfigs()
-                  .withNeutralMode(NeutralModeValue.Brake)
+                  .withNeutralMode(NeutralModeValue.Coast)
                   .withInverted(InvertedValue.Clockwise_Positive))
           .withMotionMagic(
               new MotionMagicConfigs()

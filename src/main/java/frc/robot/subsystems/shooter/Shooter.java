@@ -61,6 +61,10 @@ public class Shooter extends DisableSubsystem {
     Logger.processInputs(this.getClass().getSimpleName(), shooterIOAutoLogged);
   }
 
+  public double getVelocity() {
+    return shooterIOAutoLogged.shooterMotorVelocity;
+  }
+
   public Command setVoltage(double voltage, double followerVoltage) {
     return this.run(
             () -> {
