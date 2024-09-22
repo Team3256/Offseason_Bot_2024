@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.autos.LocalADStarAK;
+import frc.robot.utils.FileConsoleSource;
 import frc.robot.utils.NT4PublisherNoFMS;
 import java.util.HashMap;
 import java.util.Map;
@@ -36,9 +37,14 @@ import org.littletonrobotics.junction.wpilog.WPILOGWriter;
  * project.
  */
 public class Robot extends LoggedRobot implements Logged {
+  public Robot() {
+    super();
+  }
 
   private RobotContainer m_robotContainer;
   private Command m_autonomousCommand;
+  private FileConsoleSource dmesgSource;
+  private FileConsoleSource kernelMessagesSource;
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -49,6 +55,7 @@ public class Robot extends LoggedRobot implements Logged {
     Pathfinding.setPathfinder(new LocalADStarAK());
     PathfindingCommand.warmupCommand().schedule();
     RobotController.setBrownoutVoltage(5.6); // we ball
+
     // if (Constants.kOverrideBrownOutVoltage) {
     // RobotController.setBrownoutVoltage(Constants.kOverridenBrownOutVoltage);
     // System.out.println(
@@ -89,11 +96,15 @@ public class Robot extends LoggedRobot implements Logged {
       Logger.addDataReceiver(new NT4PublisherNoFMS()); // Publish data to NetworkTables
       new PowerDistribution(
           1, PowerDistribution.ModuleType.kRev); // Enables power distribution logging
+      dmesgSource = new FileConsoleSource("/var/log/dmesg");
+      kernelMessagesSource = new FileConsoleSource("/var/log/messages");
     } else if (isSimulation()) {
+
       // DriverStation.silenceJoystickConnectionWarning(true);
       Logger.addDataReceiver(new WPILOGWriter(""));
       Logger.addDataReceiver(new NT4Publisher());
     } else {
+
       // Unknown mode
       Logger.addDataReceiver(new WPILOGWriter(""));
       Logger.addDataReceiver(new NT4Publisher());
@@ -167,6 +178,10 @@ public class Robot extends LoggedRobot implements Logged {
       Monologue.setFileOnly(DriverStation.isFMSAttached());
       Monologue.updateAll();
     }
+    if (dmesgSource != null && kernelMessagesSource != null && isReal()) {
+      Logger.recordOutput("dmesg", dmesgSource.getNewData());
+      Logger.recordOutput("kernelMessages", kernelMessagesSource.getNewData());
+    }
     m_robotContainer.periodic(Robot.defaultPeriodSecs);
   }
 
@@ -207,7 +222,14 @@ public class Robot extends LoggedRobot implements Logged {
 
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
-      System.out.println("hehe auto startie " + Timer.getFPGATimestamp());
+      System.out.println(
+          "Auto Command "
+              + m_autonomousCommand.getName()
+              + " starting at "
+              + Timer.getFPGATimestamp()
+              + " (real time: "
+              + Logger.getRealTimestamp()
+              + ")");
       m_autonomousCommand.schedule();
     }
   }
@@ -217,14 +239,19 @@ public class Robot extends LoggedRobot implements Logged {
   public void autonomousPeriodic() {}
 
   @Override
+  public void autonomousExit() {
+    m_robotContainer.disableRumble();
+  }
+
+  @Override
   public void teleopInit() {
     // This makes sure that the autonomous stops running when
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove
     // this line or comment it out.
-    //    if (m_autonomousCommand != null) {
-    //      m_autonomousCommand.cancel();
-    //    }
+    // if (m_autonomousCommand != null) {
+    // m_autonomousCommand.cancel();
+    // }
     CommandScheduler.getInstance().cancelAll();
 
     boolean isRedAlliance = true;
