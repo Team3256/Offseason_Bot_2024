@@ -29,6 +29,8 @@ public class Shooter extends DisableSubsystem {
 
   private final SysIdRoutine m_sysIdRoutine;
 
+  private double targetVelocity = 0;
+
   public Shooter(boolean disabled, ShooterIO shooterIO) {
     super(disabled);
     this.shooterIO = shooterIO;
@@ -74,9 +76,15 @@ public class Shooter extends DisableSubsystem {
         .finallyDo(shooterIO::off);
   }
 
+  // Only cares about main motor
+  public boolean isAtTargetVelocity() {
+    return Math.abs(getVelocity() - targetVelocity) < ShooterConstants.kVelocityTolerance;
+  }
+
   public Command setVelocity(double velocity, double followerVelocity) {
     return this.run(
             () -> {
+              targetVelocity = velocity;
               shooterIO.setShooterVelocity(velocity);
               shooterIO.setShooterFollowerVelocity(followerVelocity);
             })

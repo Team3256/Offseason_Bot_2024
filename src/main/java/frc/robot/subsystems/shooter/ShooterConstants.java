@@ -82,4 +82,6 @@ public final class ShooterConstants {
   public static NeutralModeValue neutralMode = NeutralModeValue.Brake;
   public static InvertedValue shooterInverted = InvertedValue.Clockwise_Positive;
   public static InvertedValue shooterFollowerInverted = InvertedValue.CounterClockwise_Positive;
+
+  public static double kVelocityTolerance = 5;
 }
