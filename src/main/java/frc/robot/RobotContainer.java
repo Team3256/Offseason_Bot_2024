@@ -323,6 +323,16 @@ public class RobotContainer {
                                     }));
 
         }
+        if (FeatureFlags.kIntakeEnabled) {
+            // XXX: Or maybe I should re-use the debouncedBeamBreak trigger inside this
+            // object
+            new Trigger(() -> intake.isBeamBroken())
+                    .onTrue(new InstantCommand(() -> {
+                        operator.getHID().setRumble(GenericHID.RumbleType.kBothRumble, 50);
+                    })).onFalse(new InstantCommand(() -> {
+                        operator.getHID().setRumble(GenericHID.RumbleType.kBothRumble, 0);
+                    }));
+        }
     }
 
     private void configurePivotShooter() {
