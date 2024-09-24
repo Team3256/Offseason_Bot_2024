@@ -13,13 +13,14 @@ import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.NeutralOut;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
+import com.ctre.phoenix6.hardware.TalonFX;
 import frc.robot.drivers.MonitoredTalonFX;
 import frc.robot.utils.PhoenixUtil;
 import frc.robot.utils.TalonUtil;
 
 public class AmpBarIOTalonFX implements AmpBarIO {
 
-  private final MonitoredTalonFX ampBarMotor = new MonitoredTalonFX(AmpBarConstants.kAmpBarMotorID);
+  private final TalonFX ampBarMotor = new TalonFX(AmpBarConstants.kAmpBarMotorID);
 
   private final PositionVoltage positionRequest = new PositionVoltage(0).withSlot(0);
   private final MotionMagicVoltage motionMagicRequest = new MotionMagicVoltage(0).withSlot(0);
@@ -83,7 +84,7 @@ public class AmpBarIOTalonFX implements AmpBarIO {
   }
 
   @Override
-  public MonitoredTalonFX getMotor() {
+  public TalonFX getMotor() {
     return ampBarMotor;
   }
 

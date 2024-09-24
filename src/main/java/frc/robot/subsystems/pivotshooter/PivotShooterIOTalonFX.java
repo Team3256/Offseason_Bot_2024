@@ -13,14 +13,15 @@ import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.NeutralOut;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
+import com.ctre.phoenix6.hardware.TalonFX;
 import frc.robot.drivers.MonitoredTalonFX;
 import frc.robot.utils.PhoenixUtil;
 import frc.robot.utils.TalonUtil;
 
 public class PivotShooterIOTalonFX implements PivotShooterIO {
 
-  private final MonitoredTalonFX pivotShooterMotor =
-      new MonitoredTalonFX(PivotShooterConstants.kPivotMotorID);
+  private final TalonFX pivotShooterMotor =
+      new TalonFX(PivotShooterConstants.kPivotMotorID);
   final PositionVoltage positionRequest = new PositionVoltage(0).withSlot(0);
   final MotionMagicVoltage motionMagicRequest = new MotionMagicVoltage(0).withSlot(0);
   private final VoltageOut voltageReq = new VoltageOut(0);
@@ -100,7 +101,7 @@ public class PivotShooterIOTalonFX implements PivotShooterIO {
   }
 
   @Override
-  public MonitoredTalonFX getMotor() {
+  public TalonFX getMotor() {
     return pivotShooterMotor;
   }
 
