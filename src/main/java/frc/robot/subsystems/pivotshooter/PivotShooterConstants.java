@@ -27,7 +27,7 @@ public final class PivotShooterConstants {
   public static final double kHalfWingPodiumPreset =
       6.55 / 138.33; // old value: 6.7 distance: -11.5275
   public static final double kPodiumLeftPreset = 6.5 / 138.33;
-  public static final double kPodiumRPreset = 6 / 138.33;
+  public static final double kPodiumRPreset = 5.5 / 138.33;
 
   public static final int kPivotMotorID = 12;
 
