@@ -308,21 +308,22 @@ public class RobotContainer {
   }
 
   private void configureRumble() {
-    if (FeatureFlags.kShooterEnabled) {
-      // When shooter is within 5 RPM of target, rumble operator controller
-      new Trigger(() -> shooter.isAtTargetVelocity())
-          .onTrue(
-              Commands.run(
-                  () -> {
-                    operator.getHID().setRumble(GenericHID.RumbleType.kBothRumble, 100);
-                  }))
-          .onFalse(
-              Commands.run(
-                  () -> {
-                    operator.getHID().setRumble(GenericHID.RumbleType.kBothRumble, 0);
-                  }));
-    }
+    // if (FeatureFlags.kShooterEnabled) {
+    // // When shooter is within 5 RPM of target, rumble operator controller
+    // new Trigger(() -> shooter.isAtTargetVelocity())
+    // .onTrue(
+    // Commands.run(
+    // () -> {
+    // operator.getHID().setRumble(GenericHID.RumbleType.kBothRumble, 100);
+    // }))
+    // .onFalse(
+    // Commands.run(
+    // () -> {
+    // operator.getHID().setRumble(GenericHID.RumbleType.kBothRumble, 0);
+    // }));
+    // }
     if (FeatureFlags.kIntakeEnabled) {
+
       // XXX: Or maybe I should re-use the debouncedBeamBreak trigger inside this
       // object
       new Trigger(() -> intake.isBeamBroken())
