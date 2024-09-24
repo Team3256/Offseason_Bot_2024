@@ -14,14 +14,12 @@ import com.ctre.phoenix6.controls.NeutralOut;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
-import frc.robot.drivers.MonitoredTalonFX;
 import frc.robot.utils.PhoenixUtil;
 import frc.robot.utils.TalonUtil;
 
 public class ClimbIOTalonFX implements ClimbIO {
 
-  private final TalonFX climbMotor =
-      new TalonFX(ClimbConstants.kLeftClimbMotorID);
+  private final TalonFX climbMotor = new TalonFX(ClimbConstants.kLeftClimbMotorID);
   private final PositionVoltage positionRequest = new PositionVoltage(0).withSlot(0);
   private final MotionMagicVoltage motionMagicRequest = new MotionMagicVoltage(0).withSlot(0);
   private final VoltageOut voltageReq = new VoltageOut(0);
