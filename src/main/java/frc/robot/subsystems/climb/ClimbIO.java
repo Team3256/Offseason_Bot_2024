@@ -8,6 +8,7 @@
 package frc.robot.subsystems.climb;
 
 import com.ctre.phoenix6.controls.VoltageOut;
+import com.ctre.phoenix6.hardware.TalonFX;
 import frc.robot.drivers.MonitoredTalonFX;
 import org.littletonrobotics.junction.AutoLog;
 
@@ -33,8 +34,8 @@ public interface ClimbIO {
 
   public default void zero() {}
 
-  public default MonitoredTalonFX getMotor() {
-    return new MonitoredTalonFX(0);
+  public default TalonFX getMotor() {
+    return new TalonFX(0);
   }
 
   public default VoltageOut getVoltageRequest() {

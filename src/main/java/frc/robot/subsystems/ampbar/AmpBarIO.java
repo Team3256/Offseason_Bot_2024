@@ -8,6 +8,7 @@
 package frc.robot.subsystems.ampbar;
 
 import com.ctre.phoenix6.controls.VoltageOut;
+import com.ctre.phoenix6.hardware.TalonFX;
 import frc.robot.drivers.MonitoredTalonFX;
 import org.littletonrobotics.junction.AutoLog;
 
@@ -34,8 +35,8 @@ public interface AmpBarIO {
 
   public default void setPosition(double position) {}
 
-  public default MonitoredTalonFX getMotor() {
-    return new MonitoredTalonFX(0);
+  public default TalonFX getMotor() {
+    return new TalonFX(0);
   }
 
   public default VoltageOut getVoltageRequest() {

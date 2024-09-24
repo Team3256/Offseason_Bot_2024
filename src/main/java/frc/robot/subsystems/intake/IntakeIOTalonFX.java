@@ -13,13 +13,14 @@ import com.ctre.phoenix6.controls.MotionMagicVelocityVoltage;
 import com.ctre.phoenix6.controls.NeutralOut;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
+import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.wpilibj.DigitalInput;
 import frc.robot.drivers.MonitoredTalonFX;
 import frc.robot.utils.PhoenixUtil;
 import frc.robot.utils.TalonUtil;
 
 public class IntakeIOTalonFX implements IntakeIO {
-  private final MonitoredTalonFX intakeMotor = new MonitoredTalonFX(IntakeConstants.kIntakeMotorID);
+  private final TalonFX intakeMotor = new TalonFX(IntakeConstants.kIntakeMotorID);
   final VelocityVoltage intakeRequest = new VelocityVoltage(0).withSlot(0);
   final MotionMagicVelocityVoltage motionMagicIntakeRequest =
       new MotionMagicVelocityVoltage(0).withSlot(0);
@@ -33,8 +34,8 @@ public class IntakeIOTalonFX implements IntakeIO {
   private final StatusSignal<Double> intakeMotorReferenceSlope =
       intakeMotor.getClosedLoopReferenceSlope();
 
-  private final MonitoredTalonFX passthroughMotor =
-      new MonitoredTalonFX(IntakeConstants.kPassthroughMotorID);
+  private final TalonFX passthroughMotor =
+      new TalonFX(IntakeConstants.kPassthroughMotorID);
   final VelocityVoltage passthroughRequest = new VelocityVoltage(0).withSlot(0);
   final MotionMagicVelocityVoltage motionMagicPassthroughRequest =
       new MotionMagicVelocityVoltage(0).withSlot(0);
@@ -152,7 +153,7 @@ public class IntakeIOTalonFX implements IntakeIO {
   }
 
   @Override
-  public MonitoredTalonFX getIntakeMotor() {
+  public TalonFX getIntakeMotor() {
     return intakeMotor;
   }
 
@@ -162,7 +163,7 @@ public class IntakeIOTalonFX implements IntakeIO {
   }
 
   @Override
-  public MonitoredTalonFX getPassthroughMotor() {
+  public TalonFX getPassthroughMotor() {
     return passthroughMotor;
   }
 

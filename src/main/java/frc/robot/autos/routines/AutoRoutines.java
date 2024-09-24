@@ -75,6 +75,9 @@ public class AutoRoutines {
     ChoreoTrajectory w1_center = Choreo.getTrajectory("W1-Center");
     ChoreoTrajectory w2_center = Choreo.getTrajectory("W2-Center");
     ChoreoTrajectory w3_center = Choreo.getTrajectory("W3-Center");
+    ChoreoTrajectory w1_w2 = Choreo.getTrajectory("W1-W2");
+    ChoreoTrajectory w2_w3 = Choreo.getTrajectory("W2-W3");
+    ChoreoTrajectory w3_c1 = Choreo.getTrajectory("W3-C1");
     Trigger noteOuttaken =
         new Trigger(() -> !intake.isBeamBroken()).debounce(RoutineConstants.beamBreakDelay);
 
@@ -82,16 +85,31 @@ public class AutoRoutines {
         AutoHelperCommands.resetPose(center_w1, swerve),
         AutoHelperCommands.preLoad(pivotShooter, intake, shooter, noteOuttaken),
         AutoHelperCommands.intakeIn(intake, swerve, pivotIntake, pivotShooter, center_w1),
-        AutoHelperCommands.shootSubwoofer(
-            intake, shooter, swerve, pivotShooter, w1_center, noteOuttaken),
-        AutoHelperCommands.intakeIn(intake, swerve, pivotIntake, pivotShooter, center_w2),
-        AutoHelperCommands.shootSubwoofer(
-            intake, shooter, swerve, pivotShooter, w2_center, noteOuttaken),
-        AutoHelperCommands.intakeIn(intake, swerve, pivotIntake, pivotShooter, center_w3),
-        AutoHelperCommands.shootSubwoofer(
-            intake, shooter, swerve, pivotShooter, w3_center, noteOuttaken),
-        AutoHelperCommands.intakeInDeadlineTraj(
-            intake, swerve, pivotIntake, pivotShooter, center_c1),
+        Commands.either(
+            AutoHelperCommands.shootSubwoofer(
+                    intake, shooter, swerve, pivotShooter, w1_center, noteOuttaken)
+                .andThen(
+                    AutoHelperCommands.intakeIn(
+                        intake, swerve, pivotIntake, pivotShooter, center_w2)),
+            AutoHelperCommands.intakeIn(intake, swerve, pivotIntake, pivotShooter, w1_w2),
+            intake::isBeamBroken),
+        Commands.either(
+            AutoHelperCommands.shootSubwoofer(
+                    intake, shooter, swerve, pivotShooter, w2_center, noteOuttaken)
+                .andThen(
+                    AutoHelperCommands.intakeIn(
+                        intake, swerve, pivotIntake, pivotShooter, center_w3)),
+            AutoHelperCommands.intakeIn(intake, swerve, pivotIntake, pivotShooter, w2_w3),
+            intake::isBeamBroken),
+        Commands.either(
+            AutoHelperCommands.shootSubwoofer(
+                    intake, shooter, swerve, pivotShooter, w3_center, noteOuttaken)
+                .andThen(
+                    AutoHelperCommands.intakeIn(
+                        intake, swerve, pivotIntake, pivotShooter, center_c1)),
+            AutoHelperCommands.intakeInDeadlineTraj(
+                intake, swerve, pivotIntake, pivotShooter, w3_c1),
+            intake::isBeamBroken),
         Commands.either(
             AutoHelperCommands.shootSubwoofer(
                 intake, shooter, swerve, pivotShooter, c1_center, noteOuttaken),

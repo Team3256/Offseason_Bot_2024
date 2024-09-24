@@ -14,14 +14,15 @@ import com.ctre.phoenix6.controls.NeutralOut;
 import com.ctre.phoenix6.controls.VelocityTorqueCurrentFOC;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
+import com.ctre.phoenix6.hardware.TalonFX;
 import frc.robot.Constants;
 import frc.robot.drivers.MonitoredTalonFX;
 import frc.robot.utils.PhoenixUtil;
 import frc.robot.utils.TalonUtil;
 
 public class ShooterIOTalonFX implements ShooterIO {
-  private final MonitoredTalonFX shooterMotor =
-      new MonitoredTalonFX(ShooterConstants.kShooterMotorID);
+  private final TalonFX shooterMotor =
+      new TalonFX(ShooterConstants.kShooterMotorID);
   final VelocityVoltage velocityRequest = new VelocityVoltage(0).withSlot(0);
   final MotionMagicVelocityVoltage motionMagicRequest =
       new MotionMagicVelocityVoltage(0).withSlot(0);
@@ -36,8 +37,8 @@ public class ShooterIOTalonFX implements ShooterIO {
   private final StatusSignal<Double> shooterMotorReferenceSlope =
       shooterMotor.getClosedLoopReferenceSlope();
 
-  private final MonitoredTalonFX shooterMotorFollower =
-      new MonitoredTalonFX(ShooterConstants.kShooterMotorFollowerID);
+  private final TalonFX shooterMotorFollower =
+      new TalonFX(ShooterConstants.kShooterMotorFollowerID);
   final VelocityVoltage velocityRequestFollower = new VelocityVoltage(0).withSlot(0);
   final MotionMagicVelocityVoltage motionMagicRequestFollower =
       new MotionMagicVelocityVoltage(0).withSlot(0);
@@ -154,7 +155,7 @@ public class ShooterIOTalonFX implements ShooterIO {
   }
 
   @Override
-  public MonitoredTalonFX getMotor() {
+  public TalonFX getMotor() {
     return shooterMotor;
   }
 

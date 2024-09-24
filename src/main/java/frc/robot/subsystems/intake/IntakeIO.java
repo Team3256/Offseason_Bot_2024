@@ -8,6 +8,7 @@
 package frc.robot.subsystems.intake;
 
 import com.ctre.phoenix6.controls.VoltageOut;
+import com.ctre.phoenix6.hardware.TalonFX;
 import frc.robot.drivers.MonitoredTalonFX;
 import org.littletonrobotics.junction.AutoLog;
 
@@ -41,16 +42,16 @@ public interface IntakeIO {
 
   public default void setPassthroughVelocity(double velocity) {}
 
-  public default MonitoredTalonFX getIntakeMotor() {
-    return new MonitoredTalonFX(0);
+  public default TalonFX getIntakeMotor() {
+    return new TalonFX(0);
   }
 
   public default VoltageOut getIntakeVoltageRequest() {
     return new VoltageOut(0);
   }
 
-  public default MonitoredTalonFX getPassthroughMotor() {
-    return new MonitoredTalonFX(0);
+  public default TalonFX getPassthroughMotor() {
+    return new TalonFX(0);
   }
 
   public default VoltageOut getPassthroughVoltageRequest() {
