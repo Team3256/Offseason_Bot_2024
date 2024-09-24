@@ -26,12 +26,15 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.robot.limelight.LimelightHelpers;
 import frc.robot.subsystems.vision.Vision;
+import frc.robot.utils.Tracer;
+
 import java.util.Optional;
 import java.util.function.Supplier;
 import org.littletonrobotics.junction.Logger;
 
 /**
- * Class that extends the Phoenix SwerveDrivetrain class and implements subsystem so it can be used
+ * Class that extends the Phoenix SwerveDrivetrain class and implements
+ * subsystem so it can be used
  * in command-based projects easily.
  */
 public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsystem {
@@ -39,15 +42,13 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
   private Notifier m_simNotifier = null;
   private double m_lastSimTime;
 
-  public final SwerveRequest.ApplyChassisSpeeds AutoRequest =
-      new SwerveRequest.ApplyChassisSpeeds()
-          .withDriveRequestType(
-              SwerveModule.DriveRequestType.Velocity); // TODO: VERY IMPORTANT TUNE THIS
+  public final SwerveRequest.ApplyChassisSpeeds AutoRequest = new SwerveRequest.ApplyChassisSpeeds()
+      .withDriveRequestType(
+          SwerveModule.DriveRequestType.Velocity); // TODO: VERY IMPORTANT TUNE THIS
 
-  public final SwerveRequest.RobotCentric NoteRequest =
-      new SwerveRequest.RobotCentric()
-          .withDriveRequestType(
-              SwerveModule.DriveRequestType.Velocity); // TODO: VERY IMPORTANT TUNE THIS
+  public final SwerveRequest.RobotCentric NoteRequest = new SwerveRequest.RobotCentric()
+      .withDriveRequestType(
+          SwerveModule.DriveRequestType.Velocity); // TODO: VERY IMPORTANT TUNE THIS
   /* Blue alliance sees forward as 0 degrees (toward red alliance wall) */
   private final Rotation2d BlueAlliancePerspectiveRotation = Rotation2d.fromDegrees(0);
   /* Red alliance sees forward as 180 degrees (toward blue alliance wall) */
@@ -98,16 +99,15 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
     m_lastSimTime = Utils.getCurrentTimeSeconds();
 
     /* Run simulation at a faster rate so PID gains behave more reasonably */
-    m_simNotifier =
-        new Notifier(
-            () -> {
-              final double currentTime = Utils.getCurrentTimeSeconds();
-              double deltaTime = currentTime - m_lastSimTime;
-              m_lastSimTime = currentTime;
+    m_simNotifier = new Notifier(
+        () -> {
+          final double currentTime = Utils.getCurrentTimeSeconds();
+          double deltaTime = currentTime - m_lastSimTime;
+          m_lastSimTime = currentTime;
 
-              /* use the measured time delta, get battery voltage from WPILib */
-              updateSimState(deltaTime, RobotController.getBatteryVoltage());
-            });
+          /* use the measured time delta, get battery voltage from WPILib */
+          updateSimState(deltaTime, RobotController.getBatteryVoltage());
+        });
     m_simNotifier.startPeriodic(kSimLoopPeriod);
   }
 
@@ -121,18 +121,15 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
         () -> this.getState().Pose, // Supplier of current robot pose
         this::seedFieldRelative, // Consumer for seeding pose against auto
         () -> this.getState().speeds,
-        (speeds) ->
-            this.setControl(
-                AutoRequest.withSpeeds(speeds)), // Consumer of ChassisSpeeds to drive the robot
+        (speeds) -> this.setControl(
+            AutoRequest.withSpeeds(speeds)), // Consumer of ChassisSpeeds to drive the robot
         new HolonomicPathFollowerConfig(
             SwerveConstants.autoTranslationalController,
             SwerveConstants.autoRotationalController,
             TunerConstants.kSpeedAt12VoltsMps,
             driveBaseRadius,
             new ReplanningConfig()),
-        () ->
-            DriverStation.getAlliance().orElse(DriverStation.Alliance.Blue)
-                == DriverStation.Alliance.Red, // Assume
+        () -> DriverStation.getAlliance().orElse(DriverStation.Alliance.Blue) == DriverStation.Alliance.Red, // Assume
         this); // Subsystem for requirements
   }
 
@@ -143,8 +140,7 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
         SwerveConstants.choreoTranslationController,
         SwerveConstants.choreoTranslationController,
         SwerveConstants.choreoRotationController,
-        ((ChassisSpeeds speeds) ->
-            this.setControl(new SwerveRequest.ApplyChassisSpeeds().withSpeeds(speeds))),
+        ((ChassisSpeeds speeds) -> this.setControl(new SwerveRequest.ApplyChassisSpeeds().withSpeeds(speeds))),
         () -> {
           Optional<Alliance> alliance = DriverStation.getAlliance();
           return alliance.isPresent() && alliance.get() == DriverStation.Alliance.Red;
@@ -183,10 +179,8 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
           0,
           0,
           0);
-      LimelightHelpers.PoseEstimate mt2 =
-          LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight");
-      if (Math.abs(this.getPigeon2().getRate())
-          > 720) // if our angular velocity is greater than 720 degrees per
+      LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight");
+      if (Math.abs(this.getPigeon2().getRate()) > 720) // if our angular velocity is greater than 720 degrees per
       // second, ignore vision
       // updates
       {
@@ -205,10 +199,22 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
   @Override
   public void periodic() {
     /* Periodically try to apply the operator perspective */
-    /* If we haven't applied the operator perspective before, then we should apply it regardless of DS state */
-    /* This allows us to correct the perspective in case the robot code restarts mid-match */
-    /* Otherwise, only check and apply the operator perspective if the DS is disabled */
-    /* This ensures driving behavior doesn't change until an explicit disable event occurs during testing*/
+    /*
+     * If we haven't applied the operator perspective before, then we should apply
+     * it regardless of DS state
+     */
+    /*
+     * This allows us to correct the perspective in case the robot code restarts
+     * mid-match
+     */
+    /*
+     * Otherwise, only check and apply the operator perspective if the DS is
+     * disabled
+     */
+    /*
+     * This ensures driving behavior doesn't change until an explicit disable event
+     * occurs during testing
+     */
     if (!hasAppliedOperatorPerspective || DriverStation.isDisabled()) {
       DriverStation.getAlliance()
           .ifPresent(
@@ -220,6 +226,36 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
                 hasAppliedOperatorPerspective = true;
               });
     }
-    updateVision();
+    Tracer.startTrace("SwervePeriodic");
+    Tracer.traceFunc("UpdateVision", this::updateVision);
+    Tracer.traceFunc("MotorLog", () -> {
+      Logger.recordOutput("SwervePose", this.getState().Pose);
+      Logger.recordOutput("Velocity", this.getState().speeds);
+      Logger.recordOutput("SwerveCurrentStates", this.getState().ModuleStates);
+      Logger.recordOutput("SwerveTargetStates", this.getState().ModuleTargets);
+      Logger.recordOutput("SwerveRotation", this.getRotation3d());
+      Logger.recordOutput("SwerveOdometry", this.m_odometry.getEstimatedPosition());
+      for (int i = 0; i < this.ModuleCount; ++i) {
+        Logger.recordOutput("SwerveModule" + i + "State", this.getState().ModuleStates[i]);
+        Logger.recordOutput("SwerveModule" + i + "Target", this.getState().ModuleTargets[i]);
+        Logger.recordOutput("SwerveModule" + i + "/DriveSpeed",
+            this.Modules[i].getDriveMotor().getVelocity().getValue());
+        Logger.recordOutput("SwerveModule" + i + "/DriveVoltage",
+            this.Modules[i].getDriveMotor().getMotorVoltage().getValue());
+        Logger.recordOutput("SwerveModule" + i + "/DriveCurrent",
+            this.Modules[i].getDriveMotor().getStatorCurrent().getValue());
+        Logger.recordOutput("SwerveModule" + i + "/DriveTemp",
+            this.Modules[i].getDriveMotor().getDeviceTemp().getValue());
+        Logger.recordOutput("SwerveModule" + i + "/SteerSpeed",
+            this.Modules[i].getSteerMotor().getVelocity().getValue());
+        Logger.recordOutput("SwerveModule" + i + "/SteerVoltage",
+            this.Modules[i].getSteerMotor().getMotorVoltage().getValue());
+        Logger.recordOutput("SwerveModule" + i + "/SteerCurrent",
+            this.Modules[i].getSteerMotor().getStatorCurrent().getValue());
+        Logger.recordOutput("SwerveModule" + i + "/SteerTemp",
+            this.Modules[i].getSteerMotor().getDeviceTemp().getValue());
+      }
+    });
+    Tracer.endTrace();
   }
 }
