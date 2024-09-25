@@ -8,6 +8,7 @@
 package frc.robot;
 
 public final class Constants {
+
   // We do not include the AdvKit in the main FeatureFlags class - since this is
   // in Robot.java and we'd prefer not to
   // have things break.
@@ -31,6 +32,7 @@ public final class Constants {
   public static final boolean kMonologueLazyLogging = false;
 
   public static final class FeatureFlags {
+
     // subsystems
 
     public static final boolean kIntakeEnabled = true;
@@ -51,6 +53,7 @@ public final class Constants {
     public static final boolean kDebugEnabled = false;
     public static final boolean DebugCommandEnabled = false;
     public static final boolean kRobotVizEnabled = true && !Robot.isReal();
+    public static final boolean kRumbleEnabled = true;
 
     public static boolean kPivotShooterEnabled = true;
   }

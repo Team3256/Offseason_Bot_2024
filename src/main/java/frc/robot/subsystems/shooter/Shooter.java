@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants;
 import frc.robot.utils.DisableSubsystem;
 import frc.robot.utils.LoggedTunableNumber;
+import frc.robot.utils.Util;
 import org.littletonrobotics.junction.Logger;
 
 public class Shooter extends DisableSubsystem {
@@ -28,6 +29,8 @@ public class Shooter extends DisableSubsystem {
       new LoggedTunableNumber("Shooter/FollowerVelocity");
 
   private final SysIdRoutine m_sysIdRoutine;
+
+  private double targetVelocity = 0;
 
   public Shooter(boolean disabled, ShooterIO shooterIO) {
     super(disabled);
@@ -74,9 +77,15 @@ public class Shooter extends DisableSubsystem {
         .finallyDo(shooterIO::off);
   }
 
+  // Only cares about main motor
+  public boolean isAtTargetVelocity() {
+    return Util.epsilonEquals(getVelocity(), targetVelocity, ShooterConstants.kVelocityTolerance);
+  }
+
   public Command setVelocity(double velocity, double followerVelocity) {
     return this.run(
             () -> {
+              targetVelocity = velocity;
               shooterIO.setShooterVelocity(velocity);
               shooterIO.setShooterFollowerVelocity(followerVelocity);
             })

@@ -63,6 +63,7 @@ import org.littletonrobotics.junction.Logger;
  * subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
+
   private SendableChooser<Command> autoChooser;
   /* Controllers */
   private final CommandXboxController driver = new CommandXboxController(0);
@@ -135,6 +136,9 @@ public class RobotContainer {
         && FeatureFlags.kPivotIntakeEnabled) {
       configureOperatorAutos();
     }
+    if (FeatureFlags.kRumbleEnabled) {
+      configureRumble();
+    }
 
     // Named commands
     {
@@ -151,7 +155,8 @@ public class RobotContainer {
       // new PivotSlamAndVoltage(pivotIntake).withTimeout(0.75),
       // new ScheduleCommand(new ShootSpeaker(shooter)))));
 
-      NamedCommands.registerCommand( // shoot preloaded note to speaker, use at match start
+      NamedCommands.registerCommand(
+          // shoot preloaded note to speaker, use at match start
           "preload speaker",
           new SequentialCommandGroup(
               // new PrintCommand("preload im outta blush"),
@@ -169,7 +174,8 @@ public class RobotContainer {
                       ShooterConstants.kShooterSubwooferRPS,
                       ShooterConstants.kShooterFollowerSubwooferRPS))));
 
-      NamedCommands.registerCommand( // shoot preloaded note to speaker, use at match start
+      NamedCommands.registerCommand(
+          // shoot preloaded note to speaker, use at match start
           "preload speaker amp side",
           new SequentialCommandGroup(
               // new PrintCommand("preload im outta blush"),
@@ -188,7 +194,8 @@ public class RobotContainer {
                       ShooterConstants.kShooterFollowerSubwooferRPS))
               // new PivotShooterSlamAndVoltage(pivotShooter)));
               ));
-      NamedCommands.registerCommand( // intake ground note, stow to feeder chamber
+      NamedCommands.registerCommand(
+          // intake ground note, stow to feeder chamber
           "intake sequence",
           new ParallelCommandGroup(
               pivotIntake.setPosition(PivotIntakeConstants.kPivotGroundPos),
@@ -198,10 +205,12 @@ public class RobotContainer {
               shooter.setVelocity(
                   ShooterConstants.kShooterSubwooferRPS,
                   ShooterConstants.kShooterFollowerSubwooferRPS)));
-      NamedCommands.registerCommand( // outtake note to feeder
+      NamedCommands.registerCommand(
+          // outtake note to feeder
           "outtake speaker",
           new SequentialCommandGroup(
-              // new ScheduleCommand(new PivotShootSubwoofer(pivotShooter)).asProxy(),
+              // new ScheduleCommand(new
+              // PivotShootSubwoofer(pivotShooter)).asProxy(),
               new ParallelCommandGroup(
                   intake
                       .setVoltage(
@@ -215,7 +224,8 @@ public class RobotContainer {
           "aim subwoofer", pivotShooter.setPosition(PivotShooterConstants.kSubWooferPreset));
       NamedCommands.registerCommand("shooter off", shooter.off());
 
-      NamedCommands.registerCommand( // outtake note to feeder
+      NamedCommands.registerCommand(
+          // outtake note to feeder
           "safety",
           new ParallelCommandGroup(
               intake.intakeIn().withTimeout(1),
@@ -223,40 +233,47 @@ public class RobotContainer {
                   ShooterConstants.kShooterAmpRPS, ShooterConstants.kShooterFollowerAmpRPS)));
       NamedCommands.registerCommand(
           "aim wing center",
-          pivotShooter.setPosition(
-              PivotShooterConstants.kWingNoteCenterPreset)); // wing note center
+          pivotShooter.setPosition(PivotShooterConstants.kWingNoteCenterPreset)); // wing note
+      // center
       NamedCommands.registerCommand(
           "aim wing side",
-          pivotShooter.setPosition(PivotShooterConstants.kWingNoteSidePreset)); // wing note side
+          pivotShooter.setPosition(PivotShooterConstants.kWingNoteSidePreset)); // wing
+      // note
+      // side
       NamedCommands.registerCommand(
           "aim wing far side",
-          pivotShooter.setPosition(
-              PivotShooterConstants.kWingNoteFarSidePreset)); // wing note far side
+          pivotShooter.setPosition(PivotShooterConstants.kWingNoteFarSidePreset)); // wing note far
+      // side
       NamedCommands.registerCommand(
           "aim truss",
-          pivotShooter.setPosition(
-              PivotShooterConstants.kTrussSourceSidePreset)); // truss source sid
+          pivotShooter.setPosition(PivotShooterConstants.kTrussSourceSidePreset)); // truss source
+      // sid
       NamedCommands.registerCommand(
           "aim half truss wing",
-          pivotShooter.setPosition(
-              PivotShooterConstants.kHalfWingPodiumPreset)); // half wing podium
+          pivotShooter.setPosition(PivotShooterConstants.kHalfWingPodiumPreset)); // half wing
+      // podium
       NamedCommands.registerCommand("zero pivot shooter", pivotShooter.slamAndPID());
 
-      NamedCommands.registerCommand( // rev shooter to speaker presets
+      NamedCommands.registerCommand(
+          // rev shooter to speaker presets
           "rev speaker",
           shooter.setVelocity(
               ShooterConstants.kShooterSubwooferRPS,
               ShooterConstants.kShooterFollowerSubwooferRPS));
-      NamedCommands.registerCommand( // rev shooter to amp presets
+      NamedCommands.registerCommand(
+          // rev shooter to amp presets
           "rev amp",
           shooter.setVelocity(
               ShooterConstants.kShooterAmpRPS, ShooterConstants.kShooterFollowerAmpRPS));
-      NamedCommands.registerCommand( // modular pivot down, use for sabotage
+      NamedCommands.registerCommand(
+          // modular pivot down, use for sabotage
           "pivot down", pivotIntake.setPosition(kPivotGroundPos).withTimeout(0.75));
       NamedCommands.registerCommand("stow", pivotIntake.slamAndPID().withTimeout(0.75));
-      NamedCommands.registerCommand( // intake with no stow, use for sabotage
+      NamedCommands.registerCommand(
+          // intake with no stow, use for sabotage
           "intake", intake.intakeIn());
-      NamedCommands.registerCommand( // shoot preloaded note to amp, use at match start
+      NamedCommands.registerCommand(
+          // shoot preloaded note to amp, use at match start
           "preload amp",
           new SequentialCommandGroup(
               pivotIntake.zero(),
@@ -293,6 +310,39 @@ public class RobotContainer {
         AutoRoutines.ampFeed1Sub1Pre1(drivetrain, intake, pivotIntake, pivotShooter, shooter));
     autoChooser.addOption("Box path", AutoRoutines.boxAuto(drivetrain));
     SmartDashboard.putData("Auto Chooser", autoChooser);
+  }
+
+  private void configureRumble() {
+    // if (FeatureFlags.kShooterEnabled) {
+    // // When shooter is within 5 RPM of target, rumble operator controller
+    // new Trigger(() -> shooter.isAtTargetVelocity())
+    // .onTrue(
+    // Commands.run(
+    // () -> {
+    // operator.getHID().setRumble(GenericHID.RumbleType.kBothRumble, 100);
+    // }))
+    // .onFalse(
+    // Commands.run(
+    // () -> {
+    // operator.getHID().setRumble(GenericHID.RumbleType.kBothRumble, 0);
+    // }));
+    // }
+    if (FeatureFlags.kIntakeEnabled) {
+
+      // XXX: Or maybe I should re-use the debouncedBeamBreak trigger inside this
+      // object
+      new Trigger(() -> intake.isBeamBroken())
+          .onTrue(
+              Commands.run(
+                  () -> {
+                    operator.getHID().setRumble(GenericHID.RumbleType.kBothRumble, 50);
+                  }))
+          .onFalse(
+              Commands.run(
+                  () -> {
+                    operator.getHID().setRumble(GenericHID.RumbleType.kBothRumble, 0);
+                  }));
+    }
   }
 
   private void configurePivotShooter() {
@@ -339,7 +389,7 @@ public class RobotContainer {
         .whileTrue(
             intake.setVoltage(
                 IntakeConstants.kIntakeIntakeVoltage, -IntakeConstants.kPassthroughIntakeVoltage));
-    //    driver.rightTrigger().whileTrue(intake.intakeIn());
+    // driver.rightTrigger().whileTrue(intake.intakeIn());
 
     // operator.povDown().onTrue(new IntakeOff(intake));
   }
@@ -367,7 +417,11 @@ public class RobotContainer {
                   climb.extendClimber()));
     } else {
       new Trigger(() -> Math.abs(operator.getRawAxis(secondaryAxis)) > 0.5)
-          .onTrue(new PrintCommand("u suck")); // old command waws dehook climb
+          .onTrue(new PrintCommand("u suck")); // old
+      // command
+      // waws
+      // dehook
+      // climb
     }
   }
 
@@ -376,30 +430,44 @@ public class RobotContainer {
   }
 
   public void configureSwerve() {
-
     // default command
-    drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
+    drivetrain.setDefaultCommand(
+        // Drivetrain will execute this command periodically
         drivetrain.applyRequest(
             () ->
                 drive
-                    .withVelocityX(driver.getLeftY() * MaxSpeed) // Drive forward with
+                    .withVelocityX(driver.getLeftY() * MaxSpeed) // Drive
+                    // forward
+                    // with
                     // negative Y (forward)
-                    .withVelocityY(
-                        driver.getLeftX() * MaxSpeed) // Drive left with negative X (left)
+                    .withVelocityY(driver.getLeftX() * MaxSpeed) // Drive
+                    // left
+                    // with
+                    // negative
+                    // X
+                    // (left)
                     .withRotationalRate(-driver.getRightX() * MaxAngularRate)));
 
-    /* Right stick absolute angle mode on trigger hold,
-    robot adjusts heading to the angle right joystick creates */
+    /*
+     * Right stick absolute angle mode on trigger hold,
+     * robot adjusts heading to the angle right joystick creates
+     */
     driver
         .rightTrigger()
         .whileTrue(
             drivetrain.applyRequest(
                 () ->
                     drive
-                        .withVelocityX(-driver.getLeftY() * MaxSpeed) // Drive forward with
+                        .withVelocityX(-driver.getLeftY() * MaxSpeed) // Drive
+                        // forward
+                        // with
                         // negative Y (forward)
-                        .withVelocityY(
-                            -driver.getLeftX() * MaxSpeed) // Drive left with negative X (left)
+                        .withVelocityY(-driver.getLeftX() * MaxSpeed) // Drive
+                        // left
+                        // with
+                        // negative
+                        // X
+                        // (left)
                         .withRotationalRate(-driver.getRightX() * MaxAngularRate)));
 
     azi.withTargetDirection(new Rotation2d(driver.getRightX(), driver.getRightY()));
@@ -419,7 +487,8 @@ public class RobotContainer {
     // Reset robot heading on button press
     driver.y().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
 
-    // Azimuth angle bindings. isRed == true for red alliance presets. isRed != true for blue.
+    // Azimuth angle bindings. isRed == true for red alliance presets. isRed != true
+    // for blue.
     if (isRed == true) {
       driver
           .rightBumper()
@@ -544,7 +613,6 @@ public class RobotContainer {
             "Robot is FMS-attached & debug mode is enabled. This is not recommended.", false);
       }
     } else {
-
     }
   }
 
