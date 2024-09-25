@@ -286,8 +286,11 @@ public class RobotContainer {
     autoChooser.addOption(
         "5 Note", AutoRoutines.center5Note(drivetrain, intake, shooter, pivotShooter, pivotIntake));
     autoChooser.addOption(
-        "2 Feed Pick Preload",
+        "2 Feed Pick Preload Amp",
         AutoRoutines.ampFeed2Preload(drivetrain, intake, pivotIntake, pivotShooter, shooter));
+    autoChooser.addOption(
+        "1 Feed 1 Score Preload Amp",
+        AutoRoutines.ampFeed1Sub1Pre1(drivetrain, intake, pivotIntake, pivotShooter, shooter));
     autoChooser.addOption("Box path", AutoRoutines.boxAuto(drivetrain));
     SmartDashboard.putData("Auto Chooser", autoChooser);
   }

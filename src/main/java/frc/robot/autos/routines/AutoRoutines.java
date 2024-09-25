@@ -149,6 +149,42 @@ public class AutoRoutines {
             intake, shooter, swerve, pivotShooter, amp_preload_center, noteOuttaken));
   }
 
+  public static Command ampFeed1Sub1Pre1(
+      CommandSwerveDrivetrain swerve,
+      Intake intake,
+      PivotIntake pivotIntake,
+      PivotShooter pivotShooter,
+      Shooter shooter) {
+    ChoreoTrajectory amp_c1 = Choreo.getTrajectory("Amp-C1");
+    ChoreoTrajectory c1_c2 = Choreo.getTrajectory("C1-C2");
+    ChoreoTrajectory c2_center = Choreo.getTrajectory("C2-Center_ampside");
+    ChoreoTrajectory center_amp = Choreo.getTrajectory("Center_ampside-Amp_preload");
+    ChoreoTrajectory amp_center = Choreo.getTrajectory("Amp_preload-Center");
+    ChoreoTrajectory c2_amp_preload = Choreo.getTrajectory("C2-Amp_preload");
+    ChoreoTrajectory amp_preload_center = Choreo.getTrajectory("Amp_preload-center");
+    Trigger noteOuttaken =
+        new Trigger(() -> !intake.isBeamBroken()).debounce(RoutineConstants.beamBreakDelay);
+
+    return Commands.sequence(
+        AutoHelperCommands.resetPose(amp_c1, swerve),
+        AutoHelperCommands.dropPreloadAndFeed(
+            shooter, pivotIntake, pivotShooter, intake, swerve, amp_c1, noteOuttaken),
+        AutoHelperCommands.intakeIn(intake, swerve, pivotIntake, pivotShooter, c1_c2),
+        Commands.either(
+            Commands.sequence(
+                AutoHelperCommands.shootSubwoofer(
+                    intake, shooter, swerve, pivotShooter, c2_center, noteOuttaken),
+                AutoHelperCommands.intakeIn(intake, swerve, pivotIntake, pivotShooter, center_amp),
+                AutoHelperCommands.shootSubwoofer(
+                    intake, shooter, swerve, pivotShooter, amp_center, noteOuttaken)),
+            Commands.sequence(
+                AutoHelperCommands.intakeIn(
+                    intake, swerve, pivotIntake, pivotShooter, c2_amp_preload),
+                AutoHelperCommands.shootSubwoofer(
+                    intake, shooter, swerve, pivotShooter, amp_preload_center, noteOuttaken)),
+            intake::isBeamBroken));
+  }
+
   private static class AutoHelperCommands {
     public static Command dropPreloadAndFeed(
         Shooter shooter,
