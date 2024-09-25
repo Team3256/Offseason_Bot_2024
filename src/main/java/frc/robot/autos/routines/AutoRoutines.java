@@ -55,7 +55,7 @@ public class AutoRoutines {
                         intake.setPassthroughVoltage(IntakeConstants.kPassthroughIntakeVoltage))));
   }
 
-  public static Command center5Note(
+  public static Command center5Note( // if we use this during comp we're cooked
       CommandSwerveDrivetrain swerve,
       Intake intake,
       Shooter shooter,
