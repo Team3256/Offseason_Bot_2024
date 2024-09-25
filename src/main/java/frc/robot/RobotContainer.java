@@ -334,11 +334,13 @@ public class RobotContainer {
               Commands.run(
                   () -> {
                     operator.getHID().setRumble(GenericHID.RumbleType.kBothRumble, 50);
+                    driver.getHID().setRumble(GenericHID.RumbleType.kBothRumble, 50);
                   }))
           .onFalse(
               Commands.run(
                   () -> {
                     operator.getHID().setRumble(GenericHID.RumbleType.kBothRumble, 0);
+                    driver.getHID().setRumble(GenericHID.RumbleType.kBothRumble, 0);
                   }));
     }
   }
