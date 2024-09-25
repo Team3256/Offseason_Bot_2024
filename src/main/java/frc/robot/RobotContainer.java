@@ -284,8 +284,10 @@ public class RobotContainer {
     autoChooser = new SendableChooser<>();
     autoChooser.setDefaultOption("Do Nothing", new InstantCommand());
     autoChooser.addOption(
-        "5 Note test",
-        AutoRoutines.center5Note(drivetrain, intake, shooter, pivotShooter, pivotIntake));
+        "5 Note", AutoRoutines.center5Note(drivetrain, intake, shooter, pivotShooter, pivotIntake));
+    autoChooser.addOption(
+        "2 Feed Pick Preload",
+        AutoRoutines.ampFeed2Preload(drivetrain, intake, pivotIntake, pivotShooter, shooter));
     autoChooser.addOption("Box path", AutoRoutines.boxAuto(drivetrain));
     SmartDashboard.putData("Auto Chooser", autoChooser);
   }

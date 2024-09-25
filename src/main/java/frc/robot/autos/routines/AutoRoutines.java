@@ -36,9 +36,7 @@ public class AutoRoutines {
       Intake intake,
       Shooter shooter,
       PivotShooter pivotShooter,
-      PivotIntake
-          pivotIntake) { // This is an example on how to make a choreo auto, I have no clue if its
-    // gonna work
+      PivotIntake pivotIntake) {
     return Commands.sequence(
         swerve
             .runChoreoTraj(Choreo.getTrajectory("AmpSingleNote.1"))
@@ -128,7 +126,87 @@ public class AutoRoutines {
             intake::isBeamBroken));
   }
 
+  public static Command ampFeed2Preload(
+      CommandSwerveDrivetrain swerve,
+      Intake intake,
+      PivotIntake pivotIntake,
+      PivotShooter pivotShooter,
+      Shooter shooter) {
+    ChoreoTrajectory amp_c1 = Choreo.getTrajectory("Amp-C1");
+    ChoreoTrajectory c1_c2_feed = Choreo.getTrajectory("C1-C2_feed");
+    ChoreoTrajectory c2_amp_preload = Choreo.getTrajectory("C2-Amp_preload");
+    ChoreoTrajectory amp_preload_center = Choreo.getTrajectory("Amp_preload-center");
+    Trigger noteOuttaken =
+        new Trigger(() -> !intake.isBeamBroken()).debounce(RoutineConstants.beamBreakDelay);
+
+    return Commands.sequence(
+        AutoHelperCommands.resetPose(amp_c1, swerve),
+        AutoHelperCommands.dropPreloadAndFeed(
+            shooter, pivotIntake, pivotShooter, intake, swerve, amp_c1, noteOuttaken),
+        AutoHelperCommands.feed(shooter, pivotIntake, pivotShooter, intake, swerve, c1_c2_feed),
+        AutoHelperCommands.intakeIn(intake, swerve, pivotIntake, pivotShooter, c2_amp_preload),
+        AutoHelperCommands.shootSubwoofer(
+            intake, shooter, swerve, pivotShooter, amp_preload_center, noteOuttaken));
+  }
+
   private static class AutoHelperCommands {
+    public static Command dropPreloadAndFeed(
+        Shooter shooter,
+        PivotIntake pivotIntake,
+        PivotShooter pivotShooter,
+        Intake intake,
+        CommandSwerveDrivetrain swerve,
+        ChoreoTrajectory traj,
+        Trigger noteOuttaken) {
+      return swerve
+          .runChoreoTraj(traj)
+          .andThen(Commands.waitSeconds(1))
+          .deadlineWith(
+              intake
+                  .setPassthroughVoltage(-IntakeConstants.kPassthroughIntakeVoltage)
+                  .until(noteOuttaken.debounce(0.5))
+                  .andThen(
+                      Commands.parallel(
+                          intake.setVoltage(
+                              IntakeConstants.kIntakeIntakeVoltage,
+                              IntakeConstants.kPassthroughIntakeVoltage),
+                          pivotShooter.setPosition(
+                              PivotShooterConstants.kFeederPreset
+                                  * PivotShooterConstants.kPivotMotorGearing),
+                          shooter.setVelocity(
+                              ShooterConstants.kShooterFeederRPS,
+                              ShooterConstants.kShooterFollowerFeederRPS),
+                          pivotIntake.setPosition(
+                              PivotIntakeConstants.kPivotGroundPos
+                                  * PivotIntakeConstants.kPivotMotorGearing))));
+    }
+
+    public static Command feed(
+        Shooter shooter,
+        PivotIntake pivotIntake,
+        PivotShooter pivotShooter,
+        Intake intake,
+        CommandSwerveDrivetrain swerve,
+        ChoreoTrajectory traj) {
+      return swerve
+          .runChoreoTraj(traj)
+          .andThen(Commands.waitSeconds(1))
+          .deadlineWith(
+              Commands.parallel(
+                  intake.setVoltage(
+                      IntakeConstants.kIntakeIntakeVoltage,
+                      IntakeConstants.kPassthroughIntakeVoltage),
+                  pivotShooter.setPosition(
+                      PivotShooterConstants.kFeederPreset
+                          * PivotShooterConstants.kPivotMotorGearing),
+                  shooter.setVelocity(
+                      ShooterConstants.kShooterFeederRPS,
+                      ShooterConstants.kShooterFollowerFeederRPS),
+                  pivotIntake.setPosition(
+                      PivotIntakeConstants.kPivotGroundPos
+                          * PivotIntakeConstants.kPivotMotorGearing)));
+    }
+
     public static Command preLoad(
         PivotShooter pivotShooter, Intake intake, Shooter shooter, Trigger noteOuttaken) {
       return Commands.parallel(
@@ -176,7 +254,7 @@ public class AutoRoutines {
               pivotShooter.setPosition(0),
               pivotIntake.setPosition(
                   PivotIntakeConstants.kPivotGroundPos * PivotIntakeConstants.kPivotMotorGearing))
-          .withTimeout(3);
+          .withTimeout(5);
     }
 
     public static Command intakeIn(
@@ -219,7 +297,7 @@ public class AutoRoutines {
               pivotShooter.setPosition(
                   PivotShooterConstants.kSubWooferPreset
                       * PivotShooterConstants.kPivotMotorGearing))
-          .until(noteOuttaken.debounce(1))
+          .until(noteOuttaken.debounce(0.5))
           .withTimeout(4);
     }
   }
