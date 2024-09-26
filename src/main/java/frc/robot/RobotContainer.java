@@ -306,6 +306,9 @@ public class RobotContainer {
     autoChooser.addOption(
         "5 Note test",
         AutoRoutines.center5Note(drivetrain, intake, shooter, pivotShooter, pivotIntake));
+    autoChooser.addOption(
+        "Diagonal seep",
+        AutoRoutines.diagSweep(intake, shooter, drivetrain, pivotShooter, pivotIntake));
     autoChooser.addOption("Box path", AutoRoutines.boxAuto(drivetrain));
     SmartDashboard.putData("Auto Chooser", autoChooser);
   }

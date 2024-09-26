@@ -128,6 +128,24 @@ public class AutoRoutines {
             intake::isBeamBroken));
   }
 
+  public static Command diagSweep(
+      Intake intake,
+      Shooter shooter,
+      CommandSwerveDrivetrain swerve,
+      PivotShooter pivotShooter,
+      PivotIntake pivotIntake) {
+    ChoreoTrajectory diagSweep = Choreo.getTrajectory("DiagSweep");
+    return Commands.deadline(
+        swerve.runChoreoTraj(diagSweep),
+        // Or maybe use position
+        pivotIntake.slamZero(),
+        intake.setPassthroughVoltage(IntakeConstants.kPassthroughIntakeVoltage),
+        shooter.setVelocity(
+            ShooterConstants.kShooterSubwooferRPS, ShooterConstants.kShooterFollowerSubwooferRPS),
+        pivotShooter.setPosition(
+            PivotShooterConstants.kSubWooferPreset * PivotShooterConstants.kPivotMotorGearing));
+  }
+
   private static class AutoHelperCommands {
     public static Command preLoad(
         PivotShooter pivotShooter, Intake intake, Shooter shooter, Trigger noteOuttaken) {
