@@ -81,6 +81,9 @@ public class RobotContainer {
       TunerConstants.kSpeedAt12VoltsMps; // kSpeedAt12VoltsMps desired top speed
   private double MaxAngularRate = 1.5 * Math.PI; // My drivetrain
 
+  private double SlowMaxSpeed = MaxSpeed * 0.3;
+  private double SlowMaxAngular = MaxAngularRate * 0.3;
+
   private final SwerveRequest.FieldCentric drive =
       new SwerveRequest.FieldCentric()
           .withDeadband(Constants.stickDeadband * MaxSpeed)
@@ -335,11 +338,13 @@ public class RobotContainer {
               Commands.run(
                   () -> {
                     operator.getHID().setRumble(GenericHID.RumbleType.kBothRumble, 50);
+                    driver.getHID().setRumble(GenericHID.RumbleType.kBothRumble, 50);
                   }))
           .onFalse(
               Commands.run(
                   () -> {
                     operator.getHID().setRumble(GenericHID.RumbleType.kBothRumble, 0);
+                    driver.getHID().setRumble(GenericHID.RumbleType.kBothRumble, 0);
                   }));
     }
   }
@@ -435,16 +440,8 @@ public class RobotContainer {
         drivetrain.applyRequest(
             () ->
                 drive
-                    .withVelocityX(driver.getLeftY() * MaxSpeed) // Drive
-                    // forward
-                    // with
-                    // negative Y (forward)
-                    .withVelocityY(driver.getLeftX() * MaxSpeed) // Drive
-                    // left
-                    // with
-                    // negative
-                    // X
-                    // (left)
+                    .withVelocityX(driver.getLeftY() * MaxSpeed) // Drive -y is forward
+                    .withVelocityY(driver.getLeftX() * MaxSpeed) // Drive -x is left
                     .withRotationalRate(-driver.getRightX() * MaxAngularRate)));
 
     /*
@@ -457,16 +454,8 @@ public class RobotContainer {
             drivetrain.applyRequest(
                 () ->
                     drive
-                        .withVelocityX(-driver.getLeftY() * MaxSpeed) // Drive
-                        // forward
-                        // with
-                        // negative Y (forward)
-                        .withVelocityY(-driver.getLeftX() * MaxSpeed) // Drive
-                        // left
-                        // with
-                        // negative
-                        // X
-                        // (left)
+                        .withVelocityX(-driver.getLeftY() * MaxSpeed) // Drive -y is forward
+                        .withVelocityY(-driver.getLeftX() * MaxSpeed) // Drive -x is left
                         .withRotationalRate(-driver.getRightX() * MaxAngularRate)));
 
     azi.withTargetDirection(new Rotation2d(driver.getRightX(), driver.getRightY()));
