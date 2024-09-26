@@ -144,7 +144,10 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
         SwerveConstants.choreoTranslationController,
         SwerveConstants.choreoRotationController,
         ((ChassisSpeeds speeds) ->
-            this.setControl(new SwerveRequest.ApplyChassisSpeeds().withSpeeds(speeds))),
+            this.setControl(
+                new SwerveRequest.ApplyChassisSpeeds()
+                    .withSpeeds(speeds)
+                    .withDriveRequestType(SwerveModule.DriveRequestType.Velocity))),
         () -> {
           Optional<Alliance> alliance = DriverStation.getAlliance();
           return alliance.isPresent() && alliance.get() == DriverStation.Alliance.Red;

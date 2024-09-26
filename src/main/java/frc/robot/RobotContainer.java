@@ -54,7 +54,6 @@ import frc.robot.subsystems.swerve.TunerConstants;
 import frc.robot.subsystems.swerve.requests.SwerveFieldCentricFacingAngle;
 import frc.robot.subsystems.vision.Vision;
 import frc.robot.subsystems.vision.VisionIOLimelight;
-import org.littletonrobotics.junction.Logger;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -426,7 +425,7 @@ public class RobotContainer {
   }
 
   public void setAllianceCol(boolean col) {
-    isRed = col;
+    isRed = !col;
   }
 
   public void configureSwerve() {
@@ -479,10 +478,9 @@ public class RobotContainer {
             drivetrain.applyRequest(
                 () ->
                     drive
-                        .withVelocityX(-driver.getLeftY() * (MaxSpeed * 0.3))
-                        .withVelocityY(-driver.getLeftX() * (MaxSpeed * 0.3))
-                        .withRotationalRate(
-                            -driver.getLeftTriggerAxis() * (MaxAngularRate * 0.3))));
+                        .withVelocityX(driver.getLeftY() * (MaxSpeed * 0.3))
+                        .withVelocityY(driver.getLeftX() * (MaxSpeed * 0.3))
+                        .withRotationalRate(-driver.getRightX() * (MaxAngularRate * 0.3))));
 
     // Reset robot heading on button press
     driver.y().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
@@ -622,6 +620,6 @@ public class RobotContainer {
 
   public void periodic(double dt) {
     XboxStalker.stalk(driver, operator);
-    Logger.recordOutput("Note pose", vision.getNotePose(drivetrain.getState().Pose));
+    System.out.println(vision.getCenterLimelightY());
   }
 }

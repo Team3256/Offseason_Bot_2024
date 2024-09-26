@@ -167,6 +167,11 @@ public class AutoRoutines {
 
     return Commands.sequence(
         AutoHelperCommands.resetPose(amp_c1, swerve),
+        //        swerve.runChoreoTraj(amp_c1),
+        //        swerve.runChoreoTraj(c1_c2),
+        //        swerve.runChoreoTraj(c2_center),
+        //        swerve.runChoreoTraj(center_amp),
+        //    swerve.runChoreoTraj(amp_center));
         AutoHelperCommands.dropPreloadAndFeed(
             shooter, pivotIntake, pivotShooter, intake, swerve, amp_c1, noteOuttaken),
         AutoHelperCommands.intakeIn(intake, swerve, pivotIntake, pivotShooter, c1_c2),
@@ -229,9 +234,8 @@ public class AutoRoutines {
           .andThen(Commands.waitSeconds(1))
           .deadlineWith(
               Commands.parallel(
-                  intake.setVoltage(
-                      IntakeConstants.kIntakeIntakeVoltage,
-                      IntakeConstants.kPassthroughIntakeVoltage),
+                  intake.setIntakeVelocityPassthroughVoltage(
+                      80, IntakeConstants.kPassthroughIntakeVoltage),
                   pivotShooter.setPosition(
                       PivotShooterConstants.kFeederPreset
                           * PivotShooterConstants.kPivotMotorGearing),
