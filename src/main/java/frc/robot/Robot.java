@@ -63,6 +63,7 @@ public class Robot extends LoggedRobot implements Logged {
     // + Constants.kOverridenBrownOutVoltage
     // + " (current battery voltage is "
     // + RobotController.getBatteryVoltage()
+    // + RobotController.getBatteryVoltage()
     // + ")");
     // if (Constants.kOverridenBrownOutVoltage <= 5.0) {
     // System.out.println("**** BROWNOUT VOLTAGE LESS THAN 5 VOLTS! DO NOT DO
@@ -96,8 +97,8 @@ public class Robot extends LoggedRobot implements Logged {
       Logger.addDataReceiver(new NT4PublisherNoFMS()); // Publish data to NetworkTables
       new PowerDistribution(
           1, PowerDistribution.ModuleType.kRev); // Enables power distribution logging
-      dmesgSource = new FileConsoleSource("/var/log/dmesg");
-      kernelMessagesSource = new FileConsoleSource("/var/log/messages");
+      //      dmesgSource = new FileConsoleSource("/var/log/dmesg");
+      //      kernelMessagesSource = new FileConsoleSource("/var/log/messages");
     } else if (isSimulation()) {
 
       // DriverStation.silenceJoystickConnectionWarning(true);

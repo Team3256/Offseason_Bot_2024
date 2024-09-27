@@ -108,10 +108,14 @@ public class Intake extends DisableSubsystem {
     return this.runOnce(intakeIO::off);
   }
 
+  public Command setIntakeVelocityPassthroughVoltage(double velocity, double voltage) {
+    return setIntakeVelocity(velocity).andThen(setPassthroughVoltage(voltage));
+  }
+
   public Command intakeIn() {
     return this.run(
             () -> {
-              intakeIO.setIntakeVoltage(IntakeConstants.kIntakeIntakeVoltage);
+              intakeIO.setIntakeVelocity(80);
               intakeIO.setPassthroughVoltage(IntakeConstants.kPassthroughIntakeVoltage);
             })
         .until(debouncedBeamBreak)

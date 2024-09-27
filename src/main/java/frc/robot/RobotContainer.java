@@ -27,7 +27,6 @@ import edu.wpi.first.wpilibj2.command.*;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.FeatureFlags;
-import frc.robot.autos.commands.IntakeSequence;
 import frc.robot.autos.routines.AutoRoutines;
 import frc.robot.helpers.XboxStalker;
 import frc.robot.subsystems.ampbar.AmpBar;
@@ -54,7 +53,6 @@ import frc.robot.subsystems.swerve.TunerConstants;
 import frc.robot.subsystems.swerve.requests.SwerveFieldCentricFacingAngle;
 import frc.robot.subsystems.vision.Vision;
 import frc.robot.subsystems.vision.VisionIOLimelight;
-import org.littletonrobotics.junction.Logger;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -95,8 +93,8 @@ public class RobotContainer {
 
   private SwerveFieldCentricFacingAngle azi =
       new SwerveFieldCentricFacingAngle()
-          .withDeadband(MaxSpeed * .1) // TODO: update deadband
-          .withRotationalDeadband(MaxAngularRate * .1) // TODO: update deadband
+          .withDeadband(MaxSpeed * .15) // TODO: update deadband
+          .withRotationalDeadband(MaxAngularRate * .15) // TODO: update deadband
           .withHeadingController(SwerveConstants.azimuthController)
           .withDriveRequestType(SwerveModule.DriveRequestType.Velocity);
 
@@ -304,8 +302,15 @@ public class RobotContainer {
     autoChooser = new SendableChooser<>();
     autoChooser.setDefaultOption("Do Nothing", new InstantCommand());
     autoChooser.addOption(
-        "5 Note test",
-        AutoRoutines.center5Note(drivetrain, intake, shooter, pivotShooter, pivotIntake));
+        "5 Note",
+        AutoRoutines.center5Note(drivetrain, intake, shooter, pivotShooter, pivotIntake, vision));
+    autoChooser.addOption(
+        "Note Detection",
+        AutoRoutines.noteDetectionRush(
+            drivetrain, intake, pivotIntake, pivotShooter, shooter, vision));
+    autoChooser.addOption(
+        "1 Feed 1 Score Preload Amp",
+        AutoRoutines.ampFeed1Sub1Pre1(drivetrain, intake, pivotIntake, pivotShooter, shooter));
     autoChooser.addOption("Box path", AutoRoutines.boxAuto(drivetrain));
     SmartDashboard.putData("Auto Chooser", autoChooser);
   }
@@ -426,8 +431,8 @@ public class RobotContainer {
   }
 
   public void setAllianceCol(boolean col) {
-    isRed = col;
-  }
+    isRed = false;
+  } // change back to boolean col before fri matches
 
   public void configureSwerve() {
     // default command
@@ -450,8 +455,8 @@ public class RobotContainer {
             drivetrain.applyRequest(
                 () ->
                     drive
-                        .withVelocityX(-driver.getLeftY() * MaxSpeed) // Drive -y is forward
-                        .withVelocityY(-driver.getLeftX() * MaxSpeed) // Drive -x is left
+                        .withVelocityX(driver.getLeftY() * MaxSpeed) // Drive -y is forward
+                        .withVelocityY(driver.getLeftX() * MaxSpeed) // Drive -x is left
                         .withRotationalRate(-driver.getRightX() * MaxAngularRate)));
 
     azi.withTargetDirection(new Rotation2d(driver.getRightX(), driver.getRightY()));
@@ -463,9 +468,9 @@ public class RobotContainer {
             drivetrain.applyRequest(
                 () ->
                     drive
-                        .withVelocityX(-driver.getLeftY() * SlowMaxSpeed)
-                        .withVelocityY(-driver.getLeftX() * SlowMaxSpeed)
-                        .withRotationalRate(-driver.getRightX() * SlowMaxAngular)));
+                        .withVelocityX(driver.getLeftY() * (MaxSpeed * 0.25))
+                        .withVelocityY(driver.getLeftX() * (MaxSpeed * 0.25))
+                        .withRotationalRate(-driver.getRightX() * (MaxAngularRate * 0.2))));
 
     // Reset robot heading on button press
     driver.y().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
@@ -552,7 +557,7 @@ public class RobotContainer {
   }
 
   private void configureOperatorAutos() {
-    operator.a().onTrue(new IntakeSequence(intake, pivotIntake, pivotShooter, shooter, ampbar));
+    operator.a().whileTrue(drivetrain.pidToNote(vision));
     operator
         .povUp()
         .onTrue(
@@ -605,6 +610,5 @@ public class RobotContainer {
 
   public void periodic(double dt) {
     XboxStalker.stalk(driver, operator);
-    Logger.recordOutput("Note pose", vision.getNotePose(drivetrain.getState().Pose));
   }
 }

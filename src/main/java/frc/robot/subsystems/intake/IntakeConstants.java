@@ -30,7 +30,7 @@ public final class IntakeConstants {
 
   public static final TalonFXConfiguration intakeMotorConfig =
       new TalonFXConfiguration()
-          .withSlot0(new Slot0Configs().withKS(0).withKV(0.1).withKP(1).withKI(0).withKD(0))
+          .withSlot0(new Slot0Configs().withKS(0).withKV(0.13).withKP(0.2).withKI(0).withKD(0))
           .withMotorOutput(
               new MotorOutputConfigs()
                   .withNeutralMode(NeutralModeValue.Brake)
