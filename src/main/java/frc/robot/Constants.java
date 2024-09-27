@@ -23,8 +23,8 @@ public final class Constants {
   public static final double kOverridenBrownOutVoltage = 5.6;
 
   /* Drive configuration */
-  public static final double stickDeadband = 0.1;
-  public static final double rotationalDeadband = 0.1;
+  public static final double stickDeadband = 0.15;
+  public static final double rotationalDeadband = 0.15;
   public static final double azimuthStickDeadband = 0.3;
   // Logging
   public static final int kLogLinesBeforeFlush = 100;

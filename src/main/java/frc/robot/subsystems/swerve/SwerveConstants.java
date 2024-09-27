@@ -13,7 +13,7 @@ import edu.wpi.first.math.controller.PIDController;
 
 public final class SwerveConstants {
   public static final PhoenixPIDController azimuthController =
-      new PhoenixPIDController(5, 0, 0); // you shouldn't have a I or D value TODO: tune
+      new PhoenixPIDController(8, 0, 0); // you shouldn't have a I or D value TODO: tune
   public static final PIDConstants autoRotationalController =
       new PIDConstants(6, azimuthController.getI(), azimuthController.getD()); // 6
   public static final PIDConstants autoTranslationalController = new PIDConstants(6, 0, 0); // 8

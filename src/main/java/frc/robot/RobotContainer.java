@@ -94,8 +94,8 @@ public class RobotContainer {
 
   private SwerveFieldCentricFacingAngle azi =
       new SwerveFieldCentricFacingAngle()
-          .withDeadband(MaxSpeed * .1) // TODO: update deadband
-          .withRotationalDeadband(MaxAngularRate * .1) // TODO: update deadband
+          .withDeadband(MaxSpeed * .15) // TODO: update deadband
+          .withRotationalDeadband(MaxAngularRate * .15) // TODO: update deadband
           .withHeadingController(SwerveConstants.azimuthController)
           .withDriveRequestType(SwerveModule.DriveRequestType.Velocity);
 
@@ -303,10 +303,10 @@ public class RobotContainer {
     autoChooser = new SendableChooser<>();
     autoChooser.setDefaultOption("Do Nothing", new InstantCommand());
     autoChooser.addOption(
-        "5 Note", AutoRoutines.center5Note(drivetrain, intake, shooter, pivotShooter, pivotIntake));
+        "5 Note", AutoRoutines.center5Note(drivetrain, intake, shooter, pivotShooter, pivotIntake, vision));
     autoChooser.addOption(
-        "2 Feed Pick Preload Amp",
-        AutoRoutines.ampFeed2Preload(drivetrain, intake, pivotIntake, pivotShooter, shooter));
+        "Note Detection",
+        AutoRoutines.noteDetectionRush(drivetrain, intake, pivotIntake, pivotShooter, shooter, vision));
     autoChooser.addOption(
         "1 Feed 1 Score Preload Amp",
         AutoRoutines.ampFeed1Sub1Pre1(drivetrain, intake, pivotIntake, pivotShooter, shooter));
@@ -430,8 +430,8 @@ public class RobotContainer {
   }
 
   public void setAllianceCol(boolean col) {
-    isRed = !col;
-  }
+    isRed = false;
+  } // change back to boolean col before fri matches
 
   public void configureSwerve() {
     // default command
@@ -454,8 +454,8 @@ public class RobotContainer {
             drivetrain.applyRequest(
                 () ->
                     drive
-                        .withVelocityX(-driver.getLeftY() * MaxSpeed) // Drive -y is forward
-                        .withVelocityY(-driver.getLeftX() * MaxSpeed) // Drive -x is left
+                        .withVelocityX(driver.getLeftY() * MaxSpeed) // Drive -y is forward
+                        .withVelocityY(driver.getLeftX() * MaxSpeed) // Drive -x is left
                         .withRotationalRate(-driver.getRightX() * MaxAngularRate)));
 
     azi.withTargetDirection(new Rotation2d(driver.getRightX(), driver.getRightY()));
@@ -467,9 +467,9 @@ public class RobotContainer {
             drivetrain.applyRequest(
                 () ->
                     drive
-                        .withVelocityX(driver.getLeftY() * (MaxSpeed * 0.3))
-                        .withVelocityY(driver.getLeftX() * (MaxSpeed * 0.3))
-                        .withRotationalRate(-driver.getRightX() * (MaxAngularRate * 0.3))));
+                        .withVelocityX(driver.getLeftY() * (MaxSpeed * 0.25))
+                        .withVelocityY(driver.getLeftX() * (MaxSpeed * 0.25))
+                        .withRotationalRate(-driver.getRightX() * (MaxAngularRate * 0.2))));
 
     // Reset robot heading on button press
     driver.y().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
@@ -556,7 +556,7 @@ public class RobotContainer {
   }
 
   private void configureOperatorAutos() {
-    operator.a().onTrue(new IntakeSequence(intake, pivotIntake, pivotShooter, shooter, ampbar));
+    operator.a().whileTrue(drivetrain.pidToNote(vision));
     operator
         .povUp()
         .onTrue(
@@ -609,6 +609,6 @@ public class RobotContainer {
 
   public void periodic(double dt) {
     XboxStalker.stalk(driver, operator);
-    System.out.println(vision.getCenterLimelightY());
+
   }
 }
