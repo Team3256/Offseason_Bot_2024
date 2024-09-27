@@ -27,7 +27,6 @@ import edu.wpi.first.wpilibj2.command.*;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.FeatureFlags;
-import frc.robot.autos.commands.IntakeSequence;
 import frc.robot.autos.routines.AutoRoutines;
 import frc.robot.helpers.XboxStalker;
 import frc.robot.subsystems.ampbar.AmpBar;
@@ -303,10 +302,12 @@ public class RobotContainer {
     autoChooser = new SendableChooser<>();
     autoChooser.setDefaultOption("Do Nothing", new InstantCommand());
     autoChooser.addOption(
-        "5 Note", AutoRoutines.center5Note(drivetrain, intake, shooter, pivotShooter, pivotIntake, vision));
+        "5 Note",
+        AutoRoutines.center5Note(drivetrain, intake, shooter, pivotShooter, pivotIntake, vision));
     autoChooser.addOption(
         "Note Detection",
-        AutoRoutines.noteDetectionRush(drivetrain, intake, pivotIntake, pivotShooter, shooter, vision));
+        AutoRoutines.noteDetectionRush(
+            drivetrain, intake, pivotIntake, pivotShooter, shooter, vision));
     autoChooser.addOption(
         "1 Feed 1 Score Preload Amp",
         AutoRoutines.ampFeed1Sub1Pre1(drivetrain, intake, pivotIntake, pivotShooter, shooter));
@@ -609,6 +610,5 @@ public class RobotContainer {
 
   public void periodic(double dt) {
     XboxStalker.stalk(driver, operator);
-
   }
 }
