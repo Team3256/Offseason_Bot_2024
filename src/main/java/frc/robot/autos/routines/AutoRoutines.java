@@ -137,7 +137,12 @@ public class AutoRoutines {
             intake::isBeamBroken));
   }
 
-  public static Command ampMobility(CommandSwerveDrivetrain swerve, Intake intake, Shooter shooter, PivotShooter pivotShooter, PivotIntake pivotIntake) {
+  public static Command ampMobility(
+      CommandSwerveDrivetrain swerve,
+      Intake intake,
+      Shooter shooter,
+      PivotShooter pivotShooter,
+      PivotIntake pivotIntake) {
 
     ChoreoTrajectory amp_mobility = Choreo.getTrajectory("ampMobility");
     Trigger noteOuttaken =
@@ -261,11 +266,11 @@ public class AutoRoutines {
 
     return Commands.sequence(
         AutoHelperCommands.resetPose(amp_c1, swerve),
-        //        swerve.runChoreoTraj(amp_c1),
-        //        swerve.runChoreoTraj(c1_c2),
-        //        swerve.runChoreoTraj(c2_center),
-        //        swerve.runChoreoTraj(center_amp),
-        //    swerve.runChoreoTraj(amp_center));
+        // swerve.runChoreoTraj(amp_c1),
+        // swerve.runChoreoTraj(c1_c2),
+        // swerve.runChoreoTraj(c2_center),
+        // swerve.runChoreoTraj(center_amp),
+        // swerve.runChoreoTraj(amp_center));
         AutoHelperCommands.dropPreloadAndFeed(
             shooter, pivotIntake, pivotShooter, intake, swerve, amp_c1, noteOuttaken),
         AutoHelperCommands.intakeIn(intake, swerve, pivotIntake, pivotShooter, c1_c2),
@@ -501,8 +506,8 @@ public class AutoRoutines {
               pivotShooter.setPosition(
                   PivotShooterConstants.kSubWooferPreset
                       * PivotShooterConstants.kPivotMotorGearing))
-          .until(noteOuttaken.debounce(1))
-          .withTimeout(4);
+          .until(noteOuttaken.debounce(2))
+          .withTimeout(5);
     }
   }
 }

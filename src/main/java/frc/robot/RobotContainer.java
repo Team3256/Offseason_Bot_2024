@@ -301,7 +301,9 @@ public class RobotContainer {
 
     autoChooser = new SendableChooser<>();
     autoChooser.setDefaultOption("Do Nothing", new InstantCommand());
-    autoChooser.addOption("Amp Mobility",  AutoRoutines.ampMobility(drivetrain, intake, shooter, pivotShooter, pivotIntake));
+    autoChooser.addOption(
+        "Amp Mobility",
+        AutoRoutines.ampMobility(drivetrain, intake, shooter, pivotShooter, pivotIntake));
     autoChooser.addOption(
         "5 Note",
         AutoRoutines.center5Note(drivetrain, intake, shooter, pivotShooter, pivotIntake, vision));
@@ -465,7 +467,6 @@ public class RobotContainer {
                         .withVelocityX(-driver.getLeftY() * MaxSpeed) // Drive -y is forward
                         .withVelocityY(-driver.getLeftX() * MaxSpeed) // Drive -x is left
                         .withRotationalRate(-driver.getRightX() * MaxAngularRate)));
-
 
     // Slows translational and rotational speed to 30%
     driver
