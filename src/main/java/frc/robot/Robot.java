@@ -31,9 +31,12 @@ import org.littletonrobotics.junction.networktables.NT4Publisher;
 import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 
 /**
- * The VM is configured to automatically run this class, and to call the functions corresponding to
- * each mode, as described in the TimedRobot documentation. If you change the name of this class or
- * the package after creating this project, you must also update the build.gradle file in the
+ * The VM is configured to automatically run this class, and to call the
+ * functions corresponding to
+ * each mode, as described in the TimedRobot documentation. If you change the
+ * name of this class or
+ * the package after creating this project, you must also update the
+ * build.gradle file in the
  * project.
  */
 public class Robot extends LoggedRobot implements Logged {
@@ -47,7 +50,8 @@ public class Robot extends LoggedRobot implements Logged {
   private FileConsoleSource kernelMessagesSource;
 
   /**
-   * This function is run when the robot is first started up and should be used for any
+   * This function is run when the robot is first started up and should be used
+   * for any
    * initialization code.
    */
   @Override
@@ -91,14 +95,14 @@ public class Robot extends LoggedRobot implements Logged {
 
     if (isReal()) {
       System.out.println("Robot is real, forcing Robot mode to REAL");
-      // Logger.addDataReceiver(new WPILOGWriter("/U/logs"));
-      Logger.addDataReceiver(
-          new WPILOGWriter("/home/lvuser/logs")); // Log to a USB stick ("/U/logs")
+      Logger.addDataReceiver(new WPILOGWriter("/U/wpilogs"));
+      // Logger.addDataReceiver(
+      // new WPILOGWriter("/home/lvuser/logs")); // Log to a USB stick ("/U/logs")
       Logger.addDataReceiver(new NT4PublisherNoFMS()); // Publish data to NetworkTables
       new PowerDistribution(
           1, PowerDistribution.ModuleType.kRev); // Enables power distribution logging
-      //      dmesgSource = new FileConsoleSource("/var/log/dmesg");
-      //      kernelMessagesSource = new FileConsoleSource("/var/log/messages");
+      // dmesgSource = new FileConsoleSource("/var/log/dmesg");
+      // kernelMessagesSource = new FileConsoleSource("/var/log/messages");
     } else if (isSimulation()) {
 
       // DriverStation.silenceJoystickConnectionWarning(true);
@@ -117,16 +121,15 @@ public class Robot extends LoggedRobot implements Logged {
 
     // Log active commands
     Map<String, Integer> commandCounts = new HashMap<>();
-    BiConsumer<Command, Boolean> logCommandFunction =
-        (Command command, Boolean active) -> {
-          String name = command.getName();
-          int count = commandCounts.getOrDefault(name, 0) + (active ? 1 : -1);
-          commandCounts.put(name, count);
+    BiConsumer<Command, Boolean> logCommandFunction = (Command command, Boolean active) -> {
+      String name = command.getName();
+      int count = commandCounts.getOrDefault(name, 0) + (active ? 1 : -1);
+      commandCounts.put(name, count);
 
-          Logger.recordOutput(
-              "CommandsUnique/" + name + "_" + Integer.toHexString(command.hashCode()), active);
-          Logger.recordOutput("CommandsAll/" + name, count > 0);
-        };
+      Logger.recordOutput(
+          "CommandsUnique/" + name + "_" + Integer.toHexString(command.hashCode()), active);
+      Logger.recordOutput("CommandsAll/" + name, count > 0);
+    };
     CommandScheduler.getInstance()
         .onCommandInitialize(
             (Command command) -> {
@@ -159,10 +162,14 @@ public class Robot extends LoggedRobot implements Logged {
   }
 
   /**
-   * This function is called every robot packet, no matter the mode. Use this for items like
-   * diagnostics that you want ran during disabled, autonomous, teleoperated and test.
+   * This function is called every robot packet, no matter the mode. Use this for
+   * items like
+   * diagnostics that you want ran during disabled, autonomous, teleoperated and
+   * test.
    *
-   * <p>This runs after the mode specific periodic functions, but before LiveWindow and
+   * <p>
+   * This runs after the mode specific periodic functions, but before LiveWindow
+   * and
    * SmartDashboard integrated updating.
    */
   @Override
@@ -213,9 +220,13 @@ public class Robot extends LoggedRobot implements Logged {
   }
 
   @Override
-  public void disabledPeriodic() {}
+  public void disabledPeriodic() {
+  }
 
-  /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
+  /**
+   * This autonomous runs the autonomous command selected by your
+   * {@link RobotContainer} class.
+   */
   @Override
   public void autonomousInit() {
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
@@ -237,7 +248,8 @@ public class Robot extends LoggedRobot implements Logged {
 
   /** This function is called periodically during autonomous. */
   @Override
-  public void autonomousPeriodic() {}
+  public void autonomousPeriodic() {
+  }
 
   @Override
   public void autonomousExit() {
@@ -272,7 +284,8 @@ public class Robot extends LoggedRobot implements Logged {
 
   /** This function is called periodically during operator control. */
   @Override
-  public void teleopPeriodic() {}
+  public void teleopPeriodic() {
+  }
 
   @Override
   public void testInit() {
@@ -284,7 +297,8 @@ public class Robot extends LoggedRobot implements Logged {
 
   /** This function is called periodically during test mode. */
   @Override
-  public void testPeriodic() {}
+  public void testPeriodic() {
+  }
 
   @Override
   public void driverStationConnected() {
