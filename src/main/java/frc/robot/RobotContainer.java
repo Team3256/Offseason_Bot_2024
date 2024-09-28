@@ -426,7 +426,7 @@ public class RobotContainer {
           .onTrue(
               Commands.sequence(
                   new ParallelCommandGroup(
-                          ampbar.setAmpPosition(), pivotShooter.setPosition(12 / 138.33))
+                          ampbar.setAmpPosition(), pivotShooter.setPosition(12 / 138.33* kPivotMotorGearing))
                       .withTimeout(1),
                   climb.extendClimber()));
     } else {
