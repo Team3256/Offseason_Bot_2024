@@ -78,7 +78,7 @@ public class RobotContainer {
 
   private double MaxSpeed =
       TunerConstants.kSpeedAt12VoltsMps; // kSpeedAt12VoltsMps desired top speed
-  private double MaxAngularRate = 1.3 * Math.PI; // My drivetrain
+  private double MaxAngularRate = 1.5 * Math.PI; // My drivetrain
 
   private double SlowMaxSpeed = MaxSpeed * 0.3;
   private double SlowMaxAngular = MaxAngularRate * 0.3;
@@ -474,9 +474,9 @@ public class RobotContainer {
             drivetrain.applyRequest(
                 () ->
                     drive
-                        .withVelocityX(driver.getLeftY() * (MaxSpeed * 0.20))
-                        .withVelocityY(driver.getLeftX() * (MaxSpeed * 0.20))
-                        .withRotationalRate(-driver.getRightX() * (MaxAngularRate * 0.2))));
+                        .withVelocityX(driver.getLeftY() * (MaxSpeed * 0.17))
+                        .withVelocityY(driver.getLeftX() * (MaxSpeed * 0.17))
+                        .withRotationalRate(-driver.getRightX() * (1.3 * 0.2 * Math.PI))));
 
     // Reset robot heading on button press
     driver.y().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
