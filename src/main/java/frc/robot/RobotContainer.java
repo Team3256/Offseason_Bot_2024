@@ -305,6 +305,9 @@ public class RobotContainer {
         "5 Note",
         AutoRoutines.center5Note(drivetrain, intake, shooter, pivotShooter, pivotIntake, vision));
     autoChooser.addOption(
+        "5 Note but center first",
+        AutoRoutines.center5Note2(drivetrain, intake, shooter, pivotShooter, pivotIntake, vision));
+    autoChooser.addOption(
         "Note Detection",
         AutoRoutines.noteDetectionRush(
             drivetrain, intake, pivotIntake, pivotShooter, shooter, vision));
