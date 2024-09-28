@@ -56,6 +56,31 @@ public class AutoRoutines {
                         intake.setPassthroughVoltage(IntakeConstants.kPassthroughIntakeVoltage))));
   }
 
+  public static Command sourceCenter2(
+      CommandSwerveDrivetrain swerve,
+      Intake intake,
+      Shooter shooter,
+      PivotShooter pivotShooter,
+      PivotIntake pivotIntake,
+      Vision vision) {
+    ChoreoTrajectory source_c5 = Choreo.getTrajectory("Source-C5");
+    ChoreoTrajectory c5_source = Choreo.getTrajectory("C5-Source");
+    ChoreoTrajectory source_c4 = Choreo.getTrajectory("Source-C4");
+    ChoreoTrajectory c4_source = Choreo.getTrajectory("C4-Source");
+    Trigger noteOuttaken =
+        new Trigger(() -> !intake.isBeamBroken()).debounce(RoutineConstants.beamBreakDelay);
+
+    return Commands.sequence(
+        AutoHelperCommands.resetPose(source_c5, swerve),
+        AutoHelperCommands.preLoad(pivotShooter, intake, shooter, noteOuttaken),
+        AutoHelperCommands.intakeIn(5, intake, swerve, pivotIntake, pivotShooter, source_c5),
+        AutoHelperCommands.shootSubwoofer(
+            intake, shooter, swerve, pivotShooter, c5_source, noteOuttaken),
+        AutoHelperCommands.intakeIn(4, intake, swerve, pivotIntake, pivotShooter, source_c4),
+        AutoHelperCommands.shootSubwoofer(
+            intake, shooter, swerve, pivotShooter, c4_source, noteOuttaken));
+  }
+
   public static Command center5Note2( // if we use this during comp we're cooked
       CommandSwerveDrivetrain swerve,
       Intake intake,
@@ -407,6 +432,23 @@ public class AutoRoutines {
     }
 
     public static Command intakeIn(
+        double timeout,
+        Intake intake,
+        CommandSwerveDrivetrain swerve,
+        PivotIntake pivotIntake,
+        PivotShooter pivotShooter,
+        ChoreoTrajectory traj) {
+      return intake
+          .intakeIn()
+          .deadlineWith(
+              swerve.runChoreoTraj(traj),
+              pivotShooter.setPosition(0),
+              pivotIntake.setPosition(
+                  PivotIntakeConstants.kPivotGroundPos * PivotIntakeConstants.kPivotMotorGearing))
+          .withTimeout(timeout);
+    }
+
+    public static Command intakeIn(
         Intake intake,
         CommandSwerveDrivetrain swerve,
         PivotIntake pivotIntake,
@@ -447,7 +489,7 @@ public class AutoRoutines {
               pivotShooter.setPosition(
                   PivotShooterConstants.kSubWooferPreset
                       * PivotShooterConstants.kPivotMotorGearing))
-          .until(noteOuttaken.debounce(0.5))
+          .until(noteOuttaken.debounce(1))
           .withTimeout(4);
     }
   }
