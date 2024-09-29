@@ -301,6 +301,7 @@ public class RobotContainer {
 
     autoChooser = new SendableChooser<>();
     autoChooser.setDefaultOption("Do Nothing", new InstantCommand());
+    autoChooser.addOption("Source auto", AutoRoutines.sourceMobility(drivetrain, intake, shooter, pivotShooter, pivotIntake));
     autoChooser.addOption(
         "Amp Mobility",
         AutoRoutines.ampMobility(drivetrain, intake, shooter, pivotShooter, pivotIntake));
