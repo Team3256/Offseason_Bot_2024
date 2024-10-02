@@ -56,6 +56,120 @@ public class AutoRoutines {
                         intake.setPassthroughVoltage(IntakeConstants.kPassthroughIntakeVoltage))));
   }
 
+  public static Command sourceCenter2(
+      CommandSwerveDrivetrain swerve,
+      Intake intake,
+      Shooter shooter,
+      PivotShooter pivotShooter,
+      PivotIntake pivotIntake,
+      Vision vision) {
+    ChoreoTrajectory source_c5 = Choreo.getTrajectory("Source-C5");
+    ChoreoTrajectory c5_source = Choreo.getTrajectory("C5-Source");
+    ChoreoTrajectory source_c4 = Choreo.getTrajectory("Source-C4");
+    ChoreoTrajectory c4_source = Choreo.getTrajectory("C4-Source");
+    Trigger noteOuttaken =
+        new Trigger(() -> !intake.isBeamBroken()).debounce(RoutineConstants.beamBreakDelay);
+
+    return Commands.sequence(
+        AutoHelperCommands.resetPose(source_c5, swerve),
+        AutoHelperCommands.preLoad(pivotShooter, intake, shooter, noteOuttaken),
+        AutoHelperCommands.intakeIn(5, intake, swerve, pivotIntake, pivotShooter, source_c5),
+        AutoHelperCommands.shootSubwoofer(
+            intake, shooter, swerve, pivotShooter, c5_source, noteOuttaken),
+        AutoHelperCommands.intakeIn(4, intake, swerve, pivotIntake, pivotShooter, source_c4),
+        AutoHelperCommands.shootSubwoofer(
+            intake, shooter, swerve, pivotShooter, c4_source, noteOuttaken));
+  }
+
+  public static Command center5Note2( // if we use this during comp we're cooked
+      CommandSwerveDrivetrain swerve,
+      Intake intake,
+      Shooter shooter,
+      PivotShooter pivotShooter,
+      PivotIntake pivotIntake,
+      Vision vision) {
+    ChoreoTrajectory c1_c2 = Choreo.getTrajectory("C1-C2");
+    ChoreoTrajectory c2_c3 = Choreo.getTrajectory("C2-C3");
+    ChoreoTrajectory c1_center = Choreo.getTrajectory("C1-Center");
+    ChoreoTrajectory c2_center = Choreo.getTrajectory("C2-Center");
+    ChoreoTrajectory c3_center = Choreo.getTrajectory("C3-Center");
+    ChoreoTrajectory center_c1 = Choreo.getTrajectory("Center-C1");
+    ChoreoTrajectory center_w1 = Choreo.getTrajectory("Center-W1");
+    ChoreoTrajectory center_w2 = Choreo.getTrajectory("Center-W2");
+    ChoreoTrajectory center_w3 = Choreo.getTrajectory("Center-W3");
+    ChoreoTrajectory w1_center = Choreo.getTrajectory("W1-Center");
+    ChoreoTrajectory w2_center = Choreo.getTrajectory("W2-Center");
+    ChoreoTrajectory w3_center = Choreo.getTrajectory("W3-Center");
+    ChoreoTrajectory w1_w2 = Choreo.getTrajectory("W1-W2");
+    ChoreoTrajectory w2_w3 = Choreo.getTrajectory("W2-W3");
+    ChoreoTrajectory w3_c1 = Choreo.getTrajectory("W3-C1");
+    Trigger noteOuttaken =
+        new Trigger(() -> !intake.isBeamBroken()).debounce(RoutineConstants.beamBreakDelay);
+
+    return Commands.sequence(
+        AutoHelperCommands.resetPose(center_w1, swerve),
+        AutoHelperCommands.preLoad(pivotShooter, intake, shooter, noteOuttaken),
+        AutoHelperCommands.intakeIn(intake, swerve, pivotIntake, pivotShooter, center_w2, 0.5),
+        AutoHelperCommands.shootSubwoofer(
+            intake, shooter, swerve, pivotShooter, w2_center, noteOuttaken),
+        AutoHelperCommands.intakeIn(intake, swerve, pivotIntake, pivotShooter, center_w1, 0.5),
+        AutoHelperCommands.shootSubwoofer(
+            intake, shooter, swerve, pivotShooter, w1_center, noteOuttaken),
+        AutoHelperCommands.intakeIn(intake, swerve, pivotIntake, pivotShooter, center_w3, 0.5),
+        AutoHelperCommands.shootSubwoofer(
+            intake, shooter, swerve, pivotShooter, w3_center, noteOuttaken),
+        AutoHelperCommands.intakeIn(intake, swerve, pivotIntake, pivotShooter, center_c1, 0.5),
+        Commands.either(
+            AutoHelperCommands.shootSubwoofer(
+                intake, shooter, swerve, pivotShooter, c1_center, noteOuttaken),
+            Commands.sequence(
+                AutoHelperCommands.intakeInDeadlineTraj(
+                    intake, swerve, pivotIntake, pivotShooter, c1_c2),
+                Commands.either(
+                    AutoHelperCommands.shootSubwoofer(
+                        intake, shooter, swerve, pivotShooter, c2_center, noteOuttaken),
+                    Commands.sequence(
+                        AutoHelperCommands.intakeInDeadlineTraj(
+                            intake, swerve, pivotIntake, pivotShooter, c2_c3),
+                        AutoHelperCommands.shootSubwoofer(
+                            intake, shooter, swerve, pivotShooter, c3_center, noteOuttaken)),
+                    intake::isBeamBroken)),
+            intake::isBeamBroken));
+  }
+
+  public static Command sourceMobility(
+      CommandSwerveDrivetrain swerve,
+      Intake intake,
+      Shooter shooter,
+      PivotShooter pivotShooter,
+      PivotIntake pivotIntake) {
+
+    ChoreoTrajectory amp_mobility = Choreo.getTrajectory("Source");
+    Trigger noteOuttaken =
+        new Trigger(() -> !intake.isBeamBroken()).debounce(RoutineConstants.beamBreakDelay);
+    return Commands.sequence(
+        AutoHelperCommands.resetPose(amp_mobility, swerve),
+        AutoHelperCommands.preLoad(pivotShooter, intake, shooter, noteOuttaken),
+        swerve.runChoreoTraj(amp_mobility));
+  }
+
+  public static Command ampMobility(
+      CommandSwerveDrivetrain swerve,
+      Intake intake,
+      Shooter shooter,
+      PivotShooter pivotShooter,
+      PivotIntake pivotIntake) {
+
+    ChoreoTrajectory amp_mobility = Choreo.getTrajectory("ampMobility");
+    Trigger noteOuttaken =
+        new Trigger(() -> !intake.isBeamBroken()).debounce(RoutineConstants.beamBreakDelay);
+    return Commands.sequence(
+        AutoHelperCommands.resetPose(amp_mobility, swerve),
+        AutoHelperCommands.preLoad(pivotShooter, intake, shooter, noteOuttaken),
+        Commands.waitSeconds(5),
+        swerve.runChoreoTraj(amp_mobility));
+  }
+
   public static Command center5Note( // if we use this during comp we're cooked
       CommandSwerveDrivetrain swerve,
       Intake intake,
@@ -168,11 +282,11 @@ public class AutoRoutines {
 
     return Commands.sequence(
         AutoHelperCommands.resetPose(amp_c1, swerve),
-        //        swerve.runChoreoTraj(amp_c1),
-        //        swerve.runChoreoTraj(c1_c2),
-        //        swerve.runChoreoTraj(c2_center),
-        //        swerve.runChoreoTraj(center_amp),
-        //    swerve.runChoreoTraj(amp_center));
+        // swerve.runChoreoTraj(amp_c1),
+        // swerve.runChoreoTraj(c1_c2),
+        // swerve.runChoreoTraj(c2_center),
+        // swerve.runChoreoTraj(center_amp),
+        // swerve.runChoreoTraj(amp_center));
         AutoHelperCommands.dropPreloadAndFeed(
             shooter, pivotIntake, pivotShooter, intake, swerve, amp_c1, noteOuttaken),
         AutoHelperCommands.intakeIn(intake, swerve, pivotIntake, pivotShooter, c1_c2),
@@ -351,6 +465,23 @@ public class AutoRoutines {
     }
 
     public static Command intakeIn(
+        double timeout,
+        Intake intake,
+        CommandSwerveDrivetrain swerve,
+        PivotIntake pivotIntake,
+        PivotShooter pivotShooter,
+        ChoreoTrajectory traj) {
+      return intake
+          .intakeIn()
+          .deadlineWith(
+              swerve.runChoreoTraj(traj),
+              pivotShooter.setPosition(0),
+              pivotIntake.setPosition(
+                  PivotIntakeConstants.kPivotGroundPos * PivotIntakeConstants.kPivotMotorGearing))
+          .withTimeout(timeout);
+    }
+
+    public static Command intakeIn(
         Intake intake,
         CommandSwerveDrivetrain swerve,
         PivotIntake pivotIntake,
@@ -391,8 +522,8 @@ public class AutoRoutines {
               pivotShooter.setPosition(
                   PivotShooterConstants.kSubWooferPreset
                       * PivotShooterConstants.kPivotMotorGearing))
-          .until(noteOuttaken.debounce(0.5))
-          .withTimeout(4);
+          .until(noteOuttaken.debounce(2))
+          .withTimeout(5);
     }
   }
 }

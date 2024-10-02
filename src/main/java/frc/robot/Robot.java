@@ -91,14 +91,14 @@ public class Robot extends LoggedRobot implements Logged {
 
     if (isReal()) {
       System.out.println("Robot is real, forcing Robot mode to REAL");
-      // Logger.addDataReceiver(new WPILOGWriter("/U/logs"));
-      Logger.addDataReceiver(
-          new WPILOGWriter("/home/lvuser/logs")); // Log to a USB stick ("/U/logs")
+      Logger.addDataReceiver(new WPILOGWriter("/U/wpilogs"));
+      // Logger.addDataReceiver(
+      // new WPILOGWriter("/home/lvuser/logs")); // Log to a USB stick ("/U/logs")
       Logger.addDataReceiver(new NT4PublisherNoFMS()); // Publish data to NetworkTables
       new PowerDistribution(
           1, PowerDistribution.ModuleType.kRev); // Enables power distribution logging
-      //      dmesgSource = new FileConsoleSource("/var/log/dmesg");
-      //      kernelMessagesSource = new FileConsoleSource("/var/log/messages");
+      // dmesgSource = new FileConsoleSource("/var/log/dmesg");
+      // kernelMessagesSource = new FileConsoleSource("/var/log/messages");
     } else if (isSimulation()) {
 
       // DriverStation.silenceJoystickConnectionWarning(true);

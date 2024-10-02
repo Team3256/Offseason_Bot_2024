@@ -20,7 +20,8 @@ import edu.wpi.first.math.util.Units;
 public class TunerConstants {
   // Both sets of gains need to be tuned to your individual robot.
 
-  // The steer motor uses any SwerveModule.SteerRequestType control request with the
+  // The steer motor uses any SwerveModule.SteerRequestType control request with
+  // the
   // output type specified by SwerveModuleConstants.SteerMotorClosedLoopOutput
   private static final Slot0Configs steerGains =
       new Slot0Configs().withKP(100).withKI(0).withKD(0.2).withKS(0).withKV(1.5).withKA(0);
@@ -41,7 +42,8 @@ public class TunerConstants {
   private static final double kSlipCurrentA = 75.0;
   // Theoretical free speed (m/s) at 12v applied output;
   // This needs to be tuned to your individual robot
-  public static final double kSpeedAt12VoltsMps = 5.96;
+  public static final double kSpeedAt12VoltsMps = 5.96; // 5.96
+  // public static final double kSpeedAt12VoltsMps = 5; // 5.96
 
   // Every 1 rotation of the azimuth results in kCoupleRatio drive motor turns;
   // This may need to be tuned to your individual robot

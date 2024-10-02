@@ -302,8 +302,20 @@ public class RobotContainer {
     autoChooser = new SendableChooser<>();
     autoChooser.setDefaultOption("Do Nothing", new InstantCommand());
     autoChooser.addOption(
+        "Source auto",
+        AutoRoutines.sourceMobility(drivetrain, intake, shooter, pivotShooter, pivotIntake));
+    autoChooser.addOption(
+        "Amp Mobility",
+        AutoRoutines.ampMobility(drivetrain, intake, shooter, pivotShooter, pivotIntake));
+    autoChooser.addOption(
         "5 Note",
         AutoRoutines.center5Note(drivetrain, intake, shooter, pivotShooter, pivotIntake, vision));
+    autoChooser.addOption(
+        "5 Note but center first",
+        AutoRoutines.center5Note2(drivetrain, intake, shooter, pivotShooter, pivotIntake, vision));
+    autoChooser.addOption(
+        "Source Rush Shreya Auto",
+        AutoRoutines.sourceCenter2(drivetrain, intake, shooter, pivotShooter, pivotIntake, vision));
     autoChooser.addOption(
         "Note Detection",
         AutoRoutines.noteDetectionRush(
@@ -417,7 +429,8 @@ public class RobotContainer {
           .onTrue(
               Commands.sequence(
                   new ParallelCommandGroup(
-                          ampbar.setAmpPosition(), pivotShooter.setPosition(12 / 138.33))
+                          ampbar.setAmpPosition(),
+                          pivotShooter.setPosition(12 / 138.33 * kPivotMotorGearing))
                       .withTimeout(1),
                   climb.extendClimber()));
     } else {
@@ -455,11 +468,9 @@ public class RobotContainer {
             drivetrain.applyRequest(
                 () ->
                     drive
-                        .withVelocityX(driver.getLeftY() * MaxSpeed) // Drive -y is forward
-                        .withVelocityY(driver.getLeftX() * MaxSpeed) // Drive -x is left
+                        .withVelocityX(-driver.getLeftY() * MaxSpeed) // Drive -y is forward
+                        .withVelocityY(-driver.getLeftX() * MaxSpeed) // Drive -x is left
                         .withRotationalRate(-driver.getRightX() * MaxAngularRate)));
-
-    azi.withTargetDirection(new Rotation2d(driver.getRightX(), driver.getRightY()));
 
     // Slows translational and rotational speed to 30%
     driver
@@ -468,9 +479,9 @@ public class RobotContainer {
             drivetrain.applyRequest(
                 () ->
                     drive
-                        .withVelocityX(driver.getLeftY() * (MaxSpeed * 0.25))
-                        .withVelocityY(driver.getLeftX() * (MaxSpeed * 0.25))
-                        .withRotationalRate(-driver.getRightX() * (MaxAngularRate * 0.2))));
+                        .withVelocityX(driver.getLeftY() * (MaxSpeed * 0.17))
+                        .withVelocityY(driver.getLeftX() * (MaxSpeed * 0.17))
+                        .withRotationalRate(-driver.getRightX() * (1.3 * 0.2 * Math.PI))));
 
     // Reset robot heading on button press
     driver.y().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
