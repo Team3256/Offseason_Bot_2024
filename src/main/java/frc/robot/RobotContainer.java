@@ -301,7 +301,9 @@ public class RobotContainer {
 
     autoChooser = new SendableChooser<>();
     autoChooser.setDefaultOption("Do Nothing", new InstantCommand());
-    autoChooser.addOption("Source auto", AutoRoutines.sourceMobility(drivetrain, intake, shooter, pivotShooter, pivotIntake));
+    autoChooser.addOption(
+        "Source auto",
+        AutoRoutines.sourceMobility(drivetrain, intake, shooter, pivotShooter, pivotIntake));
     autoChooser.addOption(
         "Amp Mobility",
         AutoRoutines.ampMobility(drivetrain, intake, shooter, pivotShooter, pivotIntake));
@@ -427,7 +429,8 @@ public class RobotContainer {
           .onTrue(
               Commands.sequence(
                   new ParallelCommandGroup(
-                          ampbar.setAmpPosition(), pivotShooter.setPosition(12 / 138.33* kPivotMotorGearing))
+                          ampbar.setAmpPosition(),
+                          pivotShooter.setPosition(12 / 138.33 * kPivotMotorGearing))
                       .withTimeout(1),
                   climb.extendClimber()));
     } else {
