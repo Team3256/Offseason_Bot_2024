@@ -92,13 +92,6 @@ public class RobotContainer {
           .withDriveRequestType(
               SwerveModule.DriveRequestType.OpenLoopVoltage); // I want field-centric
 
-  private SwerveFieldCentricFacingAngle azi =
-      new SwerveFieldCentricFacingAngle()
-          .withDeadband(MaxSpeed * .15) // TODO: update deadband
-          .withRotationalDeadband(MaxAngularRate * .15) // TODO: update deadband
-          .withHeadingController(SwerveConstants.azimuthController)
-          .withDriveRequestType(SwerveModule.DriveRequestType.Velocity);
-
   // driving in open loop
   private final SwerveTelemetry swerveTelemetry = new SwerveTelemetry(MaxSpeed);
 
