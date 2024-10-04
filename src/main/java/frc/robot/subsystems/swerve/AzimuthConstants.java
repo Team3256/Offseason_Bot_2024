@@ -8,7 +8,7 @@
 package frc.robot.subsystems.swerve;
 
 public final class AzimuthConstants {
-  /* Angles (raw) */
+  /* raw angles in degrees. positive angles mean left turns */
 
   public static final double aziAmpRed = 90;
 
