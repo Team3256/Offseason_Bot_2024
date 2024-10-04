@@ -481,10 +481,12 @@ public class RobotContainer {
 
     // Reset robot heading on button press
     driver.y().onTrue(drivetrain.runOnce(drivetrain::seedFieldRelative));
-    driver.povUp().onTrue(
+    driver
+        .povUp()
+        .onTrue(
             Commands.sequence(
-                    new Azimuth(driver, drivetrain, () -> aziCleanUp),
-                    drivetrain.runOnce(drivetrain::seedFieldRelative)));
+                new Azimuth(driver, drivetrain, () -> aziCleanUp),
+                drivetrain.runOnce(drivetrain::seedFieldRelative)));
     // TODO: make azimuth faster so this doesnt tweak out when we run
 
     // Azimuth angle bindings. isRed == true for red alliance presets. isRed != true
