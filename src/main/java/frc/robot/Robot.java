@@ -272,7 +272,16 @@ public class Robot extends LoggedRobot implements Logged {
 
   /** This function is called periodically during operator control. */
   @Override
-  public void teleopPeriodic() {}
+  public void teleopPeriodic() {
+    m_robotContainer.setClockAngle(
+        Math.atan2(
+            (Math.abs(m_robotContainer.getY()) < Constants.rotationalDeadband)
+                ? 0
+                : m_robotContainer.getX(),
+            (Math.abs(m_robotContainer.getX()) < Constants.rotationalDeadband)
+                ? 0
+                : m_robotContainer.getX()));
+  }
 
   @Override
   public void testInit() {

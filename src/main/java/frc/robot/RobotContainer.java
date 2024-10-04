@@ -47,11 +47,9 @@ import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.subsystems.shooter.ShooterConstants;
 import frc.robot.subsystems.shooter.ShooterIOTalonFX;
 import frc.robot.subsystems.swerve.CommandSwerveDrivetrain;
-import frc.robot.subsystems.swerve.SwerveConstants;
 import frc.robot.subsystems.swerve.SwerveTelemetry;
 import frc.robot.subsystems.swerve.TunerConstants;
 import frc.robot.subsystems.swerve.requests.Azimuth;
-import frc.robot.subsystems.swerve.requests.SwerveFieldCentricFacingAngle;
 import frc.robot.subsystems.vision.Vision;
 import frc.robot.subsystems.vision.VisionIOLimelight;
 
@@ -74,6 +72,7 @@ public class RobotContainer {
 
   /* Subsystems */
   private boolean isRed;
+  private double clockAngle;
 
   private final CommandSwerveDrivetrain drivetrain = TunerConstants.DriveTrain;
 
@@ -441,6 +440,18 @@ public class RobotContainer {
     isRed = col;
   }
 
+  public double getY() {
+    return driver.getLeftY();
+  }
+
+  public double getX() {
+    return driver.getLeftX();
+  }
+
+  public void setClockAngle(double angle) {
+    clockAngle = angle;
+  }
+
   public void configureSwerve() {
     // default command
     drivetrain.setDefaultCommand(
@@ -453,15 +464,9 @@ public class RobotContainer {
                     .withRotationalRate(-driver.getRightX() * MaxAngularRate)));
     // TODO: maybe make left stick axes negative, test first
 
-    driver
-        .rightTrigger()
-        .whileTrue(
-            drivetrain.applyRequest(
-                () ->
-                    drive
-                        .withVelocityX(-driver.getLeftY() * MaxSpeed) // Drive -y is forward
-                        .withVelocityY(-driver.getLeftX() * MaxSpeed) // Drive -x is left
-                        .withRotationalRate(-driver.getRightX() * MaxAngularRate)));
+    // TODO: if clock angle is 0, robot will not adjust heading
+    driver.rightTrigger().whileTrue(new Azimuth(driver, drivetrain, () -> clockAngle));
+
     driver
         .leftTrigger()
         .whileTrue(

@@ -12,7 +12,6 @@ import static frc.robot.RobotContainer.MaxAngularRate;
 import static frc.robot.RobotContainer.MaxSpeed;
 import static frc.robot.subsystems.swerve.SwerveConstants.*;
 
-import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 import edu.wpi.first.math.MathUtil;
@@ -22,7 +21,6 @@ import frc.robot.Constants;
 import frc.robot.helpers.DebugCommandBase;
 import frc.robot.subsystems.swerve.CommandSwerveDrivetrain;
 import frc.robot.subsystems.swerve.SwerveConstants;
-
 import java.util.function.DoubleSupplier;
 
 // TODO: implement swerve request
