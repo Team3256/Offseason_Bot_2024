@@ -20,6 +20,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -47,6 +48,7 @@ import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.subsystems.shooter.ShooterConstants;
 import frc.robot.subsystems.shooter.ShooterIOTalonFX;
 import frc.robot.subsystems.swerve.CommandSwerveDrivetrain;
+import frc.robot.subsystems.swerve.SwerveConstants;
 import frc.robot.subsystems.swerve.SwerveTelemetry;
 import frc.robot.subsystems.swerve.TunerConstants;
 import frc.robot.subsystems.swerve.requests.Azimuth;
@@ -441,11 +443,11 @@ public class RobotContainer {
   }
 
   public double getY() {
-    return driver.getLeftY();
+    return driver.getRightY();
   }
 
   public double getX() {
-    return driver.getLeftX();
+    return driver.getRightX();
   }
 
   public void setClockAngle(double angle) {
@@ -501,6 +503,19 @@ public class RobotContainer {
 
     // Universal azimuth bindings
     driver.leftBumper().whileTrue(new Azimuth(driver, drivetrain, () -> aziSubwooferFront));
+
+    driver.leftBumper().whileTrue(
+            drivetrain.applyRequest(
+                    () -> drive
+                            .withVelocityX(driver.getLeftY() * SlowMaxSpeed)
+                            .withVelocityY(driver.getLeftX() * SlowMaxSpeed)
+                            .withRotationalRate(
+                                    SwerveConstants.azimuthController.calculate(
+                                            drivetrain.getPigeon2().getAngle(),
+                                            aziSubwooferFront,
+                                            Timer.getFPGATimestamp()) * SlowMaxAngular))
+    );
+
     driver.povDownLeft().whileTrue(new Azimuth(driver, drivetrain, () -> aziSubwooferLeft));
     driver.povDownRight().whileTrue(new Azimuth(driver, drivetrain, () -> aziSubwooferRight));
     driver.povDown().whileTrue(new Azimuth(driver, drivetrain, () -> aziCleanUp));
