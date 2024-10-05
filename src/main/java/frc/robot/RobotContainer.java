@@ -9,7 +9,7 @@ package frc.robot;
 
 import static frc.robot.subsystems.pivotintake.PivotIntakeConstants.kPivotGroundPos;
 import static frc.robot.subsystems.pivotshooter.PivotShooterConstants.*;
-import static frc.robot.subsystems.swerve.AzimuthConstants.*;
+import static frc.robot.subsystems.swerve.SwerveConstants.AzimuthAngles.*;
 
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule;
@@ -51,7 +51,6 @@ import frc.robot.subsystems.swerve.CommandSwerveDrivetrain;
 import frc.robot.subsystems.swerve.SwerveConstants;
 import frc.robot.subsystems.swerve.SwerveTelemetry;
 import frc.robot.subsystems.swerve.TunerConstants;
-import frc.robot.subsystems.swerve.requests.Azimuth;
 import frc.robot.subsystems.vision.Vision;
 import frc.robot.subsystems.vision.VisionIOLimelight;
 
@@ -505,6 +504,7 @@ public class RobotContainer {
                                                     aziCleanUp,
                                                     Timer.getFPGATimestamp()) * SlowMaxAngular)),
                     drivetrain.runOnce(drivetrain::seedFieldRelative)));
+
     // TODO: make azimuth faster so this doesnt tweak out when we run
 
     // Azimuth angle bindings. isRed == true for red alliance presets. isRed != true
@@ -575,7 +575,6 @@ public class RobotContainer {
     }
 
     // Universal azimuth bindings
-    //driver.leftBumper().whileTrue(new Azimuth(driver, drivetrain, () -> aziSubwooferFront));
 
     driver.leftBumper().whileTrue(
             drivetrain.applyRequest(
