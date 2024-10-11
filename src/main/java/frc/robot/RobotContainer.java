@@ -451,7 +451,7 @@ public class RobotContainer {
                     .withRotationalRate(-driver.getRightX() * MaxAngularRate)));
     // TODO: maybe make left stick axes negative, test first
 
-    // TODO: if clock angle is 0, robot will not adjust heading
+    // if clock angle is 0, robot will not adjust heading
     driver
         .rightTrigger()
         .whileTrue(
@@ -638,8 +638,6 @@ public class RobotContainer {
       drivetrain.seedFieldRelative(new Pose2d(new Translation2d(), Rotation2d.fromDegrees(90)));
     }
     drivetrain.registerTelemetry(swerveTelemetry::telemeterize);
-    // drivetrain.registerTelemetry(logger::telemeterize);
-    // drivetrain.registerTelemetry(swerveTelemetry::telemeterize);
   }
 
   private void configureShooter() {
