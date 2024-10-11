@@ -74,6 +74,7 @@ public class RobotContainer {
   /* Subsystems */
   private boolean isRed;
   private double clockAngle;
+  private double autoCorrectionAngle;
 
   private final CommandSwerveDrivetrain drivetrain = TunerConstants.DriveTrain;
 
@@ -435,6 +436,10 @@ public class RobotContainer {
     return driver.getRightX();
   }
 
+  public void setAutoCorrectionAngle(double angle) {
+    autoCorrectionAngle = angle;
+  }
+
   public void setClockAngle(double angle) {
     clockAngle = angle;
   }
@@ -450,6 +455,23 @@ public class RobotContainer {
                     .withVelocityY(driver.getLeftX() * MaxSpeed) // Drive -x is left
                     .withRotationalRate(-driver.getRightX() * MaxAngularRate)));
     // TODO: maybe make left stick axes negative, test first
+
+    driver
+        .povUp()
+        .onTrue(
+            Commands.sequence(
+                drivetrain.runOnce(drivetrain::seedFieldRelative),
+                drivetrain.applyRequest(
+                    () ->
+                        drive
+                            .withVelocityX(driver.getLeftY() * SlowMaxSpeed)
+                            .withVelocityY(driver.getLeftX() * SlowMaxSpeed)
+                            .withRotationalRate(
+                                SwerveConstants.azimuthController.calculate(
+                                    drivetrain.getPigeon2().getAngle(),
+                                    -autoCorrectionAngle,
+                                    Timer.getFPGATimestamp()))),
+                drivetrain.runOnce(drivetrain::seedFieldRelative)));
 
     // if clock angle is 0, robot will not adjust heading
     driver
@@ -478,22 +500,6 @@ public class RobotContainer {
 
     // Reset robot heading on button press
     driver.y().onTrue(drivetrain.runOnce(drivetrain::seedFieldRelative));
-
-    driver
-        .povUp()
-        .onTrue(
-            Commands.sequence(
-                drivetrain.applyRequest(
-                    () ->
-                        drive
-                            .withVelocityX(driver.getLeftY() * SlowMaxSpeed)
-                            .withVelocityY(driver.getLeftX() * SlowMaxSpeed)
-                            .withRotationalRate(
-                                SwerveConstants.azimuthController.calculate(
-                                    drivetrain.getPigeon2().getAngle(),
-                                    aziCleanUp,
-                                    Timer.getFPGATimestamp()))),
-                drivetrain.runOnce(drivetrain::seedFieldRelative)));
 
     // Azimuth angle bindings. isRed == true for red alliance presets. isRed != true
     // for blue.

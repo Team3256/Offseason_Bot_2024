@@ -7,6 +7,7 @@
 
 package frc.robot;
 
+import com.choreo.lib.Choreo;
 import com.pathplanner.lib.commands.FollowPathCommand;
 import com.pathplanner.lib.commands.PathfindingCommand;
 import com.pathplanner.lib.pathfinding.Pathfinding;
@@ -242,6 +243,11 @@ public class Robot extends LoggedRobot implements Logged {
   @Override
   public void autonomousExit() {
     m_robotContainer.disableRumble();
+    m_robotContainer.setAutoCorrectionAngle(
+        Choreo.getTrajectory(m_autonomousCommand.getName())
+            .getFinalPose()
+            .getRotation()
+            .getDegrees());
   }
 
   @Override
@@ -267,7 +273,6 @@ public class Robot extends LoggedRobot implements Logged {
     }
 
     m_robotContainer.setAllianceCol(isRedAlliance);
-    m_robotContainer.configureSwerve();
   }
 
   /** This function is called periodically during operator control. */
