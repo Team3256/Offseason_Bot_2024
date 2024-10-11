@@ -388,20 +388,6 @@ public class RobotContainer {
         .whileTrue(
             intake.setVoltage(
                 -IntakeConstants.kIntakeIntakeVoltage, -IntakeConstants.kPassthroughIntakeVoltage));
-
-    // Intake / outtake overrides
-    driver
-        .x()
-        .whileTrue(
-            intake.setVoltage(
-                IntakeConstants.kIntakeIntakeVoltage, IntakeConstants.kPassthroughIntakeVoltage));
-    driver
-        .b()
-        .whileTrue(
-            intake.setVoltage(
-                IntakeConstants.kIntakeIntakeVoltage, -IntakeConstants.kPassthroughIntakeVoltage));
-    // driver.rightTrigger().whileTrue(intake.intakeIn());
-
     // operator.povDown().onTrue(new IntakeOff(intake));
   }
 
@@ -476,10 +462,9 @@ public class RobotContainer {
                         .withVelocityY(driver.getLeftX() * SlowMaxSpeed)
                         .withRotationalRate(
                             SwerveConstants.azimuthController.calculate(
-                                    drivetrain.getPigeon2().getAngle(),
-                                    clockAngle,
-                                    Timer.getFPGATimestamp())
-                                * SlowMaxAngular)));
+                                drivetrain.getPigeon2().getAngle(),
+                                clockAngle,
+                                Timer.getFPGATimestamp()))));
 
     driver
         .leftTrigger()
@@ -505,13 +490,10 @@ public class RobotContainer {
                             .withVelocityY(driver.getLeftX() * SlowMaxSpeed)
                             .withRotationalRate(
                                 SwerveConstants.azimuthController.calculate(
-                                        drivetrain.getPigeon2().getAngle(),
-                                        aziCleanUp,
-                                        Timer.getFPGATimestamp())
-                                    * SlowMaxAngular)),
+                                    drivetrain.getPigeon2().getAngle(),
+                                    aziCleanUp,
+                                    Timer.getFPGATimestamp()))),
                 drivetrain.runOnce(drivetrain::seedFieldRelative)));
-
-    // TODO: make azimuth faster so this doesnt tweak out when we run
 
     // Azimuth angle bindings. isRed == true for red alliance presets. isRed != true
     // for blue.
@@ -526,10 +508,9 @@ public class RobotContainer {
                           .withVelocityY(driver.getLeftX() * SlowMaxSpeed)
                           .withRotationalRate(
                               SwerveConstants.azimuthController.calculate(
-                                      drivetrain.getPigeon2().getAngle(),
-                                      aziSourceRed,
-                                      Timer.getFPGATimestamp())
-                                  * SlowMaxAngular)));
+                                  drivetrain.getPigeon2().getAngle(),
+                                  aziSourceRed,
+                                  Timer.getFPGATimestamp()))));
       driver
           .a()
           .whileTrue(
@@ -540,10 +521,9 @@ public class RobotContainer {
                           .withVelocityY(driver.getLeftX() * SlowMaxSpeed)
                           .withRotationalRate(
                               SwerveConstants.azimuthController.calculate(
-                                      drivetrain.getPigeon2().getAngle(),
-                                      aziAmpRed,
-                                      Timer.getFPGATimestamp())
-                                  * SlowMaxAngular)));
+                                  drivetrain.getPigeon2().getAngle(),
+                                  aziAmpRed,
+                                  Timer.getFPGATimestamp()))));
       driver
           .povRight()
           .whileTrue(
@@ -554,10 +534,9 @@ public class RobotContainer {
                           .withVelocityY(driver.getLeftX() * SlowMaxSpeed)
                           .withRotationalRate(
                               SwerveConstants.azimuthController.calculate(
-                                      drivetrain.getPigeon2().getAngle(),
-                                      aziFeederRed,
-                                      Timer.getFPGATimestamp())
-                                  * SlowMaxAngular)));
+                                  drivetrain.getPigeon2().getAngle(),
+                                  aziFeederRed,
+                                  Timer.getFPGATimestamp()))));
     } else {
       driver
           .rightBumper()
@@ -569,10 +548,9 @@ public class RobotContainer {
                           .withVelocityY(driver.getLeftX() * SlowMaxSpeed)
                           .withRotationalRate(
                               SwerveConstants.azimuthController.calculate(
-                                      drivetrain.getPigeon2().getAngle(),
-                                      aziSourceBlue,
-                                      Timer.getFPGATimestamp())
-                                  * SlowMaxAngular)));
+                                  drivetrain.getPigeon2().getAngle(),
+                                  aziSourceBlue,
+                                  Timer.getFPGATimestamp()))));
       driver
           .a()
           .whileTrue(
@@ -583,10 +561,9 @@ public class RobotContainer {
                           .withVelocityY(driver.getLeftX() * SlowMaxSpeed)
                           .withRotationalRate(
                               SwerveConstants.azimuthController.calculate(
-                                      drivetrain.getPigeon2().getAngle(),
-                                      aziAmpBlue,
-                                      Timer.getFPGATimestamp())
-                                  * SlowMaxAngular)));
+                                  drivetrain.getPigeon2().getAngle(),
+                                  aziAmpBlue,
+                                  Timer.getFPGATimestamp()))));
       driver
           .povRight()
           .whileTrue(
@@ -597,10 +574,9 @@ public class RobotContainer {
                           .withVelocityY(driver.getLeftX() * SlowMaxSpeed)
                           .withRotationalRate(
                               SwerveConstants.azimuthController.calculate(
-                                      drivetrain.getPigeon2().getAngle(),
-                                      aziFeederBlue,
-                                      Timer.getFPGATimestamp())
-                                  * SlowMaxAngular)));
+                                  drivetrain.getPigeon2().getAngle(),
+                                  aziFeederBlue,
+                                  Timer.getFPGATimestamp()))));
     }
 
     // Universal azimuth bindings
@@ -615,12 +591,11 @@ public class RobotContainer {
                         .withVelocityY(driver.getLeftX() * SlowMaxSpeed)
                         .withRotationalRate(
                             SwerveConstants.azimuthController.calculate(
-                                    drivetrain.getPigeon2().getAngle(),
-                                    aziSubwooferFront,
-                                    Timer.getFPGATimestamp())
-                                * SlowMaxAngular)));
+                                drivetrain.getPigeon2().getAngle(),
+                                aziSubwooferFront,
+                                Timer.getFPGATimestamp()))));
     driver
-        .povDownLeft()
+        .x()
         .whileTrue(
             drivetrain.applyRequest(
                 () ->
@@ -629,12 +604,11 @@ public class RobotContainer {
                         .withVelocityY(driver.getLeftX() * SlowMaxSpeed)
                         .withRotationalRate(
                             SwerveConstants.azimuthController.calculate(
-                                    drivetrain.getPigeon2().getAngle(),
-                                    aziSubwooferLeft,
-                                    Timer.getFPGATimestamp())
-                                * SlowMaxAngular)));
+                                drivetrain.getPigeon2().getAngle(),
+                                aziSubwooferLeft,
+                                Timer.getFPGATimestamp()))));
     driver
-        .povDownRight()
+        .b()
         .whileTrue(
             drivetrain.applyRequest(
                 () ->
@@ -643,10 +617,9 @@ public class RobotContainer {
                         .withVelocityY(driver.getLeftX() * SlowMaxSpeed)
                         .withRotationalRate(
                             SwerveConstants.azimuthController.calculate(
-                                    drivetrain.getPigeon2().getAngle(),
-                                    aziSubwooferRight,
-                                    Timer.getFPGATimestamp())
-                                * SlowMaxAngular)));
+                                drivetrain.getPigeon2().getAngle(),
+                                aziSubwooferRight,
+                                Timer.getFPGATimestamp()))));
     driver
         .povDown()
         .whileTrue(
@@ -657,10 +630,9 @@ public class RobotContainer {
                         .withVelocityY(driver.getLeftX() * SlowMaxSpeed)
                         .withRotationalRate(
                             SwerveConstants.azimuthController.calculate(
-                                    drivetrain.getPigeon2().getAngle(),
-                                    aziCleanUp,
-                                    Timer.getFPGATimestamp())
-                                * SlowMaxAngular)));
+                                drivetrain.getPigeon2().getAngle(),
+                                aziCleanUp,
+                                Timer.getFPGATimestamp()))));
 
     if (Utils.isSimulation()) {
       drivetrain.seedFieldRelative(new Pose2d(new Translation2d(), Rotation2d.fromDegrees(90)));
