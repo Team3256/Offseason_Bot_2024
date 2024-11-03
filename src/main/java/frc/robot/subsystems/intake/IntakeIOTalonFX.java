@@ -22,7 +22,8 @@ import frc.robot.utils.TalonUtil;
 public class IntakeIOTalonFX implements IntakeIO {
   private final TalonFX intakeMotor = new TalonFX(IntakeConstants.kIntakeMotorID);
   final VelocityVoltage intakeRequest = new VelocityVoltage(0).withSlot(0);
-  final MotionMagicVelocityVoltage motionMagicIntakeRequest = new MotionMagicVelocityVoltage(0).withSlot(0);
+  final MotionMagicVelocityVoltage motionMagicIntakeRequest =
+      new MotionMagicVelocityVoltage(0).withSlot(0);
   private final VoltageOut intakeVoltageReq = new VoltageOut(0);
 
   private final TalonFX secondaryIntakeMotor = new TalonFX(IntakeConstants.kSecondaryIntakeMotorID);
@@ -33,19 +34,24 @@ public class IntakeIOTalonFX implements IntakeIO {
   private final StatusSignal<Double> intakeMotorStatorCurrent = intakeMotor.getStatorCurrent();
   private final StatusSignal<Double> intakeMotorSupplyCurrent = intakeMotor.getSupplyCurrent();
   private final StatusSignal<Double> intakeMotorTemperature = intakeMotor.getDeviceTemp();
-  private final StatusSignal<Double> intakeMotorReferenceSlope = intakeMotor.getClosedLoopReferenceSlope();
+  private final StatusSignal<Double> intakeMotorReferenceSlope =
+      intakeMotor.getClosedLoopReferenceSlope();
 
   private final TalonFX passthroughMotor = new TalonFX(IntakeConstants.kPassthroughMotorID);
   final VelocityVoltage passthroughRequest = new VelocityVoltage(0).withSlot(0);
-  final MotionMagicVelocityVoltage motionMagicPassthroughRequest = new MotionMagicVelocityVoltage(0).withSlot(0);
+  final MotionMagicVelocityVoltage motionMagicPassthroughRequest =
+      new MotionMagicVelocityVoltage(0).withSlot(0);
   private final VoltageOut passthroughVoltageReq = new VoltageOut(0);
 
   private final StatusSignal<Double> passthroughMotorVoltage = passthroughMotor.getMotorVoltage();
   private final StatusSignal<Double> passthroughMotorVelocity = passthroughMotor.getVelocity();
-  private final StatusSignal<Double> passthroughMotorStatorCurrent = passthroughMotor.getStatorCurrent();
-  private final StatusSignal<Double> passthroughMotorSupplyCurrent = passthroughMotor.getSupplyCurrent();
+  private final StatusSignal<Double> passthroughMotorStatorCurrent =
+      passthroughMotor.getStatorCurrent();
+  private final StatusSignal<Double> passthroughMotorSupplyCurrent =
+      passthroughMotor.getSupplyCurrent();
   private final StatusSignal<Double> passthroughMotorTemperature = passthroughMotor.getDeviceTemp();
-  private final StatusSignal<Double> passthroughMotorReferenceSlope = passthroughMotor.getClosedLoopReferenceSlope();
+  private final StatusSignal<Double> passthroughMotorReferenceSlope =
+      passthroughMotor.getClosedLoopReferenceSlope();
 
   private DigitalInput beamBreakInput = new DigitalInput(IntakeConstants.kIntakeBeamBreakDIO);
 
