@@ -9,6 +9,7 @@ package frc.robot.subsystems.intake;
 
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
+import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.MotionMagicVelocityVoltage;
 import com.ctre.phoenix6.controls.NeutralOut;
 import com.ctre.phoenix6.controls.VelocityVoltage;
@@ -24,6 +25,9 @@ public class IntakeIOTalonFX implements IntakeIO {
   final MotionMagicVelocityVoltage motionMagicIntakeRequest =
       new MotionMagicVelocityVoltage(0).withSlot(0);
   private final VoltageOut intakeVoltageReq = new VoltageOut(0);
+
+  private final TalonFX secondaryIntakeMotor = new TalonFX(IntakeConstants.kSecondaryIntakeMotorID);
+  final Follower secondaryIntakeFollowReq = new Follower(intakeMotor.getDeviceID(), false);
 
   private final StatusSignal<Double> intakeMotorVoltage = intakeMotor.getMotorVoltage();
   private final StatusSignal<Double> intakeMotorVelocity = intakeMotor.getVelocity();
@@ -56,6 +60,11 @@ public class IntakeIOTalonFX implements IntakeIO {
     PhoenixUtil.checkErrorAndRetry(() -> intakeMotor.getConfigurator().refresh(motorConfig));
     TalonUtil.applyAndCheckConfiguration(intakeMotor, motorConfig);
 
+    var secondaryMotorConfig = IntakeConstants.intakeMotorConfig; // Same as intake motor.
+    PhoenixUtil.checkErrorAndRetry(
+        () -> secondaryIntakeMotor.getConfigurator().refresh(secondaryMotorConfig));
+    TalonUtil.applyAndCheckConfiguration(secondaryIntakeMotor, secondaryMotorConfig);
+
     var passthroughConfig = IntakeConstants.passthroughMotorConfig;
     PhoenixUtil.checkErrorAndRetry(
         () -> passthroughMotor.getConfigurator().refresh(passthroughConfig));
@@ -77,6 +86,7 @@ public class IntakeIOTalonFX implements IntakeIO {
         passthroughMotorReferenceSlope);
     intakeMotor.optimizeBusUtilization();
     passthroughMotor.optimizeBusUtilization();
+    secondaryIntakeMotor.setControl(secondaryIntakeFollowReq);
   }
 
   @Override
