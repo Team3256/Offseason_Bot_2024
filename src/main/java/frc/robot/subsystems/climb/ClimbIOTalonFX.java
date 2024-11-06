@@ -30,8 +30,6 @@ public class ClimbIOTalonFX implements ClimbIO {
   private final StatusSignal<Double> climbMotorReferenceSlope =
       leftClimbMotor.getClosedLoopReferenceSlope();
 
-
-
   private final TalonFX rightClimbMotor = new TalonFX(ClimbConstants.kRightClimbMotorID);
 
   private final Follower rightClimbFollowReq = new Follower(leftClimbMotor.getDeviceID(), false);
@@ -42,7 +40,8 @@ public class ClimbIOTalonFX implements ClimbIO {
     TalonUtil.applyAndCheckConfiguration(leftClimbMotor, leftClimbConfig);
 
     var rightClimbConfig = ClimbConstants.righClimbConfig;
-    PhoenixUtil.checkErrorAndRetry(() -> rightClimbMotor.getConfigurator().refresh(rightClimbConfig));
+    PhoenixUtil.checkErrorAndRetry(
+        () -> rightClimbMotor.getConfigurator().refresh(rightClimbConfig));
     TalonUtil.applyAndCheckConfiguration(rightClimbMotor, rightClimbConfig);
 
     BaseStatusSignal.setUpdateFrequencyForAll(
