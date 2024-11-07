@@ -23,27 +23,29 @@ public abstract class DisableSubsystem extends SubsystemBase {
 
   @Override
   public Command run(Runnable action) {
-    return disabled ? Commands.none() : super.run(action);
+    return disabled ? Commands.none() : super.run(action).withName(StackJumper.getCallerMethodName());
   }
 
   @Override
   public Command runOnce(Runnable action) {
-    return disabled ? Commands.none() : super.runOnce(action);
+    return disabled ? Commands.none() : super.runOnce(action).withName(StackJumper.getCallerMethodName() + ".runOnce");
   }
 
   @Override
   public Command startEnd(Runnable action, Runnable end) {
-    return disabled ? Commands.none() : super.startEnd(action, end);
+    return disabled ? Commands.none()
+        : super.startEnd(action, end).withName(StackJumper.getCallerMethodName() + ".startEnd");
   }
 
   @Override
   public Command runEnd(Runnable action, Runnable end) {
-    return disabled ? Commands.none() : super.runEnd(action, end);
+    return disabled ? Commands.none()
+        : super.runEnd(action, end).withName(StackJumper.getCallerMethodName() + ".runEnd");
   }
 
   @Override
   public Command defer(Supplier<Command> supplier) {
-    return disabled ? Commands.none() : super.defer(supplier);
+    return disabled ? Commands.none() : super.defer(supplier).withName(StackJumper.getCallerMethodName() + ".defer");
   }
 
   @Override
