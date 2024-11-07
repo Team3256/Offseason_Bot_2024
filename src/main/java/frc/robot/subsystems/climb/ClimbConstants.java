@@ -14,6 +14,7 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 public final class ClimbConstants {
 
   public static final int kLeftClimbMotorID = 18;
+  public static final int kRightClimbMotorID = 17;
   public static final double gearRatio = 20; // needs to be tuned
 
   public static final double kClimbUpPosition = 150 / 20;
@@ -29,7 +30,22 @@ public final class ClimbConstants {
   public static double updateFrequency;
   public static boolean kUseMotionMagic = false;
 
-  public static final TalonFXConfiguration motorConfig =
+  public static final TalonFXConfiguration leftClimbConfig =
+      new TalonFXConfiguration()
+          .withSlot0(new Slot0Configs().withKS(0).withKV(0).withKP(1).withKI(0).withKD(0))
+          .withMotorOutput(
+              new MotorOutputConfigs()
+                  .withNeutralMode(NeutralModeValue.Brake)
+                  .withInverted(InvertedValue.Clockwise_Positive))
+          .withMotionMagic(
+              new MotionMagicConfigs()
+                  .withMotionMagicAcceleration(400)
+                  .withMotionMagicCruiseVelocity(100))
+          .withCurrentLimits(
+              new CurrentLimitsConfigs()
+                  .withStatorCurrentLimitEnable(true)
+                  .withStatorCurrentLimit(60));
+  public static final TalonFXConfiguration righClimbConfig =
       new TalonFXConfiguration()
           .withSlot0(new Slot0Configs().withKS(0).withKV(0).withKP(1).withKI(0).withKD(0))
           .withMotorOutput(

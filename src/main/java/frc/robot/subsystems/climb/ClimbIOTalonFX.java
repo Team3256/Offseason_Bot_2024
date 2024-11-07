@@ -9,34 +9,40 @@ package frc.robot.subsystems.climb;
 
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
-import com.ctre.phoenix6.controls.MotionMagicVoltage;
-import com.ctre.phoenix6.controls.NeutralOut;
-import com.ctre.phoenix6.controls.PositionVoltage;
-import com.ctre.phoenix6.controls.VoltageOut;
+import com.ctre.phoenix6.controls.*;
 import com.ctre.phoenix6.hardware.TalonFX;
 import frc.robot.utils.PhoenixUtil;
 import frc.robot.utils.TalonUtil;
 
 public class ClimbIOTalonFX implements ClimbIO {
 
-  private final TalonFX climbMotor = new TalonFX(ClimbConstants.kLeftClimbMotorID);
+  private final TalonFX leftClimbMotor = new TalonFX(ClimbConstants.kLeftClimbMotorID);
   private final PositionVoltage positionRequest = new PositionVoltage(0).withSlot(0);
   private final MotionMagicVoltage motionMagicRequest = new MotionMagicVoltage(0).withSlot(0);
   private final VoltageOut voltageReq = new VoltageOut(0);
 
-  private final StatusSignal<Double> climbMotorVoltage = climbMotor.getMotorVoltage();
-  private final StatusSignal<Double> climbMotorVelocity = climbMotor.getVelocity();
-  private final StatusSignal<Double> climbMotorPosition = climbMotor.getPosition();
-  private final StatusSignal<Double> climbMotorStatorCurrent = climbMotor.getStatorCurrent();
-  private final StatusSignal<Double> climbMotorSupplyCurrent = climbMotor.getSupplyCurrent();
-  private final StatusSignal<Double> climbMotorTemperature = climbMotor.getDeviceTemp();
+  private final StatusSignal<Double> climbMotorVoltage = leftClimbMotor.getMotorVoltage();
+  private final StatusSignal<Double> climbMotorVelocity = leftClimbMotor.getVelocity();
+  private final StatusSignal<Double> climbMotorPosition = leftClimbMotor.getPosition();
+  private final StatusSignal<Double> climbMotorStatorCurrent = leftClimbMotor.getStatorCurrent();
+  private final StatusSignal<Double> climbMotorSupplyCurrent = leftClimbMotor.getSupplyCurrent();
+  private final StatusSignal<Double> climbMotorTemperature = leftClimbMotor.getDeviceTemp();
   private final StatusSignal<Double> climbMotorReferenceSlope =
-      climbMotor.getClosedLoopReferenceSlope();
+      leftClimbMotor.getClosedLoopReferenceSlope();
+
+  private final TalonFX rightClimbMotor = new TalonFX(ClimbConstants.kRightClimbMotorID);
+
+  private final Follower rightClimbFollowReq = new Follower(leftClimbMotor.getDeviceID(), false);
 
   public ClimbIOTalonFX() {
-    var motorConfig = ClimbConstants.motorConfig;
-    PhoenixUtil.checkErrorAndRetry(() -> climbMotor.getConfigurator().refresh(motorConfig));
-    TalonUtil.applyAndCheckConfiguration(climbMotor, motorConfig);
+    var leftClimbConfig = ClimbConstants.leftClimbConfig;
+    PhoenixUtil.checkErrorAndRetry(() -> leftClimbMotor.getConfigurator().refresh(leftClimbConfig));
+    TalonUtil.applyAndCheckConfiguration(leftClimbMotor, leftClimbConfig);
+
+    var rightClimbConfig = ClimbConstants.righClimbConfig;
+    PhoenixUtil.checkErrorAndRetry(
+        () -> rightClimbMotor.getConfigurator().refresh(rightClimbConfig));
+    TalonUtil.applyAndCheckConfiguration(rightClimbMotor, rightClimbConfig);
 
     BaseStatusSignal.setUpdateFrequencyForAll(
         ClimbConstants.updateFrequency,
@@ -47,7 +53,8 @@ public class ClimbIOTalonFX implements ClimbIO {
         climbMotorSupplyCurrent,
         climbMotorTemperature,
         climbMotorReferenceSlope);
-    climbMotor.optimizeBusUtilization();
+    leftClimbMotor.optimizeBusUtilization();
+    rightClimbMotor.setControl(rightClimbFollowReq);
   }
 
   @Override
@@ -72,30 +79,30 @@ public class ClimbIOTalonFX implements ClimbIO {
   @Override
   public void setPosition(double position) {
     if (ClimbConstants.kUseMotionMagic) {
-      climbMotor.setControl(motionMagicRequest.withPosition(position));
+      leftClimbMotor.setControl(motionMagicRequest.withPosition(position));
     } else {
-      climbMotor.setControl(positionRequest.withPosition(position));
+      leftClimbMotor.setControl(positionRequest.withPosition(position));
     }
   }
 
   @Override
   public void setVoltage(double voltage) {
-    climbMotor.setVoltage(voltage);
+    leftClimbMotor.setVoltage(voltage);
   }
 
   @Override
   public void off() {
-    climbMotor.setControl(new NeutralOut());
+    leftClimbMotor.setControl(new NeutralOut());
   }
 
   @Override
   public void zero() {
-    climbMotor.setPosition(0);
+    leftClimbMotor.setPosition(0);
   }
 
   @Override
   public TalonFX getMotor() {
-    return climbMotor;
+    return leftClimbMotor;
   }
 
   @Override
