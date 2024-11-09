@@ -22,38 +22,34 @@ import org.littletonrobotics.junction.Logger;
 public class PivotShooter extends DisableSubsystem {
 
   private final PivotShooterIO pivotShooterIO;
-  private final PivotShooterIOInputsAutoLogged pivotShooterIOAutoLogged =
-      new PivotShooterIOInputsAutoLogged();
+  private final PivotShooterIOInputsAutoLogged pivotShooterIOAutoLogged = new PivotShooterIOInputsAutoLogged();
 
   private final SysIdRoutine m_sysIdRoutine;
 
-  private final InterpolatingDoubleTreeMap aprilTagMap =
-      new InterpolatingDoubleTreeMap() {
-        {
-          put(0.0, 0.0);
-          put(1.0, 1.0);
-        }
-      };
+  private final InterpolatingDoubleTreeMap aprilTagMap = new InterpolatingDoubleTreeMap() {
+    {
+      put(0.0, 0.0);
+      put(1.0, 1.0);
+    }
+  };
 
   public PivotShooter(boolean disabled, PivotShooterIO pivotShooterIO) {
     super(disabled);
 
     this.pivotShooterIO = pivotShooterIO;
-    m_sysIdRoutine =
-        new SysIdRoutine(
-            new SysIdRoutine.Config(
-                Volts.of(0.2).per(Seconds.of(1)), // Use default ramp rate (1 V/s)
-                Volts.of(6), // Reduce dynamic step voltage to 4 to prevent brownout
-                null, // Use default timeout (10 s)
-                // Log state with Phoenix SignalLogger class
-                (state) -> SignalLogger.writeString("state", state.toString())),
-            new SysIdRoutine.Mechanism(
-                (volts) ->
-                    pivotShooterIO
-                        .getMotor()
-                        .setControl(pivotShooterIO.getVoltageRequest().withOutput(volts.in(Volts))),
-                null,
-                this));
+    m_sysIdRoutine = new SysIdRoutine(
+        new SysIdRoutine.Config(
+            Volts.of(0.2).per(Seconds.of(1)), // Use default ramp rate (1 V/s)
+            Volts.of(6), // Reduce dynamic step voltage to 4 to prevent brownout
+            null, // Use default timeout (10 s)
+            // Log state with Phoenix SignalLogger class
+            (state) -> SignalLogger.writeString("state", state.toString())),
+        new SysIdRoutine.Mechanism(
+            (volts) -> pivotShooterIO
+                .getMotor()
+                .setControl(pivotShooterIO.getVoltageRequest().withOutput(volts.in(Volts))),
+            null,
+            this));
   }
 
   @Override
@@ -64,7 +60,7 @@ public class PivotShooter extends DisableSubsystem {
   }
 
   public Command setPosition(double position) {
-    return this.run(() -> pivotShooterIO.setPosition(position));
+    return this.run(() -> pivotShooterIO.setPosition(position)).finallyDo(pivotShooterIO::off);
   }
 
   public Command setVoltage(double voltage) {
@@ -79,9 +75,7 @@ public class PivotShooter extends DisableSubsystem {
   public Command slamZero() {
     return this.run(() -> pivotShooterIO.setVoltage(PivotShooterConstants.kPivotSlamShooterVoltage))
         .until(
-            () ->
-                pivotShooterIOAutoLogged.pivotShooterMotorStatorCurrent
-                    > PivotShooterConstants.kPivotSlamStallCurrent)
+            () -> pivotShooterIOAutoLogged.pivotShooterMotorStatorCurrent > PivotShooterConstants.kPivotSlamStallCurrent)
         .andThen(this.zero());
   }
 
@@ -99,8 +93,8 @@ public class PivotShooter extends DisableSubsystem {
         () -> {
           pivotShooterIO.setPosition(
               aprilTagMap.get(
-                      (vision.getLastCenterLimelightY() - vision.getLastLastCenterLimelightY())
-                          + vision.getCenterLimelightY())
+                  (vision.getLastCenterLimelightY() - vision.getLastLastCenterLimelightY())
+                      + vision.getCenterLimelightY())
                   * PivotShooterConstants.kPivotMotorGearing);
         });
   }
