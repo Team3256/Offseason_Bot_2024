@@ -36,7 +36,7 @@ public final class ClimbConstants {
           .withMotorOutput(
               new MotorOutputConfigs()
                   .withNeutralMode(NeutralModeValue.Brake)
-                  .withInverted(InvertedValue.Clockwise_Positive))
+                  .withInverted(InvertedValue.CounterClockwise_Positive))
           .withMotionMagic(
               new MotionMagicConfigs()
                   .withMotionMagicAcceleration(400)
@@ -51,7 +51,7 @@ public final class ClimbConstants {
           .withMotorOutput(
               new MotorOutputConfigs()
                   .withNeutralMode(NeutralModeValue.Brake)
-                  .withInverted(InvertedValue.Clockwise_Positive))
+                  .withInverted(InvertedValue.CounterClockwise_Positive))
           .withMotionMagic(
               new MotionMagicConfigs()
                   .withMotionMagicAcceleration(400)
