@@ -161,12 +161,12 @@ public class AutoRoutines {
       PivotIntake pivotIntake) {
 
     ChoreoTrajectory amp_mobility = Choreo.getTrajectory("ampMobility");
-    Trigger noteOuttaken =
-        new Trigger(() -> !intake.isBeamBroken()).debounce(RoutineConstants.beamBreakDelay);
+    // Trigger noteOuttaken =
+    //     new Trigger(() -> !intake.isBeamBroken()).debounce(RoutineConstants.beamBreakDelay);
     return Commands.sequence(
         AutoHelperCommands.resetPose(amp_mobility, swerve),
-        AutoHelperCommands.preLoad(pivotShooter, intake, shooter, noteOuttaken),
-        Commands.waitSeconds(5),
+        // AutoHelperCommands.preLoad(pivotShooter, intake, shooter, noteOuttaken),
+        Commands.waitSeconds(1),
         swerve.runChoreoTraj(amp_mobility));
   }
 

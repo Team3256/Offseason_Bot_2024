@@ -25,11 +25,14 @@ public final class ShooterConstants {
   public static int kShooterMotorID = 11;
   public static int kShooterMotorFollowerID = 23;
   /* PID */
+
+  public static InvertedValue shooterInverted = InvertedValue.CounterClockwise_Positive;
+  public static InvertedValue shooterFollowerInverted = InvertedValue.Clockwise_Positive;
   // Shooter
   public static MotorOutputConfigs motorOutputConfigs =
       new MotorOutputConfigs()
           .withNeutralMode(NeutralModeValue.Brake)
-          .withInverted(InvertedValue.CounterClockwise_Positive);
+          .withInverted(shooterInverted);
   public static TalonFXConfiguration motorConfigs =
       new TalonFXConfiguration()
           .withSlot0(
@@ -58,8 +61,7 @@ public final class ShooterConstants {
                   .withPeakForwardTorqueCurrent(80)
                   .withPeakReverseTorqueCurrent(80));
   public static TalonFXConfiguration followerMotorConfigs =
-      motorConfigs.withMotorOutput(
-          motorOutputConfigs.withInverted(InvertedValue.Clockwise_Positive));
+      motorConfigs.withMotorOutput(motorOutputConfigs.withInverted(shooterFollowerInverted));
 
   public static double kShooterSpeakerRPS = 42;
   public static double kShooterFollowerSpeakerRPS = 45; // really 80
@@ -80,8 +82,6 @@ public final class ShooterConstants {
   public static boolean kUseMotionMagic = false;
 
   public static NeutralModeValue neutralMode = NeutralModeValue.Brake;
-  public static InvertedValue shooterInverted = InvertedValue.Clockwise_Positive;
-  public static InvertedValue shooterFollowerInverted = InvertedValue.CounterClockwise_Positive;
 
   public static double kVelocityTolerance = 5;
 }
