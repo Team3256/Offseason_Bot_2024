@@ -304,9 +304,10 @@ public class RobotContainer {
     autoChooser.addOption(
         "Source auto",
         AutoRoutines.sourceMobility(drivetrain, intake, shooter, pivotShooter, pivotIntake));
-    autoChooser.addOption(
-        "Amp Mobility",
-        AutoRoutines.ampMobility(drivetrain, intake, shooter, pivotShooter, pivotIntake));
+    autoChooser.addOption("Amp Mobility", AutoRoutines.ampUp(drivetrain));
+    autoChooser.addOption("Source Mobility", AutoRoutines.sourceUp(drivetrain));
+    autoChooser.addOption("Sub Mobility", AutoRoutines.subUp(drivetrain));
+    // AutoRoutines.ampUp(drivetrain, intake, shooter, pivotShooter, pivotIntake));
     autoChooser.addOption(
         "5 Note",
         AutoRoutines.center5Note(drivetrain, intake, shooter, pivotShooter, pivotIntake, vision));

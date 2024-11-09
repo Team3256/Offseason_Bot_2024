@@ -153,21 +153,34 @@ public class AutoRoutines {
         swerve.runChoreoTraj(amp_mobility));
   }
 
-  public static Command ampMobility(
-      CommandSwerveDrivetrain swerve,
-      Intake intake,
-      Shooter shooter,
-      PivotShooter pivotShooter,
-      PivotIntake pivotIntake) {
+  public static Command ampUp(CommandSwerveDrivetrain swerve
+      // Intake intake,
+      // Shooter shooter,
+      // PivotShooter pivotShooter,
+      // PivotIntake pivotIntake
+      ) {
 
     ChoreoTrajectory amp_mobility = Choreo.getTrajectory("ampMobility");
-    // Trigger noteOuttaken =
-    //     new Trigger(() -> !intake.isBeamBroken()).debounce(RoutineConstants.beamBreakDelay);
     return Commands.sequence(
         AutoHelperCommands.resetPose(amp_mobility, swerve),
-        // AutoHelperCommands.preLoad(pivotShooter, intake, shooter, noteOuttaken),
         Commands.waitSeconds(1),
         swerve.runChoreoTraj(amp_mobility));
+  }
+
+  public static Command subUp(CommandSwerveDrivetrain swerve) {
+    ChoreoTrajectory traj = Choreo.getTrajectory("subUp");
+    return Commands.sequence(
+        AutoHelperCommands.resetPose(traj, swerve),
+        Commands.waitSeconds(1),
+        swerve.runChoreoTraj(traj));
+  }
+
+  public static Command sourceUp(CommandSwerveDrivetrain swerve) {
+    ChoreoTrajectory traj = Choreo.getTrajectory("sourceUp");
+    return Commands.sequence(
+        AutoHelperCommands.resetPose(traj, swerve),
+        Commands.waitSeconds(1),
+        swerve.runChoreoTraj(traj));
   }
 
   public static Command center5Note( // if we use this during comp we're cooked
