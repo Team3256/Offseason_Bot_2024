@@ -183,6 +183,10 @@ public class AutoRoutines {
         swerve.runChoreoTraj(traj));
   }
 
+  // public static Command literallyGoForward(CommandSwerveDrivetrain swerve) {
+  // return swerve.applyRequest(swerve.AutoRequest.Speeds)
+  // }
+
   public static Command center5Note( // if we use this during comp we're cooked
       CommandSwerveDrivetrain swerve,
       Intake intake,
