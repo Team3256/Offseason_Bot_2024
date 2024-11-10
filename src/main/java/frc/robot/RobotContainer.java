@@ -446,18 +446,18 @@ public class RobotContainer {
                 .onTrue(
                         Commands.sequence(
                                 new ParallelCommandGroup(
-                                        ampbar.setAmpPosition(),
+                                        ampbar.setAmpPosition().withTimeout(3),
                                         pivotShooter.setPosition(12 / 138.33 * kPivotMotorGearing))
-                                        .withTimeout(1),
+                                        .withTimeout(3),
                                 climb.runOnce(() -> climb.extendClimber())));
         new Trigger(
                 () -> (operator.getRawAxis(translationAxis) < -0.5))
                 .onTrue(
                         Commands.sequence(
                                 new ParallelCommandGroup(
-                                        ampbar.setAmpPosition(),
+                                        ampbar.setAmpPosition().withTimeout(3),
                                         pivotShooter.setPosition(12 / 138.33 * kPivotMotorGearing))
-                                        .withTimeout(1),
+                                        .withTimeout(3),
                                 climb.runOnce(() -> climb.retractClimber())));
         // new Trigger(() -> (operator.getRawAxis(secondaryAxis) > 0.5))
         // .onTrue(climb.runOnce(() -> climb.setVoltageRight(6)));
