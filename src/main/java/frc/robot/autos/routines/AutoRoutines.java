@@ -163,7 +163,7 @@ public class AutoRoutines {
     ChoreoTrajectory amp_mobility = Choreo.getTrajectory("ampMobility");
     return Commands.sequence(
         AutoHelperCommands.resetPose(amp_mobility, swerve),
-        Commands.waitSeconds(1),
+        Commands.waitSeconds(12),
         swerve.runChoreoTraj(amp_mobility));
   }
 
@@ -171,7 +171,7 @@ public class AutoRoutines {
     ChoreoTrajectory traj = Choreo.getTrajectory("subUp");
     return Commands.sequence(
         AutoHelperCommands.resetPose(traj, swerve),
-        Commands.waitSeconds(1),
+        Commands.waitSeconds(13),
         swerve.runChoreoTraj(traj));
   }
 
@@ -179,7 +179,7 @@ public class AutoRoutines {
     ChoreoTrajectory traj = Choreo.getTrajectory("sourceUp");
     return Commands.sequence(
         AutoHelperCommands.resetPose(traj, swerve),
-        Commands.waitSeconds(1),
+        Commands.waitSeconds(13),
         swerve.runChoreoTraj(traj));
   }
 
