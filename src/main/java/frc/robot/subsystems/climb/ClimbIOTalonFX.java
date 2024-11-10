@@ -53,7 +53,7 @@ public class ClimbIOTalonFX implements ClimbIO {
     PhoenixUtil.checkErrorAndRetry(() -> leftClimbMotor.getConfigurator().refresh(leftClimbConfig));
     TalonUtil.applyAndCheckConfiguration(leftClimbMotor, leftClimbConfig);
 
-    var rightClimbConfig = ClimbConstants.righClimbConfig;
+    var rightClimbConfig = ClimbConstants.rightClimbConfig;
     PhoenixUtil.checkErrorAndRetry(
         () -> rightClimbMotor.getConfigurator().refresh(rightClimbConfig));
     TalonUtil.applyAndCheckConfiguration(rightClimbMotor, rightClimbConfig);

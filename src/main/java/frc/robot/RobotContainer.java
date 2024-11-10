@@ -430,7 +430,8 @@ public class RobotContainer {
     climb = new Climb(FeatureFlags.kClimbEnabled, new ClimbIOTalonFX());
     operator.povDown().onTrue(climb.zero());
 
-    // Deadband of 0.5
+    // Deadband of 0.5, max 6 volts, when between deadband, turn it off (static
+    // brake)
     new Trigger(
             () ->
                 (operator.getRawAxis(translationAxis) > 0.5)
@@ -447,6 +448,13 @@ public class RobotContainer {
             climb.runOnce(() -> climb.setVoltageRight(operator.getRawAxis(secondaryAxis) * 6)));
     new Trigger(() -> operator.getRawAxis(translationAxis) == -1).onTrue(climb.goToZeroLeft());
     new Trigger(() -> operator.getRawAxis(secondaryAxis) == -1).onTrue(climb.goToZeroRight());
+    new Trigger(
+            () ->
+                -0.5 < operator.getRawAxis(translationAxis)
+                    && operator.getRawAxis(translationAxis) < 0.5
+                    && -0.5 < operator.getRawAxis(secondaryAxis)
+                    && operator.getRawAxis(secondaryAxis) < 0.5)
+        .onTrue(climb.off());
     // if (this.ampbar != null && this.pivotShooter != null) {
     // new Trigger(() -> operator.getRawAxis(translationAxis) < -0.5)
     // .onTrue(
