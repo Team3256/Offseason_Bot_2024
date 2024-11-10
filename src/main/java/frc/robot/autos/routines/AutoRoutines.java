@@ -153,32 +153,67 @@ public class AutoRoutines {
         swerve.runChoreoTraj(amp_mobility));
   }
 
-  public static Command ampUp(CommandSwerveDrivetrain swerve
-      // Intake intake,
-      // Shooter shooter,
-      // PivotShooter pivotShooter,
-      // PivotIntake pivotIntake
-      ) {
+  public static Command ampMobility(
+      CommandSwerveDrivetrain swerve,
+      Intake intake,
+      Shooter shooter,
+      PivotShooter pivotShooter,
+      PivotIntake pivotIntake) {
 
-    ChoreoTrajectory amp_mobility = Choreo.getTrajectory("ampMobility");
+    ChoreoTrajectory amp_mobility = Choreo.getTrajectory("Amp");
+    Trigger noteOuttaken =
+        new Trigger(() -> !intake.isBeamBroken()).debounce(RoutineConstants.beamBreakDelay);
     return Commands.sequence(
         AutoHelperCommands.resetPose(amp_mobility, swerve),
+        AutoHelperCommands.preLoad(pivotShooter, intake, shooter, noteOuttaken),
+        swerve.runChoreoTraj(amp_mobility));
+  }
+
+  public static Command ampUp(
+      CommandSwerveDrivetrain swerve,
+      Intake intake,
+      Shooter shooter,
+      PivotShooter pivotShooter,
+      PivotIntake pivotIntake) {
+
+    ChoreoTrajectory amp_mobility = Choreo.getTrajectory("ampMobility");
+    Trigger noteOuttaken =
+        new Trigger(() -> !intake.isBeamBroken()).debounce(RoutineConstants.beamBreakDelay);
+    return Commands.sequence(
+        AutoHelperCommands.resetPose(amp_mobility, swerve),
+        AutoHelperCommands.preLoad(pivotShooter, intake, shooter, noteOuttaken),
         Commands.waitSeconds(12),
         swerve.runChoreoTraj(amp_mobility));
   }
 
-  public static Command subUp(CommandSwerveDrivetrain swerve) {
+  public static Command subUp(
+      CommandSwerveDrivetrain swerve,
+      Intake intake,
+      Shooter shooter,
+      PivotShooter pivotShooter,
+      PivotIntake pivotIntake) {
     ChoreoTrajectory traj = Choreo.getTrajectory("subUp");
+    Trigger noteOuttaken =
+        new Trigger(() -> !intake.isBeamBroken()).debounce(RoutineConstants.beamBreakDelay);
     return Commands.sequence(
         AutoHelperCommands.resetPose(traj, swerve),
+        AutoHelperCommands.preLoad(pivotShooter, intake, shooter, noteOuttaken),
         Commands.waitSeconds(13),
         swerve.runChoreoTraj(traj));
   }
 
-  public static Command sourceUp(CommandSwerveDrivetrain swerve) {
+  public static Command sourceUp(
+      CommandSwerveDrivetrain swerve,
+      Intake intake,
+      Shooter shooter,
+      PivotShooter pivotShooter,
+      PivotIntake pivotIntake) {
     ChoreoTrajectory traj = Choreo.getTrajectory("sourceUp");
+    Trigger noteOuttaken =
+        new Trigger(() -> !intake.isBeamBroken()).debounce(RoutineConstants.beamBreakDelay);
     return Commands.sequence(
         AutoHelperCommands.resetPose(traj, swerve),
+        AutoHelperCommands.preLoad(pivotShooter, intake, shooter, noteOuttaken),
         Commands.waitSeconds(13),
         swerve.runChoreoTraj(traj));
   }
