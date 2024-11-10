@@ -126,12 +126,12 @@ public class ClimbIOTalonFX implements ClimbIO {
 
   @Override
   public void setVoltageLeft(double voltage) {
-    leftClimbMotor.setVoltage(voltage);
+    leftClimbMotor.setControl(new VoltageOut(voltage));
   }
 
   @Override
   public void setVoltageRight(double voltage) {
-    rightClimbMotor.setVoltage(voltage);
+    rightClimbMotor.setControl(new VoltageOut(voltage));
   }
 
   @Override

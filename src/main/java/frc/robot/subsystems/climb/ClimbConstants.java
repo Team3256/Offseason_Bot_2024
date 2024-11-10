@@ -45,7 +45,7 @@ public final class ClimbConstants {
               new CurrentLimitsConfigs()
                   .withStatorCurrentLimitEnable(true)
                   .withStatorCurrentLimit(60));
-  public static final TalonFXConfiguration righClimbConfig =
+  public static final TalonFXConfiguration rightClimbConfig =
       new TalonFXConfiguration()
           .withSlot0(new Slot0Configs().withKS(0).withKV(0).withKP(1).withKI(0).withKD(0))
           .withMotorOutput(
