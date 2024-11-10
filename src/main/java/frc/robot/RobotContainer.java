@@ -428,7 +428,7 @@ public class RobotContainer {
 
   private void configureClimb() {
     climb = new Climb(FeatureFlags.kClimbEnabled, new ClimbIOTalonFX());
-    operator.povDown().onTrue(climb.zero());
+    climb.zero().schedule();
 
     // Deadband of 0.5, max 6 volts, when between deadband, turn it off (static
     // brake)
