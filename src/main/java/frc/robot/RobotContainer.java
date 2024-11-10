@@ -442,23 +442,23 @@ public class RobotContainer {
 
         // Deadband of 0.5, max 6 volts, when between deadband, turn it off (static
         // brake)
-        new Trigger(() -> (operator.getRawAxis(translationAxis) > 0.5))
+        new Trigger(() -> (operator.getRawAxis(translationAxis) <- 0.5))
                 .onTrue(
                         Commands.sequence(
                                 new ParallelCommandGroup(
                                         ampbar.setAmpPosition().withTimeout(3),
                                         pivotShooter.setPosition(12 / 138.33 * kPivotMotorGearing))
                                         .withTimeout(3),
-                                climb.runOnce(() -> climb.extendClimber())));
+                                climb.extendClimber()));
         new Trigger(
-                () -> (operator.getRawAxis(translationAxis) < -0.5))
+                () -> (operator.getRawAxis(translationAxis) > 0.5))
                 .onTrue(
                         Commands.sequence(
 //                                new ParallelCommandGroup(
 //                                        ampbar.setAmpPosition().withTimeout(3),
 //                                        pivotShooter.setPosition(12 / 138.33 * kPivotMotorGearing))
 //                                        .withTimeout(3),
-                                climb.runOnce(() -> climb.retractClimber())));
+                                climb.retractClimber()));
         // new Trigger(() -> (operator.getRawAxis(secondaryAxis) > 0.5))
         // .onTrue(climb.runOnce(() -> climb.setVoltageRight(6)));
         // new Trigger(
