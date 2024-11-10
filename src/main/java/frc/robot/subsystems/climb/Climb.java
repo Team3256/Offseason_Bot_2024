@@ -49,13 +49,14 @@ public class Climb extends DisableSubsystem {
     Logger.processInputs(this.getClass().getSimpleName(), climbIOAutoLogged);
   }
 
-  public Command setPosition(double position) {
-    return this.run(() -> climbIO.setPosition(position * ClimbConstants.gearRatio));
-  }
+  // public Command setPosition(double position) {
+  // return this.run(() -> climbIO.setPosition(position *
+  // ClimbConstants.gearRatio));
+  // }
 
-  public Command setVoltage(double voltage) {
-    return this.run(() -> climbIO.setVoltage(voltage)).finallyDo(climbIO::off);
-  }
+  // public Command setVoltage(double voltage) {
+  // return this.run(() -> climbIO.setVoltage(voltage)).finallyDo(climbIO::off);
+  // }
 
   public Command off() {
 
@@ -63,17 +64,32 @@ public class Climb extends DisableSubsystem {
   }
 
   public Command zero() {
-
     return this.runOnce(climbIO::zero);
   }
 
-  public Command extendClimber() {
-    return setPosition(ClimbConstants.kClimbUpPosition);
+  public Command goToZeroLeft() {
+    return this.runOnce(climbIO::goToZeroLeft);
   }
 
-  public Command retractClimber() {
-    return setPosition(ClimbConstants.kClimbDownPosition);
+  public Command goToZeroRight() {
+    return this.runOnce(climbIO::goToZeroRight);
   }
+
+  public void setVoltageLeft(double amount) {
+    climbIO.setVoltageLeft(amount);
+  }
+
+  public void setVoltageRight(double amount) {
+    climbIO.setVoltageRight(amount);
+  }
+
+  // public Command extendClimber() {
+  // return setPosition(ClimbConstants.kClimbUpPosition);
+  // }
+
+  // public Command retractClimber() {
+  // return setPosition(ClimbConstants.kClimbDownPosition);
+  // }
 
   public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {
     return m_sysIdRoutine.quasistatic(direction);

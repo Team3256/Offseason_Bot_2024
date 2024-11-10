@@ -113,31 +113,59 @@ public class ClimbIOTalonFX implements ClimbIO {
     inputs.rightClimbMotorReferenceSlope = rightClimbMotorReferenceSlope.getValueAsDouble();
   }
 
-  @Override
-  public void setPosition(double position) {
-    if (ClimbConstants.kUseMotionMagic) {
-      leftClimbMotor.setControl(motionMagicRequest.withPosition(position));
-      rightClimbMotor.setControl(motionMagicRequest.withPosition(position));
-    } else {
-      leftClimbMotor.setControl(positionRequest.withPosition(position));
-      rightClimbMotor.setControl(positionRequest.withPosition(position));
-    }
-  }
+  // @Override
+  // public void setPosition(double position) {
+  // if (ClimbConstants.kUseMotionMagic) {
+  // leftClimbMotor.setControl(motionMagicRequest.withPosition(position));
+  // rightClimbMotor.setControl(motionMagicRequest.withPosition(position));
+  // } else {
+  // leftClimbMotor.setControl(positionRequest.withPosition(position));
+  // rightClimbMotor.setControl(positionRequest.withPosition(position));
+  // }
+  // }
 
   @Override
-  public void setVoltage(double voltage) {
+  public void setVoltageLeft(double voltage) {
     leftClimbMotor.setVoltage(voltage);
   }
 
   @Override
+  public void setVoltageRight(double voltage) {
+    rightClimbMotor.setVoltage(voltage);
+  }
+
+  @Override
   public void off() {
-    leftClimbMotor.setControl(new NeutralOut());
+    leftClimbMotor.setControl(new StaticBrake());
+    rightClimbMotor.setControl(new StaticBrake());
   }
 
   @Override
   public void zero() {
     leftClimbMotor.setPosition(0);
     rightClimbMotor.setPosition(0);
+  }
+
+  @Override
+  public void goToZeroLeft() {
+    if (ClimbConstants.kUseMotionMagic) {
+      leftClimbMotor.setControl(motionMagicRequest.withPosition(0));
+      // rightClimbMotor.setControl(motionMagicRequest.withPosition(0));
+    } else {
+      leftClimbMotor.setControl(positionRequest.withPosition(0));
+      // rightClimbMotor.setControl(positionRequest.withPosition(0));
+    }
+  }
+
+  @Override
+  public void goToZeroRight() {
+    if (ClimbConstants.kUseMotionMagic) {
+      // leftClimbMotor.setControl(motionMagicRequest.withPosition(0));
+      rightClimbMotor.setControl(motionMagicRequest.withPosition(0));
+    } else {
+      // leftClimbMotor.setControl(positionRequest.withPosition(0));
+      rightClimbMotor.setControl(positionRequest.withPosition(0));
+    }
   }
 
   @Override

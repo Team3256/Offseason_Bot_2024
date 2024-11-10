@@ -234,7 +234,8 @@ public class RobotContainer {
                   ShooterConstants.kShooterAmpRPS, ShooterConstants.kShooterFollowerAmpRPS)));
       NamedCommands.registerCommand(
           "aim wing center",
-          pivotShooter.setPosition(PivotShooterConstants.kWingNoteCenterPreset)); // wing note
+          pivotShooter.setPosition(PivotShooterConstants.kWingNoteCenterPreset)); // wing
+      // note
       // center
       NamedCommands.registerCommand(
           "aim wing side",
@@ -243,15 +244,19 @@ public class RobotContainer {
       // side
       NamedCommands.registerCommand(
           "aim wing far side",
-          pivotShooter.setPosition(PivotShooterConstants.kWingNoteFarSidePreset)); // wing note far
+          pivotShooter.setPosition(PivotShooterConstants.kWingNoteFarSidePreset)); // wing
+      // note
+      // far
       // side
       NamedCommands.registerCommand(
           "aim truss",
-          pivotShooter.setPosition(PivotShooterConstants.kTrussSourceSidePreset)); // truss source
+          pivotShooter.setPosition(PivotShooterConstants.kTrussSourceSidePreset)); // truss
+      // source
       // sid
       NamedCommands.registerCommand(
           "aim half truss wing",
-          pivotShooter.setPosition(PivotShooterConstants.kHalfWingPodiumPreset)); // half wing
+          pivotShooter.setPosition(PivotShooterConstants.kHalfWingPodiumPreset)); // half
+      // wing
       // podium
       NamedCommands.registerCommand("zero pivot shooter", pivotShooter.slamAndPID());
 
@@ -425,24 +430,40 @@ public class RobotContainer {
     climb = new Climb(FeatureFlags.kClimbEnabled, new ClimbIOTalonFX());
     operator.povDown().onTrue(climb.zero());
 
-    new Trigger(() -> operator.getRawAxis(translationAxis) > 0.5).onTrue(climb.retractClimber());
-    if (this.ampbar != null && this.pivotShooter != null) {
-      new Trigger(() -> operator.getRawAxis(translationAxis) < -0.5)
-          .onTrue(
-              Commands.sequence(
-                  new ParallelCommandGroup(
-                          ampbar.setAmpPosition(),
-                          pivotShooter.setPosition(12 / 138.33 * kPivotMotorGearing))
-                      .withTimeout(1),
-                  climb.extendClimber()));
-    } else {
-      new Trigger(() -> Math.abs(operator.getRawAxis(secondaryAxis)) > 0.5)
-          .onTrue(new PrintCommand("u suck")); // old
-      // command
-      // waws
-      // dehook
-      // climb
-    }
+    // Deadband of 0.5
+    new Trigger(
+            () ->
+                (operator.getRawAxis(translationAxis) > 0.5)
+                    || (operator.getRawAxis(translationAxis) < -0.5
+                        && operator.getRawAxis(translationAxis) > -0.8))
+        .whileTrue(
+            climb.runOnce(() -> climb.setVoltageLeft(operator.getRawAxis(translationAxis) * 6)));
+    new Trigger(
+            () ->
+                (operator.getRawAxis(secondaryAxis) > 0.5)
+                    || operator.getRawAxis(secondaryAxis) < -0.5
+                        && operator.getRawAxis(secondaryAxis) > -0.8)
+        .whileTrue(
+            climb.runOnce(() -> climb.setVoltageRight(operator.getRawAxis(secondaryAxis) * 6)));
+    new Trigger(() -> operator.getRawAxis(translationAxis) >= -0.9).onTrue(climb.goToZeroLeft());
+    new Trigger(() -> operator.getRawAxis(secondaryAxis) >= -0.9).onTrue(climb.goToZeroRight());
+    // if (this.ampbar != null && this.pivotShooter != null) {
+    // new Trigger(() -> operator.getRawAxis(translationAxis) < -0.5)
+    // .onTrue(
+    // Commands.sequence(
+    // new ParallelCommandGroup(
+    // ampbar.setAmpPosition(),
+    // pivotShooter.setPosition(12 / 138.33 * kPivotMotorGearing))
+    // .withTimeout(1),
+    // climb.runOnce(() -> climb.leftClimbUp(leftClimbAxis * 6))));
+    // } else {
+    // new Trigger(() -> Math.abs(operator.getRawAxis(secondaryAxis)) > 0.5)
+    // .onTrue(new PrintCommand("u suck")); // old
+    // command
+    // waws
+    // dehook
+    // climb
+    // }
   }
 
   public void setAllianceCol(boolean col) {
@@ -456,8 +477,11 @@ public class RobotContainer {
         drivetrain.applyRequest(
             () ->
                 drive
-                    .withVelocityX(driver.getLeftY() * MaxSpeed) // Drive -y is forward
-                    .withVelocityY(driver.getLeftX() * MaxSpeed) // Drive -x is left
+                    .withVelocityX(driver.getLeftY() * MaxSpeed) // Drive -y
+                    // is
+                    // forward
+                    .withVelocityY(driver.getLeftX() * MaxSpeed) // Drive -x
+                    // is left
                     .withRotationalRate(-driver.getRightX() * MaxAngularRate)));
 
     /*
@@ -470,8 +494,11 @@ public class RobotContainer {
             drivetrain.applyRequest(
                 () ->
                     drive
-                        .withVelocityX(-driver.getLeftY() * MaxSpeed) // Drive -y is forward
-                        .withVelocityY(-driver.getLeftX() * MaxSpeed) // Drive -x is left
+                        .withVelocityX(-driver.getLeftY() * MaxSpeed) // Drive -y
+                        // is
+                        // forward
+                        .withVelocityY(-driver.getLeftX() * MaxSpeed) // Drive -x
+                        // is left
                         .withRotationalRate(-driver.getRightX() * MaxAngularRate)));
 
     // Slows translational and rotational speed to 30%
