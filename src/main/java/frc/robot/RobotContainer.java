@@ -439,20 +439,51 @@ public class RobotContainer {
 
     // Deadband of 0.5, max 6 volts, when between deadband, turn it off (static
     // brake)
+    new Trigger(() -> (operator.getRawAxis(translationAxis) > 0.5))
+        .onTrue(
+            Commands.sequence(
+                new ParallelCommandGroup(
+                        ampbar.setAmpPosition(),
+                        pivotShooter.setPosition(12 / 138.33 * kPivotMotorGearing))
+                    .withTimeout(1),
+                climb.runOnce(() -> climb.setVoltageLeft(6))));
     new Trigger(
             () ->
-                (operator.getRawAxis(translationAxis) > 0.5)
-                    || (operator.getRawAxis(translationAxis) < -0.5
-                        && operator.getRawAxis(translationAxis) != -1))
-        .whileTrue(
-            climb.runOnce(() -> climb.setVoltageLeft(operator.getRawAxis(translationAxis) * 6)));
+                ((operator.getRawAxis(translationAxis) < -0.5
+                    && operator.getRawAxis(translationAxis) != -1)))
+        .onTrue(
+            Commands.sequence(
+                new ParallelCommandGroup(
+                        ampbar.setAmpPosition(),
+                        pivotShooter.setPosition(12 / 138.33 * kPivotMotorGearing))
+                    .withTimeout(1),
+                climb.runOnce(() -> climb.setVoltageLeft(-6))));
+    new Trigger(() -> (operator.getRawAxis(secondaryAxis) > 0.5))
+        .onTrue(climb.runOnce(() -> climb.setVoltageRight(6)));
     new Trigger(
             () ->
-                (operator.getRawAxis(secondaryAxis) > 0.5)
-                    || operator.getRawAxis(secondaryAxis) < -0.5
-                        && operator.getRawAxis(secondaryAxis) != -1)
-        .whileTrue(
-            climb.runOnce(() -> climb.setVoltageRight(operator.getRawAxis(secondaryAxis) * 6)));
+                (operator.getRawAxis(secondaryAxis) < -0.5
+                    && operator.getRawAxis(secondaryAxis) != -1))
+        .onTrue(climb.runOnce(() -> climb.setVoltageRight(-6)));
+    // new Trigger(
+    // () -> (operator.getRawAxis(translationAxis) > 0.5)
+    // || (operator.getRawAxis(translationAxis) < -0.5
+    // && operator.getRawAxis(translationAxis) != -1))
+    // .onTrue(
+    // Commands.sequence(
+    // new ParallelCommandGroup(
+    // ampbar.setAmpPosition(),
+    // pivotShooter.setPosition(12 / 138.33 * kPivotMotorGearing))
+    // .withTimeout(1),
+    // climb.runOnce(() -> climb
+    // .setVoltageLeft((operator.getRawAxis(translationAxis) < 0 ? -1 : 1) * 6))));
+    // new Trigger(
+    // () -> (operator.getRawAxis(secondaryAxis) > 0.5)
+    // || operator.getRawAxis(secondaryAxis) < -0.5
+    // && operator.getRawAxis(secondaryAxis) != -1)
+    // .onTrue(climb
+    // .runOnce(() -> climb.setVoltageRight((operator.getRawAxis(secondaryAxis) < 0
+    // ? -1 : 1) * 6)));
     new Trigger(() -> operator.getRawAxis(translationAxis) == -1).onTrue(climb.goToZeroLeft());
     new Trigger(() -> operator.getRawAxis(secondaryAxis) == -1).onTrue(climb.goToZeroRight());
     new Trigger(
