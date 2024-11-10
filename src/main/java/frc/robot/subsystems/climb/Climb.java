@@ -25,21 +25,19 @@ public class Climb extends DisableSubsystem {
   public Climb(boolean disabled, ClimbIO climbIO) {
     super(disabled);
     this.climbIO = climbIO;
-    m_sysIdRoutine =
-        new SysIdRoutine(
-            new SysIdRoutine.Config(
-                Volts.of(0.2).per(Seconds.of(1)), // Use default ramp rate (1 V/s)
-                Volts.of(6), // Reduce dynamic step voltage to 4 to prevent brownout
-                null, // Use default timeout (10 s)
-                // Log state with Phoenix SignalLogger class
-                (state) -> SignalLogger.writeString("state", state.toString())),
-            new SysIdRoutine.Mechanism(
-                (volts) ->
-                    climbIO
-                        .getMotor()
-                        .setControl(climbIO.getVoltageRequest().withOutput(volts.in(Volts))),
-                null,
-                this));
+    m_sysIdRoutine = new SysIdRoutine(
+        new SysIdRoutine.Config(
+            Volts.of(0.2).per(Seconds.of(1)), // Use default ramp rate (1 V/s)
+            Volts.of(6), // Reduce dynamic step voltage to 4 to prevent brownout
+            null, // Use default timeout (10 s)
+            // Log state with Phoenix SignalLogger class
+            (state) -> SignalLogger.writeString("state", state.toString())),
+        new SysIdRoutine.Mechanism(
+            (volts) -> climbIO
+                .getMotor()
+                .setControl(climbIO.getVoltageRequest().withOutput(volts.in(Volts))),
+            null,
+            this));
   }
 
   @Override
@@ -50,7 +48,7 @@ public class Climb extends DisableSubsystem {
   }
 
   // public Command setPosition(double position) {
-  // return this.run(() -> climbIO.setPosition(position *
+  // return this.run(() -> climbIO.s(position *
   // ClimbConstants.gearRatio));
   // }
 
@@ -83,13 +81,15 @@ public class Climb extends DisableSubsystem {
     climbIO.setVoltageRight(amount);
   }
 
-  // public Command extendClimber() {
-  // return setPosition(ClimbConstants.kClimbUpPosition);
-  // }
+  public Command extendClimber() {
+    return this
+        .run(() -> climbIO.setPosition(ClimbConstants.kClimbUpPositionLeft, ClimbConstants.kClimbUpPositionRight));
+  }
 
-  // public Command retractClimber() {
-  // return setPosition(ClimbConstants.kClimbDownPosition);
-  // }
+  public Command retractClimber() {
+    return this
+        .run(() -> climbIO.setPosition(ClimbConstants.kClimbDownPositionLeft, ClimbConstants.kClimbDownPositionRight));
+  }
 
   public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {
     return m_sysIdRoutine.quasistatic(direction);
