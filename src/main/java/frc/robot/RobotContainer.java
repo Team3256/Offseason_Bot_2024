@@ -435,18 +435,18 @@ public class RobotContainer {
             () ->
                 (operator.getRawAxis(translationAxis) > 0.5)
                     || (operator.getRawAxis(translationAxis) < -0.5
-                        && operator.getRawAxis(translationAxis) > -0.8))
+                        && operator.getRawAxis(translationAxis) != -1))
         .whileTrue(
             climb.runOnce(() -> climb.setVoltageLeft(operator.getRawAxis(translationAxis) * 6)));
     new Trigger(
             () ->
                 (operator.getRawAxis(secondaryAxis) > 0.5)
                     || operator.getRawAxis(secondaryAxis) < -0.5
-                        && operator.getRawAxis(secondaryAxis) > -0.8)
+                        && operator.getRawAxis(secondaryAxis) != -1)
         .whileTrue(
             climb.runOnce(() -> climb.setVoltageRight(operator.getRawAxis(secondaryAxis) * 6)));
-    new Trigger(() -> operator.getRawAxis(translationAxis) >= -0.9).onTrue(climb.goToZeroLeft());
-    new Trigger(() -> operator.getRawAxis(secondaryAxis) >= -0.9).onTrue(climb.goToZeroRight());
+    new Trigger(() -> operator.getRawAxis(translationAxis) == -1).onTrue(climb.goToZeroLeft());
+    new Trigger(() -> operator.getRawAxis(secondaryAxis) == -1).onTrue(climb.goToZeroRight());
     // if (this.ampbar != null && this.pivotShooter != null) {
     // new Trigger(() -> operator.getRawAxis(translationAxis) < -0.5)
     // .onTrue(
