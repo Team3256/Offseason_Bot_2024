@@ -13,49 +13,51 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 
 public final class ClimbConstants {
 
-    public static final int kLeftClimbMotorID = 18;
-    public static final int kRightClimbMotorID = 17;
-    public static final double gearRatio = 20; // needs to be tuned
+  public static final int kLeftClimbMotorID = 18;
+  public static final int kRightClimbMotorID = 17;
+  public static final double gearRatio = 20; // needs to be tuned
 
-    public static final double kClimbUpPosition = 74;// 150 / 20;
+  public static final double kClimbUpPosition = 74; // 150 / 20;
 
-    public static final double kClimbDownPosition = 0;
-    public static final double wheelRadius = 1;
+  public static final double kClimbDownPosition = 0;
+  public static final double wheelRadius = 1;
 
-    public static double kCurrentThreshold = 4.5;
+  public static double kCurrentThreshold = 4.5;
 
-    // // What about the tension from the spring?
-    // public static double gyroRollStableThreshold = 1; // 1 degree of error is
-    // tolerated
-    public static double updateFrequency;
-    public static boolean kUseMotionMagic = false;
+  // // What about the tension from the spring?
+  // public static double gyroRollStableThreshold = 1; // 1 degree of error is
+  // tolerated
+  public static double updateFrequency;
+  public static boolean kUseMotionMagic = false;
 
-    public static final TalonFXConfiguration leftClimbConfig = new TalonFXConfiguration()
-            .withSlot0(new Slot0Configs().withKS(0).withKV(0).withKP(1).withKI(0).withKD(0))
-            .withMotorOutput(
-                    new MotorOutputConfigs()
-                            .withNeutralMode(NeutralModeValue.Brake)
-                            .withInverted(InvertedValue.CounterClockwise_Positive))
-            .withMotionMagic(
-                    new MotionMagicConfigs()
-                            .withMotionMagicAcceleration(400)
-                            .withMotionMagicCruiseVelocity(100))
-            .withCurrentLimits(
-                    new CurrentLimitsConfigs()
-                            .withStatorCurrentLimitEnable(true)
-                            .withStatorCurrentLimit(60));
-    public static final TalonFXConfiguration righClimbConfig = new TalonFXConfiguration()
-            .withSlot0(new Slot0Configs().withKS(0).withKV(0).withKP(1).withKI(0).withKD(0))
-            .withMotorOutput(
-                    new MotorOutputConfigs()
-                            .withNeutralMode(NeutralModeValue.Brake)
-                            .withInverted(InvertedValue.CounterClockwise_Positive))
-            .withMotionMagic(
-                    new MotionMagicConfigs()
-                            .withMotionMagicAcceleration(400)
-                            .withMotionMagicCruiseVelocity(100))
-            .withCurrentLimits(
-                    new CurrentLimitsConfigs()
-                            .withStatorCurrentLimitEnable(true)
-                            .withStatorCurrentLimit(60));
+  public static final TalonFXConfiguration leftClimbConfig =
+      new TalonFXConfiguration()
+          .withSlot0(new Slot0Configs().withKS(0).withKV(0).withKP(1).withKI(0).withKD(0))
+          .withMotorOutput(
+              new MotorOutputConfigs()
+                  .withNeutralMode(NeutralModeValue.Brake)
+                  .withInverted(InvertedValue.CounterClockwise_Positive))
+          .withMotionMagic(
+              new MotionMagicConfigs()
+                  .withMotionMagicAcceleration(400)
+                  .withMotionMagicCruiseVelocity(100))
+          .withCurrentLimits(
+              new CurrentLimitsConfigs()
+                  .withStatorCurrentLimitEnable(true)
+                  .withStatorCurrentLimit(60));
+  public static final TalonFXConfiguration righClimbConfig =
+      new TalonFXConfiguration()
+          .withSlot0(new Slot0Configs().withKS(0).withKV(0).withKP(1).withKI(0).withKD(0))
+          .withMotorOutput(
+              new MotorOutputConfigs()
+                  .withNeutralMode(NeutralModeValue.Brake)
+                  .withInverted(InvertedValue.CounterClockwise_Positive))
+          .withMotionMagic(
+              new MotionMagicConfigs()
+                  .withMotionMagicAcceleration(400)
+                  .withMotionMagicCruiseVelocity(100))
+          .withCurrentLimits(
+              new CurrentLimitsConfigs()
+                  .withStatorCurrentLimitEnable(true)
+                  .withStatorCurrentLimit(60));
 }
