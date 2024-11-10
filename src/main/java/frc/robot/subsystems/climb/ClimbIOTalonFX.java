@@ -136,8 +136,9 @@ public class ClimbIOTalonFX implements ClimbIO {
 
   @Override
   public void off() {
-    leftClimbMotor.setControl(new StaticBrake());
-    rightClimbMotor.setControl(new StaticBrake());
+    // Neutral mode is set to Brake
+    leftClimbMotor.setControl(new NeutralOut());
+    rightClimbMotor.setControl(new NeutralOut());
   }
 
   @Override
