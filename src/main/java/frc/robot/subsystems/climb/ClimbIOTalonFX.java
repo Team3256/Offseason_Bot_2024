@@ -21,17 +21,32 @@ public class ClimbIOTalonFX implements ClimbIO {
   private final MotionMagicVoltage motionMagicRequest = new MotionMagicVoltage(0).withSlot(0);
   private final VoltageOut voltageReq = new VoltageOut(0);
 
-  private final StatusSignal<Double> climbMotorVoltage = leftClimbMotor.getMotorVoltage();
-  private final StatusSignal<Double> climbMotorVelocity = leftClimbMotor.getVelocity();
-  private final StatusSignal<Double> climbMotorPosition = leftClimbMotor.getPosition();
-  private final StatusSignal<Double> climbMotorStatorCurrent = leftClimbMotor.getStatorCurrent();
-  private final StatusSignal<Double> climbMotorSupplyCurrent = leftClimbMotor.getSupplyCurrent();
-  private final StatusSignal<Double> climbMotorTemperature = leftClimbMotor.getDeviceTemp();
-  private final StatusSignal<Double> climbMotorReferenceSlope = leftClimbMotor.getClosedLoopReferenceSlope();
+  private final StatusSignal<Double> leftClimbMotorVoltage = leftClimbMotor.getMotorVoltage();
+  private final StatusSignal<Double> leftClimbMotorVelocity = leftClimbMotor.getVelocity();
+  private final StatusSignal<Double> leftClimbMotorPosition = leftClimbMotor.getPosition();
+  private final StatusSignal<Double> leftClimbMotorStatorCurrent =
+      leftClimbMotor.getStatorCurrent();
+  private final StatusSignal<Double> leftClimbMotorSupplyCurrent =
+      leftClimbMotor.getSupplyCurrent();
+  private final StatusSignal<Double> leftClimbMotorTemperature = leftClimbMotor.getDeviceTemp();
+  private final StatusSignal<Double> leftClimbMotorReferenceSlope =
+      leftClimbMotor.getClosedLoopReferenceSlope();
+
+  private final StatusSignal<Double> rightClimbMotorVoltage = leftClimbMotor.getMotorVoltage();
+  private final StatusSignal<Double> rightClimbMotorVelocity = leftClimbMotor.getVelocity();
+  private final StatusSignal<Double> rightClimbMotorPosition = leftClimbMotor.getPosition();
+  private final StatusSignal<Double> rightClimbMotorStatorCurrent =
+      leftClimbMotor.getStatorCurrent();
+  private final StatusSignal<Double> rightClimbMotorSupplyCurrent =
+      leftClimbMotor.getSupplyCurrent();
+  private final StatusSignal<Double> rightClimbMotorTemperature = leftClimbMotor.getDeviceTemp();
+  private final StatusSignal<Double> rightClimbMotorReferenceSlope =
+      leftClimbMotor.getClosedLoopReferenceSlope();
 
   private final TalonFX rightClimbMotor = new TalonFX(ClimbConstants.kRightClimbMotorID);
 
-  private final Follower rightClimbFollowReq = new Follower(leftClimbMotor.getDeviceID(), false);
+  // private final Follower rightClimbFollowReq = new
+  // Follower(leftClimbMotor.getDeviceID(), false);
 
   public ClimbIOTalonFX() {
     var leftClimbConfig = ClimbConstants.leftClimbConfig;
@@ -45,34 +60,57 @@ public class ClimbIOTalonFX implements ClimbIO {
 
     BaseStatusSignal.setUpdateFrequencyForAll(
         ClimbConstants.updateFrequency,
-        climbMotorVoltage,
-        climbMotorVelocity,
-        climbMotorPosition,
-        climbMotorStatorCurrent,
-        climbMotorSupplyCurrent,
-        climbMotorTemperature,
-        climbMotorReferenceSlope);
+        leftClimbMotorVoltage,
+        rightClimbMotorVoltage,
+        leftClimbMotorVelocity,
+        rightClimbMotorVelocity,
+        leftClimbMotorPosition,
+        rightClimbMotorPosition,
+        leftClimbMotorStatorCurrent,
+        rightClimbMotorStatorCurrent,
+        leftClimbMotorSupplyCurrent,
+        rightClimbMotorSupplyCurrent,
+        leftClimbMotorTemperature,
+        rightClimbMotorTemperature,
+        leftClimbMotorReferenceSlope,
+        rightClimbMotorReferenceSlope);
     leftClimbMotor.optimizeBusUtilization();
-    rightClimbMotor.setControl(rightClimbFollowReq);
+    rightClimbMotor.optimizeBusUtilization();
+    // rightClimbMotor.setControl(rightClimbFollowReq);
   }
 
   @Override
   public void updateInputs(ClimbIOInputs inputs) {
     BaseStatusSignal.refreshAll(
-        climbMotorVoltage,
-        climbMotorVelocity,
-        climbMotorPosition,
-        climbMotorStatorCurrent,
-        climbMotorSupplyCurrent,
-        climbMotorTemperature,
-        climbMotorReferenceSlope);
-    inputs.climbMotorVoltage = climbMotorVoltage.getValueAsDouble();
-    inputs.climbMotorVelocity = climbMotorVelocity.getValueAsDouble();
-    inputs.climbMotorPosition = climbMotorPosition.getValueAsDouble();
-    inputs.climbMotorStatorCurrent = climbMotorStatorCurrent.getValueAsDouble();
-    inputs.climbMotorSupplyCurrent = climbMotorSupplyCurrent.getValueAsDouble();
-    inputs.climbMotorTemperature = climbMotorTemperature.getValueAsDouble();
-    inputs.climbMotorReferenceSlope = climbMotorReferenceSlope.getValueAsDouble();
+        leftClimbMotorVoltage,
+        rightClimbMotorVoltage,
+        leftClimbMotorVelocity,
+        rightClimbMotorVelocity,
+        leftClimbMotorPosition,
+        rightClimbMotorPosition,
+        leftClimbMotorStatorCurrent,
+        rightClimbMotorStatorCurrent,
+        leftClimbMotorSupplyCurrent,
+        rightClimbMotorSupplyCurrent,
+        leftClimbMotorTemperature,
+        rightClimbMotorTemperature,
+        leftClimbMotorReferenceSlope,
+        rightClimbMotorReferenceSlope);
+    inputs.leftClimbMotorVoltage = leftClimbMotorVoltage.getValueAsDouble();
+    inputs.leftClimbMotorVelocity = leftClimbMotorVelocity.getValueAsDouble();
+    inputs.leftClimbMotorPosition = leftClimbMotorPosition.getValueAsDouble();
+    inputs.leftClimbMotorStatorCurrent = leftClimbMotorStatorCurrent.getValueAsDouble();
+    inputs.leftClimbMotorSupplyCurrent = leftClimbMotorSupplyCurrent.getValueAsDouble();
+    inputs.leftClimbMotorTemperature = leftClimbMotorTemperature.getValueAsDouble();
+    inputs.leftClimbMotorReferenceSlope = leftClimbMotorReferenceSlope.getValueAsDouble();
+
+    inputs.rightClimbMotorVoltage = rightClimbMotorVoltage.getValueAsDouble();
+    inputs.rightClimbMotorVelocity = rightClimbMotorVelocity.getValueAsDouble();
+    inputs.rightClimbMotorPosition = rightClimbMotorPosition.getValueAsDouble();
+    inputs.rightClimbMotorStatorCurrent = rightClimbMotorStatorCurrent.getValueAsDouble();
+    inputs.rightClimbMotorSupplyCurrent = rightClimbMotorSupplyCurrent.getValueAsDouble();
+    inputs.rightClimbMotorTemperature = rightClimbMotorTemperature.getValueAsDouble();
+    inputs.rightClimbMotorReferenceSlope = rightClimbMotorReferenceSlope.getValueAsDouble();
   }
 
   @Override

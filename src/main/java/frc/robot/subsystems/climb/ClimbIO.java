@@ -14,13 +14,20 @@ import org.littletonrobotics.junction.AutoLog;
 public interface ClimbIO {
   @AutoLog
   public static class ClimbIOInputs {
-    public double climbMotorVoltage = 0.0;
-    public double climbMotorPosition = 0.0;
-    public double climbMotorVelocity = 0.0;
-    public double climbMotorStatorCurrent = 0.0;
-    public double climbMotorSupplyCurrent = 0.0;
-    public double climbMotorTemperature = 0.0;
-    public double climbMotorReferenceSlope = 0.0;
+    public double leftClimbMotorVoltage = 0.0;
+    public double leftClimbMotorPosition = 0.0;
+    public double leftClimbMotorVelocity = 0.0;
+    public double leftClimbMotorStatorCurrent = 0.0;
+    public double leftClimbMotorSupplyCurrent = 0.0;
+    public double leftClimbMotorTemperature = 0.0;
+    public double leftClimbMotorReferenceSlope = 0.0;
+    public double rightClimbMotorVoltage = 0.0;
+    public double rightClimbMotorPosition = 0.0;
+    public double rightClimbMotorVelocity = 0.0;
+    public double rightClimbMotorStatorCurrent = 0.0;
+    public double rightClimbMotorSupplyCurrent = 0.0;
+    public double rightClimbMotorTemperature = 0.0;
+    public double rightClimbMotorReferenceSlope = 0.0;
   }
 
   public default void updateInputs(ClimbIOInputs inputs) {}
