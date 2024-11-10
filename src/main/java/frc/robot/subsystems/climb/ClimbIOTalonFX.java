@@ -27,8 +27,7 @@ public class ClimbIOTalonFX implements ClimbIO {
   private final StatusSignal<Double> climbMotorStatorCurrent = leftClimbMotor.getStatorCurrent();
   private final StatusSignal<Double> climbMotorSupplyCurrent = leftClimbMotor.getSupplyCurrent();
   private final StatusSignal<Double> climbMotorTemperature = leftClimbMotor.getDeviceTemp();
-  private final StatusSignal<Double> climbMotorReferenceSlope =
-      leftClimbMotor.getClosedLoopReferenceSlope();
+  private final StatusSignal<Double> climbMotorReferenceSlope = leftClimbMotor.getClosedLoopReferenceSlope();
 
   private final TalonFX rightClimbMotor = new TalonFX(ClimbConstants.kRightClimbMotorID);
 
@@ -80,8 +79,10 @@ public class ClimbIOTalonFX implements ClimbIO {
   public void setPosition(double position) {
     if (ClimbConstants.kUseMotionMagic) {
       leftClimbMotor.setControl(motionMagicRequest.withPosition(position));
+      rightClimbMotor.setControl(motionMagicRequest.withPosition(position));
     } else {
       leftClimbMotor.setControl(positionRequest.withPosition(position));
+      rightClimbMotor.setControl(positionRequest.withPosition(position));
     }
   }
 
@@ -98,6 +99,7 @@ public class ClimbIOTalonFX implements ClimbIO {
   @Override
   public void zero() {
     leftClimbMotor.setPosition(0);
+    rightClimbMotor.setPosition(0);
   }
 
   @Override
