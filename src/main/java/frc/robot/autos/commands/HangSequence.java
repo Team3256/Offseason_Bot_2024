@@ -12,7 +12,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.robot.Constants;
 import frc.robot.helpers.DebugCommandBase;
 import frc.robot.subsystems.climb.Climb;
 import java.util.LinkedList;
@@ -40,13 +39,13 @@ public class HangSequence extends DebugCommandBase {
               CommandScheduler.getInstance().cancelAll();
             });
 
-    if (Constants.FeatureFlags.kClimbEnabled) {
-      // Command un_hooker = new DehookClimb(climbSubsystem);
-      Command grave = climbSubsystem.retractClimber(); // we dont use this so idc that i broke it
+    // if (Constants.FeatureFlags.kClimbEnabled) {
+    //   // Command un_hooker = new DehookClimb(climbSubsystem);
+    //   Command grave = climbSubsystem.retractClimber(); // we dont use this so idc that i broke it
 
-      // CommandList.add(un_hooker);
-      CommandList.add(grave);
-    }
+    //   // CommandList.add(un_hooker);
+    //   CommandList.add(grave);
+    // }
 
     // Command nextCommandTriggerDown =
     // new InstantCommand(

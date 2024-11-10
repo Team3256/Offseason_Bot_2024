@@ -53,7 +53,7 @@ public class ClimbIOTalonFX implements ClimbIO {
     PhoenixUtil.checkErrorAndRetry(() -> leftClimbMotor.getConfigurator().refresh(leftClimbConfig));
     TalonUtil.applyAndCheckConfiguration(leftClimbMotor, leftClimbConfig);
 
-    var rightClimbConfig = ClimbConstants.righClimbConfig;
+    var rightClimbConfig = ClimbConstants.rightClimbConfig;
     PhoenixUtil.checkErrorAndRetry(
         () -> rightClimbMotor.getConfigurator().refresh(rightClimbConfig));
     TalonUtil.applyAndCheckConfiguration(rightClimbMotor, rightClimbConfig);
@@ -113,31 +113,60 @@ public class ClimbIOTalonFX implements ClimbIO {
     inputs.rightClimbMotorReferenceSlope = rightClimbMotorReferenceSlope.getValueAsDouble();
   }
 
+  // @Override
+  // public void setPosition(double position) {
+  // if (ClimbConstants.kUseMotionMagic) {
+  // leftClimbMotor.setControl(motionMagicRequest.withPosition(position));
+  // rightClimbMotor.setControl(motionMagicRequest.withPosition(position));
+  // } else {
+  // leftClimbMotor.setControl(positionRequest.withPosition(position));
+  // rightClimbMotor.setControl(positionRequest.withPosition(position));
+  // }
+  // }
+
   @Override
-  public void setPosition(double position) {
-    if (ClimbConstants.kUseMotionMagic) {
-      leftClimbMotor.setControl(motionMagicRequest.withPosition(position));
-      rightClimbMotor.setControl(motionMagicRequest.withPosition(position));
-    } else {
-      leftClimbMotor.setControl(positionRequest.withPosition(position));
-      rightClimbMotor.setControl(positionRequest.withPosition(position));
-    }
+  public void setVoltageLeft(double voltage) {
+    leftClimbMotor.setControl(new VoltageOut(voltage));
   }
 
   @Override
-  public void setVoltage(double voltage) {
-    leftClimbMotor.setVoltage(voltage);
+  public void setVoltageRight(double voltage) {
+    rightClimbMotor.setControl(new VoltageOut(voltage));
   }
 
   @Override
   public void off() {
+    // Neutral mode is set to Brake
     leftClimbMotor.setControl(new NeutralOut());
+    rightClimbMotor.setControl(new NeutralOut());
   }
 
   @Override
   public void zero() {
     leftClimbMotor.setPosition(0);
     rightClimbMotor.setPosition(0);
+  }
+
+  @Override
+  public void goToZeroLeft() {
+    if (ClimbConstants.kUseMotionMagic) {
+      leftClimbMotor.setControl(motionMagicRequest.withPosition(0));
+      // rightClimbMotor.setControl(motionMagicRequest.withPosition(0));
+    } else {
+      leftClimbMotor.setControl(positionRequest.withPosition(0));
+      // rightClimbMotor.setControl(positionRequest.withPosition(0));
+    }
+  }
+
+  @Override
+  public void goToZeroRight() {
+    if (ClimbConstants.kUseMotionMagic) {
+      // leftClimbMotor.setControl(motionMagicRequest.withPosition(0));
+      rightClimbMotor.setControl(motionMagicRequest.withPosition(0));
+    } else {
+      // leftClimbMotor.setControl(positionRequest.withPosition(0));
+      rightClimbMotor.setControl(positionRequest.withPosition(0));
+    }
   }
 
   @Override

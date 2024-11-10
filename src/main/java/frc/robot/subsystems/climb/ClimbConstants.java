@@ -17,7 +17,7 @@ public final class ClimbConstants {
   public static final int kRightClimbMotorID = 17;
   public static final double gearRatio = 20; // needs to be tuned
 
-  public static final double kClimbUpPosition = 74; // 150 / 20;
+  public static final double kClimbUpPosition = 150 / 20;
 
   public static final double kClimbDownPosition = 0;
   public static final double wheelRadius = 1;
@@ -45,7 +45,7 @@ public final class ClimbConstants {
               new CurrentLimitsConfigs()
                   .withStatorCurrentLimitEnable(true)
                   .withStatorCurrentLimit(60));
-  public static final TalonFXConfiguration righClimbConfig =
+  public static final TalonFXConfiguration rightClimbConfig =
       new TalonFXConfiguration()
           .withSlot0(new Slot0Configs().withKS(0).withKV(0).withKP(1).withKI(0).withKD(0))
           .withMotorOutput(

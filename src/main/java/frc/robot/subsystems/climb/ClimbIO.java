@@ -32,13 +32,19 @@ public interface ClimbIO {
 
   public default void updateInputs(ClimbIOInputs inputs) {}
 
-  public default void setPosition(double position) {}
+  // public default void setPosition(double position) {}
 
-  public default void setVoltage(double voltage) {}
+  public default void setVoltageLeft(double voltage) {}
+
+  public default void setVoltageRight(double voltage) {}
 
   public default void off() {}
 
   public default void zero() {}
+
+  public default void goToZeroLeft() {}
+
+  public default void goToZeroRight() {}
 
   public default TalonFX getMotor() {
     return new TalonFX(0);
