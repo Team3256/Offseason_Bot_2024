@@ -24,18 +24,24 @@ public class ClimbIOTalonFX implements ClimbIO {
   private final StatusSignal<Double> leftClimbMotorVoltage = leftClimbMotor.getMotorVoltage();
   private final StatusSignal<Double> leftClimbMotorVelocity = leftClimbMotor.getVelocity();
   private final StatusSignal<Double> leftClimbMotorPosition = leftClimbMotor.getPosition();
-  private final StatusSignal<Double> leftClimbMotorStatorCurrent = leftClimbMotor.getStatorCurrent();
-  private final StatusSignal<Double> leftClimbMotorSupplyCurrent = leftClimbMotor.getSupplyCurrent();
+  private final StatusSignal<Double> leftClimbMotorStatorCurrent =
+      leftClimbMotor.getStatorCurrent();
+  private final StatusSignal<Double> leftClimbMotorSupplyCurrent =
+      leftClimbMotor.getSupplyCurrent();
   private final StatusSignal<Double> leftClimbMotorTemperature = leftClimbMotor.getDeviceTemp();
-  private final StatusSignal<Double> leftClimbMotorReferenceSlope = leftClimbMotor.getClosedLoopReferenceSlope();
+  private final StatusSignal<Double> leftClimbMotorReferenceSlope =
+      leftClimbMotor.getClosedLoopReferenceSlope();
 
   private final StatusSignal<Double> rightClimbMotorVoltage = leftClimbMotor.getMotorVoltage();
   private final StatusSignal<Double> rightClimbMotorVelocity = leftClimbMotor.getVelocity();
   private final StatusSignal<Double> rightClimbMotorPosition = leftClimbMotor.getPosition();
-  private final StatusSignal<Double> rightClimbMotorStatorCurrent = leftClimbMotor.getStatorCurrent();
-  private final StatusSignal<Double> rightClimbMotorSupplyCurrent = leftClimbMotor.getSupplyCurrent();
+  private final StatusSignal<Double> rightClimbMotorStatorCurrent =
+      leftClimbMotor.getStatorCurrent();
+  private final StatusSignal<Double> rightClimbMotorSupplyCurrent =
+      leftClimbMotor.getSupplyCurrent();
   private final StatusSignal<Double> rightClimbMotorTemperature = leftClimbMotor.getDeviceTemp();
-  private final StatusSignal<Double> rightClimbMotorReferenceSlope = leftClimbMotor.getClosedLoopReferenceSlope();
+  private final StatusSignal<Double> rightClimbMotorReferenceSlope =
+      leftClimbMotor.getClosedLoopReferenceSlope();
 
   private final TalonFX rightClimbMotor = new TalonFX(ClimbConstants.kRightClimbMotorID);
 

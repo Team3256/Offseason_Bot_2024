@@ -30,29 +30,21 @@ public interface ClimbIO {
     public double rightClimbMotorReferenceSlope = 0.0;
   }
 
-  public default void updateInputs(ClimbIOInputs inputs) {
-  }
+  public default void updateInputs(ClimbIOInputs inputs) {}
 
-  public default void setPosition(double left, double right) {
-  }
+  public default void setPosition(double left, double right) {}
 
-  public default void setVoltageLeft(double voltage) {
-  }
+  public default void setVoltageLeft(double voltage) {}
 
-  public default void setVoltageRight(double voltage) {
-  }
+  public default void setVoltageRight(double voltage) {}
 
-  public default void off() {
-  }
+  public default void off() {}
 
-  public default void zero() {
-  }
+  public default void zero() {}
 
-  public default void goToZeroLeft() {
-  }
+  public default void goToZeroLeft() {}
 
-  public default void goToZeroRight() {
-  }
+  public default void goToZeroRight() {}
 
   public default TalonFX getMotor() {
     return new TalonFX(0);
