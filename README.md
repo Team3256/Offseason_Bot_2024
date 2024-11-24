@@ -1,3 +1,6 @@
+>[!NOTE]
+> This repository is archived.
+
 ### Convention
 
 - Spotless: ./gradlew spotlessApply
